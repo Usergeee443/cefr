@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CEFR Test Platform</title>
+    <title>CEFR Test</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
         * {
             -webkit-font-smoothing: antialiased;
@@ -17,95 +17,70 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif;
         }
 
-        .btn-apple {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        .btn-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .btn-apple:hover {
-            transform: scale(1.02);
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
         }
 
-        .btn-apple:active {
-            transform: scale(0.98);
+        .btn-hover:active {
+            transform: translateY(0);
         }
     </style>
 </head>
-<body class="bg-white">
+<body class="bg-white min-h-screen flex flex-col">
 
-    <!-- Navigation -->
-    <nav class="fixed w-full top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-200">
-        <div class="max-w-[980px] mx-auto px-6">
-            <div class="flex justify-between items-center h-11">
-                <a href="/" class="text-[17px] font-semibold">CEFR Test</a>
-                <div class="flex items-center space-x-8">
-                    <a href="/features" class="text-[12px] text-gray-600 hover:text-black">Xususiyatlar</a>
-                    <a href="/pricing" class="text-[12px] text-gray-600 hover:text-black">Tariflar</a>
-                    <a href="/faq" class="text-[12px] text-gray-600 hover:text-black">FAQ</a>
-                </div>
+    <!-- Header -->
+    <header class="fixed w-full top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <a href="/" class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                        <span class="text-white text-sm font-bold">C</span>
+                    </div>
+                    <span class="text-base font-semibold text-gray-900">CEFR Test</span>
+                </a>
+
+                <!-- Ko'proq malumot button -->
+                <a href="/info" class="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+                    Ko'proq malumot
+                </a>
             </div>
         </div>
-    </nav>
+    </header>
 
-    <!-- Hero -->
-    <main class="pt-32 pb-20">
-        <div class="max-w-[980px] mx-auto px-6 text-center">
-            <!-- Logo Icon -->
+    <!-- Main Content -->
+    <main class="flex-1 flex items-center justify-center px-6 pt-16">
+        <div class="w-full max-w-xl mx-auto text-center py-20">
+            <!-- Icon -->
             <div class="mb-8 flex justify-center">
-                <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-[22px] flex items-center justify-center shadow-lg">
-                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                     </svg>
                 </div>
             </div>
 
-            <h1 class="text-[56px] md:text-[72px] font-bold tracking-tight mb-6 leading-[1.05]">
-                Ingliz tilingizni<br>tekshiring.
+            <!-- Heading -->
+            <h1 class="text-4xl sm:text-5xl font-semibold text-gray-900 mb-4 tracking-tight">
+                CEFR Test
             </h1>
 
-            <p class="text-[21px] text-gray-600 mb-12 max-w-[600px] mx-auto leading-relaxed">
-                CEFR imtihoniga 99% yaqin formatda test topshiring. AI yordamida professional baholash.
+            <!-- Description -->
+            <p class="text-base sm:text-lg text-gray-600 mb-10 max-w-md mx-auto leading-relaxed">
+                Ingliz tili darajangizni professional baholang
             </p>
 
-            <div class="flex flex-col sm:flex-row gap-4 justify-center mb-20">
-                <a href="/pricing" class="inline-flex items-center justify-center bg-black text-white px-8 py-3 rounded-full font-medium text-[17px] hover:bg-gray-800 btn-apple">
-                    Boshlamoq
-                </a>
-                <a href="/features" class="inline-flex items-center justify-center text-black px-8 py-3 rounded-full font-medium text-[17px] hover:bg-gray-100 btn-apple">
-                    Batafsil
-                </a>
-            </div>
-
-            <!-- Stats -->
-            <div class="grid grid-cols-3 gap-12 max-w-[600px] mx-auto pt-12 border-t border-gray-200">
-                <div>
-                    <div class="text-[48px] font-semibold mb-1">99%</div>
-                    <div class="text-[14px] text-gray-600">Aniqlik</div>
-                </div>
-                <div>
-                    <div class="text-[48px] font-semibold mb-1">AI</div>
-                    <div class="text-[14px] text-gray-600">Baholash</div>
-                </div>
-                <div>
-                    <div class="text-[48px] font-semibold mb-1">24/7</div>
-                    <div class="text-[14px] text-gray-600">Mavjud</div>
-                </div>
-            </div>
+            <!-- CTA Button -->
+            <a href="/auth" class="inline-block bg-black text-white px-8 py-3.5 rounded-full font-medium text-base btn-hover">
+                Boshlash
+            </a>
         </div>
     </main>
-
-    <!-- Footer -->
-    <footer class="py-12 border-t border-gray-200">
-        <div class="max-w-[980px] mx-auto px-6">
-            <div class="flex justify-between items-center">
-                <p class="text-[12px] text-gray-600">© 2026 CEFR Test Platform</p>
-                <div class="flex space-x-6">
-                    <a href="/features" class="text-[12px] text-gray-600 hover:text-black">Xususiyatlar</a>
-                    <a href="/pricing" class="text-[12px] text-gray-600 hover:text-black">Tariflar</a>
-                    <a href="/faq" class="text-[12px] text-gray-600 hover:text-black">FAQ</a>
-                </div>
-            </div>
-        </div>
-    </footer>
 
 </body>
 </html>

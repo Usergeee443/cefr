@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To'lov - CEFR Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif;
+        }
+
+        .btn-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-hover:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-hover:active {
+            transform: translateY(0);
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            border: none;
+        }
+    </style>
+</head>
+<body class="bg-white min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="fixed w-full top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <a href="/" class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                        <span class="text-white text-sm font-bold">C</span>
+                    </div>
+                    <span class="text-base font-semibold text-gray-900">CEFR Test</span>
+                </a>
+
+                <!-- Skip -->
+                <button onclick="skipPayment()" class="text-sm text-gray-600 hover:text-gray-900 transition-colors">
+                    Keyinroq
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex items-center justify-center px-6 pt-16">
+        <div class="w-full max-w-md mx-auto py-20">
+            <!-- Icon -->
+            <div class="mb-6 flex justify-center">
+                <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Title -->
+            <h1 class="text-2xl font-semibold text-gray-900 mb-2 text-center">
+                Testlar sotib olish
+            </h1>
+            <p class="text-sm text-gray-600 mb-8 text-center">
+                Test davom etish uchun testlar to'plamini tanlang
+            </p>
+
+            <!-- Pricing Card -->
+            <div class="bg-gray-50 border border-gray-200 rounded-2xl p-6 mb-6">
+                <!-- Test Counter -->
+                <div class="text-center mb-6">
+                    <div class="text-5xl font-semibold text-gray-900 mb-2" id="testCount">1</div>
+                    <div class="text-sm text-gray-600">test</div>
+                </div>
+
+                <!-- Slider -->
+                <div class="mb-6">
+                    <input
+                        type="range"
+                        id="testSlider"
+                        min="1"
+                        max="50"
+                        value="1"
+                        class="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer"
+                    >
+                    <div class="flex justify-between text-xs text-gray-500 mt-2">
+                        <span>1</span>
+                        <span>50</span>
+                    </div>
+                </div>
+
+                <!-- Pricing Details -->
+                <div class="space-y-3 py-4 border-t border-gray-200">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Narx (har biri)</span>
+                        <span class="font-medium text-gray-900">3,000 so'm</span>
+                    </div>
+                    <div class="flex justify-between text-sm" id="discountRow" style="display: none;">
+                        <span class="text-gray-600">Chegirma</span>
+                        <span class="font-medium text-green-600" id="discountText">-0%</span>
+                    </div>
+                    <div class="flex justify-between text-base font-semibold pt-2 border-t border-gray-200">
+                        <span class="text-gray-900">Jami</span>
+                        <span class="text-gray-900" id="totalPrice">3,000 so'm</span>
+                    </div>
+                </div>
+
+                <!-- Discount Info -->
+                <div class="mt-4 p-3 bg-blue-50 rounded-xl" id="discountInfo" style="display: none;">
+                    <p class="text-xs text-blue-800 text-center" id="discountInfoText"></p>
+                </div>
+            </div>
+
+            <!-- Payment Button -->
+            <button
+                onclick="proceedToPayment()"
+                class="w-full bg-black text-white px-6 py-3.5 rounded-full font-medium text-base btn-hover"
+            >
+                To'lovga o'tish
+            </button>
+
+            <!-- Info -->
+            <p class="text-xs text-gray-500 mt-6 text-center">
+                Ko'proq test sotib olsangiz, avtomatik chegirmalar qo'llaniladi
+            </p>
+        </div>
+    </main>
+
+    <script>
+        const testSlider = document.getElementById('testSlider');
+        const testCount = document.getElementById('testCount');
+        const totalPrice = document.getElementById('totalPrice');
+        const discountRow = document.getElementById('discountRow');
+        const discountText = document.getElementById('discountText');
+        const discountInfo = document.getElementById('discountInfo');
+        const discountInfoText = document.getElementById('discountInfoText');
+
+        const BASE_PRICE = 3000;
+
+        function calculateDiscount(count) {
+            if (count >= 20) return 15;
+            if (count >= 10) return 10;
+            if (count >= 5) return 5;
+            return 0;
+        }
+
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        function updatePrice() {
+            const count = parseInt(testSlider.value);
+            const discount = calculateDiscount(count);
+            const subtotal = count * BASE_PRICE;
+            const total = subtotal * (1 - discount / 100);
+
+            testCount.textContent = count;
+
+            if (discount > 0) {
+                discountRow.style.display = 'flex';
+                discountText.textContent = `-${discount}%`;
+                discountInfo.style.display = 'block';
+
+                // Show next discount milestone
+                if (count < 5) {
+                    discountInfoText.textContent = `5 ta test sotib olsangiz 5% chegirma olasiz!`;
+                } else if (count < 10) {
+                    discountInfoText.textContent = `10 ta test sotib olsangiz 10% chegirma olasiz!`;
+                } else if (count < 20) {
+                    discountInfoText.textContent = `20 ta test sotib olsangiz 15% chegirma olasiz!`;
+                } else {
+                    discountInfoText.textContent = `Maksimal chegirma qo'llanildi! 🎉`;
+                }
+            } else {
+                discountRow.style.display = 'none';
+                discountInfo.style.display = 'none';
+            }
+
+            totalPrice.textContent = `${formatNumber(Math.round(total))} so'm`;
+        }
+
+        testSlider.addEventListener('input', updatePrice);
+
+        function proceedToPayment() {
+            const count = parseInt(testSlider.value);
+            const discount = calculateDiscount(count);
+            const total = count * BASE_PRICE * (1 - discount / 100);
+
+            // Mock payment - store purchase info
+            sessionStorage.setItem('purchasedTests', count);
+            sessionStorage.setItem('paymentAmount', total);
+
+            // Simulate payment processing
+            alert(`To'lov muvaffaqiyatli amalga oshirildi!\n${count} ta test sotib oldingiz.\nJami: ${formatNumber(Math.round(total))} so'm`);
+
+            // Redirect to dashboard
+            window.location.href = '/dashboard';
+        }
+
+        function skipPayment() {
+            // Allow skip but with limited access
+            sessionStorage.setItem('purchasedTests', '0');
+            window.location.href = '/dashboard';
+        }
+
+        // Initialize
+        updatePrice();
+    </script>
+
+</body>
+</html>
