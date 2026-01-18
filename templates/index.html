@@ -6,7 +6,7 @@
     <title>CEFR Test Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
         * {
             -webkit-font-smoothing: antialiased;
@@ -17,95 +17,277 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif;
         }
 
-        .btn-apple {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Scroll Snap */
+        .snap-container {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            height: 100vh;
         }
 
-        .btn-apple:hover {
-            transform: scale(1.02);
+        .snap-section {
+            scroll-snap-align: start;
+            height: 100vh;
         }
 
-        .btn-apple:active {
-            transform: scale(0.98);
+        /* Header Animation */
+        .header-hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+
+        .header-visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        header {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* AI Gradient Text */
+        .ai-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 8s ease infinite;
+            background-size: 200% 200%;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .glow {
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
         }
     </style>
 </head>
-<body class="bg-white">
+<body class="bg-white overflow-hidden">
 
-    <!-- Navigation -->
-    <nav class="fixed w-full top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-200">
-        <div class="max-w-[980px] mx-auto px-6">
-            <div class="flex justify-between items-center h-11">
-                <a href="/" class="text-[17px] font-semibold">CEFR Test</a>
-                <div class="flex items-center space-x-8">
-                    <a href="/features" class="text-[12px] text-gray-600 hover:text-black">Xususiyatlar</a>
-                    <a href="/pricing" class="text-[12px] text-gray-600 hover:text-black">Tariflar</a>
-                    <a href="/faq" class="text-[12px] text-gray-600 hover:text-black">FAQ</a>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero -->
-    <main class="pt-32 pb-20">
-        <div class="max-w-[980px] mx-auto px-6 text-center">
-            <!-- Logo Icon -->
-            <div class="mb-8 flex justify-center">
-                <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-[22px] flex items-center justify-center shadow-lg">
-                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                    </svg>
-                </div>
-            </div>
-
-            <h1 class="text-[56px] md:text-[72px] font-bold tracking-tight mb-6 leading-[1.05]">
-                Ingliz tilingizni<br>tekshiring.
-            </h1>
-
-            <p class="text-[21px] text-gray-600 mb-12 max-w-[600px] mx-auto leading-relaxed">
-                CEFR imtihoniga 99% yaqin formatda test topshiring. AI yordamida professional baholash.
-            </p>
-
-            <div class="flex flex-col sm:flex-row gap-4 justify-center mb-20">
-                <a href="/pricing" class="inline-flex items-center justify-center bg-black text-white px-8 py-3 rounded-full font-medium text-[17px] hover:bg-gray-800 btn-apple">
-                    Boshlamoq
-                </a>
-                <a href="/features" class="inline-flex items-center justify-center text-black px-8 py-3 rounded-full font-medium text-[17px] hover:bg-gray-100 btn-apple">
-                    Batafsil
-                </a>
-            </div>
-
-            <!-- Stats -->
-            <div class="grid grid-cols-3 gap-12 max-w-[600px] mx-auto pt-12 border-t border-gray-200">
-                <div>
-                    <div class="text-[48px] font-semibold mb-1">99%</div>
-                    <div class="text-[14px] text-gray-600">Aniqlik</div>
-                </div>
-                <div>
-                    <div class="text-[48px] font-semibold mb-1">AI</div>
-                    <div class="text-[14px] text-gray-600">Baholash</div>
-                </div>
-                <div>
-                    <div class="text-[48px] font-semibold mb-1">24/7</div>
-                    <div class="text-[14px] text-gray-600">Mavjud</div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="py-12 border-t border-gray-200">
-        <div class="max-w-[980px] mx-auto px-6">
+    <!-- Header - Hidden initially -->
+    <header id="header" class="fixed w-full top-0 z-50 header-hidden">
+        <div class="max-w-7xl mx-auto px-6 py-4">
             <div class="flex justify-between items-center">
-                <p class="text-[12px] text-gray-600">© 2026 CEFR Test Platform</p>
-                <div class="flex space-x-6">
-                    <a href="/features" class="text-[12px] text-gray-600 hover:text-black">Xususiyatlar</a>
-                    <a href="/pricing" class="text-[12px] text-gray-600 hover:text-black">Tariflar</a>
-                    <a href="/faq" class="text-[12px] text-gray-600 hover:text-black">FAQ</a>
+                <!-- Logo -->
+                <a href="/" class="text-[17px] font-semibold">CEFR Test</a>
+
+                <!-- Right Side -->
+                <div class="flex items-center space-x-4">
+                    <button class="text-[14px] font-medium text-gray-800 hover:text-black">Menu</button>
+                    <a href="#" class="text-[14px] font-medium text-gray-800 hover:text-black">Kirish</a>
                 </div>
             </div>
         </div>
-    </footer>
+    </header>
+
+    <!-- Scroll Snap Container -->
+    <div class="snap-container" id="scrollContainer">
+
+        <!-- Section 1: Hero - Pure AI Text -->
+        <section class="snap-section flex items-center justify-center bg-white">
+            <div class="text-center px-6">
+                <div class="relative inline-block">
+                    <!-- Glow Effect -->
+                    <div class="absolute inset-0 blur-3xl opacity-30 glow">
+                        <div class="w-full h-full bg-gradient-to-r from-purple-400 via-blue-500 to-purple-600"></div>
+                    </div>
+
+                    <!-- Main AI Text -->
+                    <h1 class="relative text-[80px] md:text-[120px] lg:text-[160px] font-bold ai-gradient leading-none tracking-tight">
+                        AI
+                    </h1>
+                </div>
+
+                <p class="mt-8 text-[18px] md:text-[24px] text-gray-600 font-light max-w-2xl mx-auto">
+                    Sun'iy intellekt bilan ingliz tilingizni<br>professional darajada baholang
+                </p>
+            </div>
+        </section>
+
+        <!-- Section 2: Main Content -->
+        <section class="snap-section flex items-center justify-center bg-white">
+            <div class="max-w-4xl mx-auto px-6 text-center">
+                <h2 class="text-[56px] md:text-[72px] font-bold mb-8 leading-tight tracking-tight">
+                    CEFR darajangizni<br>
+                    <span class="text-gray-400">aniqlang.</span>
+                </h2>
+
+                <p class="text-[21px] text-gray-600 mb-12 max-w-2xl mx-auto leading-relaxed">
+                    99% aniqlikda rasmiy CEFR imtihoniga mos keluvchi test formatida o'zingizni sinab ko'ring. AI yordamida batafsil tahlil va shaxsiy tavsiyalar.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="/pricing" class="inline-flex items-center justify-center bg-black text-white px-10 py-4 rounded-full font-medium text-[17px] hover:bg-gray-900 transition">
+                        Boshlamoq
+                    </a>
+                    <a href="/features" class="inline-flex items-center justify-center border-2 border-black text-black px-10 py-4 rounded-full font-medium text-[17px] hover:bg-black hover:text-white transition">
+                        Batafsil
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Features Overview -->
+        <section class="snap-section flex items-center justify-center bg-gray-50">
+            <div class="max-w-6xl mx-auto px-6">
+                <h2 class="text-[48px] font-bold text-center mb-16">Nima uchun CEFR Test?</h2>
+
+                <div class="grid md:grid-cols-3 gap-12">
+                    <div class="text-center">
+                        <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl mx-auto mb-6 flex items-center justify-center">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-[24px] font-semibold mb-3">99% aniqlik</h3>
+                        <p class="text-[17px] text-gray-600">Rasmiy CEFR imtihoniga maksimal darajada mos format</p>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-600 rounded-3xl mx-auto mb-6 flex items-center justify-center">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-[24px] font-semibold mb-3">AI tahlil</h3>
+                        <p class="text-[17px] text-gray-600">Sun'iy intellekt yordamida chuqur va professional baholash</p>
+                    </div>
+
+                    <div class="text-center">
+                        <div class="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-600 rounded-3xl mx-auto mb-6 flex items-center justify-center">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-[24px] font-semibold mb-3">Batafsil statistika</h3>
+                        <p class="text-[17px] text-gray-600">O'z o'sishingizni kuzatib boring va natijalarni tahlil qiling</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: How It Works -->
+        <section class="snap-section flex items-center justify-center bg-white">
+            <div class="max-w-5xl mx-auto px-6">
+                <h2 class="text-[48px] font-bold text-center mb-16">Qanday ishlaydi?</h2>
+
+                <div class="space-y-12">
+                    <div class="flex items-start gap-8">
+                        <div class="flex-shrink-0 w-16 h-16 bg-black text-white rounded-2xl flex items-center justify-center text-[28px] font-bold">1</div>
+                        <div>
+                            <h3 class="text-[28px] font-semibold mb-3">Tarif tanlang</h3>
+                            <p class="text-[17px] text-gray-600">O'zingizga mos tarifni tanlang yoki sinov testini o'ting</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-8">
+                        <div class="flex-shrink-0 w-16 h-16 bg-black text-white rounded-2xl flex items-center justify-center text-[28px] font-bold">2</div>
+                        <div>
+                            <h3 class="text-[28px] font-semibold mb-3">Testni toping</h3>
+                            <p class="text-[17px] text-gray-600">Listening, Reading va Writing testlarini ketma-ket topshiring</p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start gap-8">
+                        <div class="flex-shrink-0 w-16 h-16 bg-black text-white rounded-2xl flex items-center justify-center text-[28px] font-bold">3</div>
+                        <div>
+                            <h3 class="text-[28px] font-semibold mb-3">Natija va tavsiyalar</h3>
+                            <p class="text-[17px] text-gray-600">AI sizning natijalaringizni tahlil qiladi va shaxsiy tavsiyalar beradi</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-16">
+                    <a href="/pricing" class="inline-flex items-center justify-center bg-black text-white px-10 py-4 rounded-full font-medium text-[17px] hover:bg-gray-900 transition">
+                        Boshlash
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 5: Testimonials -->
+        <section class="snap-section flex items-center justify-center bg-gray-50">
+            <div class="max-w-5xl mx-auto px-6">
+                <h2 class="text-[48px] font-bold text-center mb-16">Foydalanuvchilar fikri</h2>
+
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-white p-8 rounded-3xl">
+                        <p class="text-[17px] text-gray-700 mb-6">"CEFR Test platformasi menga rasmiy imtihonga tayyorgarlik ko'rishda juda ko'p yordam berdi. AI tahlil juda aniq va foydali!"</p>
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-gray-200 rounded-full mr-4"></div>
+                            <div>
+                                <div class="font-semibold">Aziza Rahimova</div>
+                                <div class="text-[14px] text-gray-500">B2 darajasi</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-3xl">
+                        <p class="text-[17px] text-gray-700 mb-6">"Platformaning formati rasmiy imtihonga juda yaqin. Bu menga ishonch berdi va real testda ham yaxshi natija ko'rsatdim."</p>
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-gray-200 rounded-full mr-4"></div>
+                            <div>
+                                <div class="font-semibold">Javohir Karimov</div>
+                                <div class="text-[14px] text-gray-500">C1 darajasi</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6: CTA -->
+        <section class="snap-section flex items-center justify-center bg-black text-white">
+            <div class="max-w-4xl mx-auto px-6 text-center">
+                <h2 class="text-[56px] md:text-[72px] font-bold mb-8 leading-tight">
+                    Hoziroq<br>boshlang.
+                </h2>
+
+                <p class="text-[21px] text-gray-400 mb-12">
+                    CEFR darajangizni aniqlang va ingliz tilingizni yaxshilang
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="/pricing" class="inline-flex items-center justify-center bg-white text-black px-10 py-4 rounded-full font-medium text-[17px] hover:bg-gray-100 transition">
+                        Tariflarni ko'rish
+                    </a>
+                    <a href="/faq" class="inline-flex items-center justify-center border-2 border-white text-white px-10 py-4 rounded-full font-medium text-[17px] hover:bg-white hover:text-black transition">
+                        Savol-javob
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- JavaScript for Header Show/Hide -->
+    <script>
+        const header = document.getElementById('header');
+        const scrollContainer = document.getElementById('scrollContainer');
+        let lastScrollTop = 0;
+
+        scrollContainer.addEventListener('scroll', () => {
+            const scrollTop = scrollContainer.scrollTop;
+
+            // Show header after first section (100vh)
+            if (scrollTop > window.innerHeight) {
+                header.classList.remove('header-hidden');
+                header.classList.add('header-visible');
+            } else {
+                header.classList.remove('header-visible');
+                header.classList.add('header-hidden');
+            }
+
+            lastScrollTop = scrollTop;
+        });
+    </script>
 
 </body>
 </html>

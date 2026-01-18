@@ -16,195 +16,315 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Inter', system-ui, sans-serif;
         }
-
-        .btn-apple {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .btn-apple:hover {
-            transform: scale(1.02);
-        }
-
-        .btn-apple:active {
-            transform: scale(0.98);
-        }
     </style>
 </head>
 <body class="bg-gray-50">
 
-    <!-- Close Button -->
-    <div class="fixed top-4 right-4 z-50">
-        <a href="/" class="w-9 h-9 bg-gray-200 hover:bg-gray-300 rounded-full flex items-center justify-center">
-            <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-        </a>
-    </div>
-
-    <div class="min-h-screen flex items-center justify-center px-4 py-12">
-        <div class="max-w-[440px] w-full bg-white rounded-[28px] p-8 shadow-xl">
-
-            <!-- Icon -->
-            <div class="flex justify-center mb-6">
-                <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-[18px] flex items-center justify-center">
-                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                    </svg>
+    <!-- Header -->
+    <nav class="bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex justify-between items-center h-16">
+                <a href="/" class="text-[17px] font-semibold">CEFR Test</a>
+                <div class="flex items-center space-x-4">
+                    <button class="text-[14px] font-medium text-gray-800">Menu</button>
+                    <a href="#" class="text-[14px] font-medium text-gray-800">Kirish</a>
                 </div>
             </div>
+        </div>
+    </nav>
 
-            <!-- Title -->
-            <h1 class="text-[28px] font-bold text-center mb-2">CEFR Test Plus olish</h1>
-            <p class="text-[15px] text-gray-600 text-center mb-8">Kengaytirilgan imkoniyatlar bilan davom eting</p>
+    <!-- Content -->
+    <main class="py-20">
+        <div class="max-w-[1400px] mx-auto px-6">
 
-            <!-- Pricing Table -->
-            <div class="bg-gray-50 rounded-2xl p-6 mb-6">
-                <!-- Table Header -->
-                <div class="flex items-center mb-4 pb-4 border-b border-gray-200">
-                    <div class="flex-1">
-                        <span class="text-[15px] font-medium text-gray-700">Xususiyatlar</span>
-                    </div>
-                    <div class="w-16 text-center">
-                        <span class="text-[13px] font-medium text-gray-700">Start</span>
-                    </div>
-                    <div class="w-16 text-center">
-                        <span class="text-[13px] font-semibold text-blue-600">Plus</span>
-                    </div>
-                    <div class="w-16 text-center">
-                        <span class="text-[13px] font-medium text-gray-700">Pro</span>
-                    </div>
-                </div>
-
-                <!-- Table Rows -->
-                <div class="space-y-4">
-                    <!-- Row 1 -->
-                    <div class="flex items-center">
-                        <div class="flex-1">
-                            <span class="text-[15px] text-gray-900">Asosiy testlar</span>
-                        </div>
-                        <div class="w-16 flex justify-center">
-                            <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                        </div>
-                        <div class="w-16 flex justify-center">
-                            <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                        </div>
-                        <div class="w-16 flex justify-center">
-                            <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                        </div>
-                    </div>
-
-                    <!-- Row 2 -->
-                    <div class="flex items-center">
-                        <div class="flex-1">
-                            <span class="text-[15px] text-gray-900">Ko'proq testlar</span>
-                        </div>
-                        <div class="w-16 flex justify-center">
-                            <span class="text-gray-400 text-[15px]">3</span>
-                        </div>
-                        <div class="w-16 flex justify-center">
-                            <span class="text-blue-600 text-[15px] font-semibold">12</span>
-                        </div>
-                        <div class="w-16 flex justify-center">
-                            <span class="text-gray-400 text-[15px]">27</span>
-                        </div>
-                    </div>
-
-                    <!-- Row 3 -->
-                    <div class="flex items-center">
-                        <div class="flex-1">
-                            <span class="text-[15px] text-gray-900">Statistikalar</span>
-                        </div>
-                        <div class="w-16 flex justify-center">
-                            <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                        </div>
-                        <div class="w-16 flex justify-center">
-                            <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                        </div>
-                        <div class="w-16 flex justify-center">
-                            <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                        </div>
-                    </div>
-
-                    <!-- Row 4 -->
-                    <div class="flex items-center">
-                        <div class="flex-1">
-                            <span class="text-[15px] text-gray-900">AI tavsiyalar</span>
-                        </div>
-                        <div class="w-16 flex justify-center">
-                            <span class="text-gray-300 text-[20px]">—</span>
-                        </div>
-                        <div class="w-16 flex justify-center">
-                            <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                        </div>
-                        <div class="w-16 flex justify-center">
-                            <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                        </div>
-                    </div>
-
-                    <!-- Row 5 -->
-                    <div class="flex items-center">
-                        <div class="flex-1">
-                            <span class="text-[15px] text-gray-900">Har bir javobga AI</span>
-                        </div>
-                        <div class="w-16 flex justify-center">
-                            <span class="text-gray-300 text-[20px]">—</span>
-                        </div>
-                        <div class="w-16 flex justify-center">
-                            <span class="text-gray-300 text-[20px]">—</span>
-                        </div>
-                        <div class="w-16 flex justify-center">
-                            <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                        </div>
-                    </div>
-
-                    <!-- Row 6 -->
-                    <div class="flex items-center">
-                        <div class="flex-1">
-                            <span class="text-[15px] text-gray-900">Qo'shimcha test narxi</span>
-                        </div>
-                        <div class="w-16 flex justify-center">
-                            <span class="text-gray-600 text-[13px]">2,500</span>
-                        </div>
-                        <div class="w-16 flex justify-center">
-                            <span class="text-blue-600 text-[13px] font-semibold">2,000</span>
-                        </div>
-                        <div class="w-16 flex justify-center">
-                            <span class="text-gray-600 text-[13px]">1,500</span>
-                        </div>
-                    </div>
-                </div>
+            <!-- Header -->
+            <div class="text-center mb-16">
+                <h1 class="text-[56px] font-bold mb-4">Tariflar</h1>
+                <p class="text-[21px] text-gray-600">O'zingizga mos rejani tanlang</p>
             </div>
 
-            <!-- Upgrade Button -->
-            <button class="w-full bg-black text-white py-4 rounded-full font-semibold text-[17px] hover:bg-gray-900 btn-apple mb-3">
-                19,990 so'mga yangilash
-            </button>
+            <!-- Pricing Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
 
-            <!-- Fine Print -->
-            <p class="text-[13px] text-gray-600 text-center">
-                Har oy avtomatik yangilanadi. Istalgan vaqtda bekor qilish mumkin.
-            </p>
+                <!-- Trial Test -->
+                <div class="bg-white rounded-3xl p-8 border-2 border-gray-200 hover:border-gray-300 transition">
+                    <div class="text-center mb-6">
+                        <div class="inline-block px-4 py-1 bg-gray-100 rounded-full text-[12px] font-medium text-gray-700 mb-4">
+                            SINOV
+                        </div>
+                        <h3 class="text-[24px] font-bold mb-2">Sinov test</h3>
+                        <div class="text-[48px] font-bold mb-1">2,990</div>
+                        <div class="text-[14px] text-gray-600">so'm</div>
+                    </div>
+                    <ul class="space-y-3 mb-8 text-[15px]">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>1 ta test</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Asosiy statistika</span>
+                        </li>
+                        <li class="flex items-start text-gray-400">
+                            <svg class="w-5 h-5 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>AI tavsiya yo'q</span>
+                        </li>
+                    </ul>
+                    <button class="w-full bg-black text-white py-3 rounded-full font-medium hover:bg-gray-900 transition">
+                        Sinab ko'rish
+                    </button>
+                </div>
+
+                <!-- Start -->
+                <div class="bg-white rounded-3xl p-8 border-2 border-gray-200 hover:border-gray-300 transition">
+                    <div class="text-center mb-6">
+                        <h3 class="text-[24px] font-bold mb-2">Start</h3>
+                        <div class="text-[48px] font-bold mb-1">7,000</div>
+                        <div class="text-[14px] text-gray-600">so'm</div>
+                    </div>
+                    <ul class="space-y-3 mb-8 text-[15px]">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>3 ta test</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Statistikalar</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>+2,500 so'm/test</span>
+                        </li>
+                    </ul>
+                    <button class="w-full bg-black text-white py-3 rounded-full font-medium hover:bg-gray-900 transition">
+                        Tanlash
+                    </button>
+                </div>
+
+                <!-- Basic -->
+                <div class="bg-white rounded-3xl p-8 border-2 border-gray-200 hover:border-gray-300 transition">
+                    <div class="text-center mb-6">
+                        <h3 class="text-[24px] font-bold mb-2">Basic</h3>
+                        <div class="text-[48px] font-bold mb-1">12,000</div>
+                        <div class="text-[14px] text-gray-600">so'm</div>
+                    </div>
+                    <ul class="space-y-3 mb-8 text-[15px]">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>6 ta test</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Statistikalar</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>AI asosiy tavsiya</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>+2,300 so'm/test</span>
+                        </li>
+                    </ul>
+                    <button class="w-full bg-black text-white py-3 rounded-full font-medium hover:bg-gray-900 transition">
+                        Tanlash
+                    </button>
+                </div>
+
+                <!-- Standard -->
+                <div class="bg-white rounded-3xl p-8 border-2 border-gray-200 hover:border-gray-300 transition">
+                    <div class="text-center mb-6">
+                        <h3 class="text-[24px] font-bold mb-2">Standard</h3>
+                        <div class="text-[48px] font-bold mb-1">15,990</div>
+                        <div class="text-[14px] text-gray-600">so'm</div>
+                    </div>
+                    <ul class="space-y-3 mb-8 text-[15px]">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>9 ta test</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Statistikalar</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>AI tavsiyalar</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>+2,100 so'm/test</span>
+                        </li>
+                    </ul>
+                    <button class="w-full bg-black text-white py-3 rounded-full font-medium hover:bg-gray-900 transition">
+                        Tanlash
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Second Row -->
+            <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+
+                <!-- Plus (Popular) -->
+                <div class="bg-gradient-to-br from-blue-600 to-purple-700 text-white rounded-3xl p-8 relative transform md:scale-105 shadow-2xl">
+                    <div class="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                        <span class="bg-yellow-400 text-black px-4 py-1 rounded-full text-[12px] font-bold">OMMABOP</span>
+                    </div>
+                    <div class="text-center mb-6">
+                        <h3 class="text-[24px] font-bold mb-2">Plus</h3>
+                        <div class="text-[48px] font-bold mb-1">19,990</div>
+                        <div class="text-[14px] text-white/80">so'm</div>
+                    </div>
+                    <ul class="space-y-3 mb-8 text-[15px]">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="font-medium">12 ta test</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="font-medium">Statistikalar</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="font-medium">AI kengaytirilgan</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="font-medium">+2,000 so'm/test</span>
+                        </li>
+                    </ul>
+                    <button class="w-full bg-white text-blue-600 py-3 rounded-full font-bold hover:bg-gray-100 transition">
+                        Tanlash
+                    </button>
+                </div>
+
+                <!-- Premium -->
+                <div class="bg-white rounded-3xl p-8 border-2 border-gray-200 hover:border-gray-300 transition">
+                    <div class="text-center mb-6">
+                        <h3 class="text-[24px] font-bold mb-2">Premium</h3>
+                        <div class="text-[48px] font-bold mb-1">29,990</div>
+                        <div class="text-[14px] text-gray-600">so'm</div>
+                    </div>
+                    <ul class="space-y-3 mb-8 text-[15px]">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>18 ta test</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Statistikalar</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>AI kengaytirilgan</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>+1,800 so'm/test</span>
+                        </li>
+                    </ul>
+                    <button class="w-full bg-black text-white py-3 rounded-full font-medium hover:bg-gray-900 transition">
+                        Tanlash
+                    </button>
+                </div>
+
+                <!-- Pro -->
+                <div class="bg-white rounded-3xl p-8 border-2 border-gray-200 hover:border-gray-300 transition">
+                    <div class="text-center mb-6">
+                        <h3 class="text-[24px] font-bold mb-2">Pro</h3>
+                        <div class="text-[48px] font-bold mb-1">39,990</div>
+                        <div class="text-[14px] text-gray-600">so'm</div>
+                    </div>
+                    <ul class="space-y-3 mb-8 text-[15px]">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="font-medium">27 ta test</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="font-medium">Statistikalar</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="font-medium">AI har javobga</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="font-medium">+1,500 so'm/test</span>
+                        </li>
+                    </ul>
+                    <button class="w-full bg-black text-white py-3 rounded-full font-medium hover:bg-gray-900 transition">
+                        Tanlash
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Info -->
+            <div class="mt-16 text-center">
+                <p class="text-[15px] text-gray-600 mb-8">
+                    Barcha tariflar bir martalik to'lov. Obuna yo'q, bekor qilish yo'q.
+                </p>
+                <a href="/" class="inline-flex items-center justify-center text-[15px] text-gray-800 hover:text-black font-medium">
+                    ← Orqaga
+                </a>
+            </div>
 
         </div>
-    </div>
+    </main>
 
 </body>
 </html>
