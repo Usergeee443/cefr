@@ -17,6 +17,21 @@ async def home(request: Request):
     """Landing page"""
     return templates.TemplateResponse("index.html", {"request": request})
 
+@app.get("/pricing", response_class=HTMLResponse)
+async def pricing(request: Request):
+    """Pricing page"""
+    return templates.TemplateResponse("pricing.html", {"request": request})
+
+@app.get("/features", response_class=HTMLResponse)
+async def features(request: Request):
+    """Features page"""
+    return templates.TemplateResponse("features.html", {"request": request})
+
+@app.get("/faq", response_class=HTMLResponse)
+async def faq(request: Request):
+    """FAQ page"""
+    return templates.TemplateResponse("faq.html", {"request": request})
+
 @app.get("/health")
 async def health_check():
     """Health check endpoint"""
