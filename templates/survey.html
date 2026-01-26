@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>So'rovnoma - CEFR Level</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cefr-dark': '#0a1628',
+                        'cefr-cyan': '#2dd4bf',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #0a1628; }
+        .btn-glow { box-shadow: 0 0 20px rgba(45, 212, 191, 0.3); transition: all 0.3s ease; }
+        .btn-glow:hover { box-shadow: 0 0 30px rgba(45, 212, 191, 0.5); }
+        .rating-btn { transition: all 0.2s ease; }
+        .rating-btn:hover { background-color: rgba(45, 212, 191, 0.2); border-color: rgba(45, 212, 191, 0.5); }
+        .rating-btn.selected { background-color: rgba(45, 212, 191, 0.3); border-color: #2dd4bf; }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <nav class="fixed w-full top-0 z-50 bg-cefr-dark/90 backdrop-blur-xl border-b border-white/10">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-cefr-cyan rounded-lg flex items-center justify-center">
+                        <span class="text-cefr-dark font-bold text-sm">CL</span>
+                    </div>
+                    <span class="text-white font-semibold text-lg">CEFR Level</span>
+                </div>
+                <a href="/survey/skip" class="text-white/60 hover:text-white text-sm">
+                    O'tkazib yuborish →
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-24 pb-20">
+        <div class="max-w-2xl mx-auto px-6">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-cefr-cyan/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-cefr-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h1 class="text-3xl font-bold text-white mb-2">Test yakunlandi!</h1>
+                <p class="text-white/60">Natijangizni ko'rish uchun qisqa so'rovnomani to'ldiring</p>
+            </div>
+
+            <form id="surveyForm" class="space-y-8">
+                <!-- Overall Experience -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
+                    <h3 class="text-white font-semibold mb-4">Umumiy tajriba qanday bo'ldi?</h3>
+                    <div class="flex justify-between gap-2">
+                        {% for i in range(1, 6) %}
+                        <label class="rating-btn flex-1 bg-white/5 border border-white/10 rounded-xl py-4 text-center cursor-pointer">
+                            <input type="radio" name="overall_experience" value="{{ i }}" class="hidden" required>
+                            <span class="text-2xl">{{ ['😞', '😕', '😐', '🙂', '😊'][i-1] }}</span>
+                            <div class="text-white/60 text-xs mt-1">{{ i }}</div>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Difficulty -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
+                    <h3 class="text-white font-semibold mb-4">Test qanchalik qiyin edi?</h3>
+                    <div class="flex justify-between gap-2">
+                        <label class="rating-btn flex-1 bg-white/5 border border-white/10 rounded-xl py-3 text-center cursor-pointer">
+                            <input type="radio" name="difficulty_rating" value="1" class="hidden" required>
+                            <span class="text-white text-sm">Juda oson</span>
+                        </label>
+                        <label class="rating-btn flex-1 bg-white/5 border border-white/10 rounded-xl py-3 text-center cursor-pointer">
+                            <input type="radio" name="difficulty_rating" value="2" class="hidden">
+                            <span class="text-white text-sm">Oson</span>
+                        </label>
+                        <label class="rating-btn flex-1 bg-white/5 border border-white/10 rounded-xl py-3 text-center cursor-pointer">
+                            <input type="radio" name="difficulty_rating" value="3" class="hidden">
+                            <span class="text-white text-sm">O'rtacha</span>
+                        </label>
+                        <label class="rating-btn flex-1 bg-white/5 border border-white/10 rounded-xl py-3 text-center cursor-pointer">
+                            <input type="radio" name="difficulty_rating" value="4" class="hidden">
+                            <span class="text-white text-sm">Qiyin</span>
+                        </label>
+                        <label class="rating-btn flex-1 bg-white/5 border border-white/10 rounded-xl py-3 text-center cursor-pointer">
+                            <input type="radio" name="difficulty_rating" value="5" class="hidden">
+                            <span class="text-white text-sm">Juda qiyin</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Would Recommend -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
+                    <h3 class="text-white font-semibold mb-4">Platformani boshqalarga tavsiya qilasizmi?</h3>
+                    <div class="flex gap-4">
+                        <label class="rating-btn flex-1 bg-white/5 border border-white/10 rounded-xl py-4 text-center cursor-pointer">
+                            <input type="radio" name="would_recommend" value="yes" class="hidden" required>
+                            <span class="text-white">Ha, albatta</span>
+                        </label>
+                        <label class="rating-btn flex-1 bg-white/5 border border-white/10 rounded-xl py-4 text-center cursor-pointer">
+                            <input type="radio" name="would_recommend" value="no" class="hidden">
+                            <span class="text-white">Yo'q</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Age Group -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
+                    <h3 class="text-white font-semibold mb-4">Yosh guruhingiz</h3>
+                    <select name="age_group" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white">
+                        <option value="">Tanlang...</option>
+                        <option value="under-18">18 yoshgacha</option>
+                        <option value="18-24">18-24 yosh</option>
+                        <option value="25-34">25-34 yosh</option>
+                        <option value="35-44">35-44 yosh</option>
+                        <option value="45+">45 yoshdan katta</option>
+                    </select>
+                </div>
+
+                <!-- English Purpose -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
+                    <h3 class="text-white font-semibold mb-4">Ingliz tilini nima maqsadda o'rganyapsiz?</h3>
+                    <select name="english_purpose" class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white">
+                        <option value="">Tanlang...</option>
+                        <option value="study">Ta'lim olish uchun</option>
+                        <option value="work">Ish uchun</option>
+                        <option value="travel">Sayohat uchun</option>
+                        <option value="personal">Shaxsiy rivojlanish</option>
+                        <option value="immigration">Immigratsiya uchun</option>
+                        <option value="other">Boshqa</option>
+                    </select>
+                </div>
+
+                <!-- Feedback -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
+                    <h3 class="text-white font-semibold mb-4">Fikr-mulohazangiz (ixtiyoriy)</h3>
+                    <textarea
+                        name="feedback"
+                        rows="3"
+                        class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white placeholder-white/30 resize-none"
+                        placeholder="Platforma haqida fikringiz..."
+                    ></textarea>
+                </div>
+
+                <!-- Improvement Suggestions -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
+                    <h3 class="text-white font-semibold mb-4">Nimani yaxshilashimiz kerak? (ixtiyoriy)</h3>
+                    <textarea
+                        name="improvement_suggestions"
+                        rows="3"
+                        class="w-full bg-white/5 border border-white/10 rounded-xl p-4 text-white placeholder-white/30 resize-none"
+                        placeholder="Takliflaringiz..."
+                    ></textarea>
+                </div>
+
+                <!-- Submit -->
+                <div class="flex gap-4">
+                    <a href="/survey/skip" class="flex-1 py-4 border border-white/20 text-white rounded-full font-semibold text-center hover:bg-white/5">
+                        O'tkazib yuborish
+                    </a>
+                    <button type="submit" class="flex-1 py-4 bg-cefr-cyan text-cefr-dark rounded-full font-semibold btn-glow">
+                        Natijani ko'rish
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        // Rating selection
+        document.querySelectorAll('.rating-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const parent = this.closest('.bg-white\\/5');
+                parent.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+
+        // Form submission
+        document.getElementById('surveyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+
+            try {
+                const response = await fetch('/survey/submit', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    window.location.href = data.redirect;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                window.location.href = '/results';
+            }
+        });
+    </script>
+</body>
+</html>

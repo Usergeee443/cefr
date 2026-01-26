@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Writing Test - CEFR Level</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cefr-dark': '#0a1628',
+                        'cefr-cyan': '#2dd4bf',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #0a1628; }
+        .btn-glow { box-shadow: 0 0 20px rgba(45, 212, 191, 0.3); transition: all 0.3s ease; }
+        .btn-glow:hover { box-shadow: 0 0 30px rgba(45, 212, 191, 0.5); }
+        textarea:focus { outline: none; border-color: #2dd4bf; }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 right-0 h-1 bg-white/10 z-50">
+        <div id="progress" class="h-full bg-cefr-cyan transition-all duration-300" style="width: 100%"></div>
+    </div>
+
+    <!-- Header -->
+    <nav class="fixed w-full top-1 z-40 bg-cefr-dark/90 backdrop-blur-xl border-b border-white/10">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-4">
+                    <div class="w-10 h-10 bg-cefr-cyan/20 rounded-full flex items-center justify-center">
+                        <svg class="w-5 h-5 text-cefr-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-white font-semibold">Writing Test</h1>
+                        <p class="text-white/50 text-sm">Bo'lim 3/3 (So'nggi)</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <div class="text-white font-semibold">So'z soni: <span id="wordCount">0</span></div>
+                    <div class="text-white/50 text-sm">Qolgan vaqt: <span id="timer">30:00</span></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-24 pb-20">
+        <div class="max-w-4xl mx-auto px-6">
+            <form id="writingForm">
+                <!-- Prompt -->
+                <div class="bg-white/5 border border-white/10 rounded-2xl p-6 mb-6">
+                    <h3 class="text-cefr-cyan text-sm font-semibold mb-3">TOPSHIRIQ</h3>
+                    <p class="text-white leading-relaxed text-lg">{{ prompt.prompt_text }}</p>
+                    <div class="mt-4 flex items-center space-x-4 text-white/50 text-sm">
+                        <span>Minimal so'z: {{ prompt.min_words }}</span>
+                        <span>•</span>
+                        <span>Maksimal so'z: {{ prompt.max_words }}</span>
+                    </div>
+                </div>
+
+                <input type="hidden" name="prompt_text" value="{{ prompt.prompt_text }}">
+
+                <!-- Writing Area -->
+                <div class="mb-6">
+                    <textarea
+                        name="writing_text"
+                        id="writingText"
+                        rows="15"
+                        class="w-full bg-white/5 border border-white/10 rounded-2xl p-6 text-white placeholder-white/30 resize-none transition"
+                        placeholder="Javobingizni bu yerga yozing..."
+                    ></textarea>
+                </div>
+
+                <!-- Word Count Progress -->
+                <div class="mb-8">
+                    <div class="flex justify-between text-sm text-white/60 mb-2">
+                        <span>So'z soni: <span id="wordCountDisplay">0</span> / {{ prompt.min_words }}</span>
+                        <span id="wordStatus" class="text-yellow-500">Kam yozilgan</span>
+                    </div>
+                    <div class="h-2 bg-white/10 rounded-full overflow-hidden">
+                        <div id="wordProgress" class="h-full bg-yellow-500 transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Tips -->
+                <div class="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4 mb-8">
+                    <h4 class="text-blue-400 font-semibold mb-2">Maslahatlar:</h4>
+                    <ul class="text-blue-400/80 text-sm space-y-1">
+                        <li>• Fikrlaringizni aniq va izchil yozing</li>
+                        <li>• Grammatikaga e'tibor bering</li>
+                        <li>• Turli lug'at boyligidan foydalaning</li>
+                        <li>• Kirish, asosiy qism va xulosa qismlari bo'lsin</li>
+                    </ul>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center">
+                    <button type="submit" id="submitBtn" class="px-12 py-4 bg-cefr-cyan text-cefr-dark rounded-full font-semibold text-lg btn-glow disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                        <span class="flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Testni yakunlash
+                        </span>
+                    </button>
+                    <p class="text-white/40 text-sm mt-4">AI yordamida baholanadi</p>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Loading Modal -->
+    <div id="loadingModal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden">
+        <div class="text-center">
+            <div class="w-16 h-16 border-4 border-cefr-cyan/30 border-t-cefr-cyan rounded-full animate-spin mx-auto mb-4"></div>
+            <p class="text-white font-semibold">AI yozma ishingizni baholmoqda...</p>
+            <p class="text-white/60 text-sm mt-2">Bu bir necha soniya olishi mumkin</p>
+        </div>
+    </div>
+
+    <script>
+        const minWords = {{ prompt.min_words }};
+        const maxWords = {{ prompt.max_words }};
+        const textarea = document.getElementById('writingText');
+        const wordCountEl = document.getElementById('wordCount');
+        const wordCountDisplayEl = document.getElementById('wordCountDisplay');
+        const wordProgressEl = document.getElementById('wordProgress');
+        const wordStatusEl = document.getElementById('wordStatus');
+        const submitBtn = document.getElementById('submitBtn');
+
+        function countWords(text) {
+            return text.trim().split(/\s+/).filter(word => word.length > 0).length;
+        }
+
+        function updateWordCount() {
+            const count = countWords(textarea.value);
+            wordCountEl.textContent = count;
+            wordCountDisplayEl.textContent = count;
+
+            const progress = Math.min((count / minWords) * 100, 100);
+            wordProgressEl.style.width = `${progress}%`;
+
+            if (count < minWords) {
+                wordStatusEl.textContent = 'Kam yozilgan';
+                wordStatusEl.className = 'text-yellow-500';
+                wordProgressEl.className = 'h-full bg-yellow-500 transition-all duration-300';
+                submitBtn.disabled = true;
+            } else if (count <= maxWords) {
+                wordStatusEl.textContent = 'Yaxshi!';
+                wordStatusEl.className = 'text-green-500';
+                wordProgressEl.className = 'h-full bg-green-500 transition-all duration-300';
+                submitBtn.disabled = false;
+            } else {
+                wordStatusEl.textContent = 'Ko\'p yozilgan';
+                wordStatusEl.className = 'text-red-500';
+                wordProgressEl.className = 'h-full bg-red-500 transition-all duration-300';
+                submitBtn.disabled = false; // Still allow submission
+            }
+        }
+
+        textarea.addEventListener('input', updateWordCount);
+
+        // Form submission
+        document.getElementById('writingForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const count = countWords(textarea.value);
+            if (count < 10) {
+                alert('Iltimos, kamida 10 ta so\'z yozing.');
+                return;
+            }
+
+            document.getElementById('loadingModal').classList.remove('hidden');
+
+            const formData = new FormData(e.target);
+
+            try {
+                const response = await fetch('/test/writing/submit', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    window.location.href = data.next;
+                } else {
+                    alert('Xatolik: ' + (data.error || 'Noma\'lum xatolik'));
+                    document.getElementById('loadingModal').classList.add('hidden');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                window.location.href = '/survey';
+            }
+        });
+
+        // Timer
+        let timeLeft = 30 * 60; // 30 minutes
+        const timerEl = document.getElementById('timer');
+
+        const timerInterval = setInterval(() => {
+            timeLeft--;
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                document.getElementById('writingForm').dispatchEvent(new Event('submit'));
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

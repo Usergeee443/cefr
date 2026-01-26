@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading Test - CEFR Level</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cefr-dark': '#0a1628',
+                        'cefr-cyan': '#2dd4bf',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #0a1628; }
+        .btn-glow { box-shadow: 0 0 20px rgba(45, 212, 191, 0.3); transition: all 0.3s ease; }
+        .btn-glow:hover { box-shadow: 0 0 30px rgba(45, 212, 191, 0.5); }
+        .option-btn { transition: all 0.2s ease; }
+        .option-btn:hover { background-color: rgba(45, 212, 191, 0.1); border-color: rgba(45, 212, 191, 0.5); }
+        .option-btn.selected { background-color: rgba(45, 212, 191, 0.2); border-color: #2dd4bf; }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 right-0 h-1 bg-white/10 z-50">
+        <div id="progress" class="h-full bg-cefr-cyan transition-all duration-300" style="width: 33%"></div>
+    </div>
+
+    <!-- Header -->
+    <nav class="fixed w-full top-1 z-40 bg-cefr-dark/90 backdrop-blur-xl border-b border-white/10">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-4">
+                    <div class="w-10 h-10 bg-cefr-cyan/20 rounded-full flex items-center justify-center">
+                        <svg class="w-5 h-5 text-cefr-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-white font-semibold">Reading Test</h1>
+                        <p class="text-white/50 text-sm">Bo'lim 1/3</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <div id="questionCounter" class="text-white font-semibold">Savol 1 / {{ questions|length if questions else 0 }}</div>
+                    <div class="text-white/50 text-sm">Qolgan vaqt: <span id="timer">15:00</span></div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-24 pb-20">
+        <div class="max-w-4xl mx-auto px-6">
+            <form id="readingForm">
+                {% if questions %}
+                    {% for q in questions %}
+                    <div class="question-card {% if not loop.first %}hidden{% endif %}" data-question="{{ loop.index }}">
+                        <!-- Passage -->
+                        <div class="bg-white/5 border border-white/10 rounded-2xl p-6 mb-6">
+                            <h3 class="text-cefr-cyan text-sm font-semibold mb-3">MATN</h3>
+                            <p class="text-white/80 leading-relaxed">{{ q.passage }}</p>
+                        </div>
+
+                        <!-- Question -->
+                        <div class="mb-6">
+                            <h2 class="text-xl text-white font-semibold mb-4">{{ q.question }}</h2>
+
+                            <!-- Options -->
+                            <div class="space-y-3">
+                                <label class="option-btn block bg-white/5 border border-white/10 rounded-xl p-4 cursor-pointer">
+                                    <input type="radio" name="q_{{ q.id }}" value="A" class="hidden">
+                                    <div class="flex items-center">
+                                        <span class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center text-white font-semibold mr-4">A</span>
+                                        <span class="text-white">{{ q.option_a }}</span>
+                                    </div>
+                                </label>
+                                <label class="option-btn block bg-white/5 border border-white/10 rounded-xl p-4 cursor-pointer">
+                                    <input type="radio" name="q_{{ q.id }}" value="B" class="hidden">
+                                    <div class="flex items-center">
+                                        <span class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center text-white font-semibold mr-4">B</span>
+                                        <span class="text-white">{{ q.option_b }}</span>
+                                    </div>
+                                </label>
+                                <label class="option-btn block bg-white/5 border border-white/10 rounded-xl p-4 cursor-pointer">
+                                    <input type="radio" name="q_{{ q.id }}" value="C" class="hidden">
+                                    <div class="flex items-center">
+                                        <span class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center text-white font-semibold mr-4">C</span>
+                                        <span class="text-white">{{ q.option_c }}</span>
+                                    </div>
+                                </label>
+                                <label class="option-btn block bg-white/5 border border-white/10 rounded-xl p-4 cursor-pointer">
+                                    <input type="radio" name="q_{{ q.id }}" value="D" class="hidden">
+                                    <div class="flex items-center">
+                                        <span class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center text-white font-semibold mr-4">D</span>
+                                        <span class="text-white">{{ q.option_d }}</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-20">
+                        <div class="w-20 h-20 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <svg class="w-10 h-10 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            </svg>
+                        </div>
+                        <h2 class="text-2xl font-semibold text-white mb-4">Savollar topilmadi</h2>
+                        <p class="text-white/60 mb-8">Admin panel orqali savollar qo'shilishi kerak.</p>
+                        <a href="/test/listening" class="inline-flex items-center justify-center bg-cefr-cyan text-cefr-dark px-8 py-3 rounded-full font-semibold btn-glow">
+                            Listening testga o'tish
+                        </a>
+                    </div>
+                {% endif %}
+            </form>
+
+            {% if questions %}
+            <!-- Navigation Buttons -->
+            <div class="flex justify-between items-center mt-8">
+                <button id="prevBtn" class="px-6 py-3 border border-white/20 text-white rounded-full font-semibold hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    Oldingi
+                </button>
+                <button id="nextBtn" class="px-8 py-3 bg-cefr-cyan text-cefr-dark rounded-full font-semibold btn-glow">
+                    Keyingi
+                </button>
+                <button id="submitBtn" class="hidden px-8 py-3 bg-green-500 text-white rounded-full font-semibold hover:bg-green-600">
+                    Tugatish
+                </button>
+            </div>
+            {% endif %}
+        </div>
+    </main>
+
+    <!-- Loading Modal -->
+    <div id="loadingModal" class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden">
+        <div class="text-center">
+            <div class="w-16 h-16 border-4 border-cefr-cyan/30 border-t-cefr-cyan rounded-full animate-spin mx-auto mb-4"></div>
+            <p class="text-white font-semibold">Javoblar tekshirilmoqda...</p>
+        </div>
+    </div>
+
+    <script>
+        const totalQuestions = {{ questions|length if questions else 0 }};
+        let currentQuestion = 1;
+
+        // Option selection
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const parent = this.closest('.question-card');
+                parent.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+
+        // Navigation
+        function updateNavigation() {
+            document.getElementById('questionCounter').textContent = `Savol ${currentQuestion} / ${totalQuestions}`;
+            document.getElementById('prevBtn').disabled = currentQuestion === 1;
+
+            if (currentQuestion === totalQuestions) {
+                document.getElementById('nextBtn').classList.add('hidden');
+                document.getElementById('submitBtn').classList.remove('hidden');
+            } else {
+                document.getElementById('nextBtn').classList.remove('hidden');
+                document.getElementById('submitBtn').classList.add('hidden');
+            }
+
+            // Show/hide questions
+            document.querySelectorAll('.question-card').forEach((card, idx) => {
+                if (idx + 1 === currentQuestion) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+
+        if (totalQuestions > 0) {
+            document.getElementById('nextBtn').addEventListener('click', () => {
+                if (currentQuestion < totalQuestions) {
+                    currentQuestion++;
+                    updateNavigation();
+                }
+            });
+
+            document.getElementById('prevBtn').addEventListener('click', () => {
+                if (currentQuestion > 1) {
+                    currentQuestion--;
+                    updateNavigation();
+                }
+            });
+
+            document.getElementById('submitBtn').addEventListener('click', async () => {
+                document.getElementById('loadingModal').classList.remove('hidden');
+
+                const formData = new FormData(document.getElementById('readingForm'));
+
+                try {
+                    const response = await fetch('/test/reading/submit', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        window.location.href = data.next;
+                    } else {
+                        alert('Xatolik yuz berdi: ' + data.error);
+                        document.getElementById('loadingModal').classList.add('hidden');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    window.location.href = '/test/listening';
+                }
+            });
+        }
+
+        // Timer
+        let timeLeft = 15 * 60; // 15 minutes
+        const timerEl = document.getElementById('timer');
+
+        const timerInterval = setInterval(() => {
+            timeLeft--;
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                document.getElementById('submitBtn').click();
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

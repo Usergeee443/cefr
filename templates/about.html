@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biz haqimizda - CEFR Level</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cefr-dark': '#0a1628',
+                        'cefr-cyan': '#2dd4bf',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #0a1628; }
+        .btn-glow { box-shadow: 0 0 20px rgba(45, 212, 191, 0.3); transition: all 0.3s ease; }
+        .btn-glow:hover { box-shadow: 0 0 30px rgba(45, 212, 191, 0.5); transform: translateY(-2px); }
+        .gradient-text { background: linear-gradient(135deg, #2dd4bf 0%, #5eead4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="fixed w-full top-0 z-50 bg-cefr-dark/90 backdrop-blur-xl border-b border-white/10">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex justify-between items-center h-16">
+                <a href="/" class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-cefr-cyan rounded-lg flex items-center justify-center">
+                        <span class="text-cefr-dark font-bold text-sm">CL</span>
+                    </div>
+                    <span class="text-white font-semibold text-lg">CEFR Level</span>
+                    <span class="bg-cefr-cyan/20 text-cefr-cyan text-xs px-2 py-0.5 rounded-full">Beta</span>
+                </a>
+                <a href="/about" class="hidden md:block text-white transition">Biz haqimizda</a>
+                <a href="/start" class="bg-cefr-cyan text-cefr-dark px-6 py-2 rounded-full font-semibold btn-glow">Boshlash</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-20">
+        <div class="max-w-4xl mx-auto px-6">
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-8 text-center">
+                <span class="gradient-text">CEFR Level</span> haqida
+            </h1>
+
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-8 mb-8">
+                <h2 class="text-2xl font-semibold text-white mb-4">Loyiha haqida</h2>
+                <p class="text-white/70 leading-relaxed mb-4">
+                    CEFR Level - bu ingliz tili darajangizni CEFR (Common European Framework of Reference) standartiga mos ravishda aniqlash imkonini beruvchi mock test platformasi.
+                </p>
+                <p class="text-white/70 leading-relaxed">
+                    Platformamiz Reading, Listening va Writing bo'limlari orqali sizning til ko'nikmalaringizni har tomonlama baholaydi va 99% aniqlikda CEFR darajangizni (A1 dan C2 gacha) aniqlaydi.
+                </p>
+            </div>
+
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-8 mb-8">
+                <h2 class="text-2xl font-semibold text-white mb-4">Bizning maqsadimiz</h2>
+                <ul class="space-y-4">
+                    <li class="flex items-start">
+                        <div class="w-6 h-6 bg-cefr-cyan/20 rounded-full flex items-center justify-center mr-3 mt-1">
+                            <svg class="w-3 h-3 text-cefr-cyan" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <span class="text-white/70">Bepul va qulay test platformasini taqdim etish</span>
+                    </li>
+                    <li class="flex items-start">
+                        <div class="w-6 h-6 bg-cefr-cyan/20 rounded-full flex items-center justify-center mr-3 mt-1">
+                            <svg class="w-3 h-3 text-cefr-cyan" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <span class="text-white/70">AI yordamida aniq va tezkor baholash</span>
+                    </li>
+                    <li class="flex items-start">
+                        <div class="w-6 h-6 bg-cefr-cyan/20 rounded-full flex items-center justify-center mr-3 mt-1">
+                            <svg class="w-3 h-3 text-cefr-cyan" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <span class="text-white/70">O'zbekistonlik talabalar uchun CEFR imtihoniga tayyorgarlikni osonlashtirish</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-8 mb-8">
+                <h2 class="text-2xl font-semibold text-white mb-4">CEFR darajalari</h2>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-white/5 rounded-xl p-4">
+                        <span class="text-cefr-cyan font-semibold">A1 - Boshlang'ich</span>
+                        <p class="text-white/60 text-sm mt-1">Kundalik oddiy iboralarni tushuna oladi</p>
+                    </div>
+                    <div class="bg-white/5 rounded-xl p-4">
+                        <span class="text-cefr-cyan font-semibold">A2 - Elementar</span>
+                        <p class="text-white/60 text-sm mt-1">Tez-tez ishlatiladigan iboralarni tushunadi</p>
+                    </div>
+                    <div class="bg-white/5 rounded-xl p-4">
+                        <span class="text-cefr-cyan font-semibold">B1 - O'rta</span>
+                        <p class="text-white/60 text-sm mt-1">Asosiy fikrlarni tushunadi va ifodalay oladi</p>
+                    </div>
+                    <div class="bg-white/5 rounded-xl p-4">
+                        <span class="text-cefr-cyan font-semibold">B2 - O'rta yuqori</span>
+                        <p class="text-white/60 text-sm mt-1">Murakkab matnlarni tushunadi</p>
+                    </div>
+                    <div class="bg-white/5 rounded-xl p-4">
+                        <span class="text-cefr-cyan font-semibold">C1 - Yuqori</span>
+                        <p class="text-white/60 text-sm mt-1">Murakkab va uzoq matnlarni tushunadi</p>
+                    </div>
+                    <div class="bg-white/5 rounded-xl p-4">
+                        <span class="text-cefr-cyan font-semibold">C2 - Professional</span>
+                        <p class="text-white/60 text-sm mt-1">Deyarli barcha narsani osongina tushunadi</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <a href="/start" class="inline-flex items-center justify-center bg-cefr-cyan text-cefr-dark px-8 py-4 rounded-full font-semibold text-lg btn-glow">
+                    Testni boshlash
+                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="py-12 border-t border-white/10">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <p class="text-white/40 text-sm">© 2026 CEFR Level Platform. Beta versiya.</p>
+        </div>
+    </footer>
+</body>
+</html>

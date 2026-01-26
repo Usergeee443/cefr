@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testni boshlash - CEFR Level</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cefr-dark': '#0a1628',
+                        'cefr-cyan': '#2dd4bf',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #0a1628; }
+        .btn-glow { box-shadow: 0 0 20px rgba(45, 212, 191, 0.3); transition: all 0.3s ease; }
+        .btn-glow:hover { box-shadow: 0 0 30px rgba(45, 212, 191, 0.5); transform: translateY(-2px); }
+        .gradient-text { background: linear-gradient(135deg, #2dd4bf 0%, #5eead4 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .step-card { transition: all 0.3s ease; }
+        .step-card:hover { border-color: rgba(45, 212, 191, 0.5); }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Navigation -->
+    <nav class="fixed w-full top-0 z-50 bg-cefr-dark/90 backdrop-blur-xl border-b border-white/10">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex justify-between items-center h-16">
+                <a href="/" class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-cefr-cyan rounded-lg flex items-center justify-center">
+                        <span class="text-cefr-dark font-bold text-sm">CL</span>
+                    </div>
+                    <span class="text-white font-semibold text-lg">CEFR Level</span>
+                    <span class="bg-cefr-cyan/20 text-cefr-cyan text-xs px-2 py-0.5 rounded-full">Beta</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-20">
+        <div class="max-w-3xl mx-auto px-6 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-6">
+                Testga <span class="gradient-text">tayyor</span>misiz?
+            </h1>
+
+            <p class="text-xl text-white/60 mb-12">
+                Test 3 ta bo'limdan iborat. Har bir bo'limni ketma-ket bajarasiz.
+            </p>
+
+            <!-- Test Steps -->
+            <div class="space-y-4 mb-12">
+                <div class="step-card bg-white/5 border border-white/10 rounded-2xl p-6 flex items-center">
+                    <div class="w-12 h-12 bg-cefr-cyan text-cefr-dark rounded-full flex items-center justify-center font-bold text-xl mr-6">1</div>
+                    <div class="text-left flex-1">
+                        <h3 class="text-white font-semibold text-lg">Reading</h3>
+                        <p class="text-white/60 text-sm">Matnni o'qish va savolarga javob berish</p>
+                    </div>
+                    <div class="text-white/40 text-sm">~15 min</div>
+                </div>
+
+                <div class="step-card bg-white/5 border border-white/10 rounded-2xl p-6 flex items-center">
+                    <div class="w-12 h-12 bg-white/20 text-white rounded-full flex items-center justify-center font-bold text-xl mr-6">2</div>
+                    <div class="text-left flex-1">
+                        <h3 class="text-white font-semibold text-lg">Listening</h3>
+                        <p class="text-white/60 text-sm">Audio tinglash va savolarga javob berish</p>
+                    </div>
+                    <div class="text-white/40 text-sm">~20 min</div>
+                </div>
+
+                <div class="step-card bg-white/5 border border-white/10 rounded-2xl p-6 flex items-center">
+                    <div class="w-12 h-12 bg-white/20 text-white rounded-full flex items-center justify-center font-bold text-xl mr-6">3</div>
+                    <div class="text-left flex-1">
+                        <h3 class="text-white font-semibold text-lg">Writing</h3>
+                        <p class="text-white/60 text-sm">Berilgan mavzu bo'yicha esse yozish</p>
+                    </div>
+                    <div class="text-white/40 text-sm">~30 min</div>
+                </div>
+            </div>
+
+            <!-- Important Notes -->
+            <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-6 mb-12 text-left">
+                <h4 class="text-yellow-500 font-semibold mb-3">Muhim eslatmalar:</h4>
+                <ul class="space-y-2 text-yellow-500/80 text-sm">
+                    <li>• Testni boshlagandan keyin to'xtatish mumkin emas</li>
+                    <li>• Barcha bo'limlarni ketma-ket bajarish kerak</li>
+                    <li>• Test yakunida natijangizni ko'rasiz</li>
+                    <li>• Natijani ko'rish uchun qisqa so'rovnomani to'ldirishingiz kerak</li>
+                </ul>
+            </div>
+
+            <a href="/test/reading" class="inline-flex items-center justify-center bg-cefr-cyan text-cefr-dark px-12 py-4 rounded-full font-semibold text-lg btn-glow">
+                <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Testni boshlash
+            </a>
+
+            <p class="text-white/40 text-sm mt-6">
+                Session ID: {{ session_id[:8] }}...
+            </p>
+        </div>
+    </main>
+</body>
+</html>
