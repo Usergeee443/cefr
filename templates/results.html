@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Results - CEFR Mock Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5',
+                        secondary: '#10B981',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .level-badge {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .score-ring {
+            stroke-dasharray: 283;
+            stroke-dashoffset: 283;
+            animation: fillRing 1.5s ease-out forwards;
+        }
+        @keyframes fillRing {
+            to { stroke-dashoffset: var(--offset); }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <span class="text-xl font-bold text-primary">CEFR Test</span>
+                <span class="ml-4 px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">Results</span>
+            </div>
+            <a href="/start" class="text-primary hover:text-indigo-700 font-medium">Take Another Test</a>
+        </div>
+    </header>
+
+    <main class="py-12 px-4">
+        <div class="max-w-5xl mx-auto">
+            <!-- Overall Result -->
+            <div class="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-2xl shadow-2xl p-8 mb-8 text-white">
+                <div class="text-center">
+                    <h1 class="text-3xl font-bold mb-2">Your CEFR Level</h1>
+                    <p class="text-white/80 mb-6">Based on your performance across all sections</p>
+
+                    <div class="level-badge inline-block bg-white/20 backdrop-blur-sm rounded-2xl p-8 mb-6">
+                        <div class="text-8xl font-extrabold text-yellow-300 mb-2">{{ session.cefr_level }}</div>
+                        <div class="text-xl text-white/90">{{ session.level_description }}</div>
+                    </div>
+
+                    <div class="flex justify-center items-center space-x-8 mt-6">
+                        <div class="text-center">
+                            <div class="text-4xl font-bold">{{ session.overall_score }}%</div>
+                            <div class="text-white/70 text-sm">Overall Score</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section Scores -->
+            <div class="grid md:grid-cols-3 gap-6 mb-8">
+                <!-- Reading Score -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                        </div>
+                        <h3 class="ml-3 text-lg font-semibold text-gray-800">Reading</h3>
+                    </div>
+
+                    <div class="relative pt-4">
+                        <svg class="w-32 h-32 mx-auto" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" stroke="#E5E7EB" stroke-width="8" fill="none"/>
+                            <circle cx="50" cy="50" r="45" stroke="#10B981" stroke-width="8" fill="none"
+                                    class="score-ring" style="--offset: {{ 283 - (session.reading.percentage / 100 * 283) }}"
+                                    transform="rotate(-90 50 50)"/>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-center">
+                                <div class="text-3xl font-bold text-gray-800">{{ session.reading.percentage }}%</div>
+                                <div class="text-sm text-gray-500">{{ session.reading.score }}/{{ session.reading.total }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Listening Score -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="ml-3 text-lg font-semibold text-gray-800">Listening</h3>
+                    </div>
+
+                    <div class="relative pt-4">
+                        <svg class="w-32 h-32 mx-auto" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" stroke="#E5E7EB" stroke-width="8" fill="none"/>
+                            <circle cx="50" cy="50" r="45" stroke="#3B82F6" stroke-width="8" fill="none"
+                                    class="score-ring" style="--offset: {{ 283 - (session.listening.percentage / 100 * 283) }}"
+                                    transform="rotate(-90 50 50)"/>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-center">
+                                <div class="text-3xl font-bold text-gray-800">{{ session.listening.percentage }}%</div>
+                                <div class="text-sm text-gray-500">{{ session.listening.score }}/{{ session.listening.total }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Writing Score -->
+                <div class="bg-white rounded-xl shadow-lg p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                        </div>
+                        <h3 class="ml-3 text-lg font-semibold text-gray-800">Writing</h3>
+                    </div>
+
+                    <div class="relative pt-4">
+                        <svg class="w-32 h-32 mx-auto" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="45" stroke="#E5E7EB" stroke-width="8" fill="none"/>
+                            <circle cx="50" cy="50" r="45" stroke="#8B5CF6" stroke-width="8" fill="none"
+                                    class="score-ring" style="--offset: {{ 283 - (session.writing.percentage / 100 * 283) }}"
+                                    transform="rotate(-90 50 50)"/>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-center">
+                                <div class="text-3xl font-bold text-gray-800">{{ session.writing.evaluation.overall_percentage }}%</div>
+                                <div class="text-sm text-gray-500">Band {{ session.writing.evaluation.overall_band }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Writing Feedback -->
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
+                <div class="bg-gradient-to-r from-purple-600 to-purple-700 text-white p-6">
+                    <h2 class="text-2xl font-bold">Writing Evaluation Details</h2>
+                    <p class="text-purple-100 mt-1">AI-powered assessment of your writing tasks</p>
+                </div>
+
+                <div class="p-6">
+                    <!-- Task 1 -->
+                    <div class="mb-8 pb-8 border-b">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Task 1: Email/Letter</h3>
+                            <div class="flex items-center space-x-3">
+                                <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
+                                    Band {{ session.writing.evaluation.task1.band }}
+                                </span>
+                                <span class="text-sm text-gray-500">
+                                    {{ session.writing.evaluation.task1.word_count }} words
+                                </span>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                            <p class="font-medium text-gray-700 mb-2">{{ session.writing.evaluation.task1.feedback.overall }}</p>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="p-3 bg-green-50 rounded-lg">
+                                <h4 class="font-medium text-green-800 mb-1">Content</h4>
+                                <p class="text-sm text-green-700">{{ session.writing.evaluation.task1.feedback.content }}</p>
+                            </div>
+                            <div class="p-3 bg-blue-50 rounded-lg">
+                                <h4 class="font-medium text-blue-800 mb-1">Organization</h4>
+                                <p class="text-sm text-blue-700">{{ session.writing.evaluation.task1.feedback.organization }}</p>
+                            </div>
+                            <div class="p-3 bg-yellow-50 rounded-lg">
+                                <h4 class="font-medium text-yellow-800 mb-1">Language</h4>
+                                <p class="text-sm text-yellow-700">{{ session.writing.evaluation.task1.feedback.language }}</p>
+                            </div>
+                            <div class="p-3 bg-red-50 rounded-lg">
+                                <h4 class="font-medium text-red-800 mb-1">Accuracy</h4>
+                                <p class="text-sm text-red-700">{{ session.writing.evaluation.task1.feedback.accuracy }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Task 2 -->
+                    <div class="mb-8 pb-8 border-b">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Task 2: Review</h3>
+                            <div class="flex items-center space-x-3">
+                                <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
+                                    Band {{ session.writing.evaluation.task2.band }}
+                                </span>
+                                <span class="text-sm text-gray-500">
+                                    {{ session.writing.evaluation.task2.word_count }} words
+                                </span>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                            <p class="font-medium text-gray-700 mb-2">{{ session.writing.evaluation.task2.feedback.overall }}</p>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="p-3 bg-green-50 rounded-lg">
+                                <h4 class="font-medium text-green-800 mb-1">Content</h4>
+                                <p class="text-sm text-green-700">{{ session.writing.evaluation.task2.feedback.content }}</p>
+                            </div>
+                            <div class="p-3 bg-blue-50 rounded-lg">
+                                <h4 class="font-medium text-blue-800 mb-1">Organization</h4>
+                                <p class="text-sm text-blue-700">{{ session.writing.evaluation.task2.feedback.organization }}</p>
+                            </div>
+                            <div class="p-3 bg-yellow-50 rounded-lg">
+                                <h4 class="font-medium text-yellow-800 mb-1">Language</h4>
+                                <p class="text-sm text-yellow-700">{{ session.writing.evaluation.task2.feedback.language }}</p>
+                            </div>
+                            <div class="p-3 bg-red-50 rounded-lg">
+                                <h4 class="font-medium text-red-800 mb-1">Accuracy</h4>
+                                <p class="text-sm text-red-700">{{ session.writing.evaluation.task2.feedback.accuracy }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Essay -->
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-800">Essay</h3>
+                            <div class="flex items-center space-x-3">
+                                <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
+                                    Band {{ session.writing.evaluation.essay.band }}
+                                </span>
+                                <span class="text-sm text-gray-500">
+                                    {{ session.writing.evaluation.essay.word_count }} words
+                                </span>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                            <p class="font-medium text-gray-700 mb-2">{{ session.writing.evaluation.essay.feedback.overall }}</p>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="p-3 bg-indigo-50 rounded-lg">
+                                <h4 class="font-medium text-indigo-800 mb-1">Task Achievement</h4>
+                                <p class="text-sm text-indigo-700">{{ session.writing.evaluation.essay.feedback.task_achievement }}</p>
+                            </div>
+                            <div class="p-3 bg-teal-50 rounded-lg">
+                                <h4 class="font-medium text-teal-800 mb-1">Coherence & Cohesion</h4>
+                                <p class="text-sm text-teal-700">{{ session.writing.evaluation.essay.feedback.coherence_cohesion }}</p>
+                            </div>
+                            <div class="p-3 bg-orange-50 rounded-lg">
+                                <h4 class="font-medium text-orange-800 mb-1">Lexical Resource</h4>
+                                <p class="text-sm text-orange-700">{{ session.writing.evaluation.essay.feedback.lexical_resource }}</p>
+                            </div>
+                            <div class="p-3 bg-pink-50 rounded-lg">
+                                <h4 class="font-medium text-pink-800 mb-1">Grammatical Range</h4>
+                                <p class="text-sm text-pink-700">{{ session.writing.evaluation.essay.feedback.grammatical_range }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if session.writing.evaluation.general_feedback %}
+                    <div class="mt-8 p-4 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg border border-purple-200">
+                        <h4 class="font-semibold text-purple-800 mb-2">Overall Feedback & Recommendations</h4>
+                        <p class="text-purple-700">{{ session.writing.evaluation.general_feedback }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- CEFR Level Guide -->
+            <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">CEFR Level Guide</h3>
+                <div class="grid md:grid-cols-3 gap-4">
+                    {% for level, data in cefr_levels.items() %}
+                    <div class="p-4 rounded-lg border-2 {% if session.cefr_level == level %}border-primary bg-indigo-50{% else %}border-gray-200{% endif %}">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-2xl font-bold {% if session.cefr_level == level %}text-primary{% else %}text-gray-400{% endif %}">{{ level }}</span>
+                            {% if session.cefr_level == level %}
+                            <span class="px-2 py-1 bg-primary text-white text-xs rounded-full">Your Level</span>
+                            {% endif %}
+                        </div>
+                        <p class="text-sm {% if session.cefr_level == level %}text-gray-700{% else %}text-gray-500{% endif %}">{{ data.description }}</p>
+                        <p class="text-xs text-gray-400 mt-2">Score: {{ data.min_score }}%+</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="text-center space-x-4">
+                <a href="/start" class="inline-block bg-primary text-white px-8 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition">
+                    Take Another Test
+                </a>
+                <a href="/" class="inline-block bg-gray-200 text-gray-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-300 transition">
+                    Back to Home
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="max-w-5xl mx-auto px-4 text-center">
+            <p class="text-gray-400">CEFR Mock Test Platform - Professional English Assessment</p>
+            <p class="text-gray-500 text-sm mt-2">This is a mock test and does not provide official CEFR certification.</p>
+        </div>
+    </footer>
+</body>
+</html>
