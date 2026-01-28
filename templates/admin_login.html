@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - OSCO.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        *, *::before, *::after { border-radius: 0 !important; }
+        body { background-color: #0B1628; }
+    </style>
+</head>
+<body class="min-h-screen text-white flex items-center justify-center">
+    <div class="w-full max-w-md p-6">
+        <div class="text-center mb-8">
+            <a href="/" class="text-3xl font-black">
+                <span class="text-[#00D4AA]">OSCO</span><span class="text-white">.</span>
+            </a>
+            <p class="text-gray-500 text-sm mt-2">Admin Panel</p>
+        </div>
+
+        <div class="bg-[#0F2035] border border-gray-800 p-8">
+            <h1 class="text-xl font-bold text-white mb-6">Kirish</h1>
+
+            {% if error %}
+            <div class="bg-red-500/20 border border-red-500/50 text-red-400 p-3 mb-6 text-sm">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <form method="POST" action="/admin/login">
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Parol</label>
+                    <input type="password" name="password" required
+                           class="w-full bg-[#0B1628] border border-gray-700 text-white px-4 py-3 focus:border-[#00D4AA] outline-none"
+                           placeholder="Admin parolini kiriting">
+                </div>
+
+                <button type="submit"
+                        class="w-full bg-[#00D4AA] text-[#0B1628] px-6 py-3 font-bold hover:bg-[#00B894] transition-colors">
+                    Kirish
+                </button>
+            </form>
+        </div>
+
+        <div class="text-center mt-6">
+            <a href="/" class="text-gray-500 hover:text-[#00D4AA] text-sm">Bosh sahifaga qaytish</a>
+        </div>
+    </div>
+</body>
+</html>

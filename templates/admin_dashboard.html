@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - OSCO.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        *, *::before, *::after { border-radius: 0 !important; }
+        body { background-color: #0B1628; }
+        .tab-btn.active { background-color: #00D4AA; color: #0B1628; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body class="min-h-screen text-white">
+
+    <!-- Header -->
+    <header class="border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <a href="/" class="text-2xl font-black">
+                    <span class="text-[#00D4AA]">OSCO</span><span class="text-white">.</span>
+                </a>
+                <div class="h-5 w-px bg-gray-700"></div>
+                <span class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Admin Panel</span>
+            </div>
+            <a href="/admin/logout" class="text-red-400 hover:text-red-300 text-sm font-medium">Chiqish</a>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        <!-- Stats Overview -->
+        <div class="grid md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-[#0F2035] border border-gray-800 p-6">
+                <div class="text-3xl font-bold text-[#00D4AA]">{{ reading_count }}</div>
+                <div class="text-sm text-gray-400 mt-1">Reading Testlar</div>
+            </div>
+            <div class="bg-[#0F2035] border border-gray-800 p-6">
+                <div class="text-3xl font-bold text-[#00D4AA]">{{ listening_count }}</div>
+                <div class="text-sm text-gray-400 mt-1">Listening Testlar</div>
+            </div>
+            <div class="bg-[#0F2035] border border-gray-800 p-6">
+                <div class="text-3xl font-bold text-[#00D4AA]">{{ writing_count }}</div>
+                <div class="text-sm text-gray-400 mt-1">Writing Testlar</div>
+            </div>
+            <div class="bg-[#0F2035] border border-gray-800 p-6">
+                <div class="text-3xl font-bold text-yellow-400">{{ feedback_count }}</div>
+                <div class="text-sm text-gray-400 mt-1">Feedbacklar</div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="flex gap-2 mb-6 border-b border-gray-800 pb-4">
+            <button class="tab-btn active px-6 py-2 border border-gray-700 bg-[#0F2035] text-gray-300 font-medium text-sm hover:border-[#00D4AA] transition" data-tab="reading">Reading</button>
+            <button class="tab-btn px-6 py-2 border border-gray-700 bg-[#0F2035] text-gray-300 font-medium text-sm hover:border-[#00D4AA] transition" data-tab="listening">Listening</button>
+            <button class="tab-btn px-6 py-2 border border-gray-700 bg-[#0F2035] text-gray-300 font-medium text-sm hover:border-[#00D4AA] transition" data-tab="writing">Writing</button>
+            <button class="tab-btn px-6 py-2 border border-gray-700 bg-[#0F2035] text-gray-300 font-medium text-sm hover:border-[#00D4AA] transition" data-tab="feedback">Feedbacklar</button>
+        </div>
+
+        <!-- Reading Tab -->
+        <div id="reading-tab" class="tab-content active">
+            <div class="bg-[#0F2035] border border-gray-800 p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-bold text-white">Reading Testlar</h2>
+                    <button onclick="showModal('reading')" class="bg-[#00D4AA] text-[#0B1628] px-4 py-2 font-semibold text-sm hover:bg-[#00B894] transition">
+                        + Yangi Test
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    {% for test in reading_tests %}
+                    <div class="bg-[#0B1628] border border-gray-800 p-4 flex items-center justify-between">
+                        <div>
+                            <h3 class="font-semibold text-white">{{ test.title }}</h3>
+                            <p class="text-sm text-gray-500">{{ test.parts | length }} qism | {{ test.time_limit }} daqiqa</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="editTest('reading', '{{ test.id }}')" class="px-3 py-1 border border-gray-700 text-gray-400 hover:text-[#00D4AA] hover:border-[#00D4AA] text-sm">Tahrirlash</button>
+                            <button onclick="deleteTest('reading', '{{ test.id }}')" class="px-3 py-1 border border-red-500/30 text-red-400 hover:bg-red-500/20 text-sm">O'chirish</button>
+                        </div>
+                    </div>
+                    {% else %}
+                    <p class="text-gray-500 text-center py-8">Hozircha testlar yo'q</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Listening Tab -->
+        <div id="listening-tab" class="tab-content">
+            <div class="bg-[#0F2035] border border-gray-800 p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-bold text-white">Listening Testlar</h2>
+                    <button onclick="showModal('listening')" class="bg-[#00D4AA] text-[#0B1628] px-4 py-2 font-semibold text-sm hover:bg-[#00B894] transition">
+                        + Yangi Test
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    {% for test in listening_tests %}
+                    <div class="bg-[#0B1628] border border-gray-800 p-4 flex items-center justify-between">
+                        <div>
+                            <h3 class="font-semibold text-white">{{ test.title }}</h3>
+                            <p class="text-sm text-gray-500">{{ test.parts | length }} qism | {{ test.time_limit }} daqiqa</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="editTest('listening', '{{ test.id }}')" class="px-3 py-1 border border-gray-700 text-gray-400 hover:text-[#00D4AA] hover:border-[#00D4AA] text-sm">Tahrirlash</button>
+                            <button onclick="deleteTest('listening', '{{ test.id }}')" class="px-3 py-1 border border-red-500/30 text-red-400 hover:bg-red-500/20 text-sm">O'chirish</button>
+                        </div>
+                    </div>
+                    {% else %}
+                    <p class="text-gray-500 text-center py-8">Hozircha testlar yo'q</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Writing Tab -->
+        <div id="writing-tab" class="tab-content">
+            <div class="bg-[#0F2035] border border-gray-800 p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-bold text-white">Writing Testlar</h2>
+                    <button onclick="showModal('writing')" class="bg-[#00D4AA] text-[#0B1628] px-4 py-2 font-semibold text-sm hover:bg-[#00B894] transition">
+                        + Yangi Test
+                    </button>
+                </div>
+                <div class="space-y-4">
+                    {% for test in writing_tests %}
+                    <div class="bg-[#0B1628] border border-gray-800 p-4 flex items-center justify-between">
+                        <div>
+                            <h3 class="font-semibold text-white">{{ test.title }}</h3>
+                            <p class="text-sm text-gray-500">{{ test.parts | length }} qism | {{ test.time_limit }} daqiqa</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="editTest('writing', '{{ test.id }}')" class="px-3 py-1 border border-gray-700 text-gray-400 hover:text-[#00D4AA] hover:border-[#00D4AA] text-sm">Tahrirlash</button>
+                            <button onclick="deleteTest('writing', '{{ test.id }}')" class="px-3 py-1 border border-red-500/30 text-red-400 hover:bg-red-500/20 text-sm">O'chirish</button>
+                        </div>
+                    </div>
+                    {% else %}
+                    <p class="text-gray-500 text-center py-8">Hozircha testlar yo'q</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Feedback Tab -->
+        <div id="feedback-tab" class="tab-content">
+            <div class="bg-[#0F2035] border border-gray-800 p-6">
+                <h2 class="text-xl font-bold text-white mb-6">Foydalanuvchi Feedbacklari</h2>
+                <div class="space-y-4">
+                    {% for fb in feedbacks %}
+                    <div class="bg-[#0B1628] border border-gray-800 p-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-4">
+                                {% if fb.rating %}
+                                <div class="flex items-center gap-1">
+                                    <span class="text-[#00D4AA] font-bold">{{ fb.rating }}</span>
+                                    <span class="text-gray-500">/5</span>
+                                </div>
+                                {% endif %}
+                                {% if fb.difficulty %}
+                                <span class="px-2 py-1 bg-[#0F2035] border border-gray-700 text-xs text-gray-400">{{ fb.difficulty }}</span>
+                                {% endif %}
+                                {% if fb.accuracy %}
+                                <span class="px-2 py-1 bg-[#0F2035] border border-gray-700 text-xs text-gray-400">{{ fb.accuracy }}</span>
+                                {% endif %}
+                            </div>
+                            <span class="text-xs text-gray-600">{{ fb.submitted_at[:10] if fb.submitted_at else '' }}</span>
+                        </div>
+                        {% if fb.best_part %}
+                        <div class="mb-2">
+                            <span class="text-xs text-green-400 uppercase">Yaxshi:</span>
+                            <p class="text-sm text-gray-300">{{ fb.best_part }}</p>
+                        </div>
+                        {% endif %}
+                        {% if fb.worst_part %}
+                        <div class="mb-2">
+                            <span class="text-xs text-red-400 uppercase">Yomon:</span>
+                            <p class="text-sm text-gray-300">{{ fb.worst_part }}</p>
+                        </div>
+                        {% endif %}
+                        {% if fb.suggestions %}
+                        <div class="mb-2">
+                            <span class="text-xs text-yellow-400 uppercase">Takliflar:</span>
+                            <p class="text-sm text-gray-300">{{ fb.suggestions }}</p>
+                        </div>
+                        {% endif %}
+                        {% if fb.name or fb.email %}
+                        <div class="mt-3 pt-3 border-t border-gray-800 text-xs text-gray-500">
+                            {% if fb.name %}{{ fb.name }}{% endif %}
+                            {% if fb.email %} ({{ fb.email }}){% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <p class="text-gray-500 text-center py-8">Hozircha feedbacklar yo'q</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal for editing tests -->
+    <div id="edit-modal" class="fixed inset-0 bg-[#0B1628]/95 flex items-center justify-center z-50 hidden">
+        <div class="bg-[#0F2035] border border-gray-800 p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-6">
+                <h3 id="modal-title" class="text-xl font-bold text-white">Test Tahrirlash</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <div id="modal-content">
+                <p class="text-gray-400 mb-4">Test ma'lumotlarini JSON formatida tahrirlang:</p>
+                <textarea id="test-json" class="w-full h-96 bg-[#0B1628] border border-gray-700 text-white p-4 font-mono text-sm focus:border-[#00D4AA] outline-none"></textarea>
+                <div class="flex gap-4 mt-6">
+                    <button onclick="saveTest()" class="bg-[#00D4AA] text-[#0B1628] px-6 py-2 font-bold hover:bg-[#00B894] transition">Saqlash</button>
+                    <button onclick="closeModal()" class="border border-gray-700 text-gray-400 px-6 py-2 hover:border-[#00D4AA] hover:text-[#00D4AA] transition">Bekor qilish</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSection = null;
+        let currentTests = [];
+
+        // Tab switching
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById(this.dataset.tab + '-tab').classList.add('active');
+            });
+        });
+
+        async function loadTests(section) {
+            try {
+                const response = await fetch(`/admin/data/${section}`);
+                const data = await response.json();
+                return data.tests || [];
+            } catch (error) {
+                console.error('Error loading tests:', error);
+                return [];
+            }
+        }
+
+        async function showModal(section) {
+            currentSection = section;
+            currentTests = await loadTests(section);
+            document.getElementById('modal-title').textContent = section.charAt(0).toUpperCase() + section.slice(1) + ' Testlarni Tahrirlash';
+            document.getElementById('test-json').value = JSON.stringify(currentTests, null, 2);
+            document.getElementById('edit-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('edit-modal').classList.add('hidden');
+            currentSection = null;
+        }
+
+        async function saveTest() {
+            try {
+                const jsonText = document.getElementById('test-json').value;
+                const tests = JSON.parse(jsonText);
+
+                const response = await fetch(`/admin/data/${currentSection}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tests: tests })
+                });
+
+                if (response.ok) {
+                    alert('Saqlandi!');
+                    location.reload();
+                } else {
+                    alert('Xatolik yuz berdi');
+                }
+            } catch (error) {
+                alert('JSON format xato: ' + error.message);
+            }
+        }
+
+        async function editTest(section, testId) {
+            currentSection = section;
+            currentTests = await loadTests(section);
+            const test = currentTests.find(t => t.id === testId);
+            if (test) {
+                document.getElementById('modal-title').textContent = 'Test Tahrirlash: ' + test.title;
+                document.getElementById('test-json').value = JSON.stringify([test], null, 2);
+                document.getElementById('edit-modal').classList.remove('hidden');
+            }
+        }
+
+        async function deleteTest(section, testId) {
+            if (!confirm('Rostdan o\'chirmoqchimisiz?')) return;
+
+            currentSection = section;
+            currentTests = await loadTests(section);
+            currentTests = currentTests.filter(t => t.id !== testId);
+
+            const response = await fetch(`/admin/data/${section}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tests: currentTests })
+            });
+
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('Xatolik yuz berdi');
+            }
+        }
+    </script>
+</body>
+</html>

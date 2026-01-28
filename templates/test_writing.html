@@ -3,23 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Writing Test - CEFR Mock Test</title>
+    <title>Writing Test - OSCO.</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#4F46E5',
-                        secondary: '#10B981',
-                    }
-                }
-            }
-        }
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
+        * { font-family: 'Inter', sans-serif; }
+        *, *::before, *::after { border-radius: 0 !important; }
+        body { background-color: #0B1628; }
         textarea {
             resize: none;
             line-height: 1.8;
@@ -29,36 +19,41 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
-    <!-- Header -->
-    <header class="bg-white shadow-sm fixed top-0 left-0 right-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center">
-                <span class="text-xl font-bold text-primary">CEFR Test</span>
-                <span class="ml-4 px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">Writing</span>
+<body class="min-h-screen text-white">
+
+    <!-- Fixed Header -->
+    <header class="bg-[#0B1628] border-b border-gray-800 fixed top-0 left-0 right-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <a href="/" class="text-xl font-black">
+                    <span class="text-[#00D4AA]">OSCO</span><span class="text-white">.</span>
+                </a>
+                <div class="h-5 w-px bg-gray-700"></div>
+                <span class="text-sm font-semibold text-[#00D4AA] uppercase tracking-wider">Writing</span>
             </div>
-            <div class="flex items-center space-x-4">
-                <div id="timer" class="text-lg font-mono bg-gray-100 px-4 py-2 rounded-lg">
+            <div class="flex items-center gap-6">
+                <div id="timer" class="text-lg font-mono text-white bg-[#0F2035] border border-gray-700 px-4 py-1.5">
                     80:00
                 </div>
-                <div class="text-sm text-gray-600">
-                    <span class="px-2 py-1 bg-purple-100 text-purple-800 rounded">AI Evaluated</span>
+                <div class="px-3 py-1 bg-[#00D4AA]/20 text-[#00D4AA] text-xs font-semibold">
+                    AI Evaluated
                 </div>
             </div>
         </div>
-        <div class="w-full bg-gray-200 h-1">
-            <div id="progress-bar" class="bg-purple-500 h-1 transition-all duration-300" style="width: 0%"></div>
+        <!-- Progress bar -->
+        <div class="w-full bg-[#0F2035] h-0.5">
+            <div id="progress-bar" class="bg-[#00D4AA] h-0.5 transition-all duration-300" style="width: 0%"></div>
         </div>
     </header>
 
-    <main class="pt-24 pb-12 px-4">
+    <main class="pt-20 pb-16 px-4">
         <div class="max-w-4xl mx-auto">
             <!-- Warning about AI evaluation -->
-            <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-8 rounded-r-lg">
-                <h3 class="font-semibold text-yellow-800 mb-2">Important: AI Evaluation</h3>
-                <ul class="text-yellow-700 text-sm space-y-1">
+            <div class="bg-[#0F2035] border border-yellow-500/30 p-4 mb-8">
+                <h3 class="font-semibold text-yellow-400 mb-2 text-sm uppercase tracking-wider">Important: AI Evaluation</h3>
+                <ul class="text-gray-400 text-sm space-y-1">
                     <li>Your writing will be evaluated by AI using strict CEFR criteria</li>
-                    <li>Write genuine, thoughtful responses - spam will receive very low scores</li>
+                    <li>Write genuine, thoughtful responses - spam will receive Band 1</li>
                     <li>Follow the word count requirements for each task</li>
                     <li>Evaluation considers: Content, Organization, Language, and Accuracy</li>
                 </ul>
@@ -67,58 +62,49 @@
             <form id="writing-form">
                 {% for part in test_data.parts %}
                 <section class="part-section mb-12" data-part="{{ part.part_number }}">
-                    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="bg-[#0F2035] border border-gray-800 overflow-hidden">
                         <!-- Part Header -->
-                        <div class="bg-gradient-to-r from-purple-600 to-purple-700 text-white p-6">
-                            <h2 class="text-2xl font-bold">{{ part.title }}</h2>
-                            <p class="mt-2 text-purple-100">{{ part.instruction }}</p>
+                        <div class="bg-[#162A40] border-b border-gray-700 p-6">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-8 h-8 bg-[#00D4AA] flex items-center justify-center text-[#0B1628] font-bold text-sm">
+                                    {{ part.part_number }}
+                                </div>
+                                <h2 class="text-xl font-bold text-white">{{ part.title }}</h2>
+                            </div>
+                            <p class="text-gray-400 text-sm ml-11">{{ part.instruction }}</p>
                         </div>
 
                         <div class="p-6">
                             {% if part.part_number == 1 %}
                             <!-- Part 1: Two Tasks -->
                             {% for task in part.tasks %}
-                            <div class="task-block mb-10 {% if not loop.first %}pt-8 border-t{% endif %}">
-                                <h3 class="text-xl font-bold text-purple-800 mb-4">{{ task.title }}</h3>
+                            <div class="task-block mb-10 {% if not loop.first %}pt-8 border-t border-gray-700{% endif %}">
+                                <h3 class="text-lg font-bold text-[#00D4AA] mb-4">{{ task.title }}</h3>
 
-                                <div class="bg-purple-50 p-6 rounded-lg mb-6 border border-purple-200">
-                                    <h4 class="font-semibold text-purple-900 mb-3">{{ task.instruction }}</h4>
-                                    <div class="text-gray-700 whitespace-pre-line">{{ task.situation }}</div>
+                                <div class="bg-[#0B1628] border border-gray-800 p-6 mb-6">
+                                    <h4 class="font-semibold text-white mb-3">{{ task.instruction }}</h4>
+                                    <div class="text-gray-400 whitespace-pre-line">{{ task.situation }}</div>
                                 </div>
 
                                 <div class="relative">
                                     <textarea
                                         name="task{{ task.task_number }}"
                                         id="task{{ task.task_number }}"
-                                        class="w-full h-64 p-4 border-2 border-gray-200 rounded-lg focus:border-purple-500 outline-none"
+                                        class="w-full h-64 p-4 border border-gray-700 bg-[#0B1628] text-white focus:border-[#00D4AA] outline-none"
                                         placeholder="Write your {{ task.type }} here..."
                                         data-min="{{ task.min_words }}"
                                         data-max="{{ task.max_words }}"
                                     ></textarea>
 
                                     <div class="mt-3 flex items-center justify-between">
-                                        <div class="flex items-center space-x-4">
-                                            <span class="text-sm text-gray-600">Word count:</span>
-                                            <span id="wc-task{{ task.task_number }}" class="font-mono font-bold text-purple-600">0</span>
-                                            <span class="text-sm text-gray-500">/ {{ task.min_words }}-{{ task.max_words }} words</span>
+                                        <div class="flex items-center gap-4">
+                                            <span class="text-sm text-gray-500">Word count:</span>
+                                            <span id="wc-task{{ task.task_number }}" class="font-mono font-bold text-[#00D4AA]">0</span>
+                                            <span class="text-sm text-gray-600">/ {{ task.min_words }}-{{ task.max_words }} words</span>
                                         </div>
-                                        <div class="w-48 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                            <div id="wcbar-task{{ task.task_number }}" class="word-count-bar h-full bg-gray-400 rounded-full" style="width: 0%"></div>
+                                        <div class="w-48 h-1 bg-gray-800 overflow-hidden">
+                                            <div id="wcbar-task{{ task.task_number }}" class="word-count-bar h-full bg-gray-600" style="width: 0%"></div>
                                         </div>
-                                    </div>
-                                </div>
-
-                                <div class="mt-4 bg-gray-50 p-4 rounded-lg">
-                                    <h5 class="font-medium text-gray-700 mb-2">Evaluation Criteria:</h5>
-                                    <div class="grid grid-cols-2 gap-2 text-sm text-gray-600">
-                                        {% for criterion, description in task.criteria.items() %}
-                                        <div class="flex items-start">
-                                            <svg class="w-4 h-4 text-purple-500 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                                            </svg>
-                                            <span><strong>{{ criterion | replace("_", " ") | title }}:</strong> {{ description }}</span>
-                                        </div>
-                                        {% endfor %}
                                     </div>
                                 </div>
                             </div>
@@ -126,19 +112,18 @@
 
                             {% elif part.part_number == 2 %}
                             <!-- Part 2: Essay -->
-                            {% for topic in part.topics %}
                             <div class="task-block">
-                                <h3 class="text-xl font-bold text-purple-800 mb-4">{{ topic.title }}</h3>
+                                <h3 class="text-lg font-bold text-[#00D4AA] mb-4">Essay</h3>
 
-                                <div class="bg-purple-50 p-6 rounded-lg mb-6 border border-purple-200">
-                                    <div class="text-gray-700 whitespace-pre-line">{{ topic.prompt }}</div>
+                                <div class="bg-[#0B1628] border border-gray-800 p-6 mb-6">
+                                    <div class="text-gray-400 whitespace-pre-line">{{ part.prompt }}</div>
                                 </div>
 
                                 <div class="relative">
                                     <textarea
                                         name="essay"
                                         id="essay"
-                                        class="w-full h-96 p-4 border-2 border-gray-200 rounded-lg focus:border-purple-500 outline-none"
+                                        class="w-full h-96 p-4 border border-gray-700 bg-[#0B1628] text-white focus:border-[#00D4AA] outline-none"
                                         placeholder="Write your essay here...
 
 Introduction:
@@ -152,53 +137,38 @@ Body Paragraph 2:
 
 Conclusion:
 [Summarize and give your opinion]"
-                                        data-min="{{ topic.min_words }}"
-                                        data-max="{{ topic.max_words }}"
+                                        data-min="{{ part.min_words }}"
+                                        data-max="{{ part.max_words }}"
                                     ></textarea>
 
                                     <div class="mt-3 flex items-center justify-between">
-                                        <div class="flex items-center space-x-4">
-                                            <span class="text-sm text-gray-600">Word count:</span>
-                                            <span id="wc-essay" class="font-mono font-bold text-purple-600">0</span>
-                                            <span class="text-sm text-gray-500">/ {{ topic.min_words }}-{{ topic.max_words }} words</span>
+                                        <div class="flex items-center gap-4">
+                                            <span class="text-sm text-gray-500">Word count:</span>
+                                            <span id="wc-essay" class="font-mono font-bold text-[#00D4AA]">0</span>
+                                            <span class="text-sm text-gray-600">/ {{ part.min_words }}-{{ part.max_words }} words</span>
                                         </div>
-                                        <div class="w-48 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                            <div id="wcbar-essay" class="word-count-bar h-full bg-gray-400 rounded-full" style="width: 0%"></div>
+                                        <div class="w-48 h-1 bg-gray-800 overflow-hidden">
+                                            <div id="wcbar-essay" class="word-count-bar h-full bg-gray-600" style="width: 0%"></div>
                                         </div>
-                                    </div>
-                                </div>
-
-                                <div class="mt-4 bg-gray-50 p-4 rounded-lg">
-                                    <h5 class="font-medium text-gray-700 mb-2">Essay Evaluation Criteria (CEFR Writing Band):</h5>
-                                    <div class="grid md:grid-cols-2 gap-3 text-sm text-gray-600">
-                                        {% for criterion, description in topic.criteria.items() %}
-                                        <div class="flex items-start">
-                                            <svg class="w-4 h-4 text-purple-500 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                                            </svg>
-                                            <span><strong>{{ criterion | replace("_", " ") | title }}:</strong> {{ description }}</span>
-                                        </div>
-                                        {% endfor %}
                                     </div>
                                 </div>
 
                                 <!-- Band Score Reference -->
-                                <div class="mt-6 bg-gradient-to-r from-purple-50 to-indigo-50 p-4 rounded-lg border border-purple-200">
-                                    <h5 class="font-medium text-purple-800 mb-3">Band Score Reference:</h5>
+                                <div class="mt-6 p-4 bg-[#0B1628] border border-gray-800">
+                                    <h5 class="font-medium text-white mb-3 text-sm">Band Score Reference:</h5>
                                     <div class="grid grid-cols-3 gap-2 text-xs">
-                                        <div class="bg-white p-2 rounded">
-                                            <span class="font-bold text-green-600">7-9:</span> Good to Expert
+                                        <div class="bg-[#0F2035] border border-gray-700 p-2">
+                                            <span class="font-bold text-green-400">7-9:</span> <span class="text-gray-400">Good to Expert</span>
                                         </div>
-                                        <div class="bg-white p-2 rounded">
-                                            <span class="font-bold text-yellow-600">5-6:</span> Modest to Competent
+                                        <div class="bg-[#0F2035] border border-gray-700 p-2">
+                                            <span class="font-bold text-yellow-400">5-6:</span> <span class="text-gray-400">Modest to Competent</span>
                                         </div>
-                                        <div class="bg-white p-2 rounded">
-                                            <span class="font-bold text-red-600">1-4:</span> Limited to Non-user
+                                        <div class="bg-[#0F2035] border border-gray-700 p-2">
+                                            <span class="font-bold text-red-400">1-4:</span> <span class="text-gray-400">Limited to Non-user</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            {% endfor %}
                             {% endif %}
                         </div>
                     </div>
@@ -206,34 +176,35 @@ Conclusion:
                 {% endfor %}
 
                 <!-- Submit Button -->
-                <div class="text-center mt-8">
-                    <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 max-w-lg mx-auto">
-                        <p class="text-red-700 text-sm">
-                            <strong>Warning:</strong> Once submitted, your writing cannot be changed. AI evaluation will take a few seconds.
+                <div class="text-center mt-10">
+                    <div class="bg-[#0F2035] border border-red-500/30 p-4 mb-6 max-w-lg mx-auto">
+                        <p class="text-red-400 text-sm">
+                            <strong>Warning:</strong> Once submitted, your writing cannot be changed. AI evaluation will begin immediately.
                         </p>
                     </div>
                     <button type="submit"
                             id="submit-btn"
-                            class="bg-purple-600 text-white px-12 py-4 rounded-xl font-semibold text-lg hover:bg-purple-700 transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
-                        Submit Writing Test & View Results
+                            class="bg-[#00D4AA] text-[#0B1628] px-12 py-4 font-bold text-lg hover:bg-[#00B894] transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                        Submit Writing Test
                     </button>
+                    <p class="text-gray-600 text-xs mt-3">View your results after submission</p>
                 </div>
             </form>
         </div>
     </main>
 
     <!-- Loading Overlay -->
-    <div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-xl p-8 text-center max-w-md">
-            <div class="animate-spin w-16 h-16 border-4 border-purple-600 border-t-transparent rounded-full mx-auto mb-6"></div>
-            <h3 class="text-xl font-bold text-gray-800 mb-2">AI Evaluation in Progress</h3>
-            <p class="text-gray-600 mb-4">Please wait while our AI evaluates your writing...</p>
-            <div class="text-sm text-gray-500">
-                <p>Analyzing:</p>
-                <ul class="mt-2 space-y-1">
-                    <li id="eval-task1" class="text-gray-400">Task 1: Email/Letter...</li>
-                    <li id="eval-task2" class="text-gray-400">Task 2: Review...</li>
-                    <li id="eval-essay" class="text-gray-400">Essay...</li>
+    <div id="loading-overlay" class="fixed inset-0 bg-[#0B1628]/95 flex items-center justify-center z-50 hidden">
+        <div class="bg-[#0F2035] border border-gray-700 p-8 text-center max-w-md">
+            <div class="animate-spin w-12 h-12 border-2 border-[#00D4AA] border-t-transparent mx-auto mb-6"></div>
+            <h3 class="text-xl font-bold text-white mb-2">AI Evaluation in Progress</h3>
+            <p class="text-gray-400 mb-4">Please wait while our AI evaluates your writing...</p>
+            <div class="text-sm">
+                <p class="text-gray-500 mb-2">Analyzing:</p>
+                <ul class="space-y-1">
+                    <li id="eval-task1" class="text-gray-600">Task 1: Email/Letter...</li>
+                    <li id="eval-task2" class="text-gray-600">Task 2: Review...</li>
+                    <li id="eval-essay" class="text-gray-600">Essay...</li>
                 </ul>
             </div>
         </div>
@@ -250,7 +221,7 @@ Conclusion:
             timerEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
             if (timeLeft <= 600) {
-                timerEl.classList.add('text-red-600', 'font-bold');
+                timerEl.classList.add('text-red-400', 'border-red-500');
             }
 
             if (timeLeft > 0) {
@@ -285,25 +256,25 @@ Conclusion:
 
             // Color coding
             if (words < minWords * 0.5) {
-                barEl.classList.remove('bg-green-500', 'bg-yellow-500');
+                barEl.classList.remove('bg-green-500', 'bg-yellow-500', 'bg-[#00D4AA]');
                 barEl.classList.add('bg-red-500');
-                countEl.classList.remove('text-green-600', 'text-yellow-600');
-                countEl.classList.add('text-red-600');
+                countEl.classList.remove('text-green-400', 'text-yellow-400', 'text-[#00D4AA]');
+                countEl.classList.add('text-red-400');
             } else if (words < minWords) {
-                barEl.classList.remove('bg-green-500', 'bg-red-500');
+                barEl.classList.remove('bg-green-500', 'bg-red-500', 'bg-[#00D4AA]');
                 barEl.classList.add('bg-yellow-500');
-                countEl.classList.remove('text-green-600', 'text-red-600');
-                countEl.classList.add('text-yellow-600');
+                countEl.classList.remove('text-green-400', 'text-red-400', 'text-[#00D4AA]');
+                countEl.classList.add('text-yellow-400');
             } else if (words <= maxWords) {
                 barEl.classList.remove('bg-yellow-500', 'bg-red-500');
-                barEl.classList.add('bg-green-500');
-                countEl.classList.remove('text-yellow-600', 'text-red-600');
-                countEl.classList.add('text-green-600');
+                barEl.classList.add('bg-[#00D4AA]');
+                countEl.classList.remove('text-yellow-400', 'text-red-400');
+                countEl.classList.add('text-[#00D4AA]');
             } else {
-                barEl.classList.remove('bg-green-500', 'bg-yellow-500');
+                barEl.classList.remove('bg-green-500', 'bg-yellow-500', 'bg-[#00D4AA]');
                 barEl.classList.add('bg-red-500');
-                countEl.classList.remove('text-green-600', 'text-yellow-600');
-                countEl.classList.add('text-red-600');
+                countEl.classList.remove('text-green-400', 'text-yellow-400', 'text-[#00D4AA]');
+                countEl.classList.add('text-red-400');
             }
 
             updateProgress();
@@ -352,16 +323,16 @@ Conclusion:
 
             // Simulate evaluation progress
             setTimeout(() => {
-                document.getElementById('eval-task1').classList.remove('text-gray-400');
-                document.getElementById('eval-task1').classList.add('text-purple-600');
+                document.getElementById('eval-task1').classList.remove('text-gray-600');
+                document.getElementById('eval-task1').classList.add('text-[#00D4AA]');
             }, 500);
             setTimeout(() => {
-                document.getElementById('eval-task2').classList.remove('text-gray-400');
-                document.getElementById('eval-task2').classList.add('text-purple-600');
+                document.getElementById('eval-task2').classList.remove('text-gray-600');
+                document.getElementById('eval-task2').classList.add('text-[#00D4AA]');
             }, 1500);
             setTimeout(() => {
-                document.getElementById('eval-essay').classList.remove('text-gray-400');
-                document.getElementById('eval-essay').classList.add('text-purple-600');
+                document.getElementById('eval-essay').classList.remove('text-gray-600');
+                document.getElementById('eval-essay').classList.add('text-[#00D4AA]');
             }, 2500);
 
             const formData = new FormData(this);

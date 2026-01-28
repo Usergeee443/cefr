@@ -3,28 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listening Test - CEFR Mock Test</title>
+    <title>Listening Test - OSCO.</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#4F46E5',
-                        secondary: '#10B981',
-                    }
-                }
-            }
-        }
-    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .option-btn:hover { transform: translateY(-2px); }
+        * { font-family: 'Inter', sans-serif; }
+        *, *::before, *::after { border-radius: 0 !important; }
+        body { background-color: #0B1628; }
+        .option-btn { transition: all 0.15s ease; }
         .option-btn.selected {
-            background-color: #3B82F6 !important;
-            color: white !important;
-            border-color: #3B82F6 !important;
+            background-color: #00D4AA !important;
+            color: #0B1628 !important;
+            border-color: #00D4AA !important;
+            font-weight: 700;
         }
         .transcript-content {
             max-height: 0;
@@ -36,44 +27,54 @@
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
-    <!-- Header -->
-    <header class="bg-white shadow-sm fixed top-0 left-0 right-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center">
-                <span class="text-xl font-bold text-primary">CEFR Test</span>
-                <span class="ml-4 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">Listening</span>
+<body class="min-h-screen text-white">
+
+    <!-- Fixed Header -->
+    <header class="bg-[#0B1628] border-b border-gray-800 fixed top-0 left-0 right-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <a href="/" class="text-xl font-black">
+                    <span class="text-[#00D4AA]">OSCO</span><span class="text-white">.</span>
+                </a>
+                <div class="h-5 w-px bg-gray-700"></div>
+                <span class="text-sm font-semibold text-[#00D4AA] uppercase tracking-wider">Listening</span>
             </div>
-            <div class="flex items-center space-x-4">
-                <div id="timer" class="text-lg font-mono bg-gray-100 px-4 py-2 rounded-lg">
+            <div class="flex items-center gap-6">
+                <div id="timer" class="text-lg font-mono text-white bg-[#0F2035] border border-gray-700 px-4 py-1.5">
                     40:00
                 </div>
-                <div class="text-sm text-gray-600">
-                    Progress: <span id="progress">0</span>%
+                <div class="text-sm text-gray-400">
+                    <span id="progress" class="text-[#00D4AA] font-bold">0</span><span class="text-gray-600">%</span>
                 </div>
             </div>
         </div>
-        <div class="w-full bg-gray-200 h-1">
-            <div id="progress-bar" class="bg-blue-500 h-1 transition-all duration-300" style="width: 0%"></div>
+        <!-- Progress bar -->
+        <div class="w-full bg-[#0F2035] h-0.5">
+            <div id="progress-bar" class="bg-[#00D4AA] h-0.5 transition-all duration-300" style="width: 0%"></div>
         </div>
     </header>
 
-    <main class="pt-24 pb-12 px-4">
+    <main class="pt-20 pb-16 px-4">
         <div class="max-w-4xl mx-auto">
             <!-- Instructions -->
-            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-8 rounded-r-lg">
-                <h3 class="font-semibold text-blue-900 mb-2">Instructions</h3>
-                <p class="text-blue-800 text-sm">Read the transcript for each audio and answer the questions. In a real CEFR exam, you would listen to audio recordings. Click "Show Transcript" to reveal the audio content.</p>
+            <div class="bg-[#0F2035] border border-[#00D4AA]/30 p-4 mb-8">
+                <h3 class="font-semibold text-[#00D4AA] mb-2 text-sm uppercase tracking-wider">Instructions</h3>
+                <p class="text-gray-400 text-sm">Read the transcript for each audio and answer the questions. In a real CEFR exam, you would listen to audio recordings. Click "Show Transcript" to reveal the audio content.</p>
             </div>
 
             <form id="listening-form">
                 {% for part in test_data.parts %}
                 <section class="part-section mb-12" data-part="{{ part.part_number }}">
-                    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="bg-[#0F2035] border border-gray-800 overflow-hidden">
                         <!-- Part Header -->
-                        <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6">
-                            <h2 class="text-2xl font-bold">{{ part.title }}</h2>
-                            <p class="mt-2 text-blue-100">{{ part.instruction }}</p>
+                        <div class="bg-[#162A40] border-b border-gray-700 p-6">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-8 h-8 bg-[#00D4AA] flex items-center justify-center text-[#0B1628] font-bold text-sm">
+                                    {{ part.part_number }}
+                                </div>
+                                <h2 class="text-xl font-bold text-white">{{ part.title }}</h2>
+                            </div>
+                            <p class="text-gray-400 text-sm ml-11">{{ part.instruction }}</p>
                         </div>
 
                         <div class="p-6">
@@ -81,34 +82,34 @@
                             <!-- Part 1: Short Conversations -->
                             <div class="space-y-6">
                                 {% for q in part.questions %}
-                                <div class="question-block p-4 bg-gray-50 rounded-lg border" data-question="{{ q.number }}">
+                                <div class="question-block p-4 bg-[#0B1628] border border-gray-800" data-question="{{ q.number }}">
                                     <div class="flex items-center justify-between mb-3">
-                                        <span class="font-bold text-blue-600">Question {{ q.number }}</span>
-                                        <button type="button" class="transcript-toggle text-sm text-blue-600 hover:text-blue-800 flex items-center">
-                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                                        <span class="font-bold text-[#00D4AA]">Question {{ q.number }}</span>
+                                        <button type="button" class="transcript-toggle text-sm text-[#00D4AA] hover:text-white flex items-center gap-1">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="square" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
                                             </svg>
                                             Show Transcript
                                         </button>
                                     </div>
 
-                                    <div class="text-sm text-gray-600 mb-3">
+                                    <div class="text-sm text-gray-500 mb-3">
                                         <em>{{ q.audio_description }}</em>
                                     </div>
 
-                                    <div class="transcript-content bg-blue-50 p-4 rounded-lg mb-4">
-                                        <p class="text-gray-700 whitespace-pre-line">{{ q.transcript }}</p>
+                                    <div class="transcript-content bg-[#162A40] border border-gray-700 p-4 mb-4">
+                                        <p class="text-gray-300 whitespace-pre-line">{{ q.transcript }}</p>
                                     </div>
 
-                                    <div class="font-medium text-gray-800 mb-3">{{ q.question }}</div>
+                                    <div class="font-medium text-white mb-3">{{ q.question }}</div>
 
                                     <div class="grid gap-2">
                                         {% for letter, option in q.options.items() %}
                                         <button type="button"
-                                                class="option-btn p-3 border-2 border-gray-200 rounded-lg text-left hover:border-blue-500 transition flex items-start"
+                                                class="option-btn p-3 border border-gray-700 bg-[#0F2035] text-left text-sm text-gray-300 hover:border-[#00D4AA] hover:text-white transition flex items-start"
                                                 data-question="{{ q.number }}"
                                                 data-value="{{ letter }}">
-                                            <span class="font-bold text-blue-600 mr-2">{{ letter }}.</span>
+                                            <span class="font-bold text-[#00D4AA] mr-2">{{ letter }}.</span>
                                             <span>{{ option }}</span>
                                         </button>
                                         {% endfor %}
@@ -121,26 +122,26 @@
                             {% elif part.type == "sentence_completion" %}
                             <!-- Part 2: Sentence Completion -->
                             <div class="mb-6">
-                                <button type="button" class="transcript-toggle w-full text-left p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition flex items-center justify-between">
-                                    <span class="font-medium text-blue-800">
-                                        <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                                <button type="button" class="transcript-toggle w-full text-left p-4 bg-[#162A40] border border-gray-700 hover:border-[#00D4AA] transition flex items-center justify-between">
+                                    <span class="font-medium text-white flex items-center gap-2">
+                                        <svg class="w-5 h-5 text-[#00D4AA]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="square" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
                                         </svg>
                                         {{ part.audio_description }}
                                     </span>
-                                    <span class="text-sm text-blue-600">Click to show transcript</span>
+                                    <span class="text-sm text-[#00D4AA]">Click to show transcript</span>
                                 </button>
-                                <div class="transcript-content bg-gray-50 p-4 rounded-lg mt-2 border">
-                                    <p class="text-gray-700 whitespace-pre-line leading-relaxed">{{ part.transcript }}</p>
+                                <div class="transcript-content bg-[#0B1628] border border-gray-800 p-4 mt-2">
+                                    <p class="text-gray-300 whitespace-pre-line leading-relaxed">{{ part.transcript }}</p>
                                 </div>
                             </div>
 
                             <div class="space-y-4">
                                 {% for q in part.questions %}
-                                <div class="question-block p-4 bg-gray-50 rounded-lg border flex items-center" data-question="{{ q.number }}">
-                                    <span class="font-bold text-blue-600 mr-3">{{ q.number }}.</span>
-                                    <div class="flex-1">
-                                        {{ q.question | replace("_____", "<input type='text' name='" ~ q.number ~ "' class='border-b-2 border-blue-500 px-2 py-1 w-32 text-center outline-none bg-white' placeholder='answer'>") | safe }}
+                                <div class="question-block p-4 bg-[#0B1628] border border-gray-800 flex items-center" data-question="{{ q.number }}">
+                                    <span class="font-bold text-[#00D4AA] mr-3">{{ q.number }}.</span>
+                                    <div class="flex-1 text-gray-300">
+                                        {{ q.question | replace("_____", "<input type='text' name='" ~ q.number ~ "' class='border-b-2 border-[#00D4AA] px-2 py-1 w-32 text-center outline-none bg-transparent text-white' placeholder='answer'>") | safe }}
                                     </div>
                                 </div>
                                 {% endfor %}
@@ -149,11 +150,11 @@
                             {% elif part.type == "multiple_matching" %}
                             <!-- Part 3: Multiple Matching -->
                             <div class="mb-6">
-                                <h4 class="font-semibold text-gray-800 mb-4">Options:</h4>
-                                <div class="grid md:grid-cols-2 gap-3 bg-blue-50 p-4 rounded-lg">
+                                <h4 class="font-semibold text-white mb-4 text-sm uppercase tracking-wider">Options:</h4>
+                                <div class="grid md:grid-cols-2 gap-3 bg-[#0B1628] border border-gray-800 p-4">
                                     {% for letter, option in part.options.items() %}
-                                    <div class="p-2 bg-white rounded border">
-                                        <span class="font-bold text-blue-600">{{ letter }}.</span> {{ option }}
+                                    <div class="p-2 bg-[#0F2035] border border-gray-700 text-sm text-gray-300">
+                                        <span class="font-bold text-[#00D4AA]">{{ letter }}.</span> {{ option }}
                                     </div>
                                     {% endfor %}
                                 </div>
@@ -161,19 +162,19 @@
 
                             <div class="space-y-6">
                                 {% for speaker in part.speakers %}
-                                <div class="question-block p-4 bg-gray-50 rounded-lg border" data-question="{{ speaker.number }}">
+                                <div class="question-block p-4 bg-[#0B1628] border border-gray-800" data-question="{{ speaker.number }}">
                                     <div class="flex items-center justify-between mb-3">
-                                        <span class="font-bold text-blue-600">{{ speaker.name }} (Question {{ speaker.number }})</span>
-                                        <button type="button" class="transcript-toggle text-sm text-blue-600 hover:text-blue-800">
+                                        <span class="font-bold text-[#00D4AA]">{{ speaker.name }} (Question {{ speaker.number }})</span>
+                                        <button type="button" class="transcript-toggle text-sm text-[#00D4AA] hover:text-white">
                                             Show Transcript
                                         </button>
                                     </div>
-                                    <div class="transcript-content bg-blue-50 p-4 rounded-lg mb-4">
-                                        <p class="text-gray-700 italic">{{ speaker.transcript }}</p>
+                                    <div class="transcript-content bg-[#162A40] border border-gray-700 p-4 mb-4">
+                                        <p class="text-gray-300 italic">{{ speaker.transcript }}</p>
                                     </div>
-                                    <div class="flex items-center space-x-3">
-                                        <span class="text-gray-700">What does {{ speaker.name }} say?</span>
-                                        <select name="{{ speaker.number }}" class="border-2 border-gray-200 rounded-lg px-4 py-2 focus:border-blue-500 outline-none">
+                                    <div class="flex items-center gap-3">
+                                        <span class="text-gray-400">What does {{ speaker.name }} say?</span>
+                                        <select name="{{ speaker.number }}" class="bg-[#162A40] border border-gray-700 text-white px-4 py-2 focus:border-[#00D4AA] outline-none">
                                             <option value="">Select answer...</option>
                                             {% for letter in part.options.keys() %}
                                             <option value="{{ letter }}">{{ letter }}</option>
@@ -187,33 +188,33 @@
                             {% elif part.type == "interview" %}
                             <!-- Part 4: Interview -->
                             <div class="mb-6">
-                                <button type="button" class="transcript-toggle w-full text-left p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition flex items-center justify-between">
-                                    <span class="font-medium text-blue-800">
-                                        <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                                <button type="button" class="transcript-toggle w-full text-left p-4 bg-[#162A40] border border-gray-700 hover:border-[#00D4AA] transition flex items-center justify-between">
+                                    <span class="font-medium text-white flex items-center gap-2">
+                                        <svg class="w-5 h-5 text-[#00D4AA]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="square" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
                                         </svg>
                                         {{ part.audio_description }}
                                     </span>
-                                    <span class="text-sm text-blue-600">Click to show transcript</span>
+                                    <span class="text-sm text-[#00D4AA]">Click to show transcript</span>
                                 </button>
-                                <div class="transcript-content bg-gray-50 p-4 rounded-lg mt-2 border max-h-64 overflow-y-auto">
-                                    <p class="text-gray-700 whitespace-pre-line leading-relaxed">{{ part.transcript }}</p>
+                                <div class="transcript-content bg-[#0B1628] border border-gray-800 p-4 mt-2 max-h-64 overflow-y-auto">
+                                    <p class="text-gray-300 whitespace-pre-line leading-relaxed">{{ part.transcript }}</p>
                                 </div>
                             </div>
 
                             <div class="space-y-6">
                                 {% for q in part.questions %}
-                                <div class="question-block p-4 bg-gray-50 rounded-lg border" data-question="{{ q.number }}">
-                                    <div class="font-medium text-gray-800 mb-3">
-                                        <span class="text-blue-600 font-bold">{{ q.number }}.</span> {{ q.question }}
+                                <div class="question-block p-4 bg-[#0B1628] border border-gray-800" data-question="{{ q.number }}">
+                                    <div class="font-medium text-white mb-3">
+                                        <span class="text-[#00D4AA] font-bold">{{ q.number }}.</span> {{ q.question }}
                                     </div>
                                     <div class="grid gap-2">
                                         {% for letter, option in q.options.items() %}
                                         <button type="button"
-                                                class="option-btn p-3 border-2 border-gray-200 rounded-lg text-left hover:border-blue-500 transition flex items-start"
+                                                class="option-btn p-3 border border-gray-700 bg-[#0F2035] text-left text-sm text-gray-300 hover:border-[#00D4AA] hover:text-white transition flex items-start"
                                                 data-question="{{ q.number }}"
                                                 data-value="{{ letter }}">
-                                            <span class="font-bold text-blue-600 mr-2">{{ letter }}.</span>
+                                            <span class="font-bold text-[#00D4AA] mr-2">{{ letter }}.</span>
                                             <span>{{ option }}</span>
                                         </button>
                                         {% endfor %}
@@ -229,21 +230,22 @@
                 {% endfor %}
 
                 <!-- Submit Button -->
-                <div class="text-center mt-8">
+                <div class="text-center mt-10">
                     <button type="submit"
-                            class="bg-blue-600 text-white px-12 py-4 rounded-xl font-semibold text-lg hover:bg-blue-700 transition shadow-lg">
-                        Submit Listening Test & Continue to Writing
+                            class="bg-[#00D4AA] text-[#0B1628] px-12 py-4 font-bold text-lg hover:bg-[#00B894] transition-colors">
+                        Submit Listening Test
                     </button>
+                    <p class="text-gray-600 text-xs mt-3">Continue to Writing after submission</p>
                 </div>
             </form>
         </div>
     </main>
 
     <!-- Loading Overlay -->
-    <div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-xl p-8 text-center">
-            <div class="animate-spin w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
-            <p class="text-gray-700">Submitting your answers...</p>
+    <div id="loading-overlay" class="fixed inset-0 bg-[#0B1628]/90 flex items-center justify-center z-50 hidden">
+        <div class="bg-[#0F2035] border border-gray-700 p-8 text-center">
+            <div class="animate-spin w-10 h-10 border-2 border-[#00D4AA] border-t-transparent mx-auto mb-4"></div>
+            <p class="text-gray-300 text-sm">Submitting your answers...</p>
         </div>
     </div>
 
@@ -258,7 +260,7 @@
             timerEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
             if (timeLeft <= 300) {
-                timerEl.classList.add('text-red-600', 'font-bold');
+                timerEl.classList.add('text-red-400', 'border-red-500');
             }
 
             if (timeLeft > 0) {
@@ -276,7 +278,11 @@
                 const content = this.closest('.question-block, .mb-6').querySelector('.transcript-content');
                 if (content) {
                     content.classList.toggle('open');
-                    this.textContent = content.classList.contains('open') ? 'Hide Transcript' : 'Show Transcript';
+                    if (this.textContent.includes('Show')) {
+                        this.innerHTML = this.innerHTML.replace('Show', 'Hide');
+                    } else {
+                        this.innerHTML = this.innerHTML.replace('Hide', 'Show');
+                    }
                 }
             });
         });
