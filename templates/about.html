@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if lang == 'uz' %}Biz haqimizda{% else %}About Us{% endif %} - CEFR Level</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        *, *::before, *::after { border-radius: 0 !important; }
+        body { background-color: #0B1628; }
+    </style>
+</head>
+<body class="min-h-screen text-white">
+
+    <!-- Header -->
+    <header class="border-b border-gray-800 fixed top-0 left-0 right-0 z-50 bg-[#0B1628]">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="/" class="flex items-center gap-2">
+                    <span class="text-2xl font-black text-white">CEFR</span>
+                    <span class="text-2xl font-black text-[#00D4AA]">Level</span>
+                </a>
+                <nav class="hidden md:flex items-center gap-8">
+                    <a href="/pricing" class="text-gray-400 hover:text-white transition font-medium">{{ t.pricing }}</a>
+                    <a href="/about" class="text-[#00D4AA] font-medium">{{ t.about }}</a>
+                </nav>
+                <div class="flex items-center gap-4">
+                    <div class="relative group">
+                        <button class="flex items-center gap-2 text-gray-400 hover:text-white transition px-3 py-2 border border-gray-700">
+                            <span class="text-sm font-medium uppercase">{{ lang }}</span>
+                        </button>
+                        <div class="absolute right-0 mt-1 bg-[#0F2035] border border-gray-700 hidden group-hover:block min-w-[120px]">
+                            <a href="/lang/uz" class="block px-4 py-2 text-sm {% if lang == 'uz' %}text-[#00D4AA]{% else %}text-gray-400{% endif %} hover:bg-[#162A40]">O'zbek</a>
+                            <a href="/lang/en" class="block px-4 py-2 text-sm {% if lang == 'en' %}text-[#00D4AA]{% else %}text-gray-400{% endif %} hover:bg-[#162A40]">English</a>
+                        </div>
+                    </div>
+                    <a href="/start" class="bg-[#00D4AA] text-[#0B1628] px-6 py-2 font-bold hover:bg-[#00B894] transition">
+                        {{ t.start_test }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-24 pb-20 px-6">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-16">
+                <h1 class="text-4xl font-black mb-4">{% if lang == 'uz' %}Biz haqimizda{% else %}About Us{% endif %}</h1>
+            </div>
+
+            <div class="space-y-12">
+                <!-- About CEFR Level -->
+                <div class="bg-[#0F2035] border border-gray-800 p-8">
+                    <h2 class="text-2xl font-bold text-[#00D4AA] mb-4">CEFR Level</h2>
+                    {% if lang == 'uz' %}
+                    <p class="text-gray-400 leading-relaxed mb-4">
+                        CEFR Level - bu ingliz tili darajangizni aniqlash uchun mo'ljallangan zamonaviy platforma.
+                        Bizning test Reading, Listening va Writing ko'nikmalarini baholaydi va sizga CEFR standartlari
+                        bo'yicha (A1 dan C2 gacha) aniq natija beradi.
+                    </p>
+                    <p class="text-gray-400 leading-relaxed">
+                        Writing qismini sun'iy intellekt baholaydi, bu esa sizga batafsil fikr-mulohaza olish imkonini beradi.
+                    </p>
+                    {% else %}
+                    <p class="text-gray-400 leading-relaxed mb-4">
+                        CEFR Level is a modern platform designed to determine your English proficiency level.
+                        Our test evaluates Reading, Listening, and Writing skills and provides you with an accurate
+                        result according to CEFR standards (from A1 to C2).
+                    </p>
+                    <p class="text-gray-400 leading-relaxed">
+                        The Writing section is evaluated by artificial intelligence, which gives you detailed feedback.
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- About OSCO -->
+                <div class="bg-[#0F2035] border border-gray-800 p-8">
+                    <h2 class="text-2xl font-bold text-[#00D4AA] mb-4">OSCO</h2>
+                    {% if lang == 'uz' %}
+                    <p class="text-gray-400 leading-relaxed mb-4">
+                        OSCO - bu zamonaviy IT mahsulotlar ishlab chiqaruvchi kompaniya. Biz tajribali dasturchilar
+                        va dizaynerlardan tashkil topgan jamoamiz. OSCO turli yo'nalishlardagi innovatsion IT
+                        loyihalarni yaratadi va ularni bitta kuchli brend ostida bozorga olib chiqadi.
+                    </p>
+                    <p class="text-gray-400 leading-relaxed">
+                        CEFR Level - bu OSCO ning ta'lim sohasidagi birinchi loyihasi.
+                    </p>
+                    {% else %}
+                    <p class="text-gray-400 leading-relaxed mb-4">
+                        OSCO is a company that develops modern IT products. We are a team of experienced
+                        developers and designers. OSCO creates innovative IT projects in various fields
+                        and brings them to market under one strong brand.
+                    </p>
+                    <p class="text-gray-400 leading-relaxed">
+                        CEFR Level is OSCO's first project in the education sector.
+                    </p>
+                    {% endif %}
+                </div>
+
+                <!-- About CEFR -->
+                <div class="bg-[#0F2035] border border-gray-800 p-8">
+                    <h2 class="text-2xl font-bold text-[#00D4AA] mb-4">CEFR {% if lang == 'uz' %}haqida{% else %}Framework{% endif %}</h2>
+                    {% if lang == 'uz' %}
+                    <p class="text-gray-400 leading-relaxed mb-4">
+                        CEFR (Common European Framework of Reference for Languages) - bu til bilish darajasini
+                        baholash uchun xalqaro standart. U 6 ta darajadan iborat:
+                    </p>
+                    {% else %}
+                    <p class="text-gray-400 leading-relaxed mb-4">
+                        CEFR (Common European Framework of Reference for Languages) is an international standard
+                        for measuring language proficiency. It consists of 6 levels:
+                    </p>
+                    {% endif %}
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
+                        <div class="bg-[#0B1628] border border-gray-800 p-4">
+                            <div class="text-xl font-black text-[#00D4AA]">A1</div>
+                            <div class="text-sm text-gray-500">Beginner</div>
+                        </div>
+                        <div class="bg-[#0B1628] border border-gray-800 p-4">
+                            <div class="text-xl font-black text-[#00D4AA]">A2</div>
+                            <div class="text-sm text-gray-500">Elementary</div>
+                        </div>
+                        <div class="bg-[#0B1628] border border-gray-800 p-4">
+                            <div class="text-xl font-black text-[#00D4AA]">B1</div>
+                            <div class="text-sm text-gray-500">Intermediate</div>
+                        </div>
+                        <div class="bg-[#0B1628] border border-gray-800 p-4">
+                            <div class="text-xl font-black text-[#00D4AA]">B2</div>
+                            <div class="text-sm text-gray-500">Upper Intermediate</div>
+                        </div>
+                        <div class="bg-[#0B1628] border border-gray-800 p-4">
+                            <div class="text-xl font-black text-[#00D4AA]">C1</div>
+                            <div class="text-sm text-gray-500">Advanced</div>
+                        </div>
+                        <div class="bg-[#0B1628] border border-gray-800 p-4">
+                            <div class="text-xl font-black text-[#00D4AA]">C2</div>
+                            <div class="text-sm text-gray-500">Mastery</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CTA -->
+                <div class="text-center">
+                    <a href="/start" class="inline-block bg-[#00D4AA] text-[#0B1628] px-10 py-4 font-bold text-lg hover:bg-[#00B894] transition">
+                        {{ t.start_test }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 py-8 px-6">
+        <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <span class="text-xl font-black text-white">CEFR</span>
+                <span class="text-xl font-black text-[#00D4AA]">Level</span>
+            </div>
+            <div class="text-sm text-gray-600">{% if lang == 'uz' %}OSCO mahsuloti{% else %}An OSCO Product{% endif %}</div>
+        </div>
+    </footer>
+</body>
+</html>
