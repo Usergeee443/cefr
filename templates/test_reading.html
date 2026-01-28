@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading Test - CEFR Mock Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F46E5',
+                        secondary: '#10B981',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .passage-text { line-height: 1.8; }
+        .gap-input {
+            width: 100px;
+            border-bottom: 2px solid #4F46E5;
+            text-align: center;
+            background: transparent;
+            outline: none;
+        }
+        .option-btn:hover { transform: translateY(-2px); }
+        .option-btn.selected {
+            background-color: #4F46E5 !important;
+            color: white !important;
+            border-color: #4F46E5 !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm fixed top-0 left-0 right-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <span class="text-xl font-bold text-primary">CEFR Test</span>
+                <span class="ml-4 px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">Reading</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div id="timer" class="text-lg font-mono bg-gray-100 px-4 py-2 rounded-lg">
+                    60:00
+                </div>
+                <div class="text-sm text-gray-600">
+                    Progress: <span id="progress">0</span>%
+                </div>
+            </div>
+        </div>
+        <div class="w-full bg-gray-200 h-1">
+            <div id="progress-bar" class="bg-green-500 h-1 transition-all duration-300" style="width: 0%"></div>
+        </div>
+    </header>
+
+    <main class="pt-24 pb-12 px-4">
+        <div class="max-w-4xl mx-auto">
+            <form id="reading-form">
+                {% for part in test_data.parts %}
+                <section class="part-section mb-12" data-part="{{ part.part_number }}">
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                        <!-- Part Header -->
+                        <div class="bg-gradient-to-r from-green-600 to-green-700 text-white p-6">
+                            <h2 class="text-2xl font-bold">{{ part.title }}</h2>
+                            <p class="mt-2 text-green-100">{{ part.instruction }}</p>
+                        </div>
+
+                        <div class="p-6">
+                            {% if part.type == "multiple_choice_cloze" %}
+                            <!-- Part 1: Multiple Choice Cloze -->
+                            <div class="passage-text text-gray-700 mb-8 bg-gray-50 p-6 rounded-lg border">
+                                {{ part.text | replace("(1)_____", "<span class='font-bold text-primary'>(1)_____</span>") | replace("(2)_____", "<span class='font-bold text-primary'>(2)_____</span>") | replace("(3)_____", "<span class='font-bold text-primary'>(3)_____</span>") | replace("(4)_____", "<span class='font-bold text-primary'>(4)_____</span>") | replace("(5)_____", "<span class='font-bold text-primary'>(5)_____</span>") | replace("(6)_____", "<span class='font-bold text-primary'>(6)_____</span>") | replace("(7)_____", "<span class='font-bold text-primary'>(7)_____</span>") | replace("(8)_____", "<span class='font-bold text-primary'>(8)_____</span>") | safe }}
+                            </div>
+                            <div class="grid gap-4">
+                                {% for q in part.questions %}
+                                <div class="question-block p-4 bg-gray-50 rounded-lg border" data-question="{{ q.number }}">
+                                    <div class="font-medium text-gray-700 mb-3">Question {{ q.number }}</div>
+                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                                        {% for letter, option in q.options.items() %}
+                                        <button type="button"
+                                                class="option-btn p-3 border-2 border-gray-200 rounded-lg text-left hover:border-primary transition"
+                                                data-question="{{ q.number }}"
+                                                data-value="{{ letter }}">
+                                            <span class="font-bold text-primary">{{ letter }}.</span> {{ option }}
+                                        </button>
+                                        {% endfor %}
+                                    </div>
+                                    <input type="hidden" name="{{ q.number }}" value="">
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            {% elif part.type == "open_cloze" %}
+                            <!-- Part 2: Open Cloze -->
+                            <div class="passage-text text-gray-700 mb-8 bg-gray-50 p-6 rounded-lg border">
+                                <p class="mb-4">Read the text and fill in each gap with <strong>ONE word only</strong>.</p>
+                                <div class="leading-loose">
+                                    {{ part.text | replace("(9)_____", "<input type='text' name='9' class='gap-input' placeholder='9'>") | replace("(10)_____", "<input type='text' name='10' class='gap-input' placeholder='10'>") | replace("(11)_____", "<input type='text' name='11' class='gap-input' placeholder='11'>") | replace("(12)_____", "<input type='text' name='12' class='gap-input' placeholder='12'>") | replace("(13)_____", "<input type='text' name='13' class='gap-input' placeholder='13'>") | replace("(14)_____", "<input type='text' name='14' class='gap-input' placeholder='14'>") | replace("(15)_____", "<input type='text' name='15' class='gap-input' placeholder='15'>") | replace("(16)_____", "<input type='text' name='16' class='gap-input' placeholder='16'>") | safe }}
+                                </div>
+                            </div>
+
+                            {% elif part.type == "multiple_choice_comprehension" %}
+                            <!-- Part 3: Multiple Choice Comprehension -->
+                            <div class="passage-text text-gray-700 mb-8 bg-gray-50 p-6 rounded-lg border max-h-96 overflow-y-auto">
+                                {{ part.text | safe }}
+                            </div>
+                            <div class="space-y-6">
+                                {% for q in part.questions %}
+                                <div class="question-block p-4 bg-gray-50 rounded-lg border" data-question="{{ q.number }}">
+                                    <div class="font-medium text-gray-800 mb-3">
+                                        <span class="text-primary font-bold">{{ q.number }}.</span> {{ q.question }}
+                                    </div>
+                                    <div class="grid gap-2">
+                                        {% for letter, option in q.options.items() %}
+                                        <button type="button"
+                                                class="option-btn p-3 border-2 border-gray-200 rounded-lg text-left hover:border-primary transition flex items-start"
+                                                data-question="{{ q.number }}"
+                                                data-value="{{ letter }}">
+                                            <span class="font-bold text-primary mr-2">{{ letter }}.</span>
+                                            <span>{{ option }}</span>
+                                        </button>
+                                        {% endfor %}
+                                    </div>
+                                    <input type="hidden" name="{{ q.number }}" value="">
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            {% elif part.type == "gapped_text" %}
+                            <!-- Part 4: Gapped Text -->
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="passage-text text-gray-700 bg-gray-50 p-6 rounded-lg border">
+                                    <h4 class="font-semibold text-gray-800 mb-4">Text with gaps:</h4>
+                                    <div class="leading-loose">
+                                        {{ part.text | replace("(23)_____", "<span class='inline-block bg-primary text-white px-2 py-1 rounded font-bold'>23</span>") | replace("(24)_____", "<span class='inline-block bg-primary text-white px-2 py-1 rounded font-bold'>24</span>") | replace("(25)_____", "<span class='inline-block bg-primary text-white px-2 py-1 rounded font-bold'>25</span>") | replace("(26)_____", "<span class='inline-block bg-primary text-white px-2 py-1 rounded font-bold'>26</span>") | replace("(27)_____", "<span class='inline-block bg-primary text-white px-2 py-1 rounded font-bold'>27</span>") | replace("(28)_____", "<span class='inline-block bg-primary text-white px-2 py-1 rounded font-bold'>28</span>") | safe }}
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800 mb-4">Removed sentences:</h4>
+                                    <div class="space-y-3">
+                                        {% for letter, sentence in part.removed_sentences.items() %}
+                                        <div class="p-3 bg-white border-2 border-gray-200 rounded-lg">
+                                            <span class="font-bold text-primary">{{ letter }}.</span> {{ sentence }}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="mt-6 space-y-3">
+                                        <h4 class="font-semibold text-gray-800">Your answers:</h4>
+                                        {% for q in part.questions %}
+                                        <div class="flex items-center space-x-3">
+                                            <span class="font-medium text-gray-700">Gap {{ q.number }}:</span>
+                                            <select name="{{ q.number }}" class="border-2 border-gray-200 rounded-lg px-4 py-2 focus:border-primary outline-none">
+                                                <option value="">Select...</option>
+                                                <option value="A">A</option>
+                                                <option value="B">B</option>
+                                                <option value="C">C</option>
+                                                <option value="D">D</option>
+                                                <option value="E">E</option>
+                                                <option value="F">F</option>
+                                                <option value="G">G</option>
+                                            </select>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </section>
+                {% endfor %}
+
+                <!-- Submit Button -->
+                <div class="text-center mt-8">
+                    <button type="submit"
+                            class="bg-green-600 text-white px-12 py-4 rounded-xl font-semibold text-lg hover:bg-green-700 transition shadow-lg">
+                        Submit Reading Test & Continue to Listening
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-xl p-8 text-center">
+            <div class="animate-spin w-12 h-12 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p class="text-gray-700">Submitting your answers...</p>
+        </div>
+    </div>
+
+    <script>
+        // Timer
+        let timeLeft = {{ test_data.time_limit }} * 60;
+        const timerEl = document.getElementById('timer');
+
+        function updateTimer() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            if (timeLeft <= 300) {
+                timerEl.classList.add('text-red-600', 'font-bold');
+            }
+
+            if (timeLeft > 0) {
+                timeLeft--;
+                setTimeout(updateTimer, 1000);
+            } else {
+                document.getElementById('reading-form').dispatchEvent(new Event('submit'));
+            }
+        }
+        updateTimer();
+
+        // Option buttons for multiple choice
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const questionNum = this.dataset.question;
+                const value = this.dataset.value;
+
+                // Remove selected from siblings
+                document.querySelectorAll(`.option-btn[data-question="${questionNum}"]`).forEach(b => {
+                    b.classList.remove('selected');
+                });
+
+                // Add selected to clicked
+                this.classList.add('selected');
+
+                // Update hidden input
+                document.querySelector(`input[name="${questionNum}"]`).value = value;
+
+                updateProgress();
+            });
+        });
+
+        // Track input changes for open cloze
+        document.querySelectorAll('.gap-input').forEach(input => {
+            input.addEventListener('input', updateProgress);
+        });
+
+        // Track select changes for gapped text
+        document.querySelectorAll('select').forEach(select => {
+            select.addEventListener('change', updateProgress);
+        });
+
+        function updateProgress() {
+            const totalQuestions = 28; // Total questions in reading test
+            let answered = 0;
+
+            // Count answered questions
+            document.querySelectorAll('input[type="hidden"]').forEach(input => {
+                if (input.value) answered++;
+            });
+            document.querySelectorAll('.gap-input').forEach(input => {
+                if (input.value.trim()) answered++;
+            });
+            document.querySelectorAll('select').forEach(select => {
+                if (select.value) answered++;
+            });
+
+            const progress = Math.round((answered / totalQuestions) * 100);
+            document.getElementById('progress').textContent = progress;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+        }
+
+        // Form submission
+        document.getElementById('reading-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            document.getElementById('loading-overlay').classList.remove('hidden');
+
+            const formData = new FormData(this);
+
+            try {
+                const response = await fetch('/test/reading/submit', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    window.location.href = result.redirect;
+                } else {
+                    alert('Error submitting test. Please try again.');
+                    document.getElementById('loading-overlay').classList.add('hidden');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error submitting test. Please try again.');
+                document.getElementById('loading-overlay').classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
