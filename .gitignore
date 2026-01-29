@@ -45,3 +45,8 @@ Thumbs.db
 # Database
 *.db
 *.sqlite3
+
+# Loyiha ma'lumotlari (deployda yangi yaratiladi)
+data/users.json
+data/test_history.json
+data/feedbacks.json

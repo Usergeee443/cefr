@@ -117,6 +117,31 @@ http://localhost:8000
 
 Testni boshlash uchun avval **Kirish** yoki **Ro'yxatdan o'tish** kerak.
 
+## Render'ga deploy qilish
+
+1. **Render.com** da hisob oching va [Dashboard](https://dashboard.render.com/) → **New** → **Web Service**.
+2. Repo ulang (GitHub/GitLab). Loyiha papkasi **cefr** bo‘lsa, **Root Directory** da `cefr` yozing.
+3. Sozlamalar:
+   - **Runtime:** Python 3
+   - **Build Command:** `pip install -r requirements.txt`
+   - **Start Command:** `uvicorn app:app --host 0.0.0.0 --port $PORT`
+4. **Environment** (Environment Variables) da qo‘shing:
+
+   | Key | Value |
+   |-----|--------|
+   | `SECRET_KEY` | Tasodifiy maxfiy kalit (session uchun) |
+   | `GOOGLE_CLIENT_ID` | Google OAuth Client ID |
+   | `GOOGLE_CLIENT_SECRET` | Google OAuth Client secret |
+   | `GOOGLE_REDIRECT_URI` | `https://YOUR-APP.onrender.com/auth/google/callback` |
+   | `OPENAI_API_KEY` | (ixtiyoriy) Writing AI baholash uchun |
+
+5. **Save** → deploy boshlanadi. Birinchi build 2–5 daqiqa davom etishi mumkin.
+6. **Google OAuth:** Google Cloud Console → Credentials → OAuth 2.0 Client ID → **Authorized redirect URIs** ga production manzilni qo‘shing:
+   - `https://YOUR-APP.onrender.com/auth/google/callback`
+   - (localhost manzillari ham qolsin, agar lokalda ham test qilsangiz.)
+
+**Eslatma:** Render bepul planida servis 15 daqiqa ishlamasa uyquga ketadi; birinchi so‘rov biroz sekin bo‘lishi mumkin.
+
 ## Loyiha strukturasi
 
 ```

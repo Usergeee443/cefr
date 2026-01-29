@@ -75,7 +75,9 @@ def get_translations(request: Request) -> dict:
     lang = get_lang(request)
     return TRANSLATIONS.get(lang, TRANSLATIONS["uz"])
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# Static fayllar (papka mavjud bo'lsa)
+if Path(__file__).resolve().parent.joinpath("static").exists():
+    app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 # In-memory stores
@@ -1487,4 +1489,7 @@ async def health():
     return {"status": "ok", "service": "OSCO CEFR"}
 
 if __name__ == "__main__":
-    uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
+    port = int(os.getenv("PORT", "8000"))
+    # Render va boshqa cloud'da PORT beriladi, reload o'chiq
+    use_reload = not os.getenv("PORT")
+    uvicorn.run("app:app", host="0.0.0.0", port=port, reload=use_reload)

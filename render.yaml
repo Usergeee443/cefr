@@ -1,0 +1,14 @@
+# Render Blueprint - https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: cefr-level
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.7
+      # Quyidagilarni Render Dashboard > Environment qo'shing:
+      # SECRET_KEY, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET,
+      # GOOGLE_REDIRECT_URI=https://YOUR-SERVICE.onrender.com/auth/google/callback
+      # OPENAI_API_KEY (ixtiyoriy, Writing AI uchun)
