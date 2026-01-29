@@ -12,6 +12,10 @@ import httpx
 from datetime import datetime
 from pathlib import Path
 
+# .env faylidan o'zgaruvchilarni yuklash (GOOGLE_CLIENT_SECRET va boshqalar)
+from dotenv import load_dotenv
+load_dotenv(Path(__file__).resolve().parent / ".env")  # app.py bilan bir papkada .env
+
 app = FastAPI(title="CEFR Level - English Assessment Platform")
 
 # Multi-language support
@@ -108,6 +112,112 @@ def save_json(filename: str, data: dict):
     with open(DATA_DIR / filename, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
+# ============ USERS (AUTH) ============
+
+USERS_FILE = "users.json"
+AUTH_COOKIE = "auth_token"
+AUTH_MAX_AGE = 30 * 24 * 3600  # 30 days
+
+def load_users() -> dict:
+    data = load_json(USERS_FILE)
+    if "users" not in data:
+        data["users"] = []
+    return data
+
+def save_users(data: dict):
+    save_json(USERS_FILE, data)
+
+def hash_password(password: str) -> str:
+    from passlib.hash import bcrypt
+    return bcrypt.using(rounds=12).hash(password)
+
+def verify_password(password: str, hash_str: str) -> bool:
+    from passlib.hash import bcrypt
+    try:
+        return bcrypt.verify(password, hash_str)
+    except Exception:
+        return False
+
+def get_user_by_id(uid: str):
+    data = load_users()
+    for u in data["users"]:
+        if u.get("id") == uid:
+            return u
+    return None
+
+def get_user_by_email(email: str):
+    data = load_users()
+    email_lower = (email or "").strip().lower()
+    for u in data["users"]:
+        if (u.get("email") or "").strip().lower() == email_lower:
+            return u
+    return None
+
+def get_user_by_google_id(google_id: str):
+    data = load_users()
+    for u in data["users"]:
+        if u.get("google_id") == google_id:
+            return u
+    return None
+
+def create_user(email: str, password: str, name: str = "") -> dict:
+    data = load_users()
+    uid = str(uuid.uuid4())
+    user = {
+        "id": uid,
+        "email": (email or "").strip().lower(),
+        "password_hash": hash_password(password),
+        "name": (name or "").strip() or (email or "").split("@")[0],
+        "google_id": None,
+        "avatar": None,
+        "created_at": datetime.now().isoformat(),
+    }
+    data["users"].append(user)
+    save_users(data)
+    return user
+
+def create_or_update_user_google(google_id: str, email: str, name: str, picture: str = None) -> dict:
+    data = load_users()
+    for u in data["users"]:
+        if u.get("google_id") == google_id:
+            u["email"] = (email or u.get("email", "")).strip().lower()
+            u["name"] = (name or u.get("name", "")).strip()
+            if picture:
+                u["avatar"] = picture
+            save_users(data)
+            return u
+    # New user
+    uid = str(uuid.uuid4())
+    user = {
+        "id": uid,
+        "email": (email or "").strip().lower(),
+        "password_hash": "",
+        "name": (name or "").strip() or (email or "").split("@")[0],
+        "google_id": google_id,
+        "avatar": picture,
+        "created_at": datetime.now().isoformat(),
+    }
+    data["users"].append(user)
+    save_users(data)
+    return user
+
+def get_current_user(request: Request):
+    token = request.cookies.get(AUTH_COOKIE)
+    if not token:
+        return None
+    try:
+        from itsdangerous import URLSafeTimedSerializer
+        secret = os.getenv("SECRET_KEY", "cefr-level-secret-change-in-production")
+        s = URLSafeTimedSerializer(secret)
+        uid = s.loads(token, max_age=AUTH_MAX_AGE)
+        return get_user_by_id(uid)
+    except Exception:
+        return None
+
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "957401626494-fap468c0rveevdd6r3flt6b0ih11au49.apps.googleusercontent.com")
+GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET", "")
+GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI", "http://localhost:8000/auth/google/callback")
+
 def get_reading_tests() -> list:
     data = load_json("reading_tests.json")
     return data.get("tests", [])
@@ -130,6 +240,63 @@ def save_feedback(fb: dict):
         data["feedbacks"] = []
     data["feedbacks"].append(fb)
     save_json("feedbacks.json", data)
+
+# ============ TEST HISTORY (foydalanuvchi test natijalari) ============
+
+TEST_HISTORY_FILE = "test_history.json"
+
+def load_test_history_data() -> dict:
+    data = load_json(TEST_HISTORY_FILE)
+    if "results" not in data:
+        data["results"] = []
+    return data
+
+def save_test_result(session: dict):
+    """Test to'liq tugagach natijani user_id bilan saqlaydi."""
+    if not session.get("user_id"):
+        return
+    if not all([
+        session.get("reading", {}).get("completed"),
+        session.get("listening", {}).get("completed"),
+        session.get("writing", {}).get("completed"),
+    ]):
+        return
+    data = load_test_history_data()
+    session_id = session.get("id")
+    for r in data["results"]:
+        if r.get("session_id") == session_id:
+            return  # allaqachon saqlangan
+    record = {
+        "session_id": session_id,
+        "user_id": session["user_id"],
+        "completed_at": datetime.now().isoformat(),
+        "reading_score": session.get("reading", {}).get("score", 0),
+        "reading_total": session.get("reading", {}).get("total", 0),
+        "reading_percentage": session.get("reading", {}).get("percentage", 0),
+        "listening_score": session.get("listening", {}).get("score", 0),
+        "listening_total": session.get("listening", {}).get("total", 0),
+        "listening_percentage": session.get("listening", {}).get("percentage", 0),
+        "writing_percentage": session.get("writing", {}).get("percentage", 0),
+        "overall_score": session.get("overall_score", 0),
+        "cefr_level": session.get("cefr_level") or "—",
+        "level_description": session.get("level_description") or "",
+    }
+    data["results"].append(record)
+    save_json(TEST_HISTORY_FILE, data)
+
+def get_test_history(user_id: str, limit: int = 50) -> list:
+    data = load_test_history_data()
+    user_results = [r for r in data["results"] if r.get("user_id") == user_id]
+    user_results.sort(key=lambda x: x.get("completed_at", ""), reverse=True)
+    return user_results[:limit]
+
+# Aloqa ma'lumotlari (profil sahifasida)
+CONTACT_INFO = {
+    "email": "info@cefrlevel.uz",
+    "telegram": "@cefrlevel",
+    "phone": "+998 71 123 45 67",
+    "address_uz": "Toshkent sh., O'zbekiston",
+}
 
 def init_default_data():
     """Initialize default test data if files don't exist"""
@@ -889,7 +1056,8 @@ async def set_language(lang: str):
 async def home(request: Request):
     t = get_translations(request)
     lang = get_lang(request)
-    return templates.TemplateResponse("index.html", {"request": request, "t": t, "lang": lang})
+    user = get_current_user(request)
+    return templates.TemplateResponse("index.html", {"request": request, "t": t, "lang": lang, "user": user})
 
 @app.get("/pricing", response_class=HTMLResponse)
 async def pricing_page(request: Request):
@@ -903,13 +1071,236 @@ async def about_page(request: Request):
     lang = get_lang(request)
     return templates.TemplateResponse("about.html", {"request": request, "t": t, "lang": lang})
 
-@app.get("/start", response_class=HTMLResponse)
-async def start_test(request: Request):
-    sid = str(uuid.uuid4())
-    get_session(sid)
+# ============ AUTH ROUTES ============
+
+LOGIN_ERROR_MESSAGES = {
+    "token_failed": "Google token olinmadi. .env faylida GOOGLE_CLIENT_SECRET o'rnating (Google Cloud Console → Credentials → OAuth 2.0 Client ID → Client secret).",
+    "missing_client_secret": "Google bilan kirish uchun .env da GOOGLE_CLIENT_SECRET o'rnating.",
+    "no_code": "Google javob bermadi. Qaytadan urinib ko'ring.",
+    "no_token": "Token olinmadi.",
+    "userinfo_failed": "Foydalanuvchi ma'lumotlari olinmadi.",
+    "no_google_id": "Google ID topilmadi.",
+}
+
+@app.get("/login", response_class=HTMLResponse)
+async def login_page(request: Request, error: str = "", next_url: str = ""):
+    user = get_current_user(request)
+    if user:
+        return RedirectResponse(url=next_url or "/", status_code=302)
     t = get_translations(request)
     lang = get_lang(request)
-    resp = templates.TemplateResponse("start.html", {"request": request, "session_id": sid, "t": t, "lang": lang})
+    error_message = LOGIN_ERROR_MESSAGES.get(error, error) if error else ""
+    return templates.TemplateResponse("login.html", {
+        "request": request, "t": t, "lang": lang, "error": error_message, "next_url": next_url or "/start",
+        "google_client_id": GOOGLE_CLIENT_ID
+    })
+
+@app.post("/login", response_class=HTMLResponse)
+async def login_submit(request: Request, email: str = Form(""), password: str = Form(""), next_url: str = Form("/start")):
+    email = (email or "").strip().lower()
+    if not email or not password:
+        return templates.TemplateResponse("login.html", {
+            "request": request, "t": get_translations(request), "lang": get_lang(request),
+            "error": "Email va parol kiriting.", "next_url": next_url, "google_client_id": GOOGLE_CLIENT_ID
+        })
+    user = get_user_by_email(email)
+    if not user or not user.get("password_hash") or not verify_password(password, user["password_hash"]):
+        return templates.TemplateResponse("login.html", {
+            "request": request, "t": get_translations(request), "lang": get_lang(request),
+            "error": "Email yoki parol noto'g'ri.", "next_url": next_url, "google_client_id": GOOGLE_CLIENT_ID
+        })
+    from itsdangerous import URLSafeTimedSerializer
+    secret = os.getenv("SECRET_KEY", "cefr-level-secret-change-in-production")
+    s = URLSafeTimedSerializer(secret)
+    token = s.dumps(user["id"])
+    resp = RedirectResponse(url=next_url or "/start", status_code=302)
+    resp.set_cookie(key=AUTH_COOKIE, value=token, max_age=AUTH_MAX_AGE, httponly=True, samesite="lax")
+    return resp
+
+@app.get("/register", response_class=HTMLResponse)
+async def register_page(request: Request, error: str = ""):
+    user = get_current_user(request)
+    if user:
+        return RedirectResponse(url="/", status_code=302)
+    t = get_translations(request)
+    lang = get_lang(request)
+    return templates.TemplateResponse("register.html", {
+        "request": request, "t": t, "lang": lang, "error": error, "google_client_id": GOOGLE_CLIENT_ID
+    })
+
+@app.post("/register", response_class=HTMLResponse)
+async def register_submit(request: Request, email: str = Form(""), password: str = Form(""), name: str = Form("")):
+    email = (email or "").strip().lower()
+    if not email or not password:
+        return templates.TemplateResponse("register.html", {
+            "request": request, "t": get_translations(request), "lang": get_lang(request),
+            "error": "Email va parol kiriting.", "google_client_id": GOOGLE_CLIENT_ID
+        })
+    if len(password) < 6:
+        return templates.TemplateResponse("register.html", {
+            "request": request, "t": get_translations(request), "lang": get_lang(request),
+            "error": "Parol kamida 6 belgidan iborat bo'lishi kerak.", "google_client_id": GOOGLE_CLIENT_ID
+        })
+    if get_user_by_email(email):
+        return templates.TemplateResponse("register.html", {
+            "request": request, "t": get_translations(request), "lang": get_lang(request),
+            "error": "Bu email allaqachon ro'yxatdan o'tgan.", "google_client_id": GOOGLE_CLIENT_ID
+        })
+    user = create_user(email, password, name)
+    from itsdangerous import URLSafeTimedSerializer
+    secret = os.getenv("SECRET_KEY", "cefr-level-secret-change-in-production")
+    ser = URLSafeTimedSerializer(secret)
+    token = ser.dumps(user["id"])
+    resp = RedirectResponse(url="/start", status_code=302)
+    resp.set_cookie(key=AUTH_COOKIE, value=token, max_age=AUTH_MAX_AGE, httponly=True, samesite="lax")
+    return resp
+
+@app.get("/logout")
+async def logout_route():
+    resp = RedirectResponse(url="/", status_code=302)
+    resp.delete_cookie(AUTH_COOKIE)
+    return resp
+
+@app.get("/profile", response_class=HTMLResponse)
+async def profile_page(request: Request):
+    user = get_current_user(request)
+    if not user:
+        return RedirectResponse(url="/login?next_url=/profile", status_code=302)
+    t = get_translations(request)
+    lang = get_lang(request)
+    test_history = get_test_history(user["id"])
+    return templates.TemplateResponse("profile.html", {
+        "request": request, "t": t, "lang": lang, "user": user,
+        "test_history": test_history, "contact": CONTACT_INFO
+    })
+
+@app.post("/profile/feedback")
+async def profile_feedback_submit(request: Request):
+    user = get_current_user(request)
+    if not user:
+        return JSONResponse({"success": False, "error": "login_required"}, status_code=401)
+    fd = await request.form()
+    fb = {
+        "user_id": user["id"],
+        "user_email": user.get("email", ""),
+        "user_name": user.get("name", ""),
+        "session_id": request.cookies.get("session_id") or "profile",
+        "submitted_at": datetime.now().isoformat(),
+        "rating": fd.get("rating", ""),
+        "difficulty": fd.get("difficulty", ""),
+        "accuracy": fd.get("accuracy", ""),
+        "recommend": fd.get("recommend", ""),
+        "best_part": fd.get("best_part", ""),
+        "worst_part": fd.get("worst_part", ""),
+        "suggestions": fd.get("suggestions", ""),
+        "message": fd.get("message", ""),
+    }
+    save_feedback(fb)
+    return JSONResponse({"success": True})
+
+def _build_redirect_uri(request: Request) -> str:
+    """Redirect URI ni so'rov hostiga qarab yasaymiz (localhost yoki 127.0.0.1)."""
+    base = str(request.base_url).rstrip("/")
+    return f"{base}/auth/google/callback"
+
+@app.get("/auth/google")
+async def auth_google(request: Request, next_url: str = ""):
+    from urllib.parse import quote
+    redirect_uri = _build_redirect_uri(request)
+    state = next_url or "/start"
+    import base64
+    state_b64 = base64.urlsafe_b64encode(state.encode()).decode()
+    redirect_encoded = quote(redirect_uri, safe="")
+    url = (
+        "https://accounts.google.com/o/oauth2/v2/auth"
+        f"?client_id={GOOGLE_CLIENT_ID}"
+        f"&redirect_uri={redirect_encoded}"
+        "&response_type=code"
+        "&scope=openid email profile"
+        f"&state={state_b64}"
+        "&access_type=offline"
+        "&prompt=consent"
+    )
+    return RedirectResponse(url=url, status_code=302)
+
+@app.get("/auth/google/callback")
+async def auth_google_callback(request: Request, code: str = "", state: str = "", error: str = ""):
+    if error:
+        return RedirectResponse(url=f"/login?error={error}", status_code=302)
+    if not code:
+        return RedirectResponse(url="/login?error=no_code", status_code=302)
+    if not (GOOGLE_CLIENT_SECRET or "").strip():
+        return RedirectResponse(url="/login?error=missing_client_secret", status_code=302)
+    redirect_uri = _build_redirect_uri(request)  # auth so'rovida yuborilgan bilan bir xil bo'lishi kerak
+    import base64
+    next_url = "/start"
+    if state:
+        try:
+            pad = 4 - len(state) % 4
+            if pad != 4:
+                state = state + ("=" * pad)
+            next_url = base64.urlsafe_b64decode(state.encode()).decode()
+        except Exception:
+            pass
+    async with httpx.AsyncClient() as client:
+        token_resp = await client.post(
+            "https://oauth2.googleapis.com/token",
+            data={
+                "code": code,
+                "client_id": GOOGLE_CLIENT_ID,
+                "client_secret": GOOGLE_CLIENT_SECRET.strip(),
+                "redirect_uri": redirect_uri,
+                "grant_type": "authorization_code",
+            },
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+        )
+    if token_resp.status_code != 200:
+        try:
+            err_body = token_resp.text
+            print(f"[Google OAuth] token exchange failed: status={token_resp.status_code}, body={err_body}")
+        except Exception:
+            print(f"[Google OAuth] token exchange failed: status={token_resp.status_code}")
+        return RedirectResponse(url="/login?error=token_failed", status_code=302)
+    token_data = token_resp.json()
+    access_token = token_data.get("access_token")
+    if not access_token:
+        return RedirectResponse(url="/login?error=no_token", status_code=302)
+    async with httpx.AsyncClient() as client:
+        user_resp = await client.get(
+            "https://www.googleapis.com/oauth2/v2/userinfo",
+            headers={"Authorization": f"Bearer {access_token}"},
+        )
+    if user_resp.status_code != 200:
+        return RedirectResponse(url="/login?error=userinfo_failed", status_code=302)
+    info = user_resp.json()
+    google_id = info.get("id")
+    email = (info.get("email") or "").strip().lower()
+    name = (info.get("name") or "").strip()
+    picture = info.get("picture")
+    if not google_id:
+        return RedirectResponse(url="/login?error=no_google_id", status_code=302)
+    user = create_or_update_user_google(google_id, email, name, picture)
+    from itsdangerous import URLSafeTimedSerializer
+    secret = os.getenv("SECRET_KEY", "cefr-level-secret-change-in-production")
+    ser = URLSafeTimedSerializer(secret)
+    token = ser.dumps(user["id"])
+    resp = RedirectResponse(url=next_url or "/start", status_code=302)
+    resp.set_cookie(key=AUTH_COOKIE, value=token, max_age=AUTH_MAX_AGE, httponly=True, samesite="lax")
+    return resp
+
+# ============ PROTECTED: TEST (require login) ============
+
+@app.get("/start", response_class=HTMLResponse)
+async def start_test(request: Request):
+    user = get_current_user(request)
+    if not user:
+        return RedirectResponse(url="/login?next_url=/start", status_code=302)
+    sid = str(uuid.uuid4())
+    s = get_session(sid)
+    s["user_id"] = user["id"]
+    t = get_translations(request)
+    lang = get_lang(request)
+    resp = templates.TemplateResponse("start.html", {"request": request, "session_id": sid, "t": t, "lang": lang, "user": user})
     resp.set_cookie(key="session_id", value=sid, max_age=7200)
     return resp
 
@@ -997,6 +1388,7 @@ async def results(request: Request):
     s = get_session(sid)
     if not all([s.get("reading", {}).get("completed"), s.get("listening", {}).get("completed"), s.get("writing", {}).get("completed")]):
         return RedirectResponse(url="/start", status_code=302)
+    save_test_result(s)  # profil tarixiga saqlash
     t = get_translations(request)
     lang = get_lang(request)
     return templates.TemplateResponse("results.html", {"request": request, "session": s, "cefr_levels": CEFR_LEVELS, "t": t, "lang": lang})

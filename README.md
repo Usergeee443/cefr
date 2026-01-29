@@ -87,6 +87,36 @@ python app.py
 http://localhost:8000
 ```
 
+### Ro'yxatdan o'tish va Google bilan kirish
+
+- **Ro'yxatdan o'tish**: `/register` — email, parol va ism bilan.
+- **Kirish**: `/login` — email/parol yoki **Google bilan kirish**.
+- **Profil**: `/profile` — faqat tizimga kirgan foydalanuvchilar uchun.
+
+**Google OAuth sozlash** (Google bilan kirish uchun):
+
+1. [Google Cloud Console](https://console.cloud.google.com/) → loyihangizni tanlang.
+2. **APIs & Services** → **Credentials** → **Create Credentials** → **OAuth 2.0 Client ID** (yoki mavjud Client ID ni tanlang).
+3. **Application type**: **Web application**.
+4. **Muhim** — **Authorized redirect URIs** bo'limida **ikkala** manzilni qo'shing (brauzer qaysi manzilda ochilganiga qarab bittasi ishlatiladi):
+   - `http://localhost:8000/auth/google/callback`
+   - `http://127.0.0.1:8000/auth/google/callback`
+   - **Authorized JavaScript origins** (ixtiyoriy): `http://localhost:8000` va `http://127.0.0.1:8000`
+5. **Save** bosing.
+6. `.env` da: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI=http://localhost:8000/auth/google/callback`.
+
+**Agar "redirect_uri_mismatch" (Error 400) chiqsa:**
+
+- **Authorized redirect URIs** bo'limida (Credentials → OAuth 2.0 Client ID → Edit) quyidagidan **bitta** bo'lsin, boshqa belgi qo'shilmasin:
+  ```
+  http://localhost:8000/auth/google/callback
+  ```
+- Bosh sahifa yoki boshqa manzil emas, **faqat** `/auth/google/callback` bilan tugaydigan manzil.
+- Orqasida `/` qo'yilmagan bo'lsin: `.../callback` ✅, `.../callback/` ❌.
+- Loyiha va Client ID shu loyiha uchun yaratilgan bo'lsin (Client ID ning birinchi qismi 957401626494).
+
+Testni boshlash uchun avval **Kirish** yoki **Ro'yxatdan o'tish** kerak.
+
 ## Loyiha strukturasi
 
 ```
@@ -105,7 +135,7 @@ cefr/
 ## Keyingi bosqichlar (Roadmap)
 
 ### Faza 2
-- [ ] Foydalanuvchi autentifikatsiyasi (Login/Signup)
+- [x] Foydalanuvchi autentifikatsiyasi (Login/Signup, Google OAuth, Profil)
 - [ ] Test funksionalligini to'liq ishlatish
 - [ ] Natijalarni saqlash (PostgreSQL)
 - [ ] Batafsil progress dashboard

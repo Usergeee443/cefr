@@ -1,0 +1,45 @@
+{
+  "tests": [
+    {
+      "id": "writing_1",
+      "title": "Writing Test 1",
+      "time_limit": 80,
+      "parts": [
+        {
+          "part_number": 1,
+          "title": "Part 1",
+          "instruction": "Complete BOTH Task 1 and Task 2.",
+          "tasks": [
+            {
+              "task_number": 1,
+              "title": "Task 1: Email/Letter",
+              "type": "email",
+              "instruction": "Read the situation below and write an appropriate email.",
+              "situation": "You recently bought a laptop online, but when it arrived, you discovered several problems with it. The screen has a small crack, the keyboard is missing a key, and the battery drains very quickly.\n\nWrite an email to the company's customer service department. In your email:\n- Explain what problems you found with the laptop\n- Say how you feel about this situation\n- Tell them what you would like them to do about it\n\nWrite between 120-150 words.",
+              "min_words": 120,
+              "max_words": 150
+            },
+            {
+              "task_number": 2,
+              "title": "Task 2: Review",
+              "type": "review",
+              "instruction": "Write a review.",
+              "situation": "Your English teacher has asked you to write a review of a book, film, or TV series that you have enjoyed recently.\n\nWrite a review that:\n- Briefly describes what it is about\n- Explains what you liked about it\n- Recommends it and says who would enjoy it most\n\nWrite between 120-150 words.",
+              "min_words": 120,
+              "max_words": 150
+            }
+          ]
+        },
+        {
+          "part_number": 2,
+          "title": "Part 2: Essay",
+          "instruction": "Write an essay on the topic below.",
+          "type": "essay",
+          "prompt": "Some people believe that technology has made our lives easier and more convenient. Others argue that technology has created new problems and made life more stressful.\n\nDiscuss both views and give your own opinion.\n\nWrite between 250-300 words.\n\nYour essay will be evaluated on:\n- Task Achievement\n- Coherence & Cohesion\n- Lexical Resource\n- Grammatical Range & Accuracy",
+          "min_words": 250,
+          "max_words": 300
+        }
+      ]
+    }
+  ]
+}

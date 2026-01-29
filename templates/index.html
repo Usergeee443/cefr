@@ -30,7 +30,7 @@
                     <a href="/about" class="text-gray-400 hover:text-white transition font-medium">{{ t.about }}</a>
                 </nav>
 
-                <!-- Right: Language & Start -->
+                <!-- Right: Language, Auth, Start -->
                 <div class="flex items-center gap-4">
                     <!-- Language Selector -->
                     <div class="relative group">
@@ -46,10 +46,23 @@
                         </div>
                     </div>
 
-                    <!-- Start Button -->
-                    <a href="/start" class="bg-[#00D4AA] text-[#0B1628] px-6 py-2 font-bold hover:bg-[#00B894] transition">
-                        {{ t.start_test }}
+                    {% if user %}
+                    <!-- Logged in: Profile (Chiqish faqat profil sahifasida) -->
+                    <a href="/profile" class="text-gray-400 hover:text-white transition font-medium flex items-center gap-2">
+                        {% if user.avatar %}
+                        <img src="{{ user.avatar }}" alt="" class="w-8 h-8 rounded-full border border-gray-600">
+                        {% else %}
+                        <span class="w-8 h-8 rounded-full bg-[#00D4AA] text-[#0B1628] flex items-center justify-center text-sm font-bold">{{ (user.name or user.email)[0]|upper }}</span>
+                        {% endif %}
+                        <span class="hidden sm:inline">{{ user.name or user.email }}</span>
                     </a>
+                    <a href="/start" class="bg-[#00D4AA] text-[#0B1628] px-6 py-2 font-bold hover:bg-[#00B894] transition">{{ t.start_test }}</a>
+                    {% else %}
+                    <!-- Not logged in: Login & Register -->
+                    <a href="/login?next_url=/start" class="text-gray-400 hover:text-white transition font-medium">{% if lang == 'uz' %}Kirish{% else %}Login{% endif %}</a>
+                    <a href="/register" class="text-gray-400 hover:text-white transition font-medium border border-gray-600 px-4 py-2 hover:border-[#00D4AA]">{% if lang == 'uz' %}Ro'yxatdan o'tish{% else %}Register{% endif %}</a>
+                    <a href="/login?next_url=/start" class="bg-[#00D4AA] text-[#0B1628] px-6 py-2 font-bold hover:bg-[#00B894] transition">{{ t.start_test }}</a>
+                    {% endif %}
                 </div>
             </div>
         </div>

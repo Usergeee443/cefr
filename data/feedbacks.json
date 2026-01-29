@@ -1,0 +1,30 @@
+{
+  "feedbacks": [
+    {
+      "session_id": "ae5f8621-2a72-4184-976b-8062e23107ed",
+      "submitted_at": "2026-01-28T20:06:17.333413",
+      "rating": "5",
+      "difficulty": "easy",
+      "accuracy": "not_accurate",
+      "recommend": "probably",
+      "best_part": "",
+      "worst_part": "",
+      "suggestions": "",
+      "name": "",
+      "email": ""
+    },
+    {
+      "session_id": "3ae06e10-7b2b-45ea-af77-6bb7fc95d995",
+      "submitted_at": "2026-01-28T21:18:28.075403",
+      "rating": "5",
+      "difficulty": "medium",
+      "accuracy": "somewhat",
+      "recommend": "",
+      "best_part": "Tezligi",
+      "worst_part": "AI juda mexribon",
+      "suggestions": "ok",
+      "name": "Nurmuhammad",
+      "email": ""
+    }
+  ]
+}

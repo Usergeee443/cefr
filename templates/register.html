@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if lang == 'uz' %}Ro'yxatdan o'tish{% else %}Register{% endif %} - CEFR Level</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        body { background-color: #0B1628; }
+    </style>
+</head>
+<body class="min-h-screen text-white">
+
+    <header class="border-b border-gray-800 bg-[#0B1628]">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="/" class="flex items-center gap-2">
+                    <span class="text-2xl font-black text-white">CEFR</span>
+                    <span class="text-2xl font-black text-[#00D4AA]">Level</span>
+                </a>
+                <a href="/" class="text-gray-400 hover:text-white transition">{% if lang == 'uz' %}Bosh sahifa{% else %}Home{% endif %}</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-md mx-auto px-6 py-16">
+        <h1 class="text-3xl font-bold text-white mb-2">{% if lang == 'uz' %}Ro'yxatdan o'tish{% else %}Register{% endif %}</h1>
+        <p class="text-gray-400 mb-8">{% if lang == 'uz' %}Yangi hisob yarating{% else %}Create a new account{% endif %}</p>
+
+        {% if error %}
+        <div class="bg-red-900/30 border border-red-600 text-red-200 px-4 py-3 mb-6">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <!-- Google Sign In -->
+        <a href="/auth/google" class="w-full flex items-center justify-center gap-3 bg-white text-gray-800 px-6 py-3 font-semibold hover:bg-gray-100 transition mb-6">
+            <svg class="w-5 h-5" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            {% if lang == 'uz' %}Google bilan ro'yxatdan o'tish{% else %}Sign up with Google{% endif %}
+        </a>
+
+        <div class="flex items-center gap-4 mb-6">
+            <div class="flex-1 h-px bg-gray-700"></div>
+            <span class="text-gray-500 text-sm">{% if lang == 'uz' %}yoki{% else %}or{% endif %}</span>
+            <div class="flex-1 h-px bg-gray-700"></div>
+        </div>
+
+        <form method="post" action="/register" class="space-y-4">
+            <div>
+                <label class="block text-gray-400 text-sm mb-2">{% if lang == 'uz' %}Ism{% else %}Name{% endif %}</label>
+                <input type="text" name="name" autocomplete="name"
+                       class="w-full bg-[#0F2035] border border-gray-700 px-4 py-3 text-white focus:border-[#00D4AA] focus:outline-none"
+                       placeholder="{% if lang == 'uz' %}Ismingiz{% else %}Your name{% endif %}">
+            </div>
+            <div>
+                <label class="block text-gray-400 text-sm mb-2">Email</label>
+                <input type="email" name="email" required autocomplete="email"
+                       class="w-full bg-[#0F2035] border border-gray-700 px-4 py-3 text-white focus:border-[#00D4AA] focus:outline-none"
+                       placeholder="email@example.com">
+            </div>
+            <div>
+                <label class="block text-gray-400 text-sm mb-2">{% if lang == 'uz' %}Parol (kamida 6 belgi){% else %}Password (min 6 chars){% endif %}</label>
+                <input type="password" name="password" required autocomplete="new-password"
+                       class="w-full bg-[#0F2035] border border-gray-700 px-4 py-3 text-white focus:border-[#00D4AA] focus:outline-none"
+                       placeholder="••••••••">
+            </div>
+            <button type="submit" class="w-full bg-[#00D4AA] text-[#0B1628] py-3 font-bold hover:bg-[#00B894] transition">
+                {% if lang == 'uz' %}Ro'yxatdan o'tish{% else %}Register{% endif %}
+            </button>
+        </form>
+
+        <p class="mt-6 text-center text-gray-500 text-sm">
+            {% if lang == 'uz' %}Allaqachon hisobingiz bormi?{% else %}Already have an account?{% endif %}
+            <a href="/login" class="text-[#00D4AA] hover:underline">{% if lang == 'uz' %}Kirish{% else %}Login{% endif %}</a>
+        </p>
+    </main>
+
+</body>
+</html>

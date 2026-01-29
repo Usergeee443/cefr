@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if lang == 'uz' %}Profil{% else %}Profile{% endif %} - CEFR Level</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        body { background-color: #0B1628; }
+    </style>
+</head>
+<body class="min-h-screen text-white">
+
+    <header class="border-b border-gray-800 fixed top-0 left-0 right-0 z-50 bg-[#0B1628]">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="/" class="flex items-center gap-2">
+                    <span class="text-2xl font-black text-white">CEFR</span>
+                    <span class="text-2xl font-black text-[#00D4AA]">Level</span>
+                </a>
+                <nav class="flex items-center gap-6">
+                    <a href="/" class="text-gray-400 hover:text-white transition">{% if lang == 'uz' %}Bosh sahifa{% else %}Home{% endif %}</a>
+                    <a href="/start" class="bg-[#00D4AA] text-[#0B1628] px-6 py-2 font-bold hover:bg-[#00B894] transition">{{ t.start_test }}</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-24 pb-20 max-w-4xl mx-auto px-6">
+        <h1 class="text-3xl font-bold text-white mb-8">{% if lang == 'uz' %}Profil{% else %}Profile{% endif %}</h1>
+
+        <!-- User card -->
+        <div class="bg-[#0F2035] border border-gray-800 rounded-lg p-8 mb-8">
+            <div class="flex items-center gap-6 mb-6">
+                {% if user.avatar %}
+                <img src="{{ user.avatar }}" alt="" class="w-20 h-20 rounded-full border-2 border-[#00D4AA]">
+                {% else %}
+                <div class="w-20 h-20 rounded-full bg-[#00D4AA] text-[#0B1628] flex items-center justify-center text-2xl font-bold">
+                    {{ (user.name or user.email)[0]|upper }}
+                </div>
+                {% endif %}
+                <div>
+                    <h2 class="text-xl font-bold text-white">{{ user.name or user.email }}</h2>
+                    <p class="text-gray-400">{{ user.email }}</p>
+                    {% if user.google_id %}
+                    <span class="inline-block mt-2 px-3 py-1 bg-gray-700 text-gray-300 text-xs rounded">Google</span>
+                    {% endif %}
+                </div>
+            </div>
+            <dl class="space-y-4 text-sm">
+                <div>
+                    <dt class="text-gray-500">{% if lang == 'uz' %}Ro'yxatdan o'tgan sana{% else %}Joined{% endif %}</dt>
+                    <dd class="text-white">{{ user.created_at[:10] if user.created_at else '—' }}</dd>
+                </div>
+            </dl>
+        </div>
+
+        <!-- Test tarixi -->
+        <section class="mb-10">
+            <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                <svg class="w-6 h-6 text-[#00D4AA]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                {% if lang == 'uz' %}Test tarixi{% else %}Test History{% endif %}
+            </h2>
+            {% if test_history %}
+            <div class="overflow-x-auto rounded-lg border border-gray-800">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-[#0F2035] text-gray-400 border-b border-gray-800">
+                        <tr>
+                            <th class="px-4 py-3">{% if lang == 'uz' %}Sana{% else %}Date{% endif %}</th>
+                            <th class="px-4 py-3">Reading</th>
+                            <th class="px-4 py-3">Listening</th>
+                            <th class="px-4 py-3">Writing</th>
+                            <th class="px-4 py-3">{% if lang == 'uz' %}CEFR{% else %}CEFR{% endif %}</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-800">
+                        {% for h in test_history %}
+                        <tr class="bg-[#0F2035]/50 hover:bg-[#0F2035]">
+                            <td class="px-4 py-3 text-gray-300">{{ h.completed_at[:10] if h.completed_at else '—' }}</td>
+                            <td class="px-4 py-3">{{ h.reading_score or 0 }}/{{ h.reading_total or 0 }} ({{ h.reading_percentage or 0 }}%)</td>
+                            <td class="px-4 py-3">{{ h.listening_score or 0 }}/{{ h.listening_total or 0 }} ({{ h.listening_percentage or 0 }}%)</td>
+                            <td class="px-4 py-3">{{ h.writing_percentage or 0 }}%</td>
+                            <td class="px-4 py-3"><span class="font-bold text-[#00D4AA]">{{ h.cefr_level or '—' }}</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="bg-[#0F2035] border border-gray-800 rounded-lg p-8 text-center text-gray-500">
+                {% if lang == 'uz' %}Hali test topshirmagansiz.{% else %}No tests yet.{% endif %}
+                <a href="/start" class="block mt-4 text-[#00D4AA] hover:underline">{{ t.start_test }}</a>
+            </div>
+            {% endif %}
+        </section>
+
+        <!-- Biz bilan bog'lanish -->
+        <section class="mb-10">
+            <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                <svg class="w-6 h-6 text-[#00D4AA]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                {% if lang == 'uz' %}Biz bilan bog'lanish{% else %}Contact Us{% endif %}
+            </h2>
+            <div class="bg-[#0F2035] border border-gray-800 rounded-lg p-6 grid sm:grid-cols-2 gap-4">
+                <a href="mailto:{{ contact.email }}" class="flex items-center gap-3 text-gray-300 hover:text-[#00D4AA] transition">
+                    <span class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center">@</span>
+                    <span>{{ contact.email }}</span>
+                </a>
+                <a href="https://t.me/{{ contact.telegram|replace('@','') }}" target="_blank" rel="noopener" class="flex items-center gap-3 text-gray-300 hover:text-[#00D4AA] transition">
+                    <span class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center">TG</span>
+                    <span>{{ contact.telegram }}</span>
+                </a>
+                <span class="flex items-center gap-3 text-gray-300 sm:col-span-2">
+                    <span class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center">📞</span>
+                    <span>{{ contact.phone }}</span>
+                </span>
+                <span class="flex items-center gap-3 text-gray-400 text-sm sm:col-span-2">
+                    <span class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center flex-shrink-0">📍</span>
+                    <span>{{ contact.address_uz }}</span>
+                </span>
+            </div>
+        </section>
+
+        <!-- Feedback -->
+        <section class="mb-10">
+            <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                <svg class="w-6 h-6 text-[#00D4AA]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path></svg>
+                {% if lang == 'uz' %}Fikr-mulohaza yuborish{% else %}Send Feedback{% endif %}
+            </h2>
+            <div class="bg-[#0F2035] border border-gray-800 rounded-lg p-6">
+                <form id="profileFeedbackForm" class="space-y-4">
+                    <div>
+                        <label class="block text-gray-400 text-sm mb-2">{% if lang == 'uz' %}Umumiy baho{% else %}Overall rating{% endif %}</label>
+                        <select name="rating" class="w-full bg-[#0B1628] border border-gray-700 px-4 py-2 text-white rounded focus:border-[#00D4AA] focus:outline-none">
+                            <option value="">—</option>
+                            <option value="5">5 - {% if lang == 'uz' %}A’lo{% else %}Excellent{% endif %}</option>
+                            <option value="4">4 - {% if lang == 'uz' %}Yaxshi{% else %}Good{% endif %}</option>
+                            <option value="3">3 - {% if lang == 'uz' %}Qoniqarli{% else %}OK{% endif %}</option>
+                            <option value="2">2 - {% if lang == 'uz' %}Yomon{% else %}Poor{% endif %}</option>
+                            <option value="1">1</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 text-sm mb-2">{% if lang == 'uz' %}Xabar{% else %}Message{% endif %}</label>
+                        <textarea name="message" rows="4" class="w-full bg-[#0B1628] border border-gray-700 px-4 py-2 text-white rounded focus:border-[#00D4AA] focus:outline-none" placeholder="{% if lang == 'uz' %}Fikringizni yozing...{% else %}Write your feedback...{% endif %}"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-gray-400 text-sm mb-2">{% if lang == 'uz' %}Takliflar{% else %}Suggestions{% endif %}</label>
+                        <input type="text" name="suggestions" class="w-full bg-[#0B1628] border border-gray-700 px-4 py-2 text-white rounded focus:border-[#00D4AA] focus:outline-none" placeholder="{% if lang == 'uz' %}Nima yaxshilanishi kerak?{% else %}What could be improved?{% endif %}">
+                    </div>
+                    <button type="submit" class="bg-[#00D4AA] text-[#0B1628] px-6 py-2 font-bold rounded hover:bg-[#00B894] transition">
+                        {% if lang == 'uz' %}Yuborish{% else %}Submit{% endif %}
+                    </button>
+                </form>
+                <p id="feedbackStatus" class="mt-4 text-sm hidden"></p>
+            </div>
+        </section>
+
+        <!-- Actions -->
+        <div class="flex flex-col sm:flex-row gap-4">
+            <a href="/start" class="inline-flex items-center justify-center bg-[#00D4AA] text-[#0B1628] px-6 py-3 font-bold hover:bg-[#00B894] transition">
+                {{ t.start_test }}
+            </a>
+            <a href="/" class="inline-flex items-center justify-center border border-gray-600 text-gray-300 px-6 py-3 font-medium hover:border-[#00D4AA] hover:text-white transition">
+                {% if lang == 'uz' %}Bosh sahifaga{% else %}Back to Home{% endif %}
+            </a>
+            <a href="/logout" class="inline-flex items-center justify-center border border-red-600/50 text-red-300 px-6 py-3 font-medium hover:bg-red-900/20 hover:border-red-500 transition">
+                {% if lang == 'uz' %}Chiqish{% else %}Logout{% endif %}
+            </a>
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('profileFeedbackForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const form = e.target;
+            const btn = form.querySelector('button[type="submit"]');
+            const status = document.getElementById('feedbackStatus');
+            btn.disabled = true;
+            status.classList.add('hidden');
+            const formData = new FormData(form);
+            try {
+                const r = await fetch('/profile/feedback', { method: 'POST', body: formData });
+                const data = await r.json();
+                status.classList.remove('hidden');
+                if (data.success) {
+                    status.textContent = "{{ 'Fikr yuborildi, rahmat!' if lang == 'uz' else 'Feedback sent, thank you!' }}";
+                    status.className = 'mt-4 text-sm text-[#00D4AA]';
+                    form.reset();
+                } else {
+                    status.textContent = "{{ 'Xatolik. Qaytadan urinib ko\'ring.' if lang == 'uz' else 'Error. Please try again.' }}";
+                    status.className = 'mt-4 text-sm text-red-400';
+                }
+            } catch (err) {
+                status.classList.remove('hidden');
+                status.textContent = "{{ 'Xatolik.' if lang == 'uz' else 'Error.' }}";
+                status.className = 'mt-4 text-sm text-red-400';
+            }
+            btn.disabled = false;
+        });
+    </script>
+</body>
+</html>
