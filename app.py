@@ -173,6 +173,8 @@ def create_user(email: str, password: str, name: str = "") -> dict:
         "google_id": None,
         "avatar": None,
         "created_at": datetime.now().isoformat(),
+        "free_tests": 10,  # Beta: 10 free tests for new users
+        "purchased_tests": 0,  # Purchased tests count
     }
     data["users"].append(user)
     save_users(data)
@@ -196,6 +198,9 @@ def create_or_update_user_google(google_id: str, email: str, name: str, picture:
             u["name"] = (name or u.get("name", "")).strip()
             if picture:
                 u["avatar"] = picture
+            # Ensure free_tests field exists for existing users
+            if "free_tests" not in u:
+                u["free_tests"] = 10  # Beta bonus
             save_users(data)
             return u
     # New user – onboarding kerak (faqat ism so'raladi)
@@ -209,6 +214,8 @@ def create_or_update_user_google(google_id: str, email: str, name: str, picture:
         "avatar": picture,
         "created_at": datetime.now().isoformat(),
         "onboarding_done": False,
+        "free_tests": 10,  # Beta: 10 free tests for new users
+        "purchased_tests": 0,  # Purchased tests count
     }
     data["users"].append(user)
     save_users(data)
