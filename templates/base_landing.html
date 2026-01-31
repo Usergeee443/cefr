@@ -9,47 +9,189 @@
     <style>
         * { font-family: 'Inter', sans-serif; }
         body { background-color: #0d0d0d; }
-        .header-link { color: #a1a1a1; text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
-        .header-link:hover { color: #fff; }
-        .btn-ghost { color: #a1a1a1; font-weight: 500; padding: 8px 16px; border-radius: 6px; transition: background 0.2s, color 0.2s; }
-        .btn-ghost:hover { color: #fff; background: rgba(255,255,255,0.06); }
-        .btn-primary { background: #00D4AA; color: #0d0d0d; font-weight: 600; padding: 10px 20px; border-radius: 8px; transition: background 0.2s; }
-        .btn-primary:hover { background: #00B894; }
+        .header-link {
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+        .header-link:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.05);
+        }
+        .btn-ghost {
+            color: #9ca3af;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 10px;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+        .btn-ghost:hover {
+            color: #fff;
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.1);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #00D4AA 0%, #00B894 100%);
+            color: #0d0d0d;
+            font-weight: 600;
+            padding: 10px 24px;
+            border-radius: 10px;
+            transition: all 0.2s;
+        }
+        .btn-primary:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px rgba(0, 212, 170, 0.3);
+        }
+        .lang-switch {
+            display: flex;
+            align-items: center;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 4px;
+        }
+        .lang-btn {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            color: #6b7280;
+        }
+        .lang-btn:hover {
+            color: #9ca3af;
+        }
+        .lang-btn.active {
+            background: #00D4AA;
+            color: #0d0d0d;
+        }
+        /* Mobile menu */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 64px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #0d0d0d;
+            z-index: 40;
+            padding: 24px;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .mobile-menu.open {
+            display: flex;
+        }
     </style>
     {% block head %}{% endblock %}
 </head>
 <body class="min-h-screen text-white bg-[#0d0d0d] antialiased">
-    <header class="fixed top-0 left-0 right-0 z-50 border-b border-[#1f1f1f] bg-[#0d0d0d]/95 backdrop-blur-sm">
+    <header class="fixed top-0 left-0 right-0 z-50 border-b border-[#1f1f1f] bg-[#0d0d0d]/95 backdrop-blur-md">
         <div class="max-w-6xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
-            <a href="/" class="flex items-center gap-2.5">
-                <span class="w-9 h-9 bg-[#00D4AA] flex items-center justify-center text-[#0d0d0d] font-black text-sm">C</span>
-                <span class="text-lg font-black text-white">CEFR</span>
-                <span class="text-lg font-black text-[#00D4AA]">Level</span>
+            <!-- Logo -->
+            <a href="/" class="flex items-center gap-2.5 group">
+                <span class="w-9 h-9 bg-gradient-to-br from-[#00D4AA] to-[#00B894] flex items-center justify-center text-[#0d0d0d] font-black text-sm rounded-lg shadow-lg shadow-[#00D4AA]/20 group-hover:shadow-[#00D4AA]/40 transition-shadow">C</span>
+                <span class="text-lg font-bold text-white">CEFR</span>
+                <span class="text-lg font-bold text-[#00D4AA]">Level</span>
             </a>
-            <nav class="hidden md:flex items-center gap-8">
-                <a href="/pricing" class="header-link">{{ t.pricing }}</a>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:flex items-center gap-2">
+                <a href="/#how-it-works" class="header-link">{% if lang == 'uz' %}Qanday ishlaydi{% else %}How It Works{% endif %}</a>
+                <a href="/#pricing" class="header-link">{{ t.pricing }}</a>
                 <a href="/about" class="header-link">{{ t.about }}</a>
             </nav>
-            <div class="flex items-center gap-2">
-                <div class="flex items-center gap-1 mr-2 md:mr-4">
-                    <a href="/lang/uz" class="text-xs font-medium py-1.5 px-2 {% if lang == 'uz' %}text-[#00D4AA]{% else %}text-gray-500 hover:text-gray-400{% endif %}">O'zbek</a>
-                    <span class="text-gray-600">|</span>
-                    <a href="/lang/en" class="text-xs font-medium py-1.5 px-2 {% if lang == 'en' %}text-[#00D4AA]{% else %}text-gray-500 hover:text-gray-400{% endif %}">EN</a>
+
+            <!-- Right Side -->
+            <div class="flex items-center gap-3">
+                <!-- Language Switcher -->
+                <div class="lang-switch">
+                    <a href="/lang/uz" class="lang-btn {% if lang == 'uz' %}active{% endif %}">UZ</a>
+                    <a href="/lang/en" class="lang-btn {% if lang == 'en' %}active{% endif %}">EN</a>
                 </div>
+
                 {% if user %}
-                <a href="/start" class="btn-primary text-sm">{{ t.start_test }}</a>
-                <a href="/logout" class="btn-ghost text-sm">{% if lang == 'uz' %}Chiqish{% else %}Log out{% endif %}</a>
+                <!-- Logged in state -->
+                <div class="hidden md:flex items-center gap-2">
+                    <a href="/profile" class="header-link flex items-center gap-2">
+                        {% if user.avatar %}
+                        <img src="{{ user.avatar }}" alt="" class="w-7 h-7 rounded-full">
+                        {% else %}
+                        <div class="w-7 h-7 bg-[#1f2937] rounded-full flex items-center justify-center text-xs font-bold text-[#00D4AA]">
+                            {{ (user.name or user.email)[0]|upper }}
+                        </div>
+                        {% endif %}
+                        <span class="max-w-[100px] truncate">{{ user.name or 'Profile' }}</span>
+                    </a>
+                    <a href="/start" class="btn-primary text-sm">{{ t.start_test }}</a>
+                </div>
                 {% else %}
-                <a href="/login?next_url=/start" class="btn-ghost text-sm">{% if lang == 'uz' %}Kirish{% else %}Log in{% endif %}</a>
-                <a href="/register" class="btn-primary text-sm">{% if lang == 'uz' %}Ro'yxatdan o'tish{% else %}Sign up{% endif %}</a>
+                <!-- Logged out state -->
+                <div class="hidden md:flex items-center gap-2">
+                    <a href="/auth/google?next_url=/start" class="btn-ghost text-sm">{% if lang == 'uz' %}Kirish{% else %}Log in{% endif %}</a>
+                    <a href="/auth/google?next_url=/start" class="btn-primary text-sm">{% if lang == 'uz' %}Boshlash{% else %}Get Started{% endif %}</a>
+                </div>
                 {% endif %}
+
+                <!-- Mobile Menu Button -->
+                <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-gray-400 hover:text-white transition">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
             </div>
         </div>
     </header>
 
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="mobile-menu">
+        <a href="/#how-it-works" class="text-gray-300 hover:text-white py-3 border-b border-[#1f2937]" onclick="toggleMobileMenu()">
+            {% if lang == 'uz' %}Qanday ishlaydi{% else %}How It Works{% endif %}
+        </a>
+        <a href="/#pricing" class="text-gray-300 hover:text-white py-3 border-b border-[#1f2937]" onclick="toggleMobileMenu()">
+            {{ t.pricing }}
+        </a>
+        <a href="/about" class="text-gray-300 hover:text-white py-3 border-b border-[#1f2937]" onclick="toggleMobileMenu()">
+            {{ t.about }}
+        </a>
+
+        {% if user %}
+        <a href="/profile" class="text-gray-300 hover:text-white py-3 border-b border-[#1f2937] flex items-center gap-3" onclick="toggleMobileMenu()">
+            {% if user.avatar %}
+            <img src="{{ user.avatar }}" alt="" class="w-8 h-8 rounded-full">
+            {% else %}
+            <div class="w-8 h-8 bg-[#1f2937] rounded-full flex items-center justify-center text-sm font-bold text-[#00D4AA]">
+                {{ (user.name or user.email)[0]|upper }}
+            </div>
+            {% endif %}
+            {{ user.name or 'Profile' }}
+        </a>
+        <a href="/start" class="btn-primary text-center mt-4" onclick="toggleMobileMenu()">{{ t.start_test }}</a>
+        <a href="/logout" class="text-gray-500 hover:text-white text-center py-3" onclick="toggleMobileMenu()">
+            {% if lang == 'uz' %}Chiqish{% else %}Log out{% endif %}
+        </a>
+        {% else %}
+        <div class="mt-4 space-y-3">
+            <a href="/auth/google?next_url=/start" class="btn-primary block text-center" onclick="toggleMobileMenu()">
+                {% if lang == 'uz' %}Google bilan boshlash{% else %}Get Started with Google{% endif %}
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
     <main class="pt-16 min-h-screen">
         {% block content %}{% endblock %}
     </main>
+
+    <script>
+        function toggleMobileMenu() {
+            document.getElementById('mobileMenu').classList.toggle('open');
+        }
+    </script>
 
     {% block scripts %}{% endblock %}
 </body>
