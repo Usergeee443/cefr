@@ -9,157 +9,164 @@
     <style>
         * { font-family: 'Inter', sans-serif; }
         *, *::before, *::after { border-radius: 0 !important; }
-        body { background-color: #0B1628; }
+        body { background-color: #fafafa; }
         .passage-text { line-height: 1.9; }
         .gap-input {
             width: 110px;
-            border-bottom: 2px solid #00D4AA;
+            border-bottom: 2px solid #374151;
             text-align: center;
             background: transparent;
-            color: #fff;
+            color: #111;
             outline: none;
             font-family: 'Inter', sans-serif;
             padding: 2px 4px;
         }
-        .gap-input::placeholder { color: #4a5568; }
+        .gap-input::placeholder { color: #9ca3af; }
         .option-btn { transition: all 0.15s ease; }
         .option-btn.selected {
-            background-color: #00D4AA !important;
-            color: #0B1628 !important;
-            border-color: #00D4AA !important;
+            background-color: #1f2937 !important;
+            color: #fff !important;
+            border-color: #1f2937 !important;
             font-weight: 700;
         }
     </style>
 </head>
-<body class="min-h-screen text-white">
+<body class="min-h-screen text-gray-900 bg-[#fafafa]">
 
-    <!-- Fixed Header -->
-    <header class="bg-[#0B1628] border-b border-gray-800 fixed top-0 left-0 right-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+    <!-- Minimal bar: timer + progress -->
+    <div class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+            <span class="text-sm font-medium text-gray-600 uppercase tracking-wider">Reading</span>
             <div class="flex items-center gap-4">
-                <a href="/" class="text-xl font-black">
-                    <span class="text-[#00D4AA]">OSCO</span><span class="text-white">.</span>
-                </a>
-                <div class="h-5 w-px bg-gray-700"></div>
-                <span class="text-sm font-semibold text-[#00D4AA] uppercase tracking-wider">Reading</span>
-            </div>
-            <div class="flex items-center gap-6">
-                <div id="timer" class="text-lg font-mono text-white bg-[#0F2035] border border-gray-700 px-4 py-1.5">
-                    60:00
-                </div>
-                <div class="text-sm text-gray-400">
-                    <span id="progress" class="text-[#00D4AA] font-bold">0</span><span class="text-gray-600">%</span>
-                </div>
+                <div id="timer" class="text-lg font-mono text-gray-800 border border-gray-300 px-3 py-1">60:00</div>
+                <span class="text-sm text-gray-500"><span id="progress" class="font-bold text-gray-800">0</span>%</span>
             </div>
         </div>
-        <!-- Progress bar -->
-        <div class="w-full bg-[#0F2035] h-0.5">
-            <div id="progress-bar" class="bg-[#00D4AA] h-0.5 transition-all duration-300" style="width: 0%"></div>
+        <div class="w-full h-0.5 bg-gray-200">
+            <div id="progress-bar" class="h-full bg-gray-700 transition-all duration-300" style="width: 0%"></div>
         </div>
-    </header>
+    </div>
 
-    <main class="pt-20 pb-16 px-4">
-        <div class="max-w-4xl mx-auto">
+    <main class="pt-20 pb-24 px-4">
+        <div class="max-w-6xl mx-auto">
             <form id="reading-form">
                 {% for part in test_data.parts %}
-                <section class="part-section mb-12" data-part="{{ part.part_number }}">
-                    <div class="bg-[#0F2035] border border-gray-800 overflow-hidden">
+                <section class="part-section mb-0 hidden" data-part="{{ part.part_number }}">
+                    <div class="bg-white border border-gray-200 overflow-hidden shadow-sm">
                         <!-- Part Header -->
-                        <div class="bg-[#162A40] border-b border-gray-700 p-6">
+                        <div class="border-b border-gray-200 bg-gray-50 p-4 md:p-6">
                             <div class="flex items-center gap-3 mb-2">
-                                <div class="w-8 h-8 bg-[#00D4AA] flex items-center justify-center text-[#0B1628] font-bold text-sm">
+                                <div class="w-8 h-8 border border-gray-400 bg-gray-100 flex items-center justify-center text-gray-800 font-bold text-sm">
                                     {{ part.part_number }}
                                 </div>
-                                <h2 class="text-xl font-bold text-white">{{ part.title }}</h2>
+                                <h2 class="text-xl font-bold text-gray-900">{{ part.title }}</h2>
+                                <span class="ml-auto text-sm text-gray-500">Part {{ part.part_number }}/{{ test_data.parts|length }}</span>
                             </div>
-                            <p class="text-gray-400 text-sm ml-11">{{ part.instruction }}</p>
+                            <p class="text-gray-600 text-sm ml-11">{{ part.instruction }}</p>
                         </div>
 
                         <div class="p-6">
                             {% if part.type == "multiple_choice_cloze" %}
-                            <!-- Part 1: Multiple Choice Cloze -->
-                            <div class="passage-text text-gray-300 mb-8 bg-[#0B1628] border border-gray-800 p-6">
-                                {{ part.text | replace("(1)_____", "<span class='font-bold text-[#00D4AA]'>(1)_____</span>") | replace("(2)_____", "<span class='font-bold text-[#00D4AA]'>(2)_____</span>") | replace("(3)_____", "<span class='font-bold text-[#00D4AA]'>(3)_____</span>") | replace("(4)_____", "<span class='font-bold text-[#00D4AA]'>(4)_____</span>") | replace("(5)_____", "<span class='font-bold text-[#00D4AA]'>(5)_____</span>") | replace("(6)_____", "<span class='font-bold text-[#00D4AA]'>(6)_____</span>") | replace("(7)_____", "<span class='font-bold text-[#00D4AA]'>(7)_____</span>") | replace("(8)_____", "<span class='font-bold text-[#00D4AA]'>(8)_____</span>") | safe }}
-                            </div>
-                            <div class="space-y-4">
-                                {% for q in part.questions %}
-                                <div class="question-block p-4 bg-[#0B1628] border border-gray-800" data-question="{{ q.number }}">
-                                    <div class="font-medium text-gray-400 mb-3 text-sm">Question {{ q.number }}</div>
-                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
-                                        {% for letter, option in q.options.items() %}
-                                        <button type="button"
-                                                class="option-btn p-3 border border-gray-700 bg-[#0F2035] text-left text-sm text-gray-300 hover:border-[#00D4AA] hover:text-white transition"
-                                                data-question="{{ q.number }}"
-                                                data-value="{{ letter }}">
-                                            <span class="font-bold text-[#00D4AA] mr-1">{{ letter }}.</span> {{ option }}
-                                        </button>
-                                        {% endfor %}
-                                    </div>
-                                    <input type="hidden" name="{{ q.number }}" value="">
+                            <!-- Part 1: CEFR layout – matn chapda, variantlar o'ngda -->
+                            <div class="grid md:grid-cols-2 gap-6 min-h-[400px]">
+                                <div class="passage-text text-gray-800 bg-gray-50 border border-gray-200 p-6 overflow-y-auto max-h-[70vh]">
+                                    <h4 class="text-gray-600 font-semibold text-sm uppercase tracking-wider mb-4">Matn</h4>
+                                    {{ part.text | replace("(1)_____", "<span class='font-bold text-gray-900'>(1)_____</span>") | replace("(2)_____", "<span class='font-bold text-gray-900'>(2)_____</span>") | replace("(3)_____", "<span class='font-bold text-gray-900'>(3)_____</span>") | replace("(4)_____", "<span class='font-bold text-gray-900'>(4)_____</span>") | replace("(5)_____", "<span class='font-bold text-gray-900'>(5)_____</span>") | replace("(6)_____", "<span class='font-bold text-gray-900'>(6)_____</span>") | replace("(7)_____", "<span class='font-bold text-gray-900'>(7)_____</span>") | replace("(8)_____", "<span class='font-bold text-gray-900'>(8)_____</span>") | safe }}
                                 </div>
-                                {% endfor %}
+                                <div class="space-y-4 overflow-y-auto max-h-[70vh]">
+                                    <h4 class="text-gray-600 font-semibold text-sm uppercase tracking-wider mb-4">Javoblar</h4>
+                                    {% for q in part.questions %}
+                                    <div class="question-block p-4 border border-gray-200 bg-white" data-question="{{ q.number }}">
+                                        <div class="font-medium text-gray-500 mb-2 text-sm">Question {{ q.number }}</div>
+                                        <div class="grid grid-cols-2 gap-2">
+                                            {% for letter, option in q.options.items() %}
+                                            <button type="button"
+                                                    class="option-btn p-3 border border-gray-300 bg-white text-left text-sm text-gray-800 hover:border-gray-600 hover:bg-gray-50 transition"
+                                                    data-question="{{ q.number }}"
+                                                    data-value="{{ letter }}">
+                                                <span class="font-bold text-gray-600 mr-1">{{ letter }}.</span> {{ option }}
+                                            </button>
+                                            {% endfor %}
+                                        </div>
+                                        <input type="hidden" name="{{ q.number }}" value="">
+                                    </div>
+                                    {% endfor %}
+                                </div>
                             </div>
 
                             {% elif part.type == "open_cloze" %}
-                            <!-- Part 2: Open Cloze -->
-                            <div class="mb-4 p-3 bg-[#0B1628] border border-gray-800">
-                                <p class="text-sm text-gray-400">Read the text and fill in each gap with <strong class="text-white">ONE word only</strong>.</p>
-                            </div>
-                            <div class="passage-text text-gray-300 bg-[#0B1628] border border-gray-800 p-6 leading-loose">
-                                {{ part.text | replace("(9)_____", "<input type='text' name='9' class='gap-input' placeholder='9'>") | replace("(10)_____", "<input type='text' name='10' class='gap-input' placeholder='10'>") | replace("(11)_____", "<input type='text' name='11' class='gap-input' placeholder='11'>") | replace("(12)_____", "<input type='text' name='12' class='gap-input' placeholder='12'>") | replace("(13)_____", "<input type='text' name='13' class='gap-input' placeholder='13'>") | replace("(14)_____", "<input type='text' name='14' class='gap-input' placeholder='14'>") | replace("(15)_____", "<input type='text' name='15' class='gap-input' placeholder='15'>") | replace("(16)_____", "<input type='text' name='16' class='gap-input' placeholder='16'>") | safe }}
+                            <!-- Part 2: Open Cloze – matn chapda, bo'sh joylar matnda -->
+                            <div class="grid md:grid-cols-2 gap-6 min-h-[400px]">
+                                <div class="space-y-4">
+                                    <h4 class="text-gray-600 font-semibold text-sm uppercase tracking-wider">Matn</h4>
+                                    <div class="mb-4 p-3 border border-gray-200 bg-gray-50">
+                                        <p class="text-sm text-gray-600">Fill in each gap with <strong class="text-gray-900">ONE word only</strong>.</p>
+                                    </div>
+                                    <div class="passage-text text-gray-800 border border-gray-200 bg-gray-50 p-6 leading-loose overflow-y-auto max-h-[60vh]">
+                                        {{ part.text | replace("(9)_____", "<input type='text' name='9' class='gap-input' placeholder='9'>") | replace("(10)_____", "<input type='text' name='10' class='gap-input' placeholder='10'>") | replace("(11)_____", "<input type='text' name='11' class='gap-input' placeholder='11'>") | replace("(12)_____", "<input type='text' name='12' class='gap-input' placeholder='12'>") | replace("(13)_____", "<input type='text' name='13' class='gap-input' placeholder='13'>") | replace("(14)_____", "<input type='text' name='14' class='gap-input' placeholder='14'>") | replace("(15)_____", "<input type='text' name='15' class='gap-input' placeholder='15'>") | replace("(16)_____", "<input type='text' name='16' class='gap-input' placeholder='16'>") | safe }}
+                                    </div>
+                                </div>
+                                <div class="border border-gray-200 p-6 bg-gray-50">
+                                    <h4 class="text-gray-600 font-semibold text-sm uppercase tracking-wider mb-4">Javoblar</h4>
+                                    <p class="text-gray-500 text-sm">Chapdagi matnda har bir bo'sh joyni bitta so'z bilan to'ldiring.</p>
+                                </div>
                             </div>
 
                             {% elif part.type == "multiple_choice_comprehension" %}
-                            <!-- Part 3: Multiple Choice Comprehension -->
-                            <div class="passage-text text-gray-300 mb-8 bg-[#0B1628] border border-gray-800 p-6 max-h-96 overflow-y-auto">
-                                {{ part.text | safe }}
-                            </div>
-                            <div class="space-y-6">
-                                {% for q in part.questions %}
-                                <div class="question-block p-4 bg-[#0B1628] border border-gray-800" data-question="{{ q.number }}">
-                                    <div class="font-medium text-white mb-3 text-sm">
-                                        <span class="text-[#00D4AA] font-bold mr-1">{{ q.number }}.</span> {{ q.question }}
-                                    </div>
-                                    <div class="grid gap-2">
-                                        {% for letter, option in q.options.items() %}
-                                        <button type="button"
-                                                class="option-btn p-3 border border-gray-700 bg-[#0F2035] text-left text-sm text-gray-300 hover:border-[#00D4AA] hover:text-white transition flex items-start"
-                                                data-question="{{ q.number }}"
-                                                data-value="{{ letter }}">
-                                            <span class="font-bold text-[#00D4AA] mr-2">{{ letter }}.</span>
-                                            <span>{{ option }}</span>
-                                        </button>
-                                        {% endfor %}
-                                    </div>
-                                    <input type="hidden" name="{{ q.number }}" value="">
+                            <!-- Part 3: CEFR layout – matn chapda, savollar va variantlar o'ngda -->
+                            <div class="grid md:grid-cols-2 gap-6 min-h-[400px]">
+                                <div class="passage-text text-gray-800 bg-gray-50 border border-gray-200 p-6 overflow-y-auto max-h-[70vh]">
+                                    <h4 class="text-gray-600 font-semibold text-sm uppercase tracking-wider mb-4">Matn</h4>
+                                    {{ part.text | safe }}
                                 </div>
-                                {% endfor %}
+                                <div class="space-y-6 overflow-y-auto max-h-[70vh]">
+                                    <h4 class="text-gray-600 font-semibold text-sm uppercase tracking-wider mb-4">Savollar va javoblar</h4>
+                                    {% for q in part.questions %}
+                                    <div class="question-block p-4 border border-gray-200 bg-white" data-question="{{ q.number }}">
+                                        <div class="font-medium text-gray-900 mb-3 text-sm">
+                                            <span class="font-bold mr-1">{{ q.number }}.</span> {{ q.question }}
+                                        </div>
+                                        <div class="grid gap-2">
+                                            {% for letter, option in q.options.items() %}
+                                            <button type="button"
+                                                    class="option-btn p-3 border border-gray-300 bg-white text-left text-sm text-gray-800 hover:border-gray-600 hover:bg-gray-50 transition flex items-start"
+                                                    data-question="{{ q.number }}"
+                                                    data-value="{{ letter }}">
+                                                <span class="font-bold text-gray-600 mr-2">{{ letter }}.</span>
+                                                <span>{{ option }}</span>
+                                            </button>
+                                            {% endfor %}
+                                        </div>
+                                        <input type="hidden" name="{{ q.number }}" value="">
+                                    </div>
+                                    {% endfor %}
+                                </div>
                             </div>
 
                             {% elif part.type == "gapped_text" %}
-                            <!-- Part 4: Gapped Text -->
-                            <div class="grid md:grid-cols-2 gap-6">
-                                <div class="passage-text text-gray-300 bg-[#0B1628] border border-gray-800 p-6">
-                                    <h4 class="font-semibold text-white mb-4 text-sm uppercase tracking-wider">Text with gaps</h4>
+                            <!-- Part 4: Gapped Text – chapda matn, o'ngda javoblar -->
+                            <div class="grid md:grid-cols-2 gap-6 min-h-[400px]">
+                                <div class="passage-text text-gray-800 bg-gray-50 border border-gray-200 p-6 overflow-y-auto max-h-[70vh]">
+                                    <h4 class="font-semibold text-gray-800 mb-4 text-sm uppercase tracking-wider">Text with gaps</h4>
                                     <div class="leading-loose">
-                                        {{ part.text | replace("(23)_____", "<span class='inline-block bg-[#00D4AA] text-[#0B1628] px-2 py-0.5 font-bold text-sm'>23</span>") | replace("(24)_____", "<span class='inline-block bg-[#00D4AA] text-[#0B1628] px-2 py-0.5 font-bold text-sm'>24</span>") | replace("(25)_____", "<span class='inline-block bg-[#00D4AA] text-[#0B1628] px-2 py-0.5 font-bold text-sm'>25</span>") | replace("(26)_____", "<span class='inline-block bg-[#00D4AA] text-[#0B1628] px-2 py-0.5 font-bold text-sm'>26</span>") | replace("(27)_____", "<span class='inline-block bg-[#00D4AA] text-[#0B1628] px-2 py-0.5 font-bold text-sm'>27</span>") | replace("(28)_____", "<span class='inline-block bg-[#00D4AA] text-[#0B1628] px-2 py-0.5 font-bold text-sm'>28</span>") | safe }}
+                                        {{ part.text | replace("(23)_____", "<span class='inline-block bg-gray-700 text-white px-2 py-0.5 font-bold text-sm'>23</span>") | replace("(24)_____", "<span class='inline-block bg-gray-700 text-white px-2 py-0.5 font-bold text-sm'>24</span>") | replace("(25)_____", "<span class='inline-block bg-gray-700 text-white px-2 py-0.5 font-bold text-sm'>25</span>") | replace("(26)_____", "<span class='inline-block bg-gray-700 text-white px-2 py-0.5 font-bold text-sm'>26</span>") | replace("(27)_____", "<span class='inline-block bg-gray-700 text-white px-2 py-0.5 font-bold text-sm'>27</span>") | replace("(28)_____", "<span class='inline-block bg-gray-700 text-white px-2 py-0.5 font-bold text-sm'>28</span>") | safe }}
                                     </div>
                                 </div>
-                                <div>
-                                    <h4 class="font-semibold text-white mb-4 text-sm uppercase tracking-wider">Removed sentences</h4>
+                                <div class="overflow-y-auto max-h-[70vh]">
+                                    <h4 class="font-semibold text-gray-800 mb-4 text-sm uppercase tracking-wider">Removed sentences</h4>
                                     <div class="space-y-3 mb-6">
                                         {% for letter, sentence in part.removed_sentences.items() %}
-                                        <div class="p-3 bg-[#0B1628] border border-gray-800 text-sm text-gray-300">
-                                            <span class="font-bold text-[#00D4AA]">{{ letter }}.</span> {{ sentence }}
+                                        <div class="p-3 border border-gray-200 bg-white text-sm text-gray-800">
+                                            <span class="font-bold text-gray-700">{{ letter }}.</span> {{ sentence }}
                                         </div>
                                         {% endfor %}
                                     </div>
-                                    <h4 class="font-semibold text-white mb-3 text-sm uppercase tracking-wider">Your answers</h4>
+                                    <h4 class="font-semibold text-gray-800 mb-3 text-sm uppercase tracking-wider">Your answers</h4>
                                     <div class="space-y-3">
                                         {% for q in part.questions %}
                                         <div class="flex items-center gap-3">
-                                            <span class="font-medium text-gray-400 text-sm w-16">Gap {{ q.number }}:</span>
-                                            <select name="{{ q.number }}" class="bg-[#162A40] border border-gray-700 text-white px-4 py-2 focus:border-[#00D4AA] outline-none text-sm">
+                                            <span class="font-medium text-gray-500 text-sm w-16">Gap {{ q.number }}:</span>
+                                            <select name="{{ q.number }}" class="bg-white border border-gray-300 text-gray-900 px-4 py-2 focus:border-gray-600 outline-none text-sm">
                                                 <option value="">Select...</option>
                                                 <option value="A">A</option>
                                                 <option value="B">B</option>
@@ -180,23 +187,31 @@
                 </section>
                 {% endfor %}
 
-                <!-- Submit -->
-                <div class="text-center mt-10">
-                    <button type="submit"
-                            class="bg-[#00D4AA] text-[#0B1628] px-12 py-4 font-bold text-lg hover:bg-[#00B894] transition-colors">
-                        Submit Reading Test
+                <!-- Part navigation -->
+                <div id="part-nav" class="flex justify-between items-center mt-6 py-4 border-t border-gray-200">
+                    <button type="button" id="btn-prev-part" class="px-6 py-3 border border-gray-400 text-gray-700 font-semibold hover:border-gray-600 hover:bg-gray-50 transition hidden">
+                        ← Oldingi Part
                     </button>
-                    <p class="text-gray-600 text-xs mt-3">Continue to Listening after submission</p>
+                    <span id="part-indicator" class="text-gray-500 text-sm">Part 1/{{ test_data.parts|length }}</span>
+                    <button type="button" id="btn-next-part" class="px-6 py-3 bg-gray-800 text-white font-bold hover:bg-gray-700 transition">
+                        Keyingi Part →
+                    </button>
+                </div>
+                <div id="submit-wrap" class="text-center mt-4 hidden">
+                    <button type="submit" class="bg-gray-800 text-white px-12 py-4 font-bold text-lg hover:bg-gray-700 transition-colors">
+                        Yuborish (Listening ga o'tish)
+                    </button>
+                    <p class="text-gray-500 text-xs mt-3">Continue to Listening after submission</p>
                 </div>
             </form>
         </div>
     </main>
 
     <!-- Loading Overlay -->
-    <div id="loading-overlay" class="fixed inset-0 bg-[#0B1628]/90 flex items-center justify-center z-50 hidden">
-        <div class="bg-[#0F2035] border border-gray-700 p-8 text-center">
-            <div class="animate-spin w-10 h-10 border-2 border-[#00D4AA] border-t-transparent mx-auto mb-4"></div>
-            <p class="text-gray-300 text-sm">Submitting your answers...</p>
+    <div id="loading-overlay" class="fixed inset-0 bg-white/95 flex items-center justify-center z-50 hidden">
+        <div class="border border-gray-300 bg-white shadow-lg p-8 text-center">
+            <div class="animate-spin w-10 h-10 border-2 border-gray-600 border-t-transparent mx-auto mb-4"></div>
+            <p class="text-gray-700 text-sm">Submitting your answers...</p>
         </div>
     </div>
 
@@ -221,13 +236,45 @@
         }
         updateTimer();
 
+        // Part-by-part navigation
+        const parts = document.querySelectorAll('.part-section');
+        const totalParts = parts.length;
+        let currentPartIndex = 0;
+
+        function showPart(index) {
+            if (index < 0 || index >= totalParts) return;
+            currentPartIndex = index;
+            parts.forEach((p, i) => {
+                p.classList.toggle('hidden', i !== index);
+            });
+            document.getElementById('part-indicator').textContent = `Part ${index + 1}/${totalParts}`;
+            document.getElementById('btn-prev-part').classList.toggle('hidden', index === 0);
+            if (index === totalParts - 1) {
+                document.getElementById('btn-next-part').classList.add('hidden');
+                document.getElementById('submit-wrap').classList.remove('hidden');
+            } else {
+                document.getElementById('btn-next-part').classList.remove('hidden');
+                document.getElementById('submit-wrap').classList.add('hidden');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.getElementById('btn-prev-part').addEventListener('click', function() {
+            showPart(currentPartIndex - 1);
+        });
+        document.getElementById('btn-next-part').addEventListener('click', function() {
+            showPart(currentPartIndex + 1);
+        });
+        showPart(0);
+
         // Option buttons
         document.querySelectorAll('.option-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 const qNum = this.dataset.question;
                 document.querySelectorAll(`.option-btn[data-question="${qNum}"]`).forEach(b => b.classList.remove('selected'));
                 this.classList.add('selected');
-                document.querySelector(`input[name="${qNum}"]`).value = this.dataset.value;
+                const inp = document.querySelector(`input[name="${qNum}"]`);
+                if (inp) inp.value = this.dataset.value;
                 updateProgress();
             });
         });

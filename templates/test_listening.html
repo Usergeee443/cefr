@@ -9,70 +9,50 @@
     <style>
         * { font-family: 'Inter', sans-serif; }
         *, *::before, *::after { border-radius: 0 !important; }
-        body { background-color: #0B1628; }
+        body { background-color: #fafafa; }
         .option-btn { transition: all 0.15s ease; }
         .option-btn.selected {
-            background-color: #00D4AA !important;
-            color: #0B1628 !important;
-            border-color: #00D4AA !important;
+            background-color: #1f2937 !important;
+            color: #fff !important;
+            border-color: #1f2937 !important;
             font-weight: 700;
         }
-        .transcript-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-        .transcript-content.open {
-            max-height: 500px;
-        }
+        .transcript-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+        .transcript-content.open { max-height: 500px; }
     </style>
 </head>
-<body class="min-h-screen text-white">
+<body class="min-h-screen text-gray-900 bg-[#fafafa]">
 
-    <!-- Fixed Header -->
-    <header class="bg-[#0B1628] border-b border-gray-800 fixed top-0 left-0 right-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+    <div class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50 shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+            <span class="text-sm font-medium text-gray-600 uppercase tracking-wider">Listening</span>
             <div class="flex items-center gap-4">
-                <a href="/" class="text-xl font-black">
-                    <span class="text-[#00D4AA]">OSCO</span><span class="text-white">.</span>
-                </a>
-                <div class="h-5 w-px bg-gray-700"></div>
-                <span class="text-sm font-semibold text-[#00D4AA] uppercase tracking-wider">Listening</span>
-            </div>
-            <div class="flex items-center gap-6">
-                <div id="timer" class="text-lg font-mono text-white bg-[#0F2035] border border-gray-700 px-4 py-1.5">
-                    40:00
-                </div>
-                <div class="text-sm text-gray-400">
-                    <span id="progress" class="text-[#00D4AA] font-bold">0</span><span class="text-gray-600">%</span>
-                </div>
+                <div id="timer" class="text-lg font-mono text-gray-800 border border-gray-300 px-3 py-1">40:00</div>
+                <span class="text-sm text-gray-500"><span id="progress" class="font-bold text-gray-800">0</span>%</span>
             </div>
         </div>
-        <!-- Progress bar -->
-        <div class="w-full bg-[#0F2035] h-0.5">
-            <div id="progress-bar" class="bg-[#00D4AA] h-0.5 transition-all duration-300" style="width: 0%"></div>
-        </div>
-    </header>
+        <div class="w-full h-0.5 bg-gray-200"><div id="progress-bar" class="h-full bg-gray-700 transition-all duration-300" style="width: 0%"></div></div>
+    </div>
 
-    <main class="pt-20 pb-16 px-4">
+    <main class="pt-20 pb-24 px-4">
         <div class="max-w-4xl mx-auto">
             <!-- Instructions -->
-            <div class="bg-[#0F2035] border border-[#00D4AA]/30 p-4 mb-8">
-                <h3 class="font-semibold text-[#00D4AA] mb-2 text-sm uppercase tracking-wider">Instructions</h3>
+            <div class="border border-gray-600/20 p-4 mb-8">
+                <h3 class="font-semibold text-gray-900 mb-2 text-sm uppercase tracking-wider">Instructions</h3>
                 <p class="text-gray-400 text-sm">Read the transcript for each audio and answer the questions. In a real CEFR exam, you would listen to audio recordings. Click "Show Transcript" to reveal the audio content.</p>
             </div>
 
             <form id="listening-form">
                 {% for part in test_data.parts %}
                 <section class="part-section mb-12" data-part="{{ part.part_number }}">
-                    <div class="bg-[#0F2035] border border-gray-800 overflow-hidden">
+                    <div class="border border-gray-200 bg-white overflow-hidden">
                         <!-- Part Header -->
-                        <div class="bg-[#162A40] border-b border-gray-700 p-6">
+                        <div class="border-b border-gray-200 bg-gray-50 p-6">
                             <div class="flex items-center gap-3 mb-2">
-                                <div class="w-8 h-8 bg-[#00D4AA] flex items-center justify-center text-[#0B1628] font-bold text-sm">
+                                <div class="w-8 h-8 border border-gray-400 bg-gray-100 flex items-center justify-center text-gray-800 font-bold text-sm">
                                     {{ part.part_number }}
                                 </div>
-                                <h2 class="text-xl font-bold text-white">{{ part.title }}</h2>
+                                <h2 class="text-xl font-bold text-gray-900">{{ part.title }}</h2>
                             </div>
                             <p class="text-gray-400 text-sm ml-11">{{ part.instruction }}</p>
                         </div>
@@ -82,10 +62,10 @@
                             <!-- Part 1: Short Conversations -->
                             <div class="space-y-6">
                                 {% for q in part.questions %}
-                                <div class="question-block p-4 bg-[#0B1628] border border-gray-800" data-question="{{ q.number }}">
+                                <div class="question-block p-4 border border-gray-200 bg-white" data-question="{{ q.number }}">
                                     <div class="flex items-center justify-between mb-3">
-                                        <span class="font-bold text-[#00D4AA]">Question {{ q.number }}</span>
-                                        <button type="button" class="transcript-toggle text-sm text-[#00D4AA] hover:text-white flex items-center gap-1">
+                                        <span class="font-bold text-gray-900">Question {{ q.number }}</span>
+                                        <button type="button" class="transcript-toggle text-sm text-gray-900 hover:text-gray-900 flex items-center gap-1">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="square" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
                                             </svg>
@@ -97,19 +77,19 @@
                                         <em>{{ q.audio_description }}</em>
                                     </div>
 
-                                    <div class="transcript-content bg-[#162A40] border border-gray-700 p-4 mb-4">
-                                        <p class="text-gray-300 whitespace-pre-line">{{ q.transcript }}</p>
+                                    <div class="transcript-content border border-gray-200 bg-white p-4 mb-4">
+                                        <p class="text-gray-700 whitespace-pre-line">{{ q.transcript }}</p>
                                     </div>
 
-                                    <div class="font-medium text-white mb-3">{{ q.question }}</div>
+                                    <div class="font-medium text-gray-900 mb-3">{{ q.question }}</div>
 
                                     <div class="grid gap-2">
                                         {% for letter, option in q.options.items() %}
                                         <button type="button"
-                                                class="option-btn p-3 border border-gray-700 bg-[#0F2035] text-left text-sm text-gray-300 hover:border-[#00D4AA] hover:text-white transition flex items-start"
+                                                class="option-btn p-3 border border-gray-300 bg-white text-left text-sm text-gray-700 hover:border-gray-600 hover:bg-gray-50 hover:text-gray-900 transition flex items-start"
                                                 data-question="{{ q.number }}"
                                                 data-value="{{ letter }}">
-                                            <span class="font-bold text-[#00D4AA] mr-2">{{ letter }}.</span>
+                                            <span class="font-bold text-gray-900 mr-2">{{ letter }}.</span>
                                             <span>{{ option }}</span>
                                         </button>
                                         {% endfor %}
@@ -122,26 +102,26 @@
                             {% elif part.type == "sentence_completion" %}
                             <!-- Part 2: Sentence Completion -->
                             <div class="mb-6">
-                                <button type="button" class="transcript-toggle w-full text-left p-4 bg-[#162A40] border border-gray-700 hover:border-[#00D4AA] transition flex items-center justify-between">
-                                    <span class="font-medium text-white flex items-center gap-2">
-                                        <svg class="w-5 h-5 text-[#00D4AA]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <button type="button" class="transcript-toggle w-full text-left p-4 border border-gray-200 bg-white hover:border-gray-600 hover:bg-gray-50 transition flex items-center justify-between">
+                                    <span class="font-medium text-gray-900 flex items-center gap-2">
+                                        <svg class="w-5 h-5 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="square" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
                                         </svg>
                                         {{ part.audio_description }}
                                     </span>
-                                    <span class="text-sm text-[#00D4AA]">Click to show transcript</span>
+                                    <span class="text-sm text-gray-900">Click to show transcript</span>
                                 </button>
-                                <div class="transcript-content bg-[#0B1628] border border-gray-800 p-4 mt-2">
-                                    <p class="text-gray-300 whitespace-pre-line leading-relaxed">{{ part.transcript }}</p>
+                                <div class="transcript-content border border-gray-200 bg-white p-4 mt-2">
+                                    <p class="text-gray-700 whitespace-pre-line leading-relaxed">{{ part.transcript }}</p>
                                 </div>
                             </div>
 
                             <div class="space-y-4">
                                 {% for q in part.questions %}
-                                <div class="question-block p-4 bg-[#0B1628] border border-gray-800 flex items-center" data-question="{{ q.number }}">
-                                    <span class="font-bold text-[#00D4AA] mr-3">{{ q.number }}.</span>
-                                    <div class="flex-1 text-gray-300">
-                                        {{ q.question | replace("_____", "<input type='text' name='" ~ q.number ~ "' class='border-b-2 border-[#00D4AA] px-2 py-1 w-32 text-center outline-none bg-transparent text-white' placeholder='answer'>") | safe }}
+                                <div class="question-block p-4 border border-gray-200 bg-white flex items-center" data-question="{{ q.number }}">
+                                    <span class="font-bold text-gray-900 mr-3">{{ q.number }}.</span>
+                                    <div class="flex-1 text-gray-700">
+                                        {{ q.question | replace("_____", "<input type='text' name='" ~ q.number ~ "' class='border-b-2 border-gray-600 px-2 py-1 w-32 text-center outline-none bg-transparent text-gray-900' placeholder='answer'>") | safe }}
                                     </div>
                                 </div>
                                 {% endfor %}
@@ -150,11 +130,11 @@
                             {% elif part.type == "multiple_matching" %}
                             <!-- Part 3: Multiple Matching -->
                             <div class="mb-6">
-                                <h4 class="font-semibold text-white mb-4 text-sm uppercase tracking-wider">Options:</h4>
-                                <div class="grid md:grid-cols-2 gap-3 bg-[#0B1628] border border-gray-800 p-4">
+                                <h4 class="font-semibold text-gray-900 mb-4 text-sm uppercase tracking-wider">Options:</h4>
+                                <div class="grid md:grid-cols-2 gap-3 border border-gray-200 bg-white p-4">
                                     {% for letter, option in part.options.items() %}
-                                    <div class="p-2 bg-[#0F2035] border border-gray-700 text-sm text-gray-300">
-                                        <span class="font-bold text-[#00D4AA]">{{ letter }}.</span> {{ option }}
+                                    <div class="p-2 bg-white border border-gray-300 text-sm text-gray-700">
+                                        <span class="font-bold text-gray-900">{{ letter }}.</span> {{ option }}
                                     </div>
                                     {% endfor %}
                                 </div>
@@ -162,19 +142,19 @@
 
                             <div class="space-y-6">
                                 {% for speaker in part.speakers %}
-                                <div class="question-block p-4 bg-[#0B1628] border border-gray-800" data-question="{{ speaker.number }}">
+                                <div class="question-block p-4 border border-gray-200 bg-white" data-question="{{ speaker.number }}">
                                     <div class="flex items-center justify-between mb-3">
-                                        <span class="font-bold text-[#00D4AA]">{{ speaker.name }} (Question {{ speaker.number }})</span>
-                                        <button type="button" class="transcript-toggle text-sm text-[#00D4AA] hover:text-white">
+                                        <span class="font-bold text-gray-900">{{ speaker.name }} (Question {{ speaker.number }})</span>
+                                        <button type="button" class="transcript-toggle text-sm text-gray-900 hover:text-gray-900">
                                             Show Transcript
                                         </button>
                                     </div>
-                                    <div class="transcript-content bg-[#162A40] border border-gray-700 p-4 mb-4">
-                                        <p class="text-gray-300 italic">{{ speaker.transcript }}</p>
+                                    <div class="transcript-content border border-gray-200 bg-white p-4 mb-4">
+                                        <p class="text-gray-700 italic">{{ speaker.transcript }}</p>
                                     </div>
                                     <div class="flex items-center gap-3">
                                         <span class="text-gray-400">What does {{ speaker.name }} say?</span>
-                                        <select name="{{ speaker.number }}" class="bg-[#162A40] border border-gray-700 text-white px-4 py-2 focus:border-[#00D4AA] outline-none">
+                                        <select name="{{ speaker.number }}" class="border border-gray-200 bg-white text-gray-900 px-4 py-2 focus:border-gray-600 outline-none">
                                             <option value="">Select answer...</option>
                                             {% for letter in part.options.keys() %}
                                             <option value="{{ letter }}">{{ letter }}</option>
@@ -188,33 +168,33 @@
                             {% elif part.type == "interview" %}
                             <!-- Part 4: Interview -->
                             <div class="mb-6">
-                                <button type="button" class="transcript-toggle w-full text-left p-4 bg-[#162A40] border border-gray-700 hover:border-[#00D4AA] transition flex items-center justify-between">
-                                    <span class="font-medium text-white flex items-center gap-2">
-                                        <svg class="w-5 h-5 text-[#00D4AA]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <button type="button" class="transcript-toggle w-full text-left p-4 border border-gray-200 bg-white hover:border-gray-600 hover:bg-gray-50 transition flex items-center justify-between">
+                                    <span class="font-medium text-gray-900 flex items-center gap-2">
+                                        <svg class="w-5 h-5 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="square" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
                                         </svg>
                                         {{ part.audio_description }}
                                     </span>
-                                    <span class="text-sm text-[#00D4AA]">Click to show transcript</span>
+                                    <span class="text-sm text-gray-900">Click to show transcript</span>
                                 </button>
-                                <div class="transcript-content bg-[#0B1628] border border-gray-800 p-4 mt-2 max-h-64 overflow-y-auto">
-                                    <p class="text-gray-300 whitespace-pre-line leading-relaxed">{{ part.transcript }}</p>
+                                <div class="transcript-content border border-gray-200 bg-white p-4 mt-2 max-h-64 overflow-y-auto">
+                                    <p class="text-gray-700 whitespace-pre-line leading-relaxed">{{ part.transcript }}</p>
                                 </div>
                             </div>
 
                             <div class="space-y-6">
                                 {% for q in part.questions %}
-                                <div class="question-block p-4 bg-[#0B1628] border border-gray-800" data-question="{{ q.number }}">
-                                    <div class="font-medium text-white mb-3">
-                                        <span class="text-[#00D4AA] font-bold">{{ q.number }}.</span> {{ q.question }}
+                                <div class="question-block p-4 border border-gray-200 bg-white" data-question="{{ q.number }}">
+                                    <div class="font-medium text-gray-900 mb-3">
+                                        <span class="text-gray-900 font-bold">{{ q.number }}.</span> {{ q.question }}
                                     </div>
                                     <div class="grid gap-2">
                                         {% for letter, option in q.options.items() %}
                                         <button type="button"
-                                                class="option-btn p-3 border border-gray-700 bg-[#0F2035] text-left text-sm text-gray-300 hover:border-[#00D4AA] hover:text-white transition flex items-start"
+                                                class="option-btn p-3 border border-gray-300 bg-white text-left text-sm text-gray-700 hover:border-gray-600 hover:bg-gray-50 hover:text-gray-900 transition flex items-start"
                                                 data-question="{{ q.number }}"
                                                 data-value="{{ letter }}">
-                                            <span class="font-bold text-[#00D4AA] mr-2">{{ letter }}.</span>
+                                            <span class="font-bold text-gray-900 mr-2">{{ letter }}.</span>
                                             <span>{{ option }}</span>
                                         </button>
                                         {% endfor %}
@@ -232,7 +212,7 @@
                 <!-- Submit Button -->
                 <div class="text-center mt-10">
                     <button type="submit"
-                            class="bg-[#00D4AA] text-[#0B1628] px-12 py-4 font-bold text-lg hover:bg-[#00B894] transition-colors">
+                            class="bg-gray-800 text-white px-12 py-4 font-bold text-lg hover:bg-[#00B894] transition-colors">
                         Submit Listening Test
                     </button>
                     <p class="text-gray-600 text-xs mt-3">Continue to Writing after submission</p>
@@ -242,10 +222,10 @@
     </main>
 
     <!-- Loading Overlay -->
-    <div id="loading-overlay" class="fixed inset-0 bg-[#0B1628]/90 flex items-center justify-center z-50 hidden">
-        <div class="bg-[#0F2035] border border-gray-700 p-8 text-center">
-            <div class="animate-spin w-10 h-10 border-2 border-[#00D4AA] border-t-transparent mx-auto mb-4"></div>
-            <p class="text-gray-300 text-sm">Submitting your answers...</p>
+    <div id="loading-overlay" class="fixed inset-0 bg-white/90 flex items-center justify-center z-50 hidden">
+        <div class="bg-white border border-gray-300 p-8 text-center">
+            <div class="animate-spin w-10 h-10 border-2 border-gray-600 border-t-transparent mx-auto mb-4"></div>
+            <p class="text-gray-700 text-sm">Submitting your answers...</p>
         </div>
     </div>
 

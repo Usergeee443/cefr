@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>{% block title %}CEFR Level{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        body { background-color: #0d0d0d; }
+        .header-link { color: #a1a1a1; text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
+        .header-link:hover { color: #fff; }
+        .btn-ghost { color: #a1a1a1; font-weight: 500; padding: 8px 16px; border-radius: 6px; transition: background 0.2s, color 0.2s; }
+        .btn-ghost:hover { color: #fff; background: rgba(255,255,255,0.06); }
+        .btn-primary { background: #00D4AA; color: #0d0d0d; font-weight: 600; padding: 10px 20px; border-radius: 8px; transition: background 0.2s; }
+        .btn-primary:hover { background: #00B894; }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body class="min-h-screen text-white bg-[#0d0d0d] antialiased">
+    <header class="fixed top-0 left-0 right-0 z-50 border-b border-[#1f1f1f] bg-[#0d0d0d]/95 backdrop-blur-sm">
+        <div class="max-w-6xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
+            <a href="/" class="flex items-center gap-2.5">
+                <span class="w-9 h-9 bg-[#00D4AA] flex items-center justify-center text-[#0d0d0d] font-black text-sm">C</span>
+                <span class="text-lg font-black text-white">CEFR</span>
+                <span class="text-lg font-black text-[#00D4AA]">Level</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-8">
+                <a href="/pricing" class="header-link">{{ t.pricing }}</a>
+                <a href="/about" class="header-link">{{ t.about }}</a>
+            </nav>
+            <div class="flex items-center gap-2">
+                <div class="flex items-center gap-1 mr-2 md:mr-4">
+                    <a href="/lang/uz" class="text-xs font-medium py-1.5 px-2 {% if lang == 'uz' %}text-[#00D4AA]{% else %}text-gray-500 hover:text-gray-400{% endif %}">O'zbek</a>
+                    <span class="text-gray-600">|</span>
+                    <a href="/lang/en" class="text-xs font-medium py-1.5 px-2 {% if lang == 'en' %}text-[#00D4AA]{% else %}text-gray-500 hover:text-gray-400{% endif %}">EN</a>
+                </div>
+                {% if user %}
+                <a href="/start" class="btn-primary text-sm">{{ t.start_test }}</a>
+                <a href="/logout" class="btn-ghost text-sm">{% if lang == 'uz' %}Chiqish{% else %}Log out{% endif %}</a>
+                {% else %}
+                <a href="/login?next_url=/start" class="btn-ghost text-sm">{% if lang == 'uz' %}Kirish{% else %}Log in{% endif %}</a>
+                <a href="/register" class="btn-primary text-sm">{% if lang == 'uz' %}Ro'yxatdan o'tish{% else %}Sign up{% endif %}</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-16 min-h-screen">
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

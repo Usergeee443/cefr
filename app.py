@@ -178,6 +178,16 @@ def create_user(email: str, password: str, name: str = "") -> dict:
     save_users(data)
     return user
 
+def update_user(uid: str, **kwargs) -> dict | None:
+    data = load_users()
+    for u in data["users"]:
+        if u.get("id") == uid:
+            for key, value in kwargs.items():
+                u[key] = value
+            save_users(data)
+            return u
+    return None
+
 def create_or_update_user_google(google_id: str, email: str, name: str, picture: str = None) -> dict:
     data = load_users()
     for u in data["users"]:
@@ -188,7 +198,7 @@ def create_or_update_user_google(google_id: str, email: str, name: str, picture:
                 u["avatar"] = picture
             save_users(data)
             return u
-    # New user
+    # New user – onboarding kerak (faqat ism so'raladi)
     uid = str(uuid.uuid4())
     user = {
         "id": uid,
@@ -198,6 +208,7 @@ def create_or_update_user_google(google_id: str, email: str, name: str, picture:
         "google_id": google_id,
         "avatar": picture,
         "created_at": datetime.now().isoformat(),
+        "onboarding_done": False,
     }
     data["users"].append(user)
     save_users(data)
@@ -275,10 +286,13 @@ def save_test_result(session: dict):
         "reading_score": session.get("reading", {}).get("score", 0),
         "reading_total": session.get("reading", {}).get("total", 0),
         "reading_percentage": session.get("reading", {}).get("percentage", 0),
+        "reading_details": session.get("reading", {}).get("details", []),
         "listening_score": session.get("listening", {}).get("score", 0),
         "listening_total": session.get("listening", {}).get("total", 0),
         "listening_percentage": session.get("listening", {}).get("percentage", 0),
+        "listening_details": session.get("listening", {}).get("details", []),
         "writing_percentage": session.get("writing", {}).get("percentage", 0),
+        "writing_evaluation": session.get("writing", {}).get("evaluation"),
         "overall_score": session.get("overall_score", 0),
         "cefr_level": session.get("cefr_level") or "—",
         "level_description": session.get("level_description") or "",
@@ -291,6 +305,15 @@ def get_test_history(user_id: str, limit: int = 50) -> list:
     user_results = [r for r in data["results"] if r.get("user_id") == user_id]
     user_results.sort(key=lambda x: x.get("completed_at", ""), reverse=True)
     return user_results[:limit]
+
+
+def get_test_result_by_session(session_id: str, user_id: str) -> dict | None:
+    """Profil uchun bitta test natijasini session_id va user_id bo'yicha qaytaradi."""
+    data = load_test_history_data()
+    for r in data["results"]:
+        if r.get("session_id") == session_id and r.get("user_id") == user_id:
+            return r
+    return None
 
 # Aloqa ma'lumotlari (profil sahifasida)
 CONTACT_INFO = {
@@ -920,108 +943,210 @@ async def evaluate_writing_with_ai(task1: str, task2: str, essay: str, writing_t
 
 
 async def get_strict_ai_score(text: str, task_type: str) -> int:
-    """Get strict score when AI is unavailable - very conservative"""
+    """Fallback score when AI is unavailable - fair band by word count and diversity"""
     words = text.split()
     wc = len(words)
+    # Task1/Task2: 120–150 words; Essay: 250–300
+    target_min = 120 if task_type != "essay" else 250
+    target_ok = wc >= target_min * 0.8  # 80% of target = reasonable attempt
 
-    # Very strict scoring without AI
-    if wc < 50:
+    if wc < 30:
         return 1
-    if wc < 80:
+    if wc < 60:
         return 2
+    if wc < 90:
+        return 3
 
-    # Check basic quality
     unique = len(set(w.lower() for w in words))
-    diversity = unique / wc
-
-    if diversity < 0.3:
+    diversity = unique / wc if wc else 0
+    if diversity < 0.25:
         return 2
-    if diversity < 0.4:
+    if diversity < 0.35:
         return 3
     if diversity < 0.5:
         return 4
-
-    # Max score without AI is 5 (modest user)
-    return 5
+    # Adequate length and diversity: band 4–5 so user sees ~44–55% when AI is off
+    return 5 if target_ok else 4
 
 
 async def try_ai_evaluation(task1, task2, essay, writing_test, parts_to_eval) -> dict:
     """Try AI evaluation via Anthropic or OpenAI"""
-    prompt = f"""You are an EXTREMELY strict CEFR English examiner. Evaluate ONLY genuine English writing. Be HARSH.
+    t1_instruction = ""
+    t2_instruction = ""
+    essay_instruction = ""
+    if writing_test and writing_test.get("parts"):
+        for p in writing_test["parts"]:
+            if p.get("part_number") == 1 and p.get("tasks"):
+                t1_instruction = (p["tasks"][0].get("situation") or "")[:300]
+                if len(p["tasks"]) > 1:
+                    t2_instruction = (p["tasks"][1].get("situation") or "")[:300]
+            if p.get("part_number") == 2:
+                essay_instruction = (p.get("prompt") or "")[:400]
+    prompt = f"""You are an EXTREMELY strict CEFR English examiner. Evaluate ONLY genuine English writing that ADDRESSES THE TASK. Be HARSH.
 
 CRITICAL RULES:
+- OFF-TOPIC / IRRELEVANT: If the text does NOT address the given task (random content, different topic, or clearly ignoring the prompt), you MUST give score 0 or 1 only. In feedback write: "Off-topic - does not address the task." Never give more than 1 for off-topic content.
 - Repeated sentences/phrases = score 1-2 (SPAM)
 - Random/irrelevant text = score 1
 - Gibberish or non-English = score 1
 - Under word count = maximum score 4
-- Score 5 = barely adequate B1 attempt
-- Score 7+ requires near-perfect English
+- Score 5 = barely adequate B1 attempt that clearly addresses the task
+- Score 7+ requires near-perfect English and full task achievement
 
-TASK 1 (Email, 120-150 words): {task1}
+TASK 1 was: {t1_instruction}
+TASK 2 was: {t2_instruction}
+ESSAY topic was: {essay_instruction}
+
+CANDIDATE TASK 1 (Email, 120-150 words): {task1}
 [{len(task1.split())} words]
 
-TASK 2 (Review, 120-150 words): {task2}
+CANDIDATE TASK 2 (Review, 120-150 words): {task2}
 [{len(task2.split())} words]
 
-ESSAY (250-300 words): {essay}
+CANDIDATE ESSAY (250-300 words): {essay}
 [{len(essay.split())} words]
 
 Respond in EXACT JSON:
 {{"task1":{{"score":0,"content":"","organization":"","language":"","accuracy":""}},"task2":{{"score":0,"content":"","organization":"","language":"","accuracy":""}},"essay":{{"score":0,"task_achievement":"","coherence_cohesion":"","lexical_resource":"","grammatical_range":""}},"general_feedback":""}}"""
 
+    def extract_json(text: str):
+        if not text or not text.strip():
+            return None
+        raw = text.strip()
+        # Strip markdown code block if present
+        if raw.startswith("```"):
+            raw = re.sub(r"^```(?:json)?\s*", "", raw)
+            raw = re.sub(r"\s*```$", "", raw)
+        # Try parse as-is
+        try:
+            return json.loads(raw)
+        except json.JSONDecodeError:
+            pass
+        # Try to find first {...} block
+        for pattern in [r"```(?:json)?\s*(\{[\s\S]*?\})\s*```", r"(\{[\s\S]*\})"]:
+            m = re.search(pattern, text)
+            if m:
+                try:
+                    return json.loads(m.group(1).strip())
+                except json.JSONDecodeError:
+                    continue
+        # Greedy: take the longest {...} that parses
+        for m in re.finditer(r"\{[\s\S]*\}", text):
+            try:
+                return json.loads(m.group(0))
+            except json.JSONDecodeError:
+                continue
+        return None
+
+    def validate_ev(ev):
+        """Ensure AI response has task1, task2, essay with score."""
+        if not ev or not isinstance(ev, dict):
+            return False
+        for key in ("task1", "task2", "essay"):
+            if key not in ev or not isinstance(ev.get(key), dict):
+                return False
+        return True
+
     try:
-        if ANTHROPIC_API_KEY:
-            async with httpx.AsyncClient(timeout=60.0) as client:
-                r = await client.post("https://api.anthropic.com/v1/messages",
-                    headers={"x-api-key": ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01", "content-type": "application/json"},
-                    json={"model": "claude-3-haiku-20240307", "max_tokens": 2000, "messages": [{"role": "user", "content": prompt}]})
+        # 1) OpenAI birinchi (OPENAI_API_KEY bo'lsa)
+        if OPENAI_API_KEY.strip():
+            async with httpx.AsyncClient(timeout=90.0) as client:
+                r = await client.post(
+                    "https://api.openai.com/v1/chat/completions",
+                    headers={"Authorization": f"Bearer {OPENAI_API_KEY.strip()}", "Content-Type": "application/json"},
+                    json={
+                        "model": "gpt-4o-mini",
+                        "messages": [
+                            {"role": "system", "content": "You are a strict CEFR writing examiner. Reply ONLY with valid JSON. No markdown, no code block, no explanation. Output must be a single JSON object with keys task1, task2, essay, general_feedback."},
+                            {"role": "user", "content": prompt}
+                        ],
+                        "temperature": 0.2,
+                    },
+                )
                 if r.status_code == 200:
-                    content = r.json()["content"][0]["text"]
-                    m = re.search(r'\{[\s\S]*\}', content)
-                    if m:
-                        ev = json.loads(m.group())
-                        return format_ai_result(ev, task1, task2, essay)
-        elif OPENAI_API_KEY:
-            async with httpx.AsyncClient(timeout=60.0) as client:
-                r = await client.post("https://api.openai.com/v1/chat/completions",
-                    headers={"Authorization": f"Bearer {OPENAI_API_KEY}", "Content-Type": "application/json"},
-                    json={"model": "gpt-3.5-turbo", "messages": [{"role": "system", "content": "Strict CEFR examiner. JSON only."}, {"role": "user", "content": prompt}], "temperature": 0.2})
+                    data = r.json()
+                    choices = data.get("choices") or []
+                    if choices:
+                        msg = choices[0].get("message") or {}
+                        content = (msg.get("content") or "").strip()
+                        if content:
+                            ev = extract_json(content)
+                            if ev and validate_ev(ev):
+                                return format_ai_result(ev, task1, task2, essay)
+                else:
+                    print(f"OpenAI Writing AI: status={r.status_code}, body={r.text[:500]}")
+        # 2) Anthropic
+        if ANTHROPIC_API_KEY and ANTHROPIC_API_KEY.strip():
+            async with httpx.AsyncClient(timeout=90.0) as client:
+                r = await client.post(
+                    "https://api.anthropic.com/v1/messages",
+                    headers={"x-api-key": ANTHROPIC_API_KEY.strip(), "anthropic-version": "2023-06-01", "content-type": "application/json"},
+                    json={"model": "claude-3-haiku-20240307", "max_tokens": 2000, "messages": [{"role": "user", "content": prompt}]},
+                )
                 if r.status_code == 200:
-                    content = r.json()["choices"][0]["message"]["content"]
-                    m = re.search(r'\{[\s\S]*\}', content)
-                    if m:
-                        ev = json.loads(m.group())
-                        return format_ai_result(ev, task1, task2, essay)
+                    data = r.json()
+                    content = ""
+                    for block in data.get("content", []):
+                        if block.get("type") == "text":
+                            content += block.get("text", "")
+                    if not content and data.get("content"):
+                        content = (data["content"][0].get("text") or "")
+                    content = (content or "").strip()
+                    if content:
+                        ev = extract_json(content)
+                        if ev and validate_ev(ev):
+                            return format_ai_result(ev, task1, task2, essay)
+                else:
+                    print(f"Anthropic Writing AI: status={r.status_code}, body={r.text[:500]}")
     except Exception as e:
-        print(f"AI error: {e}")
+        print(f"Writing AI error: {e}")
+        import traceback
+        traceback.print_exc()
     return None
 
 
+def _score_int(val) -> int:
+    """Parse score from AI (may be string or float)."""
+    if val is None:
+        return 3
+    if isinstance(val, int):
+        return max(1, min(9, val))
+    try:
+        return max(1, min(9, int(float(val))))
+    except (TypeError, ValueError):
+        return 3
+
+
 def format_ai_result(ev, task1, task2, essay):
+    def cap_off_topic(name):
+        d = ev.get(name, {})
+        s = _score_int(d.get("score"))
+        fb = (d.get("content") or d.get("task_achievement") or "").lower()
+        if fb and ("off-topic" in fb or "does not address" in fb or "irrelevant" in fb):
+            s = min(s, 1)
+        return max(1, min(9, s))
     r = {}
     for name, txt in [("task1", task1), ("task2", task2)]:
-        s = ev.get(name, {}).get("score", 3)
-        s = max(1, min(9, s))
+        s = cap_off_topic(name) if name in ev else _score_int(ev.get(name, {}).get("score"))
         r[name] = {
-            "score": s, "band": s, "word_count": len(txt.split()), "is_valid": True,
+            "score": s, "band": s, "word_count": len(txt.split()), "is_valid": s >= 3,
             "feedback": {
                 "overall": f"Band {s}",
-                "content": ev.get(name, {}).get("content", ""),
-                "organization": ev.get(name, {}).get("organization", ""),
-                "language": ev.get(name, {}).get("language", ""),
-                "accuracy": ev.get(name, {}).get("accuracy", "")
+                "content": ev.get(name, {}).get("content", "") or "Evaluated.",
+                "organization": ev.get(name, {}).get("organization", "") or "Evaluated.",
+                "language": ev.get(name, {}).get("language", "") or "Evaluated.",
+                "accuracy": ev.get(name, {}).get("accuracy", "") or "Evaluated."
             }
         }
-    s = ev.get("essay", {}).get("score", 3)
-    s = max(1, min(9, s))
+    s = cap_off_topic("essay") if "essay" in ev else _score_int(ev.get("essay", {}).get("score"))
     r["essay"] = {
-        "score": s, "band": s, "word_count": len(essay.split()), "is_valid": True,
+        "score": s, "band": s, "word_count": len(essay.split()), "is_valid": s >= 3,
         "feedback": {
             "overall": f"Band {s}",
-            "task_achievement": ev.get("essay", {}).get("task_achievement", ""),
-            "coherence_cohesion": ev.get("essay", {}).get("coherence_cohesion", ""),
-            "lexical_resource": ev.get("essay", {}).get("lexical_resource", ""),
-            "grammatical_range": ev.get("essay", {}).get("grammatical_range", "")
+            "task_achievement": ev.get("essay", {}).get("task_achievement", "") or "Evaluated.",
+            "coherence_cohesion": ev.get("essay", {}).get("coherence_cohesion", "") or "Evaluated.",
+            "lexical_resource": ev.get("essay", {}).get("lexical_resource", "") or "Evaluated.",
+            "grammatical_range": ev.get("essay", {}).get("grammatical_range", "") or "Evaluated."
         }
     }
     return r
@@ -1056,22 +1181,24 @@ async def set_language(lang: str):
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
+    user = get_current_user(request)
+    if user:
+        return RedirectResponse(url="/start", status_code=302)
     t = get_translations(request)
     lang = get_lang(request)
-    user = get_current_user(request)
-    return templates.TemplateResponse("index.html", {"request": request, "t": t, "lang": lang, "user": user})
+    return templates.TemplateResponse("index.html", {"request": request, "t": t, "lang": lang, "user": None})
 
 @app.get("/pricing", response_class=HTMLResponse)
 async def pricing_page(request: Request):
     t = get_translations(request)
     lang = get_lang(request)
-    return templates.TemplateResponse("pricing.html", {"request": request, "t": t, "lang": lang})
+    return templates.TemplateResponse("pricing.html", {"request": request, "t": t, "lang": lang, "user": get_current_user(request)})
 
 @app.get("/about", response_class=HTMLResponse)
 async def about_page(request: Request):
     t = get_translations(request)
     lang = get_lang(request)
-    return templates.TemplateResponse("about.html", {"request": request, "t": t, "lang": lang})
+    return templates.TemplateResponse("about.html", {"request": request, "t": t, "lang": lang, "user": get_current_user(request)})
 
 # ============ AUTH ROUTES ============
 
@@ -1088,13 +1215,13 @@ LOGIN_ERROR_MESSAGES = {
 async def login_page(request: Request, error: str = "", next_url: str = ""):
     user = get_current_user(request)
     if user:
-        return RedirectResponse(url=next_url or "/", status_code=302)
+        return RedirectResponse(url=next_url or "/start", status_code=302)
     t = get_translations(request)
     lang = get_lang(request)
     error_message = LOGIN_ERROR_MESSAGES.get(error, error) if error else ""
     return templates.TemplateResponse("login.html", {
-        "request": request, "t": t, "lang": lang, "error": error_message, "next_url": next_url or "/start",
-        "google_client_id": GOOGLE_CLIENT_ID
+        "request": request, "t": t, "lang": lang, "user": get_current_user(request),
+        "error": error_message, "next_url": next_url or "/start", "google_client_id": GOOGLE_CLIENT_ID
     })
 
 @app.post("/login", response_class=HTMLResponse)
@@ -1102,13 +1229,13 @@ async def login_submit(request: Request, email: str = Form(""), password: str = 
     email = (email or "").strip().lower()
     if not email or not password:
         return templates.TemplateResponse("login.html", {
-            "request": request, "t": get_translations(request), "lang": get_lang(request),
+            "request": request, "t": get_translations(request), "lang": get_lang(request), "user": get_current_user(request),
             "error": "Email va parol kiriting.", "next_url": next_url, "google_client_id": GOOGLE_CLIENT_ID
         })
     user = get_user_by_email(email)
     if not user or not user.get("password_hash") or not verify_password(password, user["password_hash"]):
         return templates.TemplateResponse("login.html", {
-            "request": request, "t": get_translations(request), "lang": get_lang(request),
+            "request": request, "t": get_translations(request), "lang": get_lang(request), "user": get_current_user(request),
             "error": "Email yoki parol noto'g'ri.", "next_url": next_url, "google_client_id": GOOGLE_CLIENT_ID
         })
     from itsdangerous import URLSafeTimedSerializer
@@ -1123,11 +1250,12 @@ async def login_submit(request: Request, email: str = Form(""), password: str = 
 async def register_page(request: Request, error: str = ""):
     user = get_current_user(request)
     if user:
-        return RedirectResponse(url="/", status_code=302)
+        return RedirectResponse(url="/start", status_code=302)
     t = get_translations(request)
     lang = get_lang(request)
     return templates.TemplateResponse("register.html", {
-        "request": request, "t": t, "lang": lang, "error": error, "google_client_id": GOOGLE_CLIENT_ID
+        "request": request, "t": t, "lang": lang, "user": get_current_user(request),
+        "error": error, "google_client_id": GOOGLE_CLIENT_ID
     })
 
 @app.post("/register", response_class=HTMLResponse)
@@ -1135,17 +1263,17 @@ async def register_submit(request: Request, email: str = Form(""), password: str
     email = (email or "").strip().lower()
     if not email or not password:
         return templates.TemplateResponse("register.html", {
-            "request": request, "t": get_translations(request), "lang": get_lang(request),
+            "request": request, "t": get_translations(request), "lang": get_lang(request), "user": get_current_user(request),
             "error": "Email va parol kiriting.", "google_client_id": GOOGLE_CLIENT_ID
         })
     if len(password) < 6:
         return templates.TemplateResponse("register.html", {
-            "request": request, "t": get_translations(request), "lang": get_lang(request),
+            "request": request, "t": get_translations(request), "lang": get_lang(request), "user": get_current_user(request),
             "error": "Parol kamida 6 belgidan iborat bo'lishi kerak.", "google_client_id": GOOGLE_CLIENT_ID
         })
     if get_user_by_email(email):
         return templates.TemplateResponse("register.html", {
-            "request": request, "t": get_translations(request), "lang": get_lang(request),
+            "request": request, "t": get_translations(request), "lang": get_lang(request), "user": get_current_user(request),
             "error": "Bu email allaqachon ro'yxatdan o'tgan.", "google_client_id": GOOGLE_CLIENT_ID
         })
     user = create_user(email, password, name)
@@ -1175,6 +1303,45 @@ async def profile_page(request: Request):
         "request": request, "t": t, "lang": lang, "user": user,
         "test_history": test_history, "contact": CONTACT_INFO
     })
+
+@app.get("/profile/result/{session_id}", response_class=HTMLResponse)
+async def profile_result_detail(request: Request, session_id: str):
+    user = get_current_user(request)
+    if not user:
+        return RedirectResponse(url="/login?next_url=/profile", status_code=302)
+    record = get_test_result_by_session(session_id, user["id"])
+    if not record:
+        raise HTTPException(status_code=404, detail="Natija topilmadi")
+    t = get_translations(request)
+    lang = get_lang(request)
+    # result_detail uchun session o'rniga record dan session-ga o'xshash obyekt yasaymiz
+    session_like = {
+        "cefr_level": record.get("cefr_level"),
+        "level_description": CEFR_LEVELS.get(record.get("cefr_level", ""), {}).get("description", ""),
+        "overall_score": record.get("overall_score", 0),
+        "reading": {
+            "percentage": record.get("reading_percentage", 0),
+            "score": record.get("reading_score", 0),
+            "total": record.get("reading_total", 0),
+            "details": record.get("reading_details") or [],
+        },
+        "listening": {
+            "percentage": record.get("listening_percentage", 0),
+            "score": record.get("listening_score", 0),
+            "total": record.get("listening_total", 0),
+            "details": record.get("listening_details") or [],
+        },
+        "writing": {
+            "percentage": record.get("writing_percentage", 0),
+            "evaluation": record.get("writing_evaluation") or {},
+        },
+        "completed_at": record.get("completed_at"),
+    }
+    return templates.TemplateResponse("result_detail.html", {
+        "request": request, "session": session_like, "cefr_levels": CEFR_LEVELS,
+        "t": t, "lang": lang, "record": record
+    })
+
 
 @app.post("/profile/feedback")
 async def profile_feedback_submit(request: Request):
@@ -1286,9 +1453,38 @@ async def auth_google_callback(request: Request, code: str = "", state: str = ""
     secret = os.getenv("SECRET_KEY", "cefr-level-secret-change-in-production")
     ser = URLSafeTimedSerializer(secret)
     token = ser.dumps(user["id"])
-    resp = RedirectResponse(url=next_url or "/start", status_code=302)
+    # Yangi foydalanuvchi: onboarding (ism) → keyin platforma
+    if user.get("onboarding_done") is False:
+        resp = RedirectResponse(url="/onboarding", status_code=302)
+    else:
+        resp = RedirectResponse(url=next_url or "/start", status_code=302)
     resp.set_cookie(key=AUTH_COOKIE, value=token, max_age=AUTH_MAX_AGE, httponly=True, samesite="lax")
     return resp
+
+# ============ ONBOARDING (faqat ism – yangi Google user) ============
+
+@app.get("/onboarding", response_class=HTMLResponse)
+async def onboarding_page(request: Request):
+    user = get_current_user(request)
+    if not user:
+        return RedirectResponse(url="/login?next_url=/start", status_code=302)
+    if user.get("onboarding_done") is True:
+        return RedirectResponse(url="/start", status_code=302)
+    t = get_translations(request)
+    lang = get_lang(request)
+    return templates.TemplateResponse("onboarding.html", {"request": request, "t": t, "lang": lang, "user": user})
+
+@app.post("/onboarding", response_class=HTMLResponse)
+async def onboarding_submit(request: Request, name: str = Form("")):
+    user = get_current_user(request)
+    if not user:
+        return RedirectResponse(url="/login?next_url=/start", status_code=302)
+    name = (name or "").strip()
+    if name:
+        update_user(user["id"], name=name, onboarding_done=True)
+    else:
+        update_user(user["id"], onboarding_done=True)
+    return RedirectResponse(url="/start", status_code=302)
 
 # ============ PROTECTED: TEST (require login) ============
 
@@ -1393,7 +1589,7 @@ async def results(request: Request):
     save_test_result(s)  # profil tarixiga saqlash
     t = get_translations(request)
     lang = get_lang(request)
-    return templates.TemplateResponse("results.html", {"request": request, "session": s, "cefr_levels": CEFR_LEVELS, "t": t, "lang": lang})
+    return templates.TemplateResponse("results.html", {"request": request, "session": s, "cefr_levels": CEFR_LEVELS, "t": t, "lang": lang, "user": get_current_user(request)})
 
 @app.post("/feedback/submit")
 async def submit_feedback(request: Request):

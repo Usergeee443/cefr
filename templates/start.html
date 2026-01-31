@@ -1,198 +1,68 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Start Test - OSCO.</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        * { font-family: 'Inter', sans-serif; }
-        *, *::before, *::after { border-radius: 0 !important; }
-        body { background-color: #0B1628; }
-    </style>
-</head>
-<body class="min-h-screen text-white">
+{% extends "base_app.html" %}
+{% block title %}{{ t.start_test }} - CEFR{% endblock %}
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 md:px-6 py-8 md:py-12">
+    <div class="text-center mb-10">
+        <div class="text-xs font-semibold tracking-[0.2em] uppercase text-[#00D4AA] mb-3">CEFR Assessment</div>
+        <h1 class="text-2xl md:text-3xl font-bold mb-2">{% if lang == 'uz' %}Test bo'limlari{% else %}Test Overview{% endif %}</h1>
+        <p class="text-gray-400 text-sm max-w-xl mx-auto">
+            {% if lang == 'uz' %}Uch bo'limdan iborat. Barchasini ketma-ket bajaring.{% else %}Three sections. Complete all in order.{% endif %}
+        </p>
+    </div>
 
-    <!-- Navigation -->
-    <nav class="border-b border-gray-800">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-            <a href="/" class="text-2xl font-black tracking-tight">
-                <span class="text-[#00D4AA]">OSCO</span><span class="text-white">.</span>
-            </a>
-            <div class="text-sm text-gray-500">
-                Session: <span class="text-gray-400 font-mono">{{ session_id[:8] }}...</span>
+    <div class="grid md:grid-cols-3 gap-4 md:gap-6 mb-10">
+        <div class="bg-[#0F2035] border border-gray-800 p-5 md:p-6">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-[#00D4AA] flex items-center justify-center">
+                    <svg class="w-5 h-5 text-[#0B1628]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                </div>
+                <div><h3 class="font-bold text-white">Reading</h3><div class="text-xs text-gray-500">Section 1</div></div>
             </div>
-        </div>
-    </nav>
-
-    <main class="max-w-4xl mx-auto px-6 py-12">
-        <!-- Header -->
-        <div class="text-center mb-12">
-            <div class="text-xs font-semibold tracking-[0.2em] uppercase text-[#00D4AA] mb-4">CEFR Assessment</div>
-            <h1 class="text-3xl sm:text-4xl font-bold mb-3">Test Overview</h1>
-            <p class="text-gray-400 max-w-xl mx-auto">
-                This test follows the official CEFR examination format and consists of three sections.
-                Complete all sections in order to receive your CEFR level.
-            </p>
-        </div>
-
-        <!-- Three Sections -->
-        <div class="grid md:grid-cols-3 gap-6 mb-12">
-            <!-- Reading -->
-            <div class="bg-[#0F2035] border border-gray-800 p-6">
-                <div class="flex items-center gap-3 mb-5">
-                    <div class="w-10 h-10 bg-[#00D4AA] flex items-center justify-center">
-                        <svg class="w-5 h-5 text-[#0B1628]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="square" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-white">Reading</h3>
-                        <div class="text-xs text-gray-500">Section 1</div>
-                    </div>
-                </div>
-                <ul class="text-sm text-gray-400 space-y-2 mb-5">
-                    <li class="flex items-center gap-2">
-                        <div class="w-1 h-1 bg-[#00D4AA]"></div>
-                        Part 1: Multiple Choice Cloze
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <div class="w-1 h-1 bg-[#00D4AA]"></div>
-                        Part 2: Open Cloze
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <div class="w-1 h-1 bg-[#00D4AA]"></div>
-                        Part 3: Reading Comprehension
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <div class="w-1 h-1 bg-[#00D4AA]"></div>
-                        Part 4: Gapped Text
-                    </li>
-                </ul>
-                <div class="text-xs text-gray-500 border-t border-gray-800 pt-3">
-                    Duration: 60 minutes
-                </div>
-            </div>
-
-            <!-- Listening -->
-            <div class="bg-[#0F2035] border border-gray-800 p-6">
-                <div class="flex items-center gap-3 mb-5">
-                    <div class="w-10 h-10 bg-[#00D4AA] flex items-center justify-center">
-                        <svg class="w-5 h-5 text-[#0B1628]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="square" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-white">Listening</h3>
-                        <div class="text-xs text-gray-500">Section 2</div>
-                    </div>
-                </div>
-                <ul class="text-sm text-gray-400 space-y-2 mb-5">
-                    <li class="flex items-center gap-2">
-                        <div class="w-1 h-1 bg-[#00D4AA]"></div>
-                        Part 1: Short Conversations
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <div class="w-1 h-1 bg-[#00D4AA]"></div>
-                        Part 2: Sentence Completion
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <div class="w-1 h-1 bg-[#00D4AA]"></div>
-                        Part 3: Multiple Matching
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <div class="w-1 h-1 bg-[#00D4AA]"></div>
-                        Part 4: Interview
-                    </li>
-                </ul>
-                <div class="text-xs text-gray-500 border-t border-gray-800 pt-3">
-                    Duration: 40 minutes
-                </div>
-            </div>
-
-            <!-- Writing -->
-            <div class="bg-[#0F2035] border border-gray-800 p-6">
-                <div class="flex items-center gap-3 mb-5">
-                    <div class="w-10 h-10 bg-[#00D4AA] flex items-center justify-center">
-                        <svg class="w-5 h-5 text-[#0B1628]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="square" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-white">Writing</h3>
-                        <div class="text-xs text-gray-500">Section 3</div>
-                    </div>
-                </div>
-                <ul class="text-sm text-gray-400 space-y-2 mb-5">
-                    <li class="flex items-center gap-2">
-                        <div class="w-1 h-1 bg-[#00D4AA]"></div>
-                        Part 1: Task 1 - Email/Letter
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <div class="w-1 h-1 bg-[#00D4AA]"></div>
-                        Part 1: Task 2 - Review
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <div class="w-1 h-1 bg-[#00D4AA]"></div>
-                        Part 2: Essay
-                    </li>
-                    <li class="flex items-center gap-2">
-                        <div class="w-1 h-1 bg-[#00D4AA]"></div>
-                        AI-Powered Evaluation
-                    </li>
-                </ul>
-                <div class="text-xs text-gray-500 border-t border-gray-800 pt-3">
-                    Duration: 80 minutes
-                </div>
-            </div>
-        </div>
-
-        <!-- Instructions -->
-        <div class="bg-[#0F2035] border border-[#00D4AA]/30 p-6 mb-10">
-            <h3 class="font-bold text-[#00D4AA] mb-3 text-sm uppercase tracking-wider">Important Instructions</h3>
-            <ul class="text-sm text-gray-400 space-y-2">
-                <li class="flex items-start gap-3">
-                    <span class="text-[#00D4AA] font-mono text-xs mt-0.5">01</span>
-                    Complete all sections in order: Reading, Listening, Writing
-                </li>
-                <li class="flex items-start gap-3">
-                    <span class="text-[#00D4AA] font-mono text-xs mt-0.5">02</span>
-                    You cannot go back to previous sections once submitted
-                </li>
-                <li class="flex items-start gap-3">
-                    <span class="text-[#00D4AA] font-mono text-xs mt-0.5">03</span>
-                    Ensure you have a stable internet connection
-                </li>
-                <li class="flex items-start gap-3">
-                    <span class="text-[#00D4AA] font-mono text-xs mt-0.5">04</span>
-                    Writing section will be evaluated by AI -- be genuine and avoid spam
-                </li>
-                <li class="flex items-start gap-3">
-                    <span class="text-[#00D4AA] font-mono text-xs mt-0.5">05</span>
-                    Total test duration: approximately 3 hours
-                </li>
+            <ul class="text-sm text-gray-400 space-y-1.5 mb-4">
+                <li class="flex items-center gap-2"><span class="w-1 h-1 bg-[#00D4AA]"></span>Part 1–4</li>
             </ul>
+            <div class="text-xs text-gray-500 border-t border-gray-800 pt-3">60 {% if lang == 'uz' %}daqika{% else %}min{% endif %}</div>
         </div>
+        <div class="bg-[#0F2035] border border-gray-800 p-5 md:p-6">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-[#00D4AA] flex items-center justify-center">
+                    <svg class="w-5 h-5 text-[#0B1628]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+                </div>
+                <div><h3 class="font-bold text-white">Listening</h3><div class="text-xs text-gray-500">Section 2</div></div>
+            </div>
+            <ul class="text-sm text-gray-400 space-y-1.5 mb-4">
+                <li class="flex items-center gap-2"><span class="w-1 h-1 bg-[#00D4AA]"></span>Part 1–4</li>
+            </ul>
+            <div class="text-xs text-gray-500 border-t border-gray-800 pt-3">40 {% if lang == 'uz' %}daqika{% else %}min{% endif %}</div>
+        </div>
+        <div class="bg-[#0F2035] border border-gray-800 p-5 md:p-6">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-[#00D4AA] flex items-center justify-center">
+                    <svg class="w-5 h-5 text-[#0B1628]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                </div>
+                <div><h3 class="font-bold text-white">Writing</h3><div class="text-xs text-gray-500">Section 3</div></div>
+            </div>
+            <ul class="text-sm text-gray-400 space-y-1.5 mb-4">
+                <li class="flex items-center gap-2"><span class="w-1 h-1 bg-[#00D4AA]"></span>Task 1, 2, Essay</li>
+            </ul>
+            <div class="text-xs text-gray-500 border-t border-gray-800 pt-3">80 {% if lang == 'uz' %}daqika{% else %}min{% endif %}</div>
+        </div>
+    </div>
 
-        <!-- Start Button -->
-        <div class="text-center">
-            <a href="/test/reading"
-               class="inline-block bg-[#00D4AA] text-[#0B1628] px-12 py-4 text-lg font-bold hover:bg-[#00B894] transition-colors">
-                Start Reading Test
-            </a>
-            <p class="mt-4 text-xs text-gray-600">
-                Session ID: <span class="font-mono text-gray-500">{{ session_id }}</span>
-            </p>
-        </div>
-    </main>
+    <div class="bg-[#0F2035] border border-[#00D4AA]/30 p-4 md:p-6 mb-10">
+        <h3 class="font-bold text-[#00D4AA] mb-3 text-sm uppercase tracking-wider">{% if lang == 'uz' %}Ko'rsatmalar{% else %}Instructions{% endif %}</h3>
+        <ul class="text-sm text-gray-400 space-y-2">
+            <li>{% if lang == 'uz' %}Reading → Listening → Writing ketma-ket.{% else %}Complete Reading, then Listening, then Writing.{% endif %}</li>
+            <li>{% if lang == 'uz' %}Yuborilgach orqaga qaytib bo'lmaydi.{% else %}You cannot go back after submission.{% endif %}</li>
+            <li>{% if lang == 'uz' %}Writing AI tomonidan baholanadi.{% else %}Writing is evaluated by AI.{% endif %}</li>
+        </ul>
+    </div>
 
-    <!-- Footer -->
-    <footer class="border-t border-gray-800 mt-12">
-        <div class="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
-            <span class="text-sm font-black"><span class="text-[#00D4AA]">OSCO</span><span class="text-white">.</span></span>
-            <span class="text-gray-600 text-xs">CEFR English Assessment Platform</span>
-        </div>
-    </footer>
-</body>
-</html>
+    <div class="text-center">
+        <a href="/test/reading" class="inline-block bg-[#00D4AA] text-[#0B1628] px-10 py-4 text-lg font-bold hover:bg-[#00B894] transition">
+            {% if lang == 'uz' %}Reading testni boshlash{% else %}Start Reading Test{% endif %}
+        </a>
+        <p class="mt-4 text-xs text-gray-600">Session: <span class="font-mono text-gray-500">{{ session_id[:12] }}...</span></p>
+    </div>
+</div>
+{% endblock %}

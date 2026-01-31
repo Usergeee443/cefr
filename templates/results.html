@@ -1,50 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Results - OSCO.</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        * { font-family: 'Inter', sans-serif; }
-        *, *::before, *::after { border-radius: 0 !important; }
-        body { background-color: #0B1628; }
-        .level-badge {
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-        }
-        .score-ring {
-            stroke-dasharray: 283;
-            stroke-dashoffset: 283;
-            animation: fillRing 1.5s ease-out forwards;
-        }
-        @keyframes fillRing {
-            to { stroke-dashoffset: var(--offset); }
-        }
-    </style>
-</head>
-<body class="min-h-screen text-white">
-
-    <!-- Header -->
-    <header class="border-b border-gray-800">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <a href="/" class="text-2xl font-black">
-                    <span class="text-[#00D4AA]">OSCO</span><span class="text-white">.</span>
-                </a>
-                <div class="h-5 w-px bg-gray-700"></div>
-                <span class="text-sm font-semibold text-[#00D4AA] uppercase tracking-wider">Results</span>
-            </div>
-            <a href="/start" class="text-[#00D4AA] hover:text-white font-medium text-sm">Take Another Test</a>
-        </div>
-    </header>
-
-    <main class="py-12 px-4">
-        <div class="max-w-5xl mx-auto">
+{% extends "base_app.html" %}
+{% block title %}Test Results - CEFR{% endblock %}
+{% block head %}
+<style>
+    .score-ring { stroke-dasharray: 283; stroke-dashoffset: 283; animation: fillRing 1.5s ease-out forwards; }
+    @keyframes fillRing { to { stroke-dashoffset: var(--offset); } }
+</style>
+{% endblock %}
+{% block content %}
+<div class="max-w-5xl mx-auto py-8 md:py-12 px-4 pb-24">
             <!-- Overall Result -->
             <div class="bg-[#0F2035] border border-gray-800 p-8 mb-8">
                 <div class="text-center">
@@ -148,6 +111,102 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Reading – xato qilingan joylar (highlight) -->
+            {% if session.reading.details %}
+            <div class="bg-[#0F2035] border border-gray-800 overflow-hidden mb-8">
+                <div class="bg-[#162A40] border-b border-gray-700 p-6">
+                    <h2 class="text-xl font-bold text-white">Reading – javoblar tafsiloti</h2>
+                    <p class="text-gray-400 text-sm mt-1">Xato qilgan savollar qizil, to'g'ri javoblar yashil bilan ko'rsatilgan</p>
+                </div>
+                <div class="p-6">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-[#162A40] text-gray-400 border-b border-gray-700">
+                                <tr>
+                                    <th class="px-4 py-3">Part</th>
+                                    <th class="px-4 py-3">Savol</th>
+                                    <th class="px-4 py-3">Sizning javobingiz</th>
+                                    <th class="px-4 py-3">To'g'ri javob</th>
+                                    <th class="px-4 py-3">Holat</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-800">
+                                {% for d in session.reading.details %}
+                                <tr class="{% if not d.ok %}bg-red-900/30 border-l-4 border-red-500{% else %}bg-[#0B1628]/50{% endif %}">
+                                    <td class="px-4 py-3 text-gray-400">Part {{ d.part }}</td>
+                                    <td class="px-4 py-3 text-white font-medium">{{ d.q }}</td>
+                                    <td class="px-4 py-3">
+                                        {% if not d.ok %}
+                                        <span class="bg-red-500/30 text-red-200 px-2 py-0.5 font-semibold">{{ d.ua or '—' }}</span>
+                                        {% else %}
+                                        <span class="text-[#00D4AA]">{{ d.ua or '—' }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="px-4 py-3 text-[#00D4AA] font-medium">{{ d.ca }}</td>
+                                    <td class="px-4 py-3">
+                                        {% if d.ok %}
+                                        <span class="text-[#00D4AA] font-medium">✓ To'g'ri</span>
+                                        {% else %}
+                                        <span class="text-red-400 font-medium">✗ Xato</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Listening – xato qilingan joylar (highlight) -->
+            {% if session.listening.details %}
+            <div class="bg-[#0F2035] border border-gray-800 overflow-hidden mb-8">
+                <div class="bg-[#162A40] border-b border-gray-700 p-6">
+                    <h2 class="text-xl font-bold text-white">Listening – javoblar tafsiloti</h2>
+                    <p class="text-gray-400 text-sm mt-1">Xato qilgan savollar qizil, to'g'ri javoblar yashil bilan ko'rsatilgan</p>
+                </div>
+                <div class="p-6">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-[#162A40] text-gray-400 border-b border-gray-700">
+                                <tr>
+                                    <th class="px-4 py-3">Part</th>
+                                    <th class="px-4 py-3">Savol</th>
+                                    <th class="px-4 py-3">Sizning javobingiz</th>
+                                    <th class="px-4 py-3">To'g'ri javob</th>
+                                    <th class="px-4 py-3">Holat</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-800">
+                                {% for d in session.listening.details %}
+                                <tr class="{% if not d.ok %}bg-red-900/30 border-l-4 border-red-500{% else %}bg-[#0B1628]/50{% endif %}">
+                                    <td class="px-4 py-3 text-gray-400">Part {{ d.part }}</td>
+                                    <td class="px-4 py-3 text-white font-medium">{{ d.q }}</td>
+                                    <td class="px-4 py-3">
+                                        {% if not d.ok %}
+                                        <span class="bg-red-500/30 text-red-200 px-2 py-0.5 font-semibold">{{ d.ua or '—' }}</span>
+                                        {% else %}
+                                        <span class="text-[#00D4AA]">{{ d.ua or '—' }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="px-4 py-3 text-[#00D4AA] font-medium">{{ d.ca }}</td>
+                                    <td class="px-4 py-3">
+                                        {% if d.ok %}
+                                        <span class="text-[#00D4AA] font-medium">✓ To'g'ri</span>
+                                        {% else %}
+                                        <span class="text-red-400 font-medium">✗ Xato</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
 
             <!-- Detailed Writing Feedback -->
             <div class="bg-[#0F2035] border border-gray-800 overflow-hidden mb-8">
@@ -402,65 +461,43 @@
             </div>
 
             <!-- Actions -->
-            <div class="text-center space-x-4">
+            <div class="text-center flex flex-col sm:flex-row gap-3 justify-center pt-6">
                 <a href="/start" class="inline-block bg-[#00D4AA] text-[#0B1628] px-8 py-3 font-bold hover:bg-[#00B894] transition-colors">
                     Take Another Test
                 </a>
-                <a href="/" class="inline-block bg-[#0F2035] border border-gray-700 text-gray-300 px-8 py-3 font-semibold hover:border-[#00D4AA] hover:text-[#00D4AA] transition-colors">
+                <a href="/" class="inline-block border border-gray-600 text-gray-300 px-8 py-3 font-semibold hover:border-[#00D4AA] hover:text-[#00D4AA] transition-colors">
                     Back to Home
                 </a>
             </div>
         </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="border-t border-gray-800 mt-12">
-        <div class="max-w-5xl mx-auto px-4 py-8 text-center">
-            <a href="/" class="text-xl font-black">
-                <span class="text-[#00D4AA]">OSCO</span><span class="text-white">.</span>
-            </a>
-            <p class="text-gray-500 text-sm mt-2">CEFR English Assessment Platform</p>
-            <p class="text-gray-600 text-xs mt-1">This is a mock test and does not provide official CEFR certification.</p>
-        </div>
-    </footer>
-
-    <script>
-        // Rating buttons
-        document.querySelectorAll('.rating-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.rating-btn').forEach(b => {
-                    b.classList.remove('bg-[#00D4AA]', 'text-[#0B1628]', 'border-[#00D4AA]');
-                    b.classList.add('bg-[#0B1628]', 'text-gray-400', 'border-gray-700');
-                });
-                this.classList.remove('bg-[#0B1628]', 'text-gray-400', 'border-gray-700');
-                this.classList.add('bg-[#00D4AA]', 'text-[#0B1628]', 'border-[#00D4AA]');
-                document.getElementById('rating').value = this.dataset.value;
-            });
+{% endblock %}
+{% block scripts %}
+<script>
+document.querySelectorAll('.rating-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.rating-btn').forEach(b => {
+            b.classList.remove('bg-[#00D4AA]', 'text-[#0B1628]', 'border-[#00D4AA]');
+            b.classList.add('bg-[#0B1628]', 'text-gray-400', 'border-gray-700');
         });
-
-        // Feedback form submission
-        document.getElementById('feedback-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const formData = new FormData(this);
-
-            try {
-                const response = await fetch('/feedback/submit', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    document.getElementById('feedback-form').classList.add('hidden');
-                    document.getElementById('feedback-success').classList.remove('hidden');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Xatolik yuz berdi. Qaytadan urinib ko\'ring.');
-            }
-        });
-    </script>
-</body>
-</html>
+        this.classList.remove('bg-[#0B1628]', 'text-gray-400', 'border-gray-700');
+        this.classList.add('bg-[#00D4AA]', 'text-[#0B1628]', 'border-[#00D4AA]');
+        document.getElementById('rating').value = this.dataset.value;
+    });
+});
+document.getElementById('feedback-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    try {
+        const response = await fetch('/feedback/submit', { method: 'POST', body: formData });
+        const result = await response.json();
+        if (result.success) {
+            document.getElementById('feedback-form').classList.add('hidden');
+            document.getElementById('feedback-success').classList.remove('hidden');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Xatolik yuz berdi. Qaytadan urinib ko\'ring.');
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>{% block title %}CEFR Level{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        *, *::before, *::after { border-radius: 0 !important; }
+        body { background-color: #0d0d0d; }
+        /* Desktop: chap sidebar fixed – scroll qilganda umuman qimirlamasin */
+        .app-layout { min-height: 100vh; }
+        .app-sidebar {
+            width: 260px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            overflow-y: hidden;
+            overflow-x: hidden;
+            background: #1a1a1a;
+            border-right: 1px solid #2d2d2d;
+            z-index: 40;
+        }
+        .app-main {
+            flex: 1;
+            min-width: 0;
+            padding-bottom: 80px;
+            background: #0d0d0d;
+            margin-left: 260px;
+        }
+        @media (max-width: 767px) {
+            .app-sidebar { display: none; }
+            .app-main { margin-left: 0; padding-bottom: 72px; }
+        }
+        /* Mobil: pastki nav */
+        .bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; background: #1a1a1a; border-top: 1px solid #2d2d2d; }
+        @media (max-width: 767px) {
+            .bottom-nav { display: flex; justify-content: space-around; align-items: center; height: 64px; padding-bottom: env(safe-area-inset-bottom); }
+        }
+        .nav-link { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 8px 12px; color: #a1a1a1; text-decoration: none; font-size: 11px; font-weight: 500; transition: color 0.2s; }
+        .nav-link:hover, .nav-link.active { color: #00D4AA; }
+        .nav-link svg { width: 22px; height: 22px; }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body class="min-h-screen text-white bg-[#0d0d0d]">
+    <!-- Desktop: chap sidebar – bodyning to'g'ri childi, scroll qilganda qimirlamasin -->
+    <aside class="app-sidebar py-6 px-4 hidden md:block">
+            <a href="/" class="flex items-center gap-3 px-3 py-3 mb-6">
+                <span class="w-9 h-9 bg-[#00D4AA] flex items-center justify-center text-[#0d0d0d] font-black text-sm">C</span>
+                <span class="text-lg font-black text-white">CEFR</span>
+                <span class="text-lg font-black text-[#00D4AA]">Level</span>
+            </a>
+            <nav class="space-y-1">
+                <a href="/" class="nav-link md:flex md:flex-row md:gap-3 md:px-3 md:py-2.5 md:text-sm {% if request.url.path == '/' %}active text-[#00D4AA]{% endif %}">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                    <span>{% if lang == 'uz' %}Bosh sahifa{% else %}Home{% endif %}</span>
+                </a>
+                <a href="/start" class="nav-link md:flex md:flex-row md:gap-3 md:px-3 md:py-2.5 md:text-sm {% if request.url.path == '/start' %}active text-[#00D4AA]{% endif %}">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                    <span>{{ t.start_test }}</span>
+                </a>
+                {% if user %}
+                <a href="/profile" class="nav-link md:flex md:flex-row md:gap-3 md:px-3 md:py-2.5 md:text-sm {% if request.url.path == '/profile' %}active text-[#00D4AA]{% endif %}">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                    <span>{% if lang == 'uz' %}Profil{% else %}Profile{% endif %}</span>
+                </a>
+                {% else %}
+                <a href="/login?next_url=/start" class="nav-link md:flex md:flex-row md:gap-3 md:px-3 md:py-2.5 md:text-sm {% if request.url.path == '/login' %}active text-[#00D4AA]{% endif %}">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
+                    <span>{% if lang == 'uz' %}Kirish{% else %}Login{% endif %}</span>
+                </a>
+                <a href="/register" class="nav-link md:flex md:flex-row md:gap-3 md:px-3 md:py-2.5 md:text-sm {% if request.url.path == '/register' %}active text-[#00D4AA]{% endif %}">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
+                    <span>{% if lang == 'uz' %}Ro'yxatdan o'tish{% else %}Register{% endif %}</span>
+                </a>
+                {% endif %}
+                <a href="/pricing" class="nav-link md:flex md:flex-row md:gap-3 md:px-3 md:py-2.5 md:text-sm {% if request.url.path == '/pricing' %}active text-[#00D4AA]{% endif %}">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <span>{{ t.pricing }}</span>
+                </a>
+                <a href="/about" class="nav-link md:flex md:flex-row md:gap-3 md:px-3 md:py-2.5 md:text-sm {% if request.url.path == '/about' %}active text-[#00D4AA]{% endif %}">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <span>{{ t.about }}</span>
+                </a>
+            </nav>
+            <div class="mt-8 pt-6 border-t border-[#2d2d2d] px-3">
+                <div class="flex gap-2">
+                    <a href="/lang/uz" class="text-xs font-medium {% if lang == 'uz' %}text-[#00D4AA]{% else %}text-gray-500 hover:text-gray-400{% endif %}">O'zbek</a>
+                    <span class="text-gray-600">|</span>
+                    <a href="/lang/en" class="text-xs font-medium {% if lang == 'en' %}text-[#00D4AA]{% else %}text-gray-500 hover:text-gray-400{% endif %}">EN</a>
+                </div>
+            </div>
+    </aside>
+
+    <div class="app-layout">
+        <main class="app-main">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <!-- Mobil: pastki navigatsiya -->
+    <nav class="bottom-nav">
+        <a href="/" class="nav-link {% if request.url.path == '/' %}active{% endif %}">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            <span>{% if lang == 'uz' %}Bosh{% else %}Home{% endif %}</span>
+        </a>
+        <a href="/start" class="nav-link {% if request.url.path == '/start' %}active{% endif %}">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+            <span>Test</span>
+        </a>
+        {% if user %}
+        <a href="/profile" class="nav-link {% if request.url.path == '/profile' %}active{% endif %}">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            <span>{% if lang == 'uz' %}Profil{% else %}Profile{% endif %}</span>
+        </a>
+        {% else %}
+        <a href="/login?next_url=/start" class="nav-link {% if request.url.path == '/login' %}active{% endif %}">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
+            <span>Kirish</span>
+        </a>
+        {% endif %}
+        <a href="/pricing" class="nav-link {% if request.url.path == '/pricing' %}active{% endif %}">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>Narx</span>
+        </a>
+    </nav>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

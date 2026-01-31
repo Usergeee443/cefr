@@ -9,48 +9,29 @@
     <style>
         * { font-family: 'Inter', sans-serif; }
         *, *::before, *::after { border-radius: 0 !important; }
-        body { background-color: #0B1628; }
-        textarea {
-            resize: none;
-            line-height: 1.8;
-        }
-        .word-count-bar {
-            transition: width 0.3s ease;
-        }
+        body { background-color: #fafafa; }
+        textarea { resize: none; line-height: 1.8; }
+        .word-count-bar { transition: width 0.3s ease; }
     </style>
 </head>
-<body class="min-h-screen text-white">
+<body class="min-h-screen text-gray-900 bg-[#fafafa]">
 
-    <!-- Fixed Header -->
-    <header class="bg-[#0B1628] border-b border-gray-800 fixed top-0 left-0 right-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+    <div class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50 shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+            <span class="text-sm font-medium text-gray-600 uppercase tracking-wider">Writing</span>
             <div class="flex items-center gap-4">
-                <a href="/" class="text-xl font-black">
-                    <span class="text-[#00D4AA]">OSCO</span><span class="text-white">.</span>
-                </a>
-                <div class="h-5 w-px bg-gray-700"></div>
-                <span class="text-sm font-semibold text-[#00D4AA] uppercase tracking-wider">Writing</span>
-            </div>
-            <div class="flex items-center gap-6">
-                <div id="timer" class="text-lg font-mono text-white bg-[#0F2035] border border-gray-700 px-4 py-1.5">
-                    80:00
-                </div>
-                <div class="px-3 py-1 bg-[#00D4AA]/20 text-[#00D4AA] text-xs font-semibold">
-                    AI Evaluated
-                </div>
+                <div id="timer" class="text-lg font-mono text-gray-800 border border-gray-300 px-3 py-1">80:00</div>
+                <span class="text-xs text-gray-500">AI</span>
             </div>
         </div>
-        <!-- Progress bar -->
-        <div class="w-full bg-[#0F2035] h-0.5">
-            <div id="progress-bar" class="bg-[#00D4AA] h-0.5 transition-all duration-300" style="width: 0%"></div>
-        </div>
-    </header>
+        <div class="w-full h-0.5 bg-gray-200"><div id="progress-bar" class="h-full bg-gray-700 transition-all duration-300" style="width: 0%"></div></div>
+    </div>
 
-    <main class="pt-20 pb-16 px-4">
+    <main class="pt-20 pb-24 px-4">
         <div class="max-w-4xl mx-auto">
             <!-- Warning about AI evaluation -->
-            <div class="bg-[#0F2035] border border-yellow-500/30 p-4 mb-8">
-                <h3 class="font-semibold text-yellow-400 mb-2 text-sm uppercase tracking-wider">Important: AI Evaluation</h3>
+            <div class="border border-gray-200 bg-gray-50 p-4 mb-8">
+                <h3 class="font-semibold text-gray-700 mb-2 text-sm uppercase tracking-wider">Important: AI Evaluation</h3>
                 <ul class="text-gray-400 text-sm space-y-1">
                     <li>Your writing will be evaluated by AI using strict CEFR criteria</li>
                     <li>Write genuine, thoughtful responses - spam will receive Band 1</li>
@@ -62,14 +43,14 @@
             <form id="writing-form">
                 {% for part in test_data.parts %}
                 <section class="part-section mb-12" data-part="{{ part.part_number }}">
-                    <div class="bg-[#0F2035] border border-gray-800 overflow-hidden">
+                    <div class="border border-gray-200 overflow-hidden">
                         <!-- Part Header -->
-                        <div class="bg-[#162A40] border-b border-gray-700 p-6">
+                        <div class="border-b border-gray-200 bg-gray-50 p-6">
                             <div class="flex items-center gap-3 mb-2">
-                                <div class="w-8 h-8 bg-[#00D4AA] flex items-center justify-center text-[#0B1628] font-bold text-sm">
+                                <div class="w-8 h-8 border border-gray-400 bg-gray-100 flex items-center justify-center text-gray-800 font-bold text-sm">
                                     {{ part.part_number }}
                                 </div>
-                                <h2 class="text-xl font-bold text-white">{{ part.title }}</h2>
+                                <h2 class="text-xl font-bold text-gray-900">{{ part.title }}</h2>
                             </div>
                             <p class="text-gray-400 text-sm ml-11">{{ part.instruction }}</p>
                         </div>
@@ -78,11 +59,11 @@
                             {% if part.part_number == 1 %}
                             <!-- Part 1: Two Tasks -->
                             {% for task in part.tasks %}
-                            <div class="task-block mb-10 {% if not loop.first %}pt-8 border-t border-gray-700{% endif %}">
-                                <h3 class="text-lg font-bold text-[#00D4AA] mb-4">{{ task.title }}</h3>
+                            <div class="task-block mb-10 {% if not loop.first %}pt-8 border-t border-gray-200{% endif %}">
+                                <h3 class="text-lg font-bold text-gray-900 mb-4">{{ task.title }}</h3>
 
-                                <div class="bg-[#0B1628] border border-gray-800 p-6 mb-6">
-                                    <h4 class="font-semibold text-white mb-3">{{ task.instruction }}</h4>
+                                <div class="bg-white border border-gray-200 p-6 mb-6">
+                                    <h4 class="font-semibold text-gray-900 mb-3">{{ task.instruction }}</h4>
                                     <div class="text-gray-400 whitespace-pre-line">{{ task.situation }}</div>
                                 </div>
 
@@ -90,7 +71,7 @@
                                     <textarea
                                         name="task{{ task.task_number }}"
                                         id="task{{ task.task_number }}"
-                                        class="w-full h-64 p-4 border border-gray-700 bg-[#0B1628] text-white focus:border-[#00D4AA] outline-none"
+                                        class="w-full h-64 p-4 border border-gray-200 bg-white text-gray-900 focus:border-gray-600 outline-none"
                                         placeholder="Write your {{ task.type }} here..."
                                         data-min="{{ task.min_words }}"
                                         data-max="{{ task.max_words }}"
@@ -99,10 +80,10 @@
                                     <div class="mt-3 flex items-center justify-between">
                                         <div class="flex items-center gap-4">
                                             <span class="text-sm text-gray-500">Word count:</span>
-                                            <span id="wc-task{{ task.task_number }}" class="font-mono font-bold text-[#00D4AA]">0</span>
+                                            <span id="wc-task{{ task.task_number }}" class="font-mono font-bold text-gray-900">0</span>
                                             <span class="text-sm text-gray-600">/ {{ task.min_words }}-{{ task.max_words }} words</span>
                                         </div>
-                                        <div class="w-48 h-1 bg-gray-800 overflow-hidden">
+                                        <div class="w-48 h-1 bg-white/10 overflow-hidden">
                                             <div id="wcbar-task{{ task.task_number }}" class="word-count-bar h-full bg-gray-600" style="width: 0%"></div>
                                         </div>
                                     </div>
@@ -113,9 +94,9 @@
                             {% elif part.part_number == 2 %}
                             <!-- Part 2: Essay -->
                             <div class="task-block">
-                                <h3 class="text-lg font-bold text-[#00D4AA] mb-4">Essay</h3>
+                                <h3 class="text-lg font-bold text-gray-900 mb-4">Essay</h3>
 
-                                <div class="bg-[#0B1628] border border-gray-800 p-6 mb-6">
+                                <div class="bg-white border border-gray-200 p-6 mb-6">
                                     <div class="text-gray-400 whitespace-pre-line">{{ part.prompt }}</div>
                                 </div>
 
@@ -123,7 +104,7 @@
                                     <textarea
                                         name="essay"
                                         id="essay"
-                                        class="w-full h-96 p-4 border border-gray-700 bg-[#0B1628] text-white focus:border-[#00D4AA] outline-none"
+                                        class="w-full h-96 p-4 border border-gray-200 bg-white text-gray-900 focus:border-gray-600 outline-none"
                                         placeholder="Write your essay here...
 
 Introduction:
@@ -144,26 +125,26 @@ Conclusion:
                                     <div class="mt-3 flex items-center justify-between">
                                         <div class="flex items-center gap-4">
                                             <span class="text-sm text-gray-500">Word count:</span>
-                                            <span id="wc-essay" class="font-mono font-bold text-[#00D4AA]">0</span>
+                                            <span id="wc-essay" class="font-mono font-bold text-gray-900">0</span>
                                             <span class="text-sm text-gray-600">/ {{ part.min_words }}-{{ part.max_words }} words</span>
                                         </div>
-                                        <div class="w-48 h-1 bg-gray-800 overflow-hidden">
+                                        <div class="w-48 h-1 bg-white/10 overflow-hidden">
                                             <div id="wcbar-essay" class="word-count-bar h-full bg-gray-600" style="width: 0%"></div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Band Score Reference -->
-                                <div class="mt-6 p-4 bg-[#0B1628] border border-gray-800">
-                                    <h5 class="font-medium text-white mb-3 text-sm">Band Score Reference:</h5>
+                                <div class="mt-6 p-4 bg-white border border-gray-200">
+                                    <h5 class="font-medium text-gray-900 mb-3 text-sm">Band Score Reference:</h5>
                                     <div class="grid grid-cols-3 gap-2 text-xs">
-                                        <div class="bg-[#0F2035] border border-gray-700 p-2">
+                                        <div class="bg-white border border-gray-200 p-2">
                                             <span class="font-bold text-green-400">7-9:</span> <span class="text-gray-400">Good to Expert</span>
                                         </div>
-                                        <div class="bg-[#0F2035] border border-gray-700 p-2">
-                                            <span class="font-bold text-yellow-400">5-6:</span> <span class="text-gray-400">Modest to Competent</span>
+                                        <div class="bg-white border border-gray-200 p-2">
+                                            <span class="font-bold text-gray-700">5-6:</span> <span class="text-gray-400">Modest to Competent</span>
                                         </div>
-                                        <div class="bg-[#0F2035] border border-gray-700 p-2">
+                                        <div class="bg-white border border-gray-200 p-2">
                                             <span class="font-bold text-red-400">1-4:</span> <span class="text-gray-400">Limited to Non-user</span>
                                         </div>
                                     </div>
@@ -177,14 +158,14 @@ Conclusion:
 
                 <!-- Submit Button -->
                 <div class="text-center mt-10">
-                    <div class="bg-[#0F2035] border border-red-500/30 p-4 mb-6 max-w-lg mx-auto">
+                    <div class="bg-white border border-red-500/30 p-4 mb-6 max-w-lg mx-auto">
                         <p class="text-red-400 text-sm">
                             <strong>Warning:</strong> Once submitted, your writing cannot be changed. AI evaluation will begin immediately.
                         </p>
                     </div>
                     <button type="submit"
                             id="submit-btn"
-                            class="bg-[#00D4AA] text-[#0B1628] px-12 py-4 font-bold text-lg hover:bg-[#00B894] transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                            class="bg-white text-black px-12 py-4 font-bold text-lg hover:bg-[#00B894] transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                         Submit Writing Test
                     </button>
                     <p class="text-gray-600 text-xs mt-3">View your results after submission</p>
@@ -194,10 +175,10 @@ Conclusion:
     </main>
 
     <!-- Loading Overlay -->
-    <div id="loading-overlay" class="fixed inset-0 bg-[#0B1628]/95 flex items-center justify-center z-50 hidden">
-        <div class="bg-[#0F2035] border border-gray-700 p-8 text-center max-w-md">
-            <div class="animate-spin w-12 h-12 border-2 border-[#00D4AA] border-t-transparent mx-auto mb-6"></div>
-            <h3 class="text-xl font-bold text-white mb-2">AI Evaluation in Progress</h3>
+    <div id="loading-overlay" class="fixed inset-0 bg-white/95 flex items-center justify-center z-50 hidden">
+        <div class="bg-white border border-gray-200 p-8 text-center max-w-md">
+            <div class="animate-spin w-12 h-12 border-2 border-gray-600 border-t-transparent mx-auto mb-6"></div>
+            <h3 class="text-xl font-bold text-gray-900 mb-2">AI Evaluation in Progress</h3>
             <p class="text-gray-400 mb-4">Please wait while our AI evaluates your writing...</p>
             <div class="text-sm">
                 <p class="text-gray-500 mb-2">Analyzing:</p>
@@ -256,24 +237,24 @@ Conclusion:
 
             // Color coding
             if (words < minWords * 0.5) {
-                barEl.classList.remove('bg-green-500', 'bg-yellow-500', 'bg-[#00D4AA]');
+                barEl.classList.remove('bg-green-500', 'bg-yellow-500', 'bg-white');
                 barEl.classList.add('bg-red-500');
-                countEl.classList.remove('text-green-400', 'text-yellow-400', 'text-[#00D4AA]');
+                countEl.classList.remove('text-green-400', 'text-gray-700', 'text-gray-900');
                 countEl.classList.add('text-red-400');
             } else if (words < minWords) {
-                barEl.classList.remove('bg-green-500', 'bg-red-500', 'bg-[#00D4AA]');
+                barEl.classList.remove('bg-green-500', 'bg-red-500', 'bg-white');
                 barEl.classList.add('bg-yellow-500');
-                countEl.classList.remove('text-green-400', 'text-red-400', 'text-[#00D4AA]');
-                countEl.classList.add('text-yellow-400');
+                countEl.classList.remove('text-green-400', 'text-red-400', 'text-gray-900');
+                countEl.classList.add('text-gray-700');
             } else if (words <= maxWords) {
                 barEl.classList.remove('bg-yellow-500', 'bg-red-500');
-                barEl.classList.add('bg-[#00D4AA]');
-                countEl.classList.remove('text-yellow-400', 'text-red-400');
-                countEl.classList.add('text-[#00D4AA]');
+                barEl.classList.add('bg-white');
+                countEl.classList.remove('text-gray-700', 'text-red-400');
+                countEl.classList.add('text-gray-900');
             } else {
-                barEl.classList.remove('bg-green-500', 'bg-yellow-500', 'bg-[#00D4AA]');
+                barEl.classList.remove('bg-green-500', 'bg-yellow-500', 'bg-white');
                 barEl.classList.add('bg-red-500');
-                countEl.classList.remove('text-green-400', 'text-yellow-400', 'text-[#00D4AA]');
+                countEl.classList.remove('text-green-400', 'text-gray-700', 'text-gray-900');
                 countEl.classList.add('text-red-400');
             }
 
@@ -324,15 +305,15 @@ Conclusion:
             // Simulate evaluation progress
             setTimeout(() => {
                 document.getElementById('eval-task1').classList.remove('text-gray-600');
-                document.getElementById('eval-task1').classList.add('text-[#00D4AA]');
+                document.getElementById('eval-task1').classList.add('text-gray-900');
             }, 500);
             setTimeout(() => {
                 document.getElementById('eval-task2').classList.remove('text-gray-600');
-                document.getElementById('eval-task2').classList.add('text-[#00D4AA]');
+                document.getElementById('eval-task2').classList.add('text-gray-900');
             }, 1500);
             setTimeout(() => {
                 document.getElementById('eval-essay').classList.remove('text-gray-600');
-                document.getElementById('eval-essay').classList.add('text-[#00D4AA]');
+                document.getElementById('eval-essay').classList.add('text-gray-900');
             }, 2500);
 
             const formData = new FormData(this);
