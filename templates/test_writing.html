@@ -5,26 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Writing Test - CEFR Level</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        * { font-family: 'Inter', sans-serif; }
-        body { background-color: #111827; }
+        * { font-family: 'Nunito', sans-serif; }
+        body { background-color: #0F172A; }
+
+        /* Gradient text effect */
+        .gradient-text {
+            background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 50%, #45B7D1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .gradient-text-coral {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF9F43 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .gradient-text-teal {
+            background: linear-gradient(135deg, #4ECDC4 0%, #45B7D1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
         textarea {
             resize: none;
             line-height: 1.8;
-            background: #0d1117;
-            border: 1px solid #374151;
+            background: #0F172A;
+            border: 2px solid #334155;
             color: #e5e7eb;
             transition: all 0.2s ease;
+            border-radius: 16px;
         }
         textarea:focus {
-            border-color: #00D4AA;
+            border-color: #4ECDC4;
             outline: none;
-            box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.1);
+            box-shadow: 0 0 0 4px rgba(78, 205, 196, 0.15);
         }
         textarea::placeholder {
-            color: #6b7280;
+            color: #64748b;
         }
 
         .word-count-bar {
@@ -32,89 +55,191 @@
         }
 
         .timer-normal {
-            background: #1f2937;
-            border: 1px solid #374151;
+            background: #1E293B;
+            border: 2px solid #334155;
         }
         .timer-warning {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.5);
-            color: #f87171 !important;
+            background: rgba(255, 107, 107, 0.1);
+            border: 2px solid rgba(255, 107, 107, 0.5);
+            color: #FF6B6B !important;
+            animation: pulse-warning 1s infinite;
+        }
+
+        @keyframes pulse-warning {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
 
         .test-card {
-            background: linear-gradient(180deg, #1f2937 0%, #111827 100%);
-            border: 1px solid #374151;
+            background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
+            border: 2px solid #334155;
         }
 
         .test-header {
-            background: linear-gradient(180deg, #0d1117 0%, #111827 100%);
-            border-bottom: 1px solid #1f2937;
+            background: linear-gradient(180deg, #0F172A 0%, #1E293B 100%);
+            border-bottom: 2px solid #334155;
         }
 
         .task-card {
-            background: #0d1117;
-            border: 1px solid #1f2937;
+            background: #0F172A;
+            border: 2px solid #334155;
         }
 
         .progress-bar {
-            background: linear-gradient(90deg, #00D4AA 0%, #00B894 100%);
+            background: linear-gradient(90deg, #FF6B6B 0%, #4ECDC4 100%);
         }
 
         .ai-badge {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            background: linear-gradient(135deg, #A78BFA 0%, #45B7D1 100%);
+        }
+
+        /* 3D Button Styles */
+        .btn-3d {
+            position: relative;
+            transform: translateY(0);
+            transition: all 0.15s ease;
+        }
+        .btn-3d::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -6px;
+            height: 6px;
+            border-radius: 0 0 16px 16px;
+            z-index: -1;
+            transition: all 0.15s ease;
+        }
+        .btn-3d:hover {
+            transform: translateY(-2px);
+        }
+        .btn-3d:active {
+            transform: translateY(4px);
+        }
+        .btn-3d:active::after {
+            bottom: -2px;
+            height: 2px;
+        }
+
+        .btn-coral::after {
+            background: linear-gradient(90deg, #cc5555 0%, #cc6644 100%);
+        }
+        .btn-teal::after {
+            background: linear-gradient(90deg, #3da69f 0%, #369299 100%);
+        }
+
+        /* Logo styling */
+        .logo-box {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF9F43 100%);
+            box-shadow: 0 4px 0 #cc5555;
+        }
+
+        /* Part number badge */
+        .part-badge {
+            background: linear-gradient(135deg, #4ECDC4 0%, #45B7D1 100%);
+            box-shadow: 0 3px 0 #3da69f;
+        }
+
+        /* Task number badge */
+        .task-badge {
+            background: rgba(78, 205, 196, 0.15);
+            color: #4ECDC4;
+        }
+
+        /* Info cards */
+        .info-card-purple {
+            background: rgba(167, 139, 250, 0.1);
+            border: 2px solid rgba(167, 139, 250, 0.3);
+        }
+
+        .info-card-warning {
+            background: rgba(255, 107, 107, 0.1);
+            border: 2px solid rgba(255, 107, 107, 0.3);
+        }
+
+        /* Score cards */
+        .score-good {
+            background: rgba(78, 205, 196, 0.1);
+            border: 2px solid rgba(78, 205, 196, 0.3);
+        }
+        .score-moderate {
+            background: rgba(255, 159, 67, 0.1);
+            border: 2px solid rgba(255, 159, 67, 0.3);
+        }
+        .score-low {
+            background: rgba(255, 107, 107, 0.1);
+            border: 2px solid rgba(255, 107, 107, 0.3);
+        }
+
+        /* Loading spinner */
+        .loading-spinner {
+            border: 4px solid rgba(167, 139, 250, 0.2);
+            border-top-color: #A78BFA;
         }
 
         /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #1f2937; }
-        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #1E293B; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
     </style>
 </head>
-<body class="min-h-screen text-white bg-[#111827]">
+<body class="min-h-screen text-white bg-[#0F172A]">
 
     <!-- Header Bar -->
     <div class="test-header fixed top-0 left-0 right-0 z-50">
         <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center gap-4">
-                <div class="w-10 h-10 bg-gradient-to-br from-[#00D4AA] to-[#00B894] flex items-center justify-center text-[#0d0d0d] font-black text-lg rounded-lg">
+                <div class="logo-box w-11 h-11 flex items-center justify-center text-white font-black text-xl rounded-xl">
                     C
                 </div>
                 <div>
-                    <span class="text-sm font-bold text-[#00D4AA] uppercase tracking-wider">Writing Test</span>
-                    <div class="text-xs text-gray-500">Section 3 of 3</div>
+                    <span class="text-sm font-bold gradient-text-coral uppercase tracking-wider">Writing Test</span>
+                    <div class="text-xs text-slate-500">Section 3 of 3</div>
                 </div>
             </div>
             <div class="flex items-center gap-6">
-                <div class="ai-badge text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1">
-                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/></svg>
+                <div class="ai-badge text-white text-xs font-bold px-4 py-1.5 rounded-full flex items-center gap-2 shadow-lg">
+                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/></svg>
                     AI Evaluated
                 </div>
-                <div id="timer" class="timer-normal text-xl font-mono font-bold px-4 py-2 rounded-lg text-white">80:00</div>
+                <div id="timer" class="timer-normal text-xl font-mono font-bold px-5 py-2.5 rounded-xl text-white">80:00</div>
             </div>
         </div>
-        <div class="w-full h-1 bg-gray-800">
-            <div id="progress-bar" class="progress-bar h-full transition-all duration-300" style="width: 0%"></div>
+        <div class="w-full h-1.5 bg-slate-800">
+            <div id="progress-bar" class="progress-bar h-full transition-all duration-300 rounded-r-full" style="width: 0%"></div>
         </div>
     </div>
 
-    <main class="pt-24 pb-32 px-4">
+    <main class="pt-28 pb-32 px-4">
         <div class="max-w-5xl mx-auto">
             <!-- AI Warning -->
-            <div class="bg-purple-500/10 border border-purple-500/30 rounded-2xl p-6 mb-8">
+            <div class="info-card-purple rounded-2xl p-6 mb-8">
                 <div class="flex items-start gap-4">
-                    <div class="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-14 h-14 bg-[#A78BFA]/20 rounded-2xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-7 h-7 text-[#A78BFA]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
                         </svg>
                     </div>
                     <div>
-                        <h3 class="font-bold text-purple-400 text-lg mb-2">AI Evaluation</h3>
-                        <ul class="text-gray-300 space-y-1 text-sm">
-                            <li>Your writing will be evaluated by AI using strict CEFR criteria</li>
-                            <li>Write genuine, thoughtful responses - spam will receive Band 1</li>
-                            <li>Follow the word count requirements for each task</li>
-                            <li>Evaluation considers: Content, Organization, Language, and Accuracy</li>
+                        <h3 class="font-bold text-[#A78BFA] text-lg mb-3">AI Evaluation</h3>
+                        <ul class="text-slate-300 space-y-2 text-sm">
+                            <li class="flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-[#A78BFA]"></span>
+                                Your writing will be evaluated by AI using strict CEFR criteria
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-[#A78BFA]"></span>
+                                Write genuine, thoughtful responses - spam will receive Band 1
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-[#A78BFA]"></span>
+                                Follow the word count requirements for each task
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-[#A78BFA]"></span>
+                                Evaluation considers: Content, Organization, Language, and Accuracy
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -123,41 +248,41 @@
             <form id="writing-form">
                 {% for part in test_data.parts %}
                 <section class="part-section mb-10" data-part="{{ part.part_number }}">
-                    <div class="test-card rounded-2xl overflow-hidden">
+                    <div class="test-card rounded-3xl overflow-hidden">
                         <!-- Part Header -->
-                        <div class="p-6 border-b border-gray-700">
+                        <div class="p-6 border-b border-[#334155]">
                             <div class="flex items-center gap-4 mb-3">
-                                <div class="w-12 h-12 bg-gradient-to-br from-[#00D4AA] to-[#00B894] rounded-xl flex items-center justify-center text-[#0d0d0d] font-bold text-lg">
+                                <div class="part-badge w-14 h-14 rounded-2xl flex items-center justify-center text-white font-bold text-xl">
                                     {{ part.part_number }}
                                 </div>
                                 <div>
-                                    <h2 class="text-2xl font-bold text-white">{{ part.title }}</h2>
-                                    <span class="text-sm text-gray-400">Part {{ part.part_number }} of {{ test_data.parts|length }}</span>
+                                    <h2 class="text-2xl font-extrabold gradient-text-teal">{{ part.title }}</h2>
+                                    <span class="text-sm text-slate-500">Part {{ part.part_number }} of {{ test_data.parts|length }}</span>
                                 </div>
                             </div>
-                            <p class="text-gray-400 ml-16">{{ part.instruction }}</p>
+                            <p class="text-slate-400 ml-[72px]">{{ part.instruction }}</p>
                         </div>
 
                         <div class="p-6">
                             {% if part.part_number == 1 %}
                             <!-- Part 1: Two Tasks -->
                             {% for task in part.tasks %}
-                            <div class="task-block mb-10 {% if not loop.first %}pt-8 border-t border-gray-700{% endif %}">
+                            <div class="task-block mb-10 {% if not loop.first %}pt-8 border-t border-[#334155]{% endif %}">
                                 <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-3">
-                                    <span class="w-8 h-8 bg-[#00D4AA]/10 rounded-lg flex items-center justify-center text-[#00D4AA] text-sm font-bold">{{ loop.index }}</span>
+                                    <span class="task-badge w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold">{{ loop.index }}</span>
                                     {{ task.title }}
                                 </h3>
 
-                                <div class="task-card rounded-xl p-6 mb-6">
-                                    <h4 class="font-semibold text-[#00D4AA] mb-3">{{ task.instruction }}</h4>
-                                    <div class="text-gray-300 whitespace-pre-line">{{ task.situation }}</div>
+                                <div class="task-card rounded-2xl p-6 mb-6">
+                                    <h4 class="font-semibold text-[#4ECDC4] mb-3">{{ task.instruction }}</h4>
+                                    <div class="text-slate-300 whitespace-pre-line leading-relaxed">{{ task.situation }}</div>
                                 </div>
 
                                 <div class="relative">
                                     <textarea
                                         name="task{{ task.task_number }}"
                                         id="task{{ task.task_number }}"
-                                        class="w-full h-64 p-4 rounded-xl"
+                                        class="w-full h-64 p-5"
                                         placeholder="Write your {{ task.type }} here..."
                                         data-min="{{ task.min_words }}"
                                         data-max="{{ task.max_words }}"
@@ -165,12 +290,12 @@
 
                                     <div class="mt-4 flex items-center justify-between">
                                         <div class="flex items-center gap-4">
-                                            <span class="text-sm text-gray-500">Word count:</span>
+                                            <span class="text-sm text-slate-500 font-medium">Word count:</span>
                                             <span id="wc-task{{ task.task_number }}" class="font-mono font-bold text-white text-lg">0</span>
-                                            <span class="text-sm text-gray-500">/ {{ task.min_words }}-{{ task.max_words }} words</span>
+                                            <span class="text-sm text-slate-500">/ {{ task.min_words }}-{{ task.max_words }} words</span>
                                         </div>
-                                        <div class="w-48 h-2 bg-gray-700 rounded-full overflow-hidden">
-                                            <div id="wcbar-task{{ task.task_number }}" class="word-count-bar h-full bg-gray-600 rounded-full" style="width: 0%"></div>
+                                        <div class="w-48 h-2.5 bg-slate-700 rounded-full overflow-hidden">
+                                            <div id="wcbar-task{{ task.task_number }}" class="word-count-bar h-full bg-slate-600 rounded-full" style="width: 0%"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -181,21 +306,21 @@
                             <!-- Part 2: Essay -->
                             <div class="task-block">
                                 <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-3">
-                                    <span class="w-8 h-8 bg-[#00D4AA]/10 rounded-lg flex items-center justify-center text-[#00D4AA] text-sm font-bold">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                    <span class="task-badge w-9 h-9 rounded-xl flex items-center justify-center">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                                     </span>
                                     Essay
                                 </h3>
 
-                                <div class="task-card rounded-xl p-6 mb-6">
-                                    <div class="text-gray-300 whitespace-pre-line">{{ part.prompt }}</div>
+                                <div class="task-card rounded-2xl p-6 mb-6">
+                                    <div class="text-slate-300 whitespace-pre-line leading-relaxed">{{ part.prompt }}</div>
                                 </div>
 
                                 <div class="relative">
                                     <textarea
                                         name="essay"
                                         id="essay"
-                                        class="w-full h-96 p-4 rounded-xl"
+                                        class="w-full h-96 p-5"
                                         placeholder="Write your essay here...
 
 Introduction:
@@ -215,31 +340,31 @@ Conclusion:
 
                                     <div class="mt-4 flex items-center justify-between">
                                         <div class="flex items-center gap-4">
-                                            <span class="text-sm text-gray-500">Word count:</span>
+                                            <span class="text-sm text-slate-500 font-medium">Word count:</span>
                                             <span id="wc-essay" class="font-mono font-bold text-white text-lg">0</span>
-                                            <span class="text-sm text-gray-500">/ {{ part.min_words }}-{{ part.max_words }} words</span>
+                                            <span class="text-sm text-slate-500">/ {{ part.min_words }}-{{ part.max_words }} words</span>
                                         </div>
-                                        <div class="w-48 h-2 bg-gray-700 rounded-full overflow-hidden">
-                                            <div id="wcbar-essay" class="word-count-bar h-full bg-gray-600 rounded-full" style="width: 0%"></div>
+                                        <div class="w-48 h-2.5 bg-slate-700 rounded-full overflow-hidden">
+                                            <div id="wcbar-essay" class="word-count-bar h-full bg-slate-600 rounded-full" style="width: 0%"></div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Band Score Reference -->
-                                <div class="mt-8 task-card rounded-xl p-6">
-                                    <h5 class="font-semibold text-[#00D4AA] mb-4 text-sm uppercase tracking-wider">Band Score Reference</h5>
-                                    <div class="grid grid-cols-3 gap-3">
-                                        <div class="bg-green-500/10 border border-green-500/30 rounded-lg p-3 text-center">
-                                            <span class="font-bold text-green-400 text-lg">7-9</span>
-                                            <p class="text-gray-400 text-xs mt-1">Good to Expert</p>
+                                <div class="mt-8 task-card rounded-2xl p-6">
+                                    <h5 class="font-bold text-[#45B7D1] mb-4 text-sm uppercase tracking-wider">Band Score Reference</h5>
+                                    <div class="grid grid-cols-3 gap-4">
+                                        <div class="score-good rounded-xl p-4 text-center">
+                                            <span class="font-extrabold text-[#4ECDC4] text-2xl">7-9</span>
+                                            <p class="text-slate-400 text-xs mt-2 font-medium">Good to Expert</p>
                                         </div>
-                                        <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-3 text-center">
-                                            <span class="font-bold text-yellow-400 text-lg">5-6</span>
-                                            <p class="text-gray-400 text-xs mt-1">Modest to Competent</p>
+                                        <div class="score-moderate rounded-xl p-4 text-center">
+                                            <span class="font-extrabold text-[#FF9F43] text-2xl">5-6</span>
+                                            <p class="text-slate-400 text-xs mt-2 font-medium">Modest to Competent</p>
                                         </div>
-                                        <div class="bg-red-500/10 border border-red-500/30 rounded-lg p-3 text-center">
-                                            <span class="font-bold text-red-400 text-lg">1-4</span>
-                                            <p class="text-gray-400 text-xs mt-1">Limited to Non-user</p>
+                                        <div class="score-low rounded-xl p-4 text-center">
+                                            <span class="font-extrabold text-[#FF6B6B] text-2xl">1-4</span>
+                                            <p class="text-slate-400 text-xs mt-2 font-medium">Limited to Non-user</p>
                                         </div>
                                     </div>
                                 </div>
@@ -251,45 +376,45 @@ Conclusion:
                 {% endfor %}
 
                 <!-- Submit Button -->
-                <div class="text-center mt-10">
-                    <div class="bg-red-500/10 border border-red-500/30 rounded-xl p-4 mb-6 max-w-lg mx-auto">
-                        <p class="text-red-400 text-sm flex items-center justify-center gap-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                            <strong>Warning:</strong> Once submitted, your writing cannot be changed. AI evaluation will begin immediately.
+                <div class="text-center mt-12">
+                    <div class="info-card-warning rounded-2xl p-5 mb-8 max-w-lg mx-auto">
+                        <p class="text-[#FF6B6B] text-sm flex items-center justify-center gap-3 font-medium">
+                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                            <span><strong>Warning:</strong> Once submitted, your writing cannot be changed. AI evaluation will begin immediately.</span>
                         </p>
                     </div>
                     <button type="submit"
                             id="submit-btn"
-                            class="bg-gradient-to-r from-[#00D4AA] to-[#00B894] text-[#0d0d0d] px-12 py-5 font-bold text-xl rounded-xl hover:shadow-lg hover:shadow-[#00D4AA]/30 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3 mx-auto">
+                            class="btn-3d btn-coral bg-gradient-to-r from-[#FF6B6B] to-[#FF9F43] text-white px-14 py-5 font-bold text-xl rounded-2xl hover:shadow-xl hover:shadow-[#FF6B6B]/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-3">
                         <span>Submit Writing Test</span>
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                     </button>
-                    <p class="text-gray-500 text-sm mt-4">View your results after submission</p>
+                    <p class="text-slate-500 text-sm mt-5 font-medium">View your results after submission</p>
                 </div>
             </form>
         </div>
     </main>
 
     <!-- Loading Overlay -->
-    <div id="loading-overlay" class="fixed inset-0 bg-[#111827]/95 flex items-center justify-center z-50 hidden">
-        <div class="test-card rounded-2xl p-10 text-center max-w-md">
-            <div class="w-16 h-16 border-4 border-purple-500/20 border-t-purple-500 rounded-full animate-spin mx-auto mb-6"></div>
-            <h3 class="text-xl font-bold text-white mb-4">AI Evaluation in Progress</h3>
-            <p class="text-gray-400 mb-6">Please wait while our AI evaluates your writing...</p>
-            <div class="space-y-3 text-left">
-                <div id="eval-task1" class="flex items-center gap-3 text-gray-500">
-                    <div class="w-2 h-2 rounded-full bg-gray-600"></div>
-                    <span>Task 1: Email/Letter...</span>
+    <div id="loading-overlay" class="fixed inset-0 bg-[#0F172A]/95 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+        <div class="test-card rounded-3xl p-10 text-center max-w-md">
+            <div class="loading-spinner w-16 h-16 rounded-full animate-spin mx-auto mb-6"></div>
+            <h3 class="text-xl font-extrabold gradient-text mb-4">AI Evaluation in Progress</h3>
+            <p class="text-slate-400 mb-8">Please wait while our AI evaluates your writing...</p>
+            <div class="space-y-4 text-left">
+                <div id="eval-task1" class="flex items-center gap-4 text-slate-500 transition-colors duration-300">
+                    <div class="w-3 h-3 rounded-full bg-slate-600 transition-colors duration-300"></div>
+                    <span class="font-medium">Task 1: Email/Letter...</span>
                 </div>
-                <div id="eval-task2" class="flex items-center gap-3 text-gray-500">
-                    <div class="w-2 h-2 rounded-full bg-gray-600"></div>
-                    <span>Task 2: Review...</span>
+                <div id="eval-task2" class="flex items-center gap-4 text-slate-500 transition-colors duration-300">
+                    <div class="w-3 h-3 rounded-full bg-slate-600 transition-colors duration-300"></div>
+                    <span class="font-medium">Task 2: Review...</span>
                 </div>
-                <div id="eval-essay" class="flex items-center gap-3 text-gray-500">
-                    <div class="w-2 h-2 rounded-full bg-gray-600"></div>
-                    <span>Essay...</span>
+                <div id="eval-essay" class="flex items-center gap-4 text-slate-500 transition-colors duration-300">
+                    <div class="w-3 h-3 rounded-full bg-slate-600 transition-colors duration-300"></div>
+                    <span class="font-medium">Essay...</span>
                 </div>
             </div>
         </div>
@@ -340,27 +465,27 @@ Conclusion:
             percentage = Math.min(percentage, 100);
             barEl.style.width = `${percentage}%`;
 
-            // Color coding
+            // Color coding with new palette
             if (words < minWords * 0.5) {
-                barEl.classList.remove('bg-green-500', 'bg-yellow-500', 'bg-[#00D4AA]');
-                barEl.classList.add('bg-red-500');
-                countEl.classList.remove('text-green-400', 'text-yellow-400', 'text-white');
-                countEl.classList.add('text-red-400');
+                barEl.classList.remove('bg-[#4ECDC4]', 'bg-[#FF9F43]', 'bg-slate-600');
+                barEl.classList.add('bg-[#FF6B6B]');
+                countEl.classList.remove('text-[#4ECDC4]', 'text-[#FF9F43]', 'text-white');
+                countEl.classList.add('text-[#FF6B6B]');
             } else if (words < minWords) {
-                barEl.classList.remove('bg-green-500', 'bg-red-500', 'bg-[#00D4AA]');
-                barEl.classList.add('bg-yellow-500');
-                countEl.classList.remove('text-green-400', 'text-red-400', 'text-white');
-                countEl.classList.add('text-yellow-400');
+                barEl.classList.remove('bg-[#4ECDC4]', 'bg-[#FF6B6B]', 'bg-slate-600');
+                barEl.classList.add('bg-[#FF9F43]');
+                countEl.classList.remove('text-[#4ECDC4]', 'text-[#FF6B6B]', 'text-white');
+                countEl.classList.add('text-[#FF9F43]');
             } else if (words <= maxWords) {
-                barEl.classList.remove('bg-yellow-500', 'bg-red-500');
-                barEl.classList.add('bg-[#00D4AA]');
-                countEl.classList.remove('text-yellow-400', 'text-red-400');
-                countEl.classList.add('text-[#00D4AA]');
+                barEl.classList.remove('bg-[#FF9F43]', 'bg-[#FF6B6B]', 'bg-slate-600');
+                barEl.classList.add('bg-[#4ECDC4]');
+                countEl.classList.remove('text-[#FF9F43]', 'text-[#FF6B6B]', 'text-white');
+                countEl.classList.add('text-[#4ECDC4]');
             } else {
-                barEl.classList.remove('bg-green-500', 'bg-yellow-500', 'bg-[#00D4AA]');
-                barEl.classList.add('bg-red-500');
-                countEl.classList.remove('text-green-400', 'text-yellow-400', 'text-white');
-                countEl.classList.add('text-red-400');
+                barEl.classList.remove('bg-[#4ECDC4]', 'bg-[#FF9F43]', 'bg-slate-600');
+                barEl.classList.add('bg-[#FF6B6B]');
+                countEl.classList.remove('text-[#4ECDC4]', 'text-[#FF9F43]', 'text-white');
+                countEl.classList.add('text-[#FF6B6B]');
             }
 
             updateProgress();
@@ -396,7 +521,8 @@ Conclusion:
                 const words = countWords(textarea.value);
                 if (words < 10) {
                     valid = false;
-                    textarea.classList.add('border-red-500');
+                    textarea.classList.add('border-[#FF6B6B]');
+                    textarea.classList.add('focus:border-[#FF6B6B]');
                 }
             });
 
@@ -407,27 +533,27 @@ Conclusion:
 
             document.getElementById('loading-overlay').classList.remove('hidden');
 
-            // Simulate evaluation progress
+            // Simulate evaluation progress with new colors
             setTimeout(() => {
                 const el1 = document.getElementById('eval-task1');
-                el1.classList.remove('text-gray-500');
-                el1.classList.add('text-[#00D4AA]');
-                el1.querySelector('.w-2').classList.remove('bg-gray-600');
-                el1.querySelector('.w-2').classList.add('bg-[#00D4AA]');
+                el1.classList.remove('text-slate-500');
+                el1.classList.add('text-[#4ECDC4]');
+                el1.querySelector('.w-3').classList.remove('bg-slate-600');
+                el1.querySelector('.w-3').classList.add('bg-[#4ECDC4]');
             }, 500);
             setTimeout(() => {
                 const el2 = document.getElementById('eval-task2');
-                el2.classList.remove('text-gray-500');
-                el2.classList.add('text-[#00D4AA]');
-                el2.querySelector('.w-2').classList.remove('bg-gray-600');
-                el2.querySelector('.w-2').classList.add('bg-[#00D4AA]');
+                el2.classList.remove('text-slate-500');
+                el2.classList.add('text-[#4ECDC4]');
+                el2.querySelector('.w-3').classList.remove('bg-slate-600');
+                el2.querySelector('.w-3').classList.add('bg-[#4ECDC4]');
             }, 1500);
             setTimeout(() => {
                 const el3 = document.getElementById('eval-essay');
-                el3.classList.remove('text-gray-500');
-                el3.classList.add('text-[#00D4AA]');
-                el3.querySelector('.w-2').classList.remove('bg-gray-600');
-                el3.querySelector('.w-2').classList.add('bg-[#00D4AA]');
+                el3.classList.remove('text-slate-500');
+                el3.classList.add('text-[#4ECDC4]');
+                el3.querySelector('.w-3').classList.remove('bg-slate-600');
+                el3.querySelector('.w-3').classList.add('bg-[#4ECDC4]');
             }, 2500);
 
             const formData = new FormData(this);

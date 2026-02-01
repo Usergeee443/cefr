@@ -5,204 +5,300 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Listening Test - CEFR Level</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        * { font-family: 'Inter', sans-serif; }
-        body { background-color: #111827; }
+        * { font-family: 'Nunito', sans-serif; }
+
+        :root {
+            --primary: #FF6B6B;
+            --primary-dark: #E85555;
+            --secondary: #4ECDC4;
+            --secondary-dark: #3DB8B0;
+            --accent: #FFE66D;
+            --info: #45B7D1;
+            --purple: #A78BFA;
+            --orange: #FF9F43;
+            --bg: #0F172A;
+            --card: #1E293B;
+            --border: #334155;
+        }
+
+        body { background: linear-gradient(180deg, var(--bg) 0%, #0D1321 100%); }
 
         .option-btn {
             transition: all 0.2s ease;
-            border: 1px solid #374151;
-            background: #1f2937;
+            border: 2px solid var(--border);
+            background: var(--card);
+            border-radius: 16px;
         }
         .option-btn:hover {
-            border-color: #00D4AA;
-            background: rgba(0, 212, 170, 0.05);
+            border-color: var(--info);
+            background: rgba(69, 183, 209, 0.1);
+            transform: translateY(-2px);
         }
         .option-btn.selected {
-            background: linear-gradient(135deg, #00D4AA 0%, #00B894 100%) !important;
-            color: #0d0d0d !important;
-            border-color: #00D4AA !important;
-            font-weight: 700;
+            background: linear-gradient(135deg, var(--info) 0%, var(--secondary) 100%) !important;
+            color: white !important;
+            border-color: var(--info) !important;
+            font-weight: 800;
+            box-shadow: 0 4px 0 var(--secondary-dark), 0 6px 20px rgba(69, 183, 209, 0.3);
         }
 
         .transcript-content {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease, padding 0.3s ease;
-            padding: 0 1rem;
+            padding: 0 1.25rem;
         }
         .transcript-content.open {
             max-height: 500px;
-            padding: 1rem;
+            padding: 1.25rem;
         }
 
         .timer-normal {
-            background: #1f2937;
-            border: 1px solid #374151;
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 16px;
         }
         .timer-warning {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.5);
-            color: #f87171 !important;
+            background: rgba(255, 107, 107, 0.15);
+            border: 2px solid var(--primary);
+            color: var(--primary) !important;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
 
         .test-card {
-            background: linear-gradient(180deg, #1f2937 0%, #111827 100%);
-            border: 1px solid #374151;
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 24px;
         }
 
         .test-header {
-            background: linear-gradient(180deg, #0d1117 0%, #111827 100%);
-            border-bottom: 1px solid #1f2937;
+            background: linear-gradient(180deg, var(--bg) 0%, rgba(15, 23, 42, 0.98) 100%);
+            border-bottom: 2px solid var(--border);
+            backdrop-filter: blur(10px);
         }
 
         .question-card {
-            background: #1f2937;
-            border: 1px solid #374151;
-            transition: all 0.2s ease;
+            background: rgba(30, 41, 59, 0.8);
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            transition: all 0.3s ease;
         }
         .question-card:hover {
-            border-color: #4b5563;
+            border-color: #475569;
+            transform: translateY(-2px);
         }
 
         .transcript-btn {
-            background: rgba(0, 212, 170, 0.1);
-            border: 1px solid rgba(0, 212, 170, 0.3);
-            color: #00D4AA;
+            background: rgba(167, 139, 250, 0.15);
+            border: 2px solid rgba(167, 139, 250, 0.4);
+            color: var(--purple);
             transition: all 0.2s ease;
+            border-radius: 12px;
+            font-weight: 700;
         }
         .transcript-btn:hover {
-            background: rgba(0, 212, 170, 0.2);
+            background: rgba(167, 139, 250, 0.25);
+            transform: translateY(-2px);
         }
         .transcript-btn.active {
-            background: #00D4AA;
-            color: #0d0d0d;
+            background: linear-gradient(135deg, var(--purple) 0%, var(--info) 100%);
+            color: white;
+            border-color: var(--purple);
         }
 
         .transcript-box {
-            background: #0d1117;
-            border: 1px solid #1f2937;
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px solid var(--border);
+            border-radius: 16px;
         }
 
         .text-input {
-            background: transparent;
-            border-bottom: 2px solid #00D4AA;
+            background: rgba(69, 183, 209, 0.1);
+            border: none;
+            border-bottom: 3px solid var(--info);
             color: #fff;
             transition: all 0.2s ease;
+            padding: 6px 12px;
+            border-radius: 8px 8px 0 0;
+            font-weight: 700;
         }
         .text-input:focus {
-            border-color: #00B894;
+            border-color: var(--secondary);
+            background: rgba(78, 205, 196, 0.15);
+            box-shadow: 0 4px 12px rgba(69, 183, 209, 0.2);
             outline: none;
         }
 
         .progress-bar {
-            background: linear-gradient(90deg, #00D4AA 0%, #00B894 100%);
+            background: linear-gradient(90deg, var(--info) 0%, var(--secondary) 100%);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .btn-3d {
+            background: linear-gradient(135deg, var(--info) 0%, var(--secondary) 100%);
+            color: white;
+            font-weight: 800;
+            border-radius: 16px;
+            box-shadow: 0 6px 0 var(--secondary-dark), 0 8px 20px rgba(78, 205, 196, 0.3);
+            transition: all 0.15s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .btn-3d:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 0 var(--secondary-dark), 0 12px 30px rgba(78, 205, 196, 0.4);
+        }
+        .btn-3d:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 var(--secondary-dark);
+        }
+
+        .btn-3d-coral {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--orange) 100%);
+            box-shadow: 0 6px 0 var(--primary-dark), 0 8px 20px rgba(255, 107, 107, 0.3);
+        }
+        .btn-3d-coral:hover {
+            box-shadow: 0 8px 0 var(--primary-dark), 0 12px 30px rgba(255, 107, 107, 0.4);
+        }
+        .btn-3d-coral:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 var(--primary-dark);
+        }
+
+        .part-indicator {
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 4px 16px;
         }
 
         /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #1f2937; }
-        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--info) 50%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .info-box {
+            background: rgba(167, 139, 250, 0.1);
+            border: 2px solid rgba(167, 139, 250, 0.3);
+            border-radius: 20px;
+        }
+
+        .part-header-gradient {
+            background: linear-gradient(135deg, var(--purple) 0%, var(--info) 100%);
+        }
     </style>
 </head>
-<body class="min-h-screen text-white bg-[#111827]">
+<body class="min-h-screen text-white">
 
     <!-- Header Bar -->
     <div class="test-header fixed top-0 left-0 right-0 z-50">
-        <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center gap-4">
-                <div class="w-10 h-10 bg-gradient-to-br from-[#00D4AA] to-[#00B894] flex items-center justify-center text-[#0d0d0d] font-black text-lg rounded-lg">
+                <div class="w-12 h-12 bg-gradient-to-br from-[#A78BFA] via-[#45B7D1] to-[#4ECDC4] flex items-center justify-center text-white font-black text-xl rounded-xl shadow-lg">
                     C
                 </div>
                 <div>
-                    <span class="text-sm font-bold text-[#00D4AA] uppercase tracking-wider">Listening Test</span>
-                    <div class="text-xs text-gray-500">Section 2 of 3</div>
+                    <span class="text-lg font-black gradient-text uppercase tracking-wider">Listening Test</span>
+                    <div class="text-sm text-gray-400 font-bold">Section 2 of 3</div>
                 </div>
             </div>
             <div class="flex items-center gap-6">
-                <div class="flex items-center gap-3">
-                    <span class="text-sm text-gray-400">Progress:</span>
-                    <span id="progress" class="text-lg font-bold text-[#00D4AA]">0</span>
-                    <span class="text-sm text-gray-500">%</span>
+                <div class="part-indicator flex items-center gap-3">
+                    <span class="text-sm text-gray-400 font-bold">Progress:</span>
+                    <span id="progress" class="text-xl font-black text-[#4ECDC4]">0</span>
+                    <span class="text-sm text-gray-400 font-bold">%</span>
                 </div>
-                <div id="timer" class="timer-normal text-xl font-mono font-bold px-4 py-2 rounded-lg text-white">40:00</div>
+                <div id="timer" class="timer-normal text-2xl font-mono font-black px-6 py-3 text-white">40:00</div>
             </div>
         </div>
-        <div class="w-full h-1 bg-gray-800">
-            <div id="progress-bar" class="progress-bar h-full transition-all duration-300" style="width: 0%"></div>
+        <div class="w-full h-2 bg-[#1E293B]">
+            <div id="progress-bar" class="progress-bar h-full" style="width: 0%"></div>
         </div>
     </div>
 
-    <main class="pt-24 pb-32 px-4">
-        <div class="max-w-5xl mx-auto">
+    <main class="pt-28 pb-36 px-4">
+        <div class="max-w-6xl mx-auto">
             <!-- Instructions -->
-            <div class="bg-[#00D4AA]/10 border border-[#00D4AA]/30 rounded-2xl p-6 mb-8">
-                <div class="flex items-start gap-4">
-                    <div class="w-12 h-12 bg-[#00D4AA]/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                        <svg class="w-6 h-6 text-[#00D4AA]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="info-box p-6 mb-10">
+                <div class="flex items-start gap-5">
+                    <div class="w-14 h-14 bg-gradient-to-br from-[#A78BFA] to-[#45B7D1] rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
+                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                     </div>
                     <div>
-                        <h3 class="font-bold text-[#00D4AA] text-lg mb-2">Instructions</h3>
-                        <p class="text-gray-300">Read the transcript for each audio and answer the questions. In a real CEFR exam, you would listen to audio recordings. Click "Show Transcript" to reveal the audio content.</p>
+                        <h3 class="font-black text-[#A78BFA] text-xl mb-2">Instructions</h3>
+                        <p class="text-gray-300 text-lg font-medium">Read the transcript for each audio and answer the questions. In a real CEFR exam, you would listen to audio recordings. Click "Show Transcript" to reveal the audio content.</p>
                     </div>
                 </div>
             </div>
 
             <form id="listening-form">
                 {% for part in test_data.parts %}
-                <section class="part-section mb-10" data-part="{{ part.part_number }}">
-                    <div class="test-card rounded-2xl overflow-hidden">
+                <section class="part-section mb-12" data-part="{{ part.part_number }}">
+                    <div class="test-card overflow-hidden">
                         <!-- Part Header -->
-                        <div class="p-6 border-b border-gray-700">
-                            <div class="flex items-center gap-4 mb-3">
-                                <div class="w-12 h-12 bg-gradient-to-br from-[#00D4AA] to-[#00B894] rounded-xl flex items-center justify-center text-[#0d0d0d] font-bold text-lg">
+                        <div class="p-8 border-b-2 border-[#334155] bg-gradient-to-r from-[#1E293B] to-[#0F172A]">
+                            <div class="flex items-center gap-5 mb-4">
+                                <div class="w-16 h-16 part-header-gradient rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-lg">
                                     {{ part.part_number }}
                                 </div>
                                 <div>
-                                    <h2 class="text-2xl font-bold text-white">{{ part.title }}</h2>
-                                    <span class="text-sm text-gray-400">Part {{ part.part_number }} of {{ test_data.parts|length }}</span>
+                                    <h2 class="text-3xl font-black text-white">{{ part.title }}</h2>
+                                    <span class="text-base text-gray-400 font-bold">Part {{ part.part_number }} of {{ test_data.parts|length }}</span>
                                 </div>
                             </div>
-                            <p class="text-gray-400 ml-16">{{ part.instruction }}</p>
+                            <p class="text-gray-300 ml-[84px] text-lg font-medium">{{ part.instruction }}</p>
                         </div>
 
-                        <div class="p-6">
+                        <div class="p-8">
                             {% if part.type == "short_conversations" %}
                             <!-- Part 1: Short Conversations -->
                             <div class="space-y-6">
                                 {% for q in part.questions %}
-                                <div class="question-card rounded-xl p-5" data-question="{{ q.number }}">
-                                    <div class="flex items-center justify-between mb-4">
-                                        <span class="font-bold text-white text-lg">Question {{ q.number }}</span>
-                                        <button type="button" class="transcript-btn px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="question-card p-6" data-question="{{ q.number }}">
+                                    <div class="flex items-center justify-between mb-5">
+                                        <span class="font-black text-white text-xl">Question {{ q.number }}</span>
+                                        <button type="button" class="transcript-btn px-5 py-3 text-base flex items-center gap-3">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
                                             </svg>
                                             Show Transcript
                                         </button>
                                     </div>
 
-                                    <div class="text-sm text-gray-400 mb-3 italic">
+                                    <div class="text-base text-gray-400 mb-4 italic font-medium">
                                         {{ q.audio_description }}
                                     </div>
 
-                                    <div class="transcript-content transcript-box rounded-xl mb-4">
-                                        <p class="text-gray-300 whitespace-pre-line">{{ q.transcript }}</p>
+                                    <div class="transcript-content transcript-box mb-5">
+                                        <p class="text-gray-300 whitespace-pre-line leading-relaxed text-base font-medium">{{ q.transcript }}</p>
                                     </div>
 
-                                    <div class="font-medium text-white mb-4">{{ q.question }}</div>
+                                    <div class="font-bold text-white mb-5 text-lg">{{ q.question }}</div>
 
-                                    <div class="space-y-2">
+                                    <div class="space-y-3">
                                         {% for letter, option in q.options.items() %}
                                         <button type="button"
-                                                class="option-btn w-full p-3 rounded-lg text-left text-sm text-gray-300 flex items-start gap-3"
+                                                class="option-btn w-full p-4 text-left text-base text-gray-200 flex items-start gap-4 font-medium"
                                                 data-question="{{ q.number }}"
                                                 data-value="{{ letter }}">
-                                            <span class="font-bold text-[#00D4AA]">{{ letter }}.</span>
+                                            <span class="font-black text-[#45B7D1]">{{ letter }}.</span>
                                             <span>{{ option }}</span>
                                         </button>
                                         {% endfor %}
@@ -214,27 +310,27 @@
 
                             {% elif part.type == "sentence_completion" %}
                             <!-- Part 2: Sentence Completion -->
-                            <div class="mb-6">
-                                <button type="button" class="transcript-btn w-full p-4 rounded-xl flex items-center justify-between">
-                                    <span class="font-medium flex items-center gap-3">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="mb-8">
+                                <button type="button" class="transcript-btn w-full p-5 flex items-center justify-between text-base">
+                                    <span class="font-bold flex items-center gap-4">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
                                         </svg>
                                         {{ part.audio_description }}
                                     </span>
-                                    <span class="text-sm">Click to show transcript</span>
+                                    <span class="text-sm font-bold">Click to show transcript</span>
                                 </button>
-                                <div class="transcript-content transcript-box rounded-xl mt-2">
-                                    <p class="text-gray-300 whitespace-pre-line leading-relaxed">{{ part.transcript }}</p>
+                                <div class="transcript-content transcript-box mt-3">
+                                    <p class="text-gray-300 whitespace-pre-line leading-relaxed text-base font-medium">{{ part.transcript }}</p>
                                 </div>
                             </div>
 
                             <div class="space-y-4">
                                 {% for q in part.questions %}
-                                <div class="question-card rounded-xl p-4 flex items-center gap-4" data-question="{{ q.number }}">
-                                    <span class="font-bold text-[#00D4AA] text-lg">{{ q.number }}.</span>
-                                    <div class="flex-1 text-gray-300">
-                                        {{ q.question | replace("_____", "<input type='text' name='" ~ q.number ~ "' class='text-input px-2 py-1 w-32 text-center' placeholder='answer'>") | safe }}
+                                <div class="question-card p-5 flex items-center gap-5" data-question="{{ q.number }}">
+                                    <span class="font-black text-[#45B7D1] text-xl">{{ q.number }}.</span>
+                                    <div class="flex-1 text-gray-300 text-lg font-medium">
+                                        {{ q.question | replace("_____", "<input type='text' name='" ~ q.number ~ "' class='text-input px-3 py-2 w-36 text-center' placeholder='answer'>") | safe }}
                                     </div>
                                 </div>
                                 {% endfor %}
@@ -242,15 +338,15 @@
 
                             {% elif part.type == "multiple_matching" %}
                             <!-- Part 3: Multiple Matching -->
-                            <div class="mb-6">
-                                <h4 class="font-semibold text-[#00D4AA] mb-4 text-sm uppercase tracking-wider flex items-center gap-2">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+                            <div class="mb-8">
+                                <h4 class="font-black text-[#FFE66D] mb-5 text-sm uppercase tracking-wider flex items-center gap-3">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
                                     Options
                                 </h4>
-                                <div class="grid md:grid-cols-2 gap-3">
+                                <div class="grid md:grid-cols-2 gap-4">
                                     {% for letter, option in part.options.items() %}
-                                    <div class="transcript-box rounded-xl p-3 text-sm text-gray-300">
-                                        <span class="font-bold text-[#00D4AA]">{{ letter }}.</span> {{ option }}
+                                    <div class="transcript-box p-4 text-base text-gray-200 font-medium">
+                                        <span class="font-black text-[#FFE66D]">{{ letter }}.</span> {{ option }}
                                     </div>
                                     {% endfor %}
                                 </div>
@@ -258,19 +354,19 @@
 
                             <div class="space-y-6">
                                 {% for speaker in part.speakers %}
-                                <div class="question-card rounded-xl p-5" data-question="{{ speaker.number }}">
-                                    <div class="flex items-center justify-between mb-4">
-                                        <span class="font-bold text-white">{{ speaker.name }} <span class="text-gray-500">(Question {{ speaker.number }})</span></span>
-                                        <button type="button" class="transcript-btn px-4 py-2 rounded-lg text-sm font-medium">
+                                <div class="question-card p-6" data-question="{{ speaker.number }}">
+                                    <div class="flex items-center justify-between mb-5">
+                                        <span class="font-black text-white text-lg">{{ speaker.name }} <span class="text-gray-400 font-bold">(Question {{ speaker.number }})</span></span>
+                                        <button type="button" class="transcript-btn px-5 py-3 text-base font-bold">
                                             Show Transcript
                                         </button>
                                     </div>
-                                    <div class="transcript-content transcript-box rounded-xl mb-4">
-                                        <p class="text-gray-300 italic">{{ speaker.transcript }}</p>
+                                    <div class="transcript-content transcript-box mb-5">
+                                        <p class="text-gray-300 italic font-medium text-base">{{ speaker.transcript }}</p>
                                     </div>
-                                    <div class="flex items-center gap-4">
-                                        <span class="text-gray-400">What does {{ speaker.name }} say?</span>
-                                        <select name="{{ speaker.number }}" class="bg-[#0d1117] border border-gray-700 text-white px-4 py-3 rounded-xl focus:border-[#00D4AA] outline-none">
+                                    <div class="flex items-center gap-5">
+                                        <span class="text-gray-300 font-bold text-base">What does {{ speaker.name }} say?</span>
+                                        <select name="{{ speaker.number }}" class="bg-[#0F172A] border-2 border-[#334155] text-white px-5 py-4 rounded-xl focus:border-[#4ECDC4] outline-none font-bold text-base">
                                             <option value="">Select answer...</option>
                                             {% for letter in part.options.keys() %}
                                             <option value="{{ letter }}">{{ letter }}</option>
@@ -283,34 +379,34 @@
 
                             {% elif part.type == "interview" %}
                             <!-- Part 4: Interview -->
-                            <div class="mb-6">
-                                <button type="button" class="transcript-btn w-full p-4 rounded-xl flex items-center justify-between">
-                                    <span class="font-medium flex items-center gap-3">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div class="mb-8">
+                                <button type="button" class="transcript-btn w-full p-5 flex items-center justify-between text-base">
+                                    <span class="font-bold flex items-center gap-4">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
                                         </svg>
                                         {{ part.audio_description }}
                                     </span>
-                                    <span class="text-sm">Click to show transcript</span>
+                                    <span class="text-sm font-bold">Click to show transcript</span>
                                 </button>
-                                <div class="transcript-content transcript-box rounded-xl mt-2 max-h-64 overflow-y-auto">
-                                    <p class="text-gray-300 whitespace-pre-line leading-relaxed">{{ part.transcript }}</p>
+                                <div class="transcript-content transcript-box mt-3 max-h-72 overflow-y-auto">
+                                    <p class="text-gray-300 whitespace-pre-line leading-relaxed text-base font-medium">{{ part.transcript }}</p>
                                 </div>
                             </div>
 
-                            <div class="space-y-4">
+                            <div class="space-y-5">
                                 {% for q in part.questions %}
-                                <div class="question-card rounded-xl p-5" data-question="{{ q.number }}">
-                                    <div class="font-medium text-white mb-4">
-                                        <span class="text-[#00D4AA] font-bold">{{ q.number }}.</span> {{ q.question }}
+                                <div class="question-card p-6" data-question="{{ q.number }}">
+                                    <div class="font-bold text-white mb-5 text-lg">
+                                        <span class="text-[#FF6B6B] font-black mr-2">{{ q.number }}.</span> {{ q.question }}
                                     </div>
-                                    <div class="space-y-2">
+                                    <div class="space-y-3">
                                         {% for letter, option in q.options.items() %}
                                         <button type="button"
-                                                class="option-btn w-full p-3 rounded-lg text-left text-sm text-gray-300 flex items-start gap-3"
+                                                class="option-btn w-full p-4 text-left text-base text-gray-200 flex items-start gap-4 font-medium"
                                                 data-question="{{ q.number }}"
                                                 data-value="{{ letter }}">
-                                            <span class="font-bold text-[#00D4AA]">{{ letter }}.</span>
+                                            <span class="font-black text-[#FF6B6B]">{{ letter }}.</span>
                                             <span>{{ option }}</span>
                                         </button>
                                         {% endfor %}
@@ -326,25 +422,25 @@
                 {% endfor %}
 
                 <!-- Submit Button -->
-                <div class="text-center mt-10">
-                    <button type="submit" class="bg-gradient-to-r from-[#00D4AA] to-[#00B894] text-[#0d0d0d] px-12 py-5 font-bold text-xl rounded-xl hover:shadow-lg hover:shadow-[#00D4AA]/30 transition flex items-center gap-3 mx-auto">
+                <div class="text-center mt-12">
+                    <button type="submit" class="btn-3d-coral px-14 py-6 font-black text-xl flex items-center gap-4 mx-auto">
                         <span>Submit & Continue to Writing</span>
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
                         </svg>
                     </button>
-                    <p class="text-gray-500 text-sm mt-4">Continue to Writing section after submission</p>
+                    <p class="text-gray-400 text-base mt-5 font-medium">Continue to Writing section after submission</p>
                 </div>
             </form>
         </div>
     </main>
 
     <!-- Loading Overlay -->
-    <div id="loading-overlay" class="fixed inset-0 bg-[#111827]/95 flex items-center justify-center z-50 hidden">
-        <div class="test-card rounded-2xl p-10 text-center max-w-md">
-            <div class="w-16 h-16 border-4 border-[#00D4AA]/20 border-t-[#00D4AA] rounded-full animate-spin mx-auto mb-6"></div>
-            <h3 class="text-xl font-bold text-white mb-2">Submitting Your Answers</h3>
-            <p class="text-gray-400">Please wait while we process your responses...</p>
+    <div id="loading-overlay" class="fixed inset-0 bg-[#0F172A]/98 flex items-center justify-center z-50 hidden backdrop-blur-lg">
+        <div class="test-card p-12 text-center max-w-md">
+            <div class="w-20 h-20 border-4 border-[#4ECDC4]/20 border-t-[#4ECDC4] rounded-full animate-spin mx-auto mb-8"></div>
+            <h3 class="text-2xl font-black text-white mb-3">Submitting Your Answers</h3>
+            <p class="text-gray-400 text-lg font-medium">Please wait while we process your responses...</p>
         </div>
     </div>
 
@@ -375,7 +471,7 @@
         // Transcript toggles
         document.querySelectorAll('.transcript-btn').forEach(btn => {
             btn.addEventListener('click', function() {
-                const container = this.closest('.question-card') || this.closest('.mb-6');
+                const container = this.closest('.question-card') || this.closest('.mb-8');
                 const content = container.querySelector('.transcript-content');
                 if (content) {
                     content.classList.toggle('open');
