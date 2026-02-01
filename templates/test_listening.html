@@ -3,58 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listening Test - OSCO.</title>
+    <title>Listening Test - CEFR Level</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * { font-family: 'Inter', sans-serif; }
-        *, *::before, *::after { border-radius: 0 !important; }
-        body { background-color: #fafafa; }
-        .option-btn { transition: all 0.15s ease; }
+        body { background-color: #111827; }
+
+        .option-btn {
+            transition: all 0.2s ease;
+            border: 1px solid #374151;
+            background: #1f2937;
+        }
+        .option-btn:hover {
+            border-color: #00D4AA;
+            background: rgba(0, 212, 170, 0.05);
+        }
         .option-btn.selected {
-            background-color: #1f2937 !important;
-            color: #fff !important;
-            border-color: #1f2937 !important;
+            background: linear-gradient(135deg, #00D4AA 0%, #00B894 100%) !important;
+            color: #0d0d0d !important;
+            border-color: #00D4AA !important;
             font-weight: 700;
         }
-        .transcript-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
-        .transcript-content.open { max-height: 500px; }
+
+        .transcript-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            padding: 0 1rem;
+        }
+        .transcript-content.open {
+            max-height: 500px;
+            padding: 1rem;
+        }
+
+        .timer-normal {
+            background: #1f2937;
+            border: 1px solid #374151;
+        }
+        .timer-warning {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.5);
+            color: #f87171 !important;
+        }
+
+        .test-card {
+            background: linear-gradient(180deg, #1f2937 0%, #111827 100%);
+            border: 1px solid #374151;
+        }
+
+        .test-header {
+            background: linear-gradient(180deg, #0d1117 0%, #111827 100%);
+            border-bottom: 1px solid #1f2937;
+        }
+
+        .question-card {
+            background: #1f2937;
+            border: 1px solid #374151;
+            transition: all 0.2s ease;
+        }
+        .question-card:hover {
+            border-color: #4b5563;
+        }
+
+        .transcript-btn {
+            background: rgba(0, 212, 170, 0.1);
+            border: 1px solid rgba(0, 212, 170, 0.3);
+            color: #00D4AA;
+            transition: all 0.2s ease;
+        }
+        .transcript-btn:hover {
+            background: rgba(0, 212, 170, 0.2);
+        }
+        .transcript-btn.active {
+            background: #00D4AA;
+            color: #0d0d0d;
+        }
+
+        .transcript-box {
+            background: #0d1117;
+            border: 1px solid #1f2937;
+        }
+
+        .text-input {
+            background: transparent;
+            border-bottom: 2px solid #00D4AA;
+            color: #fff;
+            transition: all 0.2s ease;
+        }
+        .text-input:focus {
+            border-color: #00B894;
+            outline: none;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #00D4AA 0%, #00B894 100%);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #1f2937; }
+        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
     </style>
 </head>
-<body class="min-h-screen text-gray-900 bg-[#fafafa]">
+<body class="min-h-screen text-white bg-[#111827]">
 
-    <div class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50 shadow-sm">
-        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
-            <span class="text-sm font-medium text-gray-600 uppercase tracking-wider">Listening</span>
+    <!-- Header Bar -->
+    <div class="test-header fixed top-0 left-0 right-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center gap-4">
-                <div id="timer" class="text-lg font-mono text-gray-800 border border-gray-300 px-3 py-1">40:00</div>
-                <span class="text-sm text-gray-500"><span id="progress" class="font-bold text-gray-800">0</span>%</span>
+                <div class="w-10 h-10 bg-gradient-to-br from-[#00D4AA] to-[#00B894] flex items-center justify-center text-[#0d0d0d] font-black text-lg rounded-lg">
+                    C
+                </div>
+                <div>
+                    <span class="text-sm font-bold text-[#00D4AA] uppercase tracking-wider">Listening Test</span>
+                    <div class="text-xs text-gray-500">Section 2 of 3</div>
+                </div>
+            </div>
+            <div class="flex items-center gap-6">
+                <div class="flex items-center gap-3">
+                    <span class="text-sm text-gray-400">Progress:</span>
+                    <span id="progress" class="text-lg font-bold text-[#00D4AA]">0</span>
+                    <span class="text-sm text-gray-500">%</span>
+                </div>
+                <div id="timer" class="timer-normal text-xl font-mono font-bold px-4 py-2 rounded-lg text-white">40:00</div>
             </div>
         </div>
-        <div class="w-full h-0.5 bg-gray-200"><div id="progress-bar" class="h-full bg-gray-700 transition-all duration-300" style="width: 0%"></div></div>
+        <div class="w-full h-1 bg-gray-800">
+            <div id="progress-bar" class="progress-bar h-full transition-all duration-300" style="width: 0%"></div>
+        </div>
     </div>
 
-    <main class="pt-20 pb-24 px-4">
-        <div class="max-w-4xl mx-auto">
+    <main class="pt-24 pb-32 px-4">
+        <div class="max-w-5xl mx-auto">
             <!-- Instructions -->
-            <div class="border border-gray-600/20 p-4 mb-8">
-                <h3 class="font-semibold text-gray-900 mb-2 text-sm uppercase tracking-wider">Instructions</h3>
-                <p class="text-gray-400 text-sm">Read the transcript for each audio and answer the questions. In a real CEFR exam, you would listen to audio recordings. Click "Show Transcript" to reveal the audio content.</p>
+            <div class="bg-[#00D4AA]/10 border border-[#00D4AA]/30 rounded-2xl p-6 mb-8">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 bg-[#00D4AA]/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-[#00D4AA]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-[#00D4AA] text-lg mb-2">Instructions</h3>
+                        <p class="text-gray-300">Read the transcript for each audio and answer the questions. In a real CEFR exam, you would listen to audio recordings. Click "Show Transcript" to reveal the audio content.</p>
+                    </div>
+                </div>
             </div>
 
             <form id="listening-form">
                 {% for part in test_data.parts %}
-                <section class="part-section mb-12" data-part="{{ part.part_number }}">
-                    <div class="border border-gray-200 bg-white overflow-hidden">
+                <section class="part-section mb-10" data-part="{{ part.part_number }}">
+                    <div class="test-card rounded-2xl overflow-hidden">
                         <!-- Part Header -->
-                        <div class="border-b border-gray-200 bg-gray-50 p-6">
-                            <div class="flex items-center gap-3 mb-2">
-                                <div class="w-8 h-8 border border-gray-400 bg-gray-100 flex items-center justify-center text-gray-800 font-bold text-sm">
+                        <div class="p-6 border-b border-gray-700">
+                            <div class="flex items-center gap-4 mb-3">
+                                <div class="w-12 h-12 bg-gradient-to-br from-[#00D4AA] to-[#00B894] rounded-xl flex items-center justify-center text-[#0d0d0d] font-bold text-lg">
                                     {{ part.part_number }}
                                 </div>
-                                <h2 class="text-xl font-bold text-gray-900">{{ part.title }}</h2>
+                                <div>
+                                    <h2 class="text-2xl font-bold text-white">{{ part.title }}</h2>
+                                    <span class="text-sm text-gray-400">Part {{ part.part_number }} of {{ test_data.parts|length }}</span>
+                                </div>
                             </div>
-                            <p class="text-gray-400 text-sm ml-11">{{ part.instruction }}</p>
+                            <p class="text-gray-400 ml-16">{{ part.instruction }}</p>
                         </div>
 
                         <div class="p-6">
@@ -62,34 +175,34 @@
                             <!-- Part 1: Short Conversations -->
                             <div class="space-y-6">
                                 {% for q in part.questions %}
-                                <div class="question-block p-4 border border-gray-200 bg-white" data-question="{{ q.number }}">
-                                    <div class="flex items-center justify-between mb-3">
-                                        <span class="font-bold text-gray-900">Question {{ q.number }}</span>
-                                        <button type="button" class="transcript-toggle text-sm text-gray-900 hover:text-gray-900 flex items-center gap-1">
+                                <div class="question-card rounded-xl p-5" data-question="{{ q.number }}">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <span class="font-bold text-white text-lg">Question {{ q.number }}</span>
+                                        <button type="button" class="transcript-btn px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="square" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
                                             </svg>
                                             Show Transcript
                                         </button>
                                     </div>
 
-                                    <div class="text-sm text-gray-500 mb-3">
-                                        <em>{{ q.audio_description }}</em>
+                                    <div class="text-sm text-gray-400 mb-3 italic">
+                                        {{ q.audio_description }}
                                     </div>
 
-                                    <div class="transcript-content border border-gray-200 bg-white p-4 mb-4">
-                                        <p class="text-gray-700 whitespace-pre-line">{{ q.transcript }}</p>
+                                    <div class="transcript-content transcript-box rounded-xl mb-4">
+                                        <p class="text-gray-300 whitespace-pre-line">{{ q.transcript }}</p>
                                     </div>
 
-                                    <div class="font-medium text-gray-900 mb-3">{{ q.question }}</div>
+                                    <div class="font-medium text-white mb-4">{{ q.question }}</div>
 
-                                    <div class="grid gap-2">
+                                    <div class="space-y-2">
                                         {% for letter, option in q.options.items() %}
                                         <button type="button"
-                                                class="option-btn p-3 border border-gray-300 bg-white text-left text-sm text-gray-700 hover:border-gray-600 hover:bg-gray-50 hover:text-gray-900 transition flex items-start"
+                                                class="option-btn w-full p-3 rounded-lg text-left text-sm text-gray-300 flex items-start gap-3"
                                                 data-question="{{ q.number }}"
                                                 data-value="{{ letter }}">
-                                            <span class="font-bold text-gray-900 mr-2">{{ letter }}.</span>
+                                            <span class="font-bold text-[#00D4AA]">{{ letter }}.</span>
                                             <span>{{ option }}</span>
                                         </button>
                                         {% endfor %}
@@ -102,26 +215,26 @@
                             {% elif part.type == "sentence_completion" %}
                             <!-- Part 2: Sentence Completion -->
                             <div class="mb-6">
-                                <button type="button" class="transcript-toggle w-full text-left p-4 border border-gray-200 bg-white hover:border-gray-600 hover:bg-gray-50 transition flex items-center justify-between">
-                                    <span class="font-medium text-gray-900 flex items-center gap-2">
-                                        <svg class="w-5 h-5 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="square" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                                <button type="button" class="transcript-btn w-full p-4 rounded-xl flex items-center justify-between">
+                                    <span class="font-medium flex items-center gap-3">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
                                         </svg>
                                         {{ part.audio_description }}
                                     </span>
-                                    <span class="text-sm text-gray-900">Click to show transcript</span>
+                                    <span class="text-sm">Click to show transcript</span>
                                 </button>
-                                <div class="transcript-content border border-gray-200 bg-white p-4 mt-2">
-                                    <p class="text-gray-700 whitespace-pre-line leading-relaxed">{{ part.transcript }}</p>
+                                <div class="transcript-content transcript-box rounded-xl mt-2">
+                                    <p class="text-gray-300 whitespace-pre-line leading-relaxed">{{ part.transcript }}</p>
                                 </div>
                             </div>
 
                             <div class="space-y-4">
                                 {% for q in part.questions %}
-                                <div class="question-block p-4 border border-gray-200 bg-white flex items-center" data-question="{{ q.number }}">
-                                    <span class="font-bold text-gray-900 mr-3">{{ q.number }}.</span>
-                                    <div class="flex-1 text-gray-700">
-                                        {{ q.question | replace("_____", "<input type='text' name='" ~ q.number ~ "' class='border-b-2 border-gray-600 px-2 py-1 w-32 text-center outline-none bg-transparent text-gray-900' placeholder='answer'>") | safe }}
+                                <div class="question-card rounded-xl p-4 flex items-center gap-4" data-question="{{ q.number }}">
+                                    <span class="font-bold text-[#00D4AA] text-lg">{{ q.number }}.</span>
+                                    <div class="flex-1 text-gray-300">
+                                        {{ q.question | replace("_____", "<input type='text' name='" ~ q.number ~ "' class='text-input px-2 py-1 w-32 text-center' placeholder='answer'>") | safe }}
                                     </div>
                                 </div>
                                 {% endfor %}
@@ -130,11 +243,14 @@
                             {% elif part.type == "multiple_matching" %}
                             <!-- Part 3: Multiple Matching -->
                             <div class="mb-6">
-                                <h4 class="font-semibold text-gray-900 mb-4 text-sm uppercase tracking-wider">Options:</h4>
-                                <div class="grid md:grid-cols-2 gap-3 border border-gray-200 bg-white p-4">
+                                <h4 class="font-semibold text-[#00D4AA] mb-4 text-sm uppercase tracking-wider flex items-center gap-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+                                    Options
+                                </h4>
+                                <div class="grid md:grid-cols-2 gap-3">
                                     {% for letter, option in part.options.items() %}
-                                    <div class="p-2 bg-white border border-gray-300 text-sm text-gray-700">
-                                        <span class="font-bold text-gray-900">{{ letter }}.</span> {{ option }}
+                                    <div class="transcript-box rounded-xl p-3 text-sm text-gray-300">
+                                        <span class="font-bold text-[#00D4AA]">{{ letter }}.</span> {{ option }}
                                     </div>
                                     {% endfor %}
                                 </div>
@@ -142,19 +258,19 @@
 
                             <div class="space-y-6">
                                 {% for speaker in part.speakers %}
-                                <div class="question-block p-4 border border-gray-200 bg-white" data-question="{{ speaker.number }}">
-                                    <div class="flex items-center justify-between mb-3">
-                                        <span class="font-bold text-gray-900">{{ speaker.name }} (Question {{ speaker.number }})</span>
-                                        <button type="button" class="transcript-toggle text-sm text-gray-900 hover:text-gray-900">
+                                <div class="question-card rounded-xl p-5" data-question="{{ speaker.number }}">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <span class="font-bold text-white">{{ speaker.name }} <span class="text-gray-500">(Question {{ speaker.number }})</span></span>
+                                        <button type="button" class="transcript-btn px-4 py-2 rounded-lg text-sm font-medium">
                                             Show Transcript
                                         </button>
                                     </div>
-                                    <div class="transcript-content border border-gray-200 bg-white p-4 mb-4">
-                                        <p class="text-gray-700 italic">{{ speaker.transcript }}</p>
+                                    <div class="transcript-content transcript-box rounded-xl mb-4">
+                                        <p class="text-gray-300 italic">{{ speaker.transcript }}</p>
                                     </div>
-                                    <div class="flex items-center gap-3">
+                                    <div class="flex items-center gap-4">
                                         <span class="text-gray-400">What does {{ speaker.name }} say?</span>
-                                        <select name="{{ speaker.number }}" class="border border-gray-200 bg-white text-gray-900 px-4 py-2 focus:border-gray-600 outline-none">
+                                        <select name="{{ speaker.number }}" class="bg-[#0d1117] border border-gray-700 text-white px-4 py-3 rounded-xl focus:border-[#00D4AA] outline-none">
                                             <option value="">Select answer...</option>
                                             {% for letter in part.options.keys() %}
                                             <option value="{{ letter }}">{{ letter }}</option>
@@ -168,33 +284,33 @@
                             {% elif part.type == "interview" %}
                             <!-- Part 4: Interview -->
                             <div class="mb-6">
-                                <button type="button" class="transcript-toggle w-full text-left p-4 border border-gray-200 bg-white hover:border-gray-600 hover:bg-gray-50 transition flex items-center justify-between">
-                                    <span class="font-medium text-gray-900 flex items-center gap-2">
-                                        <svg class="w-5 h-5 text-gray-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="square" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                                <button type="button" class="transcript-btn w-full p-4 rounded-xl flex items-center justify-between">
+                                    <span class="font-medium flex items-center gap-3">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
                                         </svg>
                                         {{ part.audio_description }}
                                     </span>
-                                    <span class="text-sm text-gray-900">Click to show transcript</span>
+                                    <span class="text-sm">Click to show transcript</span>
                                 </button>
-                                <div class="transcript-content border border-gray-200 bg-white p-4 mt-2 max-h-64 overflow-y-auto">
-                                    <p class="text-gray-700 whitespace-pre-line leading-relaxed">{{ part.transcript }}</p>
+                                <div class="transcript-content transcript-box rounded-xl mt-2 max-h-64 overflow-y-auto">
+                                    <p class="text-gray-300 whitespace-pre-line leading-relaxed">{{ part.transcript }}</p>
                                 </div>
                             </div>
 
-                            <div class="space-y-6">
+                            <div class="space-y-4">
                                 {% for q in part.questions %}
-                                <div class="question-block p-4 border border-gray-200 bg-white" data-question="{{ q.number }}">
-                                    <div class="font-medium text-gray-900 mb-3">
-                                        <span class="text-gray-900 font-bold">{{ q.number }}.</span> {{ q.question }}
+                                <div class="question-card rounded-xl p-5" data-question="{{ q.number }}">
+                                    <div class="font-medium text-white mb-4">
+                                        <span class="text-[#00D4AA] font-bold">{{ q.number }}.</span> {{ q.question }}
                                     </div>
-                                    <div class="grid gap-2">
+                                    <div class="space-y-2">
                                         {% for letter, option in q.options.items() %}
                                         <button type="button"
-                                                class="option-btn p-3 border border-gray-300 bg-white text-left text-sm text-gray-700 hover:border-gray-600 hover:bg-gray-50 hover:text-gray-900 transition flex items-start"
+                                                class="option-btn w-full p-3 rounded-lg text-left text-sm text-gray-300 flex items-start gap-3"
                                                 data-question="{{ q.number }}"
                                                 data-value="{{ letter }}">
-                                            <span class="font-bold text-gray-900 mr-2">{{ letter }}.</span>
+                                            <span class="font-bold text-[#00D4AA]">{{ letter }}.</span>
                                             <span>{{ option }}</span>
                                         </button>
                                         {% endfor %}
@@ -211,21 +327,24 @@
 
                 <!-- Submit Button -->
                 <div class="text-center mt-10">
-                    <button type="submit"
-                            class="bg-gray-800 text-white px-12 py-4 font-bold text-lg hover:bg-[#00B894] transition-colors">
-                        Submit Listening Test
+                    <button type="submit" class="bg-gradient-to-r from-[#00D4AA] to-[#00B894] text-[#0d0d0d] px-12 py-5 font-bold text-xl rounded-xl hover:shadow-lg hover:shadow-[#00D4AA]/30 transition flex items-center gap-3 mx-auto">
+                        <span>Submit & Continue to Writing</span>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                        </svg>
                     </button>
-                    <p class="text-gray-600 text-xs mt-3">Continue to Writing after submission</p>
+                    <p class="text-gray-500 text-sm mt-4">Continue to Writing section after submission</p>
                 </div>
             </form>
         </div>
     </main>
 
     <!-- Loading Overlay -->
-    <div id="loading-overlay" class="fixed inset-0 bg-white/90 flex items-center justify-center z-50 hidden">
-        <div class="bg-white border border-gray-300 p-8 text-center">
-            <div class="animate-spin w-10 h-10 border-2 border-gray-600 border-t-transparent mx-auto mb-4"></div>
-            <p class="text-gray-700 text-sm">Submitting your answers...</p>
+    <div id="loading-overlay" class="fixed inset-0 bg-[#111827]/95 flex items-center justify-center z-50 hidden">
+        <div class="test-card rounded-2xl p-10 text-center max-w-md">
+            <div class="w-16 h-16 border-4 border-[#00D4AA]/20 border-t-[#00D4AA] rounded-full animate-spin mx-auto mb-6"></div>
+            <h3 class="text-xl font-bold text-white mb-2">Submitting Your Answers</h3>
+            <p class="text-gray-400">Please wait while we process your responses...</p>
         </div>
     </div>
 
@@ -240,7 +359,8 @@
             timerEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
             if (timeLeft <= 300) {
-                timerEl.classList.add('text-red-400', 'border-red-500');
+                timerEl.classList.remove('timer-normal');
+                timerEl.classList.add('timer-warning');
             }
 
             if (timeLeft > 0) {
@@ -253,11 +373,13 @@
         updateTimer();
 
         // Transcript toggles
-        document.querySelectorAll('.transcript-toggle').forEach(btn => {
+        document.querySelectorAll('.transcript-btn').forEach(btn => {
             btn.addEventListener('click', function() {
-                const content = this.closest('.question-block, .mb-6').querySelector('.transcript-content');
+                const container = this.closest('.question-card') || this.closest('.mb-6');
+                const content = container.querySelector('.transcript-content');
                 if (content) {
                     content.classList.toggle('open');
+                    this.classList.toggle('active');
                     if (this.textContent.includes('Show')) {
                         this.innerHTML = this.innerHTML.replace('Show', 'Hide');
                     } else {

@@ -1,68 +1,256 @@
 {% extends "base_app.html" %}
-{% block title %}{{ t.start_test }} - CEFR{% endblock %}
+{% block title %}{{ t.start_test }} - CEFR Level{% endblock %}
+
+{% block head %}
+<style>
+    .section-card {
+        background: linear-gradient(180deg, #1f2937 0%, #111827 100%);
+        border: 1px solid #374151;
+        transition: all 0.3s ease;
+    }
+    .section-card:hover {
+        border-color: #00D4AA;
+        transform: translateY(-4px);
+        box-shadow: 0 12px 40px rgba(0, 212, 170, 0.15);
+    }
+    .section-icon {
+        background: linear-gradient(135deg, #00D4AA 0%, #00B894 100%);
+        box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3);
+    }
+    .instruction-card {
+        background: linear-gradient(180deg, rgba(0, 212, 170, 0.08) 0%, rgba(0, 212, 170, 0.02) 100%);
+        border: 1px solid rgba(0, 212, 170, 0.2);
+    }
+    .start-btn {
+        background: linear-gradient(135deg, #00D4AA 0%, #00B894 100%);
+        box-shadow: 0 4px 20px rgba(0, 212, 170, 0.4);
+        transition: all 0.3s ease;
+    }
+    .start-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(0, 212, 170, 0.5);
+    }
+    .badge-ai {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    }
+    .progress-step {
+        transition: all 0.3s ease;
+    }
+    .progress-step.active {
+        background: linear-gradient(135deg, #00D4AA 0%, #00B894 100%);
+        color: #0d0d0d;
+    }
+    .progress-step.completed {
+        background: #00D4AA;
+        color: #0d0d0d;
+    }
+    .progress-line {
+        background: linear-gradient(90deg, #00D4AA 0%, #374151 100%);
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="max-w-4xl mx-auto px-4 md:px-6 py-8 md:py-12">
-    <div class="text-center mb-10">
-        <div class="text-xs font-semibold tracking-[0.2em] uppercase text-[#00D4AA] mb-3">CEFR Assessment</div>
-        <h1 class="text-2xl md:text-3xl font-bold mb-2">{% if lang == 'uz' %}Test bo'limlari{% else %}Test Overview{% endif %}</h1>
-        <p class="text-gray-400 text-sm max-w-xl mx-auto">
-            {% if lang == 'uz' %}Uch bo'limdan iborat. Barchasini ketma-ket bajaring.{% else %}Three sections. Complete all in order.{% endif %}
+<div class="max-w-5xl mx-auto px-4 md:px-6 py-8 md:py-12">
+    <!-- Header -->
+    <div class="text-center mb-12">
+        <div class="inline-flex items-center gap-2 bg-[#00D4AA]/10 border border-[#00D4AA]/30 rounded-full px-4 py-2 mb-6">
+            <span class="w-2 h-2 bg-[#00D4AA] rounded-full animate-pulse"></span>
+            <span class="text-[#00D4AA] text-sm font-semibold uppercase tracking-wider">CEFR Assessment</span>
+        </div>
+        <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">
+            {% if lang == 'uz' %}Test bo'limlari{% else %}Test Sections{% endif %}
+        </h1>
+        <p class="text-gray-400 text-lg max-w-2xl mx-auto">
+            {% if lang == 'uz' %}Uch bo'limni ketma-ket bajaring. Har bir bo'lim alohida vaqt chegarasi bilan.{% else %}Complete three sections in order. Each section has its own time limit.{% endif %}
         </p>
     </div>
 
-    <div class="grid md:grid-cols-3 gap-4 md:gap-6 mb-10">
-        <div class="bg-[#0F2035] border border-gray-800 p-5 md:p-6">
-            <div class="flex items-center gap-3 mb-4">
-                <div class="w-10 h-10 bg-[#00D4AA] flex items-center justify-center">
-                    <svg class="w-5 h-5 text-[#0B1628]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+    <!-- Progress Steps (for returning users) -->
+    <div class="flex items-center justify-center gap-2 mb-12 max-w-md mx-auto">
+        <div class="progress-step active w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm">1</div>
+        <div class="flex-1 h-1 bg-gray-700 rounded"></div>
+        <div class="progress-step w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center font-bold text-sm text-gray-400">2</div>
+        <div class="flex-1 h-1 bg-gray-700 rounded"></div>
+        <div class="progress-step w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center font-bold text-sm text-gray-400">3</div>
+    </div>
+
+    <!-- Section Cards -->
+    <div class="grid md:grid-cols-3 gap-6 mb-12">
+        <!-- Reading -->
+        <div class="section-card rounded-2xl p-6">
+            <div class="flex items-start gap-4 mb-6">
+                <div class="section-icon w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <svg class="w-7 h-7 text-[#0d0d0d]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                    </svg>
                 </div>
-                <div><h3 class="font-bold text-white">Reading</h3><div class="text-xs text-gray-500">Section 1</div></div>
+                <div>
+                    <h3 class="text-xl font-bold text-white mb-1">Reading</h3>
+                    <p class="text-gray-500 text-sm">Section 1</p>
+                </div>
             </div>
-            <ul class="text-sm text-gray-400 space-y-1.5 mb-4">
-                <li class="flex items-center gap-2"><span class="w-1 h-1 bg-[#00D4AA]"></span>Part 1–4</li>
-            </ul>
-            <div class="text-xs text-gray-500 border-t border-gray-800 pt-3">60 {% if lang == 'uz' %}daqika{% else %}min{% endif %}</div>
+
+            <div class="space-y-3 mb-6">
+                <div class="flex items-center gap-3 text-gray-400 text-sm">
+                    <svg class="w-4 h-4 text-[#00D4AA]" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>Part 1-4 (40 {% if lang == 'uz' %}savol{% else %}questions{% endif %})</span>
+                </div>
+                <div class="flex items-center gap-3 text-gray-400 text-sm">
+                    <svg class="w-4 h-4 text-[#00D4AA]" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>{% if lang == 'uz' %}Matnlarni o'qish va tushunish{% else %}Text comprehension{% endif %}</span>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-4 border-t border-gray-700">
+                <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span class="text-gray-400 font-medium">60 {% if lang == 'uz' %}daqiqa{% else %}min{% endif %}</span>
+                </div>
+                <span class="bg-[#00D4AA]/10 text-[#00D4AA] text-xs font-bold px-3 py-1 rounded-full">{% if lang == 'uz' %}Birinchi{% else %}First{% endif %}</span>
+            </div>
         </div>
-        <div class="bg-[#0F2035] border border-gray-800 p-5 md:p-6">
-            <div class="flex items-center gap-3 mb-4">
-                <div class="w-10 h-10 bg-[#00D4AA] flex items-center justify-center">
-                    <svg class="w-5 h-5 text-[#0B1628]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+
+        <!-- Listening -->
+        <div class="section-card rounded-2xl p-6">
+            <div class="flex items-start gap-4 mb-6">
+                <div class="section-icon w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <svg class="w-7 h-7 text-[#0d0d0d]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
+                    </svg>
                 </div>
-                <div><h3 class="font-bold text-white">Listening</h3><div class="text-xs text-gray-500">Section 2</div></div>
+                <div>
+                    <h3 class="text-xl font-bold text-white mb-1">Listening</h3>
+                    <p class="text-gray-500 text-sm">Section 2</p>
+                </div>
             </div>
-            <ul class="text-sm text-gray-400 space-y-1.5 mb-4">
-                <li class="flex items-center gap-2"><span class="w-1 h-1 bg-[#00D4AA]"></span>Part 1–4</li>
-            </ul>
-            <div class="text-xs text-gray-500 border-t border-gray-800 pt-3">40 {% if lang == 'uz' %}daqika{% else %}min{% endif %}</div>
+
+            <div class="space-y-3 mb-6">
+                <div class="flex items-center gap-3 text-gray-400 text-sm">
+                    <svg class="w-4 h-4 text-[#00D4AA]" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>Part 1-4 (40 {% if lang == 'uz' %}savol{% else %}questions{% endif %})</span>
+                </div>
+                <div class="flex items-center gap-3 text-gray-400 text-sm">
+                    <svg class="w-4 h-4 text-[#00D4AA]" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>{% if lang == 'uz' %}Audio yozuvlarni tinglash{% else %}Audio comprehension{% endif %}</span>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-4 border-t border-gray-700">
+                <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span class="text-gray-400 font-medium">40 {% if lang == 'uz' %}daqiqa{% else %}min{% endif %}</span>
+                </div>
+                <span class="bg-gray-700 text-gray-400 text-xs font-bold px-3 py-1 rounded-full">{% if lang == 'uz' %}Ikkinchi{% else %}Second{% endif %}</span>
+            </div>
         </div>
-        <div class="bg-[#0F2035] border border-gray-800 p-5 md:p-6">
-            <div class="flex items-center gap-3 mb-4">
-                <div class="w-10 h-10 bg-[#00D4AA] flex items-center justify-center">
-                    <svg class="w-5 h-5 text-[#0B1628]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+
+        <!-- Writing -->
+        <div class="section-card rounded-2xl p-6">
+            <div class="flex items-start gap-4 mb-6">
+                <div class="section-icon w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <svg class="w-7 h-7 text-[#0d0d0d]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
                 </div>
-                <div><h3 class="font-bold text-white">Writing</h3><div class="text-xs text-gray-500">Section 3</div></div>
+                <div>
+                    <h3 class="text-xl font-bold text-white mb-1">Writing</h3>
+                    <p class="text-gray-500 text-sm">Section 3</p>
+                </div>
             </div>
-            <ul class="text-sm text-gray-400 space-y-1.5 mb-4">
-                <li class="flex items-center gap-2"><span class="w-1 h-1 bg-[#00D4AA]"></span>Task 1, 2, Essay</li>
-            </ul>
-            <div class="text-xs text-gray-500 border-t border-gray-800 pt-3">80 {% if lang == 'uz' %}daqika{% else %}min{% endif %}</div>
+
+            <div class="space-y-3 mb-6">
+                <div class="flex items-center gap-3 text-gray-400 text-sm">
+                    <svg class="w-4 h-4 text-[#00D4AA]" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>Task 1, 2 + Essay</span>
+                </div>
+                <div class="flex items-center gap-3 text-gray-400 text-sm">
+                    <span class="badge-ai text-white text-xs font-bold px-2 py-0.5 rounded">AI</span>
+                    <span>{% if lang == 'uz' %}AI tomonidan baholanadi{% else %}Evaluated by AI{% endif %}</span>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-4 border-t border-gray-700">
+                <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span class="text-gray-400 font-medium">80 {% if lang == 'uz' %}daqiqa{% else %}min{% endif %}</span>
+                </div>
+                <span class="bg-gray-700 text-gray-400 text-xs font-bold px-3 py-1 rounded-full">{% if lang == 'uz' %}Uchinchi{% else %}Third{% endif %}</span>
+            </div>
         </div>
     </div>
 
-    <div class="bg-[#0F2035] border border-[#00D4AA]/30 p-4 md:p-6 mb-10">
-        <h3 class="font-bold text-[#00D4AA] mb-3 text-sm uppercase tracking-wider">{% if lang == 'uz' %}Ko'rsatmalar{% else %}Instructions{% endif %}</h3>
-        <ul class="text-sm text-gray-400 space-y-2">
-            <li>{% if lang == 'uz' %}Reading → Listening → Writing ketma-ket.{% else %}Complete Reading, then Listening, then Writing.{% endif %}</li>
-            <li>{% if lang == 'uz' %}Yuborilgach orqaga qaytib bo'lmaydi.{% else %}You cannot go back after submission.{% endif %}</li>
-            <li>{% if lang == 'uz' %}Writing AI tomonidan baholanadi.{% else %}Writing is evaluated by AI.{% endif %}</li>
-        </ul>
+    <!-- Instructions -->
+    <div class="instruction-card rounded-2xl p-6 md:p-8 mb-12">
+        <div class="flex items-start gap-4">
+            <div class="w-12 h-12 bg-[#00D4AA]/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6 text-[#00D4AA]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </div>
+            <div>
+                <h3 class="text-lg font-bold text-[#00D4AA] mb-4">{% if lang == 'uz' %}Muhim ko'rsatmalar{% else %}Important Instructions{% endif %}</h3>
+                <ul class="space-y-3 text-gray-300">
+                    <li class="flex items-start gap-3">
+                        <span class="text-[#00D4AA] mt-1">1.</span>
+                        <span>{% if lang == 'uz' %}Testlar ketma-ket bajariladi: Reading → Listening → Writing{% else %}Complete tests in order: Reading → Listening → Writing{% endif %}</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="text-[#00D4AA] mt-1">2.</span>
+                        <span>{% if lang == 'uz' %}Har bir bo'limni yuborganingizdan keyin orqaga qaytib bo'lmaydi{% else %}You cannot go back after submitting each section{% endif %}</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="text-[#00D4AA] mt-1">3.</span>
+                        <span>{% if lang == 'uz' %}Writing qismi sun'iy intellekt tomonidan baholanadi{% else %}Writing section is evaluated by AI for accurate scoring{% endif %}</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="text-[#00D4AA] mt-1">4.</span>
+                        <span>{% if lang == 'uz' %}Natijalar oxirida ko'rsatiladi va profilingizda saqlanadi{% else %}Results are shown at the end and saved to your profile{% endif %}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </div>
 
+    <!-- Start Button -->
     <div class="text-center">
-        <a href="/test/reading" class="inline-block bg-[#00D4AA] text-[#0B1628] px-10 py-4 text-lg font-bold hover:bg-[#00B894] transition">
-            {% if lang == 'uz' %}Reading testni boshlash{% else %}Start Reading Test{% endif %}
+        <a href="/test/reading" class="start-btn inline-flex items-center gap-3 text-[#0d0d0d] px-12 py-5 text-xl font-bold rounded-xl">
+            <span>{% if lang == 'uz' %}Reading testni boshlash{% else %}Start Reading Test{% endif %}</span>
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+            </svg>
         </a>
-        <p class="mt-4 text-xs text-gray-600">Session: <span class="font-mono text-gray-500">{{ session_id[:12] }}...</span></p>
+        <p class="mt-6 text-gray-500 text-sm">
+            {% if lang == 'uz' %}Jami vaqt: ~3 soat{% else %}Total time: ~3 hours{% endif %} |
+            Session: <span class="font-mono text-gray-400">{{ session_id[:8] }}...</span>
+        </p>
+
+        {% if user %}
+        <div class="mt-6 inline-flex items-center gap-2 bg-[#00D4AA]/10 border border-[#00D4AA]/30 rounded-full px-4 py-2">
+            <svg class="w-4 h-4 text-[#00D4AA]" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+            <span class="text-[#00D4AA] text-sm font-medium">
+                {% if lang == 'uz' %}Sizda {{ (user.free_tests or 0) + (user.purchased_tests or 0) }} ta test mavjud{% else %}You have {{ (user.free_tests or 0) + (user.purchased_tests or 0) }} tests available{% endif %}
+            </span>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
