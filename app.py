@@ -1190,7 +1190,7 @@ async def set_language(lang: str):
 async def home(request: Request):
     user = get_current_user(request)
     if user:
-        return RedirectResponse(url="/start", status_code=302)
+        return RedirectResponse(url="/dashboard", status_code=302)
     t = get_translations(request)
     lang = get_lang(request)
     return templates.TemplateResponse("index.html", {"request": request, "t": t, "lang": lang, "user": None})
@@ -1222,17 +1222,17 @@ LOGIN_ERROR_MESSAGES = {
 async def login_page(request: Request, error: str = "", next_url: str = ""):
     user = get_current_user(request)
     if user:
-        return RedirectResponse(url=next_url or "/start", status_code=302)
+        return RedirectResponse(url=next_url or "/dashboard", status_code=302)
     t = get_translations(request)
     lang = get_lang(request)
     error_message = LOGIN_ERROR_MESSAGES.get(error, error) if error else ""
     return templates.TemplateResponse("login.html", {
         "request": request, "t": t, "lang": lang, "user": get_current_user(request),
-        "error": error_message, "next_url": next_url or "/start", "google_client_id": GOOGLE_CLIENT_ID
+        "error": error_message, "next_url": next_url or "/dashboard", "google_client_id": GOOGLE_CLIENT_ID
     })
 
 @app.post("/login", response_class=HTMLResponse)
-async def login_submit(request: Request, email: str = Form(""), password: str = Form(""), next_url: str = Form("/start")):
+async def login_submit(request: Request, email: str = Form(""), password: str = Form(""), next_url: str = Form("/dashboard")):
     email = (email or "").strip().lower()
     if not email or not password:
         return templates.TemplateResponse("login.html", {
@@ -1249,7 +1249,7 @@ async def login_submit(request: Request, email: str = Form(""), password: str = 
     secret = os.getenv("SECRET_KEY", "cefr-level-secret-change-in-production")
     s = URLSafeTimedSerializer(secret)
     token = s.dumps(user["id"])
-    resp = RedirectResponse(url=next_url or "/start", status_code=302)
+    resp = RedirectResponse(url=next_url or "/dashboard", status_code=302)
     resp.set_cookie(key=AUTH_COOKIE, value=token, max_age=AUTH_MAX_AGE, httponly=True, samesite="lax")
     return resp
 
@@ -1257,7 +1257,7 @@ async def login_submit(request: Request, email: str = Form(""), password: str = 
 async def register_page(request: Request, error: str = ""):
     user = get_current_user(request)
     if user:
-        return RedirectResponse(url="/start", status_code=302)
+        return RedirectResponse(url="/dashboard", status_code=302)
     t = get_translations(request)
     lang = get_lang(request)
     return templates.TemplateResponse("register.html", {
@@ -1288,7 +1288,7 @@ async def register_submit(request: Request, email: str = Form(""), password: str
     secret = os.getenv("SECRET_KEY", "cefr-level-secret-change-in-production")
     ser = URLSafeTimedSerializer(secret)
     token = ser.dumps(user["id"])
-    resp = RedirectResponse(url="/start", status_code=302)
+    resp = RedirectResponse(url="/dashboard", status_code=302)
     resp.set_cookie(key=AUTH_COOKIE, value=token, max_age=AUTH_MAX_AGE, httponly=True, samesite="lax")
     return resp
 
@@ -1464,7 +1464,7 @@ async def auth_google_callback(request: Request, code: str = "", state: str = ""
     if user.get("onboarding_done") is False:
         resp = RedirectResponse(url="/onboarding", status_code=302)
     else:
-        resp = RedirectResponse(url=next_url or "/start", status_code=302)
+        resp = RedirectResponse(url=next_url or "/dashboard", status_code=302)
     resp.set_cookie(key=AUTH_COOKIE, value=token, max_age=AUTH_MAX_AGE, httponly=True, samesite="lax")
     return resp
 
@@ -1474,9 +1474,9 @@ async def auth_google_callback(request: Request, code: str = "", state: str = ""
 async def onboarding_page(request: Request):
     user = get_current_user(request)
     if not user:
-        return RedirectResponse(url="/login?next_url=/start", status_code=302)
+        return RedirectResponse(url="/login?next_url=/dashboard", status_code=302)
     if user.get("onboarding_done") is True:
-        return RedirectResponse(url="/start", status_code=302)
+        return RedirectResponse(url="/dashboard", status_code=302)
     t = get_translations(request)
     lang = get_lang(request)
     return templates.TemplateResponse("onboarding.html", {"request": request, "t": t, "lang": lang, "user": user})
@@ -1485,13 +1485,13 @@ async def onboarding_page(request: Request):
 async def onboarding_submit(request: Request, name: str = Form("")):
     user = get_current_user(request)
     if not user:
-        return RedirectResponse(url="/login?next_url=/start", status_code=302)
+        return RedirectResponse(url="/login?next_url=/dashboard", status_code=302)
     name = (name or "").strip()
     if name:
         update_user(user["id"], name=name, onboarding_done=True)
     else:
         update_user(user["id"], onboarding_done=True)
-    return RedirectResponse(url="/start", status_code=302)
+    return RedirectResponse(url="/dashboard", status_code=302)
 
 # ============ PROTECTED: TEST (require login) ============
 
@@ -1508,6 +1508,41 @@ async def start_test(request: Request):
     resp = templates.TemplateResponse("start.html", {"request": request, "session_id": sid, "t": t, "lang": lang, "user": user})
     resp.set_cookie(key="session_id", value=sid, max_age=7200)
     return resp
+
+@app.get("/dashboard", response_class=HTMLResponse)
+async def dashboard_page(request: Request):
+    user = get_current_user(request)
+    if not user:
+        return RedirectResponse(url="/login?next_url=/dashboard", status_code=302)
+    t = get_translations(request)
+    lang = get_lang(request)
+    test_history = get_test_history(user["id"])
+    return templates.TemplateResponse("dashboard.html", {
+        "request": request, "t": t, "lang": lang, "user": user,
+        "test_history": test_history
+    })
+
+@app.get("/practice", response_class=HTMLResponse)
+async def practice_page(request: Request):
+    user = get_current_user(request)
+    if not user:
+        return RedirectResponse(url="/login?next_url=/practice", status_code=302)
+    t = get_translations(request)
+    lang = get_lang(request)
+    return templates.TemplateResponse("practice.html", {
+        "request": request, "t": t, "lang": lang, "user": user
+    })
+
+@app.get("/info", response_class=HTMLResponse)
+async def info_page(request: Request):
+    user = get_current_user(request)
+    if not user:
+        return RedirectResponse(url="/login?next_url=/info", status_code=302)
+    t = get_translations(request)
+    lang = get_lang(request)
+    return templates.TemplateResponse("info.html", {
+        "request": request, "t": t, "lang": lang, "user": user
+    })
 
 @app.get("/test/reading", response_class=HTMLResponse)
 async def reading_test(request: Request):

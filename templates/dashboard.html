@@ -1,0 +1,174 @@
+{% extends "base_app.html" %}
+{% block title %}{% if lang == 'uz' %}Mening testlarim{% else %}My Tests{% endif %} - CEFR Level{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 md:px-6 py-8">
+    <!-- Header with greeting -->
+    <div class="mb-8">
+        <h1 class="text-3xl md:text-4xl font-black text-white mb-2">
+            {% if lang == 'uz' %}Salom, {{ user.name or user.email.split('@')[0] }}! 👋{% else %}Hi, {{ user.name or user.email.split('@')[0] }}! 👋{% endif %}
+        </h1>
+        <p class="text-[#93A8B1] text-lg">
+            {% if lang == 'uz' %}CEFR darajangizni aniqlashga tayyormisiz?{% else %}Ready to discover your CEFR level?{% endif %}
+        </p>
+    </div>
+
+    <!-- Start Test Card -->
+    <div class="duo-card p-6 md:p-8 mb-8 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#58CC02]/20 to-transparent rounded-full -mr-10 -mt-10"></div>
+        <div class="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-[#1CB0F6]/20 to-transparent rounded-full -ml-10 -mb-10"></div>
+
+        <div class="relative z-10">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                <div>
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-14 h-14 bg-gradient-to-br from-[#58CC02] to-[#89E219] rounded-2xl flex items-center justify-center shadow-lg">
+                            <svg class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-black text-white">{% if lang == 'uz' %}Yangi test{% else %}New Test{% endif %}</h2>
+                            <p class="text-[#93A8B1] text-sm">Reading • Listening • Writing</p>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap gap-3 mb-4">
+                        <span class="bg-[#223D45] text-[#1CB0F6] text-xs font-bold px-3 py-1.5 rounded-full">⏱️ ~3 {% if lang == 'uz' %}soat{% else %}hours{% endif %}</span>
+                        <span class="bg-[#223D45] text-[#CE82FF] text-xs font-bold px-3 py-1.5 rounded-full">🤖 AI {% if lang == 'uz' %}baholash{% else %}evaluation{% endif %}</span>
+                        <span class="bg-[#223D45] text-[#FFC800] text-xs font-bold px-3 py-1.5 rounded-full">📊 CEFR A1-C2</span>
+                    </div>
+                </div>
+
+                <div class="flex flex-col items-center gap-3">
+                    <a href="/test/reading" class="btn-3d px-10 py-4 text-lg">
+                        {% if lang == 'uz' %}Boshlash{% else %}Start Test{% endif %}
+                    </a>
+                    <p class="text-[#93A8B1] text-sm">
+                        <span class="text-[#FFC800] font-bold">{{ (user.free_tests or 0) + (user.purchased_tests or 0) }}</span>
+                        {% if lang == 'uz' %}ta test qoldi{% else %}tests remaining{% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="duo-card p-4 text-center">
+            <div class="text-3xl font-black text-[#58CC02] mb-1">{{ test_history|length if test_history else 0 }}</div>
+            <div class="text-[#93A8B1] text-sm font-bold">{% if lang == 'uz' %}Jami testlar{% else %}Total Tests{% endif %}</div>
+        </div>
+        <div class="duo-card p-4 text-center">
+            <div class="text-3xl font-black text-[#1CB0F6] mb-1">
+                {% if test_history and test_history|length > 0 %}
+                    {{ test_history[0].cefr_level or '—' }}
+                {% else %}
+                    —
+                {% endif %}
+            </div>
+            <div class="text-[#93A8B1] text-sm font-bold">{% if lang == 'uz' %}Oxirgi daraja{% else %}Last Level{% endif %}</div>
+        </div>
+        <div class="duo-card p-4 text-center">
+            <div class="text-3xl font-black text-[#CE82FF] mb-1">
+                {% if test_history and test_history|length > 0 %}
+                    {{ ((test_history[0].reading_score or 0) / (test_history[0].reading_total or 1) * 100)|round|int }}%
+                {% else %}
+                    —
+                {% endif %}
+            </div>
+            <div class="text-[#93A8B1] text-sm font-bold">{% if lang == 'uz' %}Reading{% else %}Reading{% endif %}</div>
+        </div>
+        <div class="duo-card p-4 text-center">
+            <div class="text-3xl font-black text-[#FF9600] mb-1">
+                {% if test_history and test_history|length > 0 %}
+                    {{ test_history[0].writing_percentage or 0 }}%
+                {% else %}
+                    —
+                {% endif %}
+            </div>
+            <div class="text-[#93A8B1] text-sm font-bold">{% if lang == 'uz' %}Writing{% else %}Writing{% endif %}</div>
+        </div>
+    </div>
+
+    <!-- Test History -->
+    <div class="duo-card overflow-hidden">
+        <div class="p-5 border-b-2 border-[#37464F]">
+            <h3 class="text-xl font-black text-white flex items-center gap-3">
+                <svg class="w-6 h-6 text-[#1CB0F6]" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/>
+                </svg>
+                {% if lang == 'uz' %}Test tarixi{% else %}Test History{% endif %}
+            </h3>
+        </div>
+
+        {% if test_history and test_history|length > 0 %}
+        <div class="divide-y-2 divide-[#37464F]">
+            {% for h in test_history[:5] %}
+            <div class="p-5 hover:bg-[#223D45] transition-colors">
+                <div class="flex items-center justify-between gap-4">
+                    <div class="flex items-center gap-4">
+                        <!-- CEFR Badge -->
+                        <div class="w-14 h-14 rounded-2xl flex items-center justify-center font-black text-lg
+                            {% if h.cefr_level in ['C1', 'C2'] %}bg-gradient-to-br from-[#FFC800] to-[#FF9600] text-[#131F24]
+                            {% elif h.cefr_level in ['B1', 'B2'] %}bg-gradient-to-br from-[#58CC02] to-[#89E219] text-white
+                            {% else %}bg-gradient-to-br from-[#1CB0F6] to-[#1899D6] text-white{% endif %}">
+                            {{ h.cefr_level or '—' }}
+                        </div>
+                        <div>
+                            <div class="font-bold text-white mb-1">{{ h.completed_at[:10] if h.completed_at else '—' }}</div>
+                            <div class="flex items-center gap-3 text-sm">
+                                <span class="text-[#CE82FF]">R: {{ h.reading_score or 0 }}/{{ h.reading_total or 0 }}</span>
+                                <span class="text-[#1CB0F6]">L: {{ h.listening_score or 0 }}/{{ h.listening_total or 0 }}</span>
+                                <span class="text-[#FF9600]">W: {{ h.writing_percentage or 0 }}%</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% if h.session_id %}
+                    <a href="/profile/result/{{ h.session_id }}" class="btn-3d btn-3d-blue px-4 py-2 text-sm">
+                        {% if lang == 'uz' %}Ko'rish{% else %}View{% endif %}
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="p-12 text-center">
+            <div class="w-20 h-20 bg-[#223D45] rounded-full flex items-center justify-center mx-auto mb-4 mascot-bounce">
+                <svg class="w-10 h-10 text-[#93A8B1]" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                </svg>
+            </div>
+            <h4 class="text-xl font-bold text-white mb-2">{% if lang == 'uz' %}Hali test topshirmagansiz{% else %}No tests yet{% endif %}</h4>
+            <p class="text-[#93A8B1] mb-6">{% if lang == 'uz' %}Birinchi testingizni boshlang va CEFR darajangizni bilib oling!{% else %}Start your first test and discover your CEFR level!{% endif %}</p>
+            <a href="/test/reading" class="btn-3d inline-block px-8 py-3">
+                {% if lang == 'uz' %}Testni boshlash{% else %}Start Test{% endif %}
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Tips Section -->
+    <div class="mt-8 duo-card p-6">
+        <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+            <span class="text-2xl">💡</span>
+            {% if lang == 'uz' %}Maslahatlar{% else %}Tips{% endif %}
+        </h3>
+        <div class="grid md:grid-cols-3 gap-4">
+            <div class="bg-[#223D45] rounded-xl p-4">
+                <div class="text-[#58CC02] font-bold mb-2">📖 Reading</div>
+                <p class="text-[#93A8B1] text-sm">{% if lang == 'uz' %}Matnni diqqat bilan o'qing, kalit so'zlarga e'tibor bering{% else %}Read carefully, pay attention to key words{% endif %}</p>
+            </div>
+            <div class="bg-[#223D45] rounded-xl p-4">
+                <div class="text-[#1CB0F6] font-bold mb-2">🎧 Listening</div>
+                <p class="text-[#93A8B1] text-sm">{% if lang == 'uz' %}Transkriptni diqqat bilan o'qing{% else %}Read transcripts carefully{% endif %}</p>
+            </div>
+            <div class="bg-[#223D45] rounded-xl p-4">
+                <div class="text-[#CE82FF] font-bold mb-2">✍️ Writing</div>
+                <p class="text-[#93A8B1] text-sm">{% if lang == 'uz' %}So'z soniga rioya qiling, grammatikaga e'tibor bering{% else %}Follow word count, focus on grammar{% endif %}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

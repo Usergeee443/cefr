@@ -5,281 +5,307 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>{% block title %}CEFR Level{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        * { font-family: 'Inter', sans-serif; }
-        body { background-color: #111827; }
+        * { font-family: 'Nunito', sans-serif; }
+        body { background-color: #131F24; }
 
-        /* Layout */
-        .app-layout { min-height: 100vh; display: flex; }
+        /* Duolingo-style colors */
+        :root {
+            --duo-green: #58CC02;
+            --duo-green-dark: #46a302;
+            --duo-green-light: #89E219;
+            --duo-blue: #1CB0F6;
+            --duo-blue-dark: #1899D6;
+            --duo-purple: #CE82FF;
+            --duo-orange: #FF9600;
+            --duo-red: #FF4B4B;
+            --duo-yellow: #FFC800;
+            --duo-bg: #131F24;
+            --duo-card: #1A2C32;
+            --duo-card-hover: #223D45;
+            --duo-border: #37464F;
+        }
 
-        /* Desktop Sidebar */
-        .app-sidebar {
-            width: 280px;
+        /* 3D Button Style */
+        .btn-3d {
+            position: relative;
+            border: none;
+            background: var(--duo-green);
+            color: white;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-radius: 16px;
+            box-shadow: 0 4px 0 var(--duo-green-dark);
+            transition: all 0.1s ease;
+            cursor: pointer;
+        }
+        .btn-3d:hover {
+            filter: brightness(1.1);
+        }
+        .btn-3d:active {
+            box-shadow: 0 2px 0 var(--duo-green-dark);
+            transform: translateY(2px);
+        }
+
+        .btn-3d-blue {
+            background: var(--duo-blue);
+            box-shadow: 0 4px 0 var(--duo-blue-dark);
+        }
+
+        .btn-3d-purple {
+            background: var(--duo-purple);
+            box-shadow: 0 4px 0 #a855f7;
+        }
+
+        .btn-3d-orange {
+            background: var(--duo-orange);
+            box-shadow: 0 4px 0 #d97706;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 256px;
             position: fixed;
             top: 0;
             left: 0;
             height: 100vh;
-            overflow-y: auto;
-            overflow-x: hidden;
-            background: linear-gradient(180deg, #0d1117 0%, #111827 100%);
-            border-right: 1px solid #1f2937;
+            background: var(--duo-card);
+            border-right: 2px solid var(--duo-border);
             z-index: 40;
             display: flex;
             flex-direction: column;
         }
 
-        .app-main {
-            flex: 1;
-            min-width: 0;
+        .main-content {
+            margin-left: 256px;
+            min-height: 100vh;
             padding-bottom: 20px;
-            background: #111827;
-            margin-left: 280px;
         }
 
         @media (max-width: 1023px) {
-            .app-sidebar { display: none; }
-            .app-main { margin-left: 0; padding-bottom: 80px; }
+            .sidebar { display: none; }
+            .main-content { margin-left: 0; padding-bottom: 90px; }
         }
 
         /* Nav Links */
-        .sidebar-link {
+        .nav-link {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 16px;
             padding: 14px 20px;
-            color: #9ca3af;
+            margin: 4px 12px;
+            color: #93A8B1;
             text-decoration: none;
             font-size: 15px;
-            font-weight: 500;
+            font-weight: 700;
+            border-radius: 16px;
             transition: all 0.2s ease;
-            border-left: 3px solid transparent;
-            margin: 2px 0;
+            border: 2px solid transparent;
         }
 
-        .sidebar-link:hover {
+        .nav-link:hover {
             color: #fff;
-            background: rgba(0, 212, 170, 0.05);
+            background: var(--duo-card-hover);
+            border-color: var(--duo-border);
         }
 
-        .sidebar-link.active {
-            color: #00D4AA;
-            background: rgba(0, 212, 170, 0.1);
-            border-left-color: #00D4AA;
+        .nav-link.active {
+            color: var(--duo-blue);
+            background: rgba(28, 176, 246, 0.15);
+            border-color: var(--duo-blue);
         }
 
-        .sidebar-link svg {
-            width: 22px;
-            height: 22px;
+        .nav-link svg {
+            width: 28px;
+            height: 28px;
             flex-shrink: 0;
         }
 
         /* Mobile Bottom Nav */
-        .bottom-nav {
+        .mobile-nav {
             display: none;
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
             z-index: 50;
-            background: linear-gradient(180deg, #0d1117 0%, #111827 100%);
-            border-top: 1px solid #1f2937;
+            background: var(--duo-card);
+            border-top: 2px solid var(--duo-border);
+            padding-bottom: env(safe-area-inset-bottom);
         }
 
         @media (max-width: 1023px) {
-            .bottom-nav {
+            .mobile-nav {
                 display: flex;
                 justify-content: space-around;
                 align-items: center;
-                height: 72px;
-                padding-bottom: env(safe-area-inset-bottom);
+                height: 80px;
             }
         }
 
-        .mobile-nav-link {
+        .mobile-link {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 4px;
             padding: 8px 16px;
-            color: #6b7280;
+            color: #93A8B1;
             text-decoration: none;
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 700;
             transition: all 0.2s;
+            border-radius: 12px;
         }
 
-        .mobile-nav-link:hover,
-        .mobile-nav-link.active {
-            color: #00D4AA;
+        .mobile-link:hover,
+        .mobile-link.active {
+            color: var(--duo-blue);
         }
 
-        .mobile-nav-link svg {
-            width: 24px;
-            height: 24px;
+        .mobile-link svg {
+            width: 28px;
+            height: 28px;
         }
 
-        /* User Badge */
-        .user-badge {
-            background: linear-gradient(135deg, rgba(0, 212, 170, 0.1) 0%, rgba(0, 184, 148, 0.1) 100%);
-            border: 1px solid rgba(0, 212, 170, 0.2);
+        /* Cards */
+        .duo-card {
+            background: var(--duo-card);
+            border: 2px solid var(--duo-border);
+            border-radius: 20px;
+            transition: all 0.2s ease;
         }
 
-        /* Test Credits */
-        .credits-badge {
-            background: linear-gradient(135deg, #00D4AA 0%, #00B894 100%);
-            color: #0d0d0d;
+        .duo-card:hover {
+            border-color: #4a5d68;
+        }
+
+        /* Mascot bounce animation */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .mascot-bounce { animation: bounce 2s ease-in-out infinite; }
+
+        /* Progress ring */
+        .progress-ring {
+            transform: rotate(-90deg);
         }
 
         /* Scrollbar */
-        .app-sidebar::-webkit-scrollbar { width: 4px; }
-        .app-sidebar::-webkit-scrollbar-track { background: transparent; }
-        .app-sidebar::-webkit-scrollbar-thumb { background: #374151; border-radius: 2px; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--duo-bg); }
+        ::-webkit-scrollbar-thumb { background: var(--duo-border); border-radius: 4px; }
     </style>
     {% block head %}{% endblock %}
 </head>
-<body class="min-h-screen text-white bg-[#111827]">
+<body class="min-h-screen text-white">
     <!-- Desktop Sidebar -->
-    <aside class="app-sidebar hidden lg:flex flex-col">
+    <aside class="sidebar hidden lg:flex flex-col">
         <!-- Logo -->
-        <div class="p-6 border-b border-[#1f2937]">
-            <a href="/" class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-gradient-to-br from-[#00D4AA] to-[#00B894] flex items-center justify-center text-[#0d0d0d] font-black text-lg shadow-lg shadow-[#00D4AA]/20">
+        <div class="p-6 mb-4">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-gradient-to-br from-[#58CC02] to-[#89E219] rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-lg">
                     C
                 </div>
                 <div>
-                    <span class="text-xl font-black text-white">CEFR</span>
-                    <span class="text-xl font-black text-[#00D4AA]">Level</span>
+                    <span class="text-2xl font-black text-white">CEFR</span>
+                    <span class="text-2xl font-black text-[#58CC02]">Level</span>
                 </div>
-            </a>
+            </div>
         </div>
 
-        <!-- User Info (if logged in) -->
+        <!-- Navigation -->
+        <nav class="flex-1 py-2">
+            <a href="/dashboard" class="nav-link {% if request.url.path == '/dashboard' or request.url.path == '/start' %}active{% endif %}">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                </svg>
+                <span>{% if lang == 'uz' %}Mening testlarim{% else %}My Tests{% endif %}</span>
+            </a>
+
+            <a href="/practice" class="nav-link {% if request.url.path == '/practice' %}active{% endif %}">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/>
+                </svg>
+                <span>{% if lang == 'uz' %}Praktika{% else %}Practice{% endif %}</span>
+            </a>
+
+            <a href="/info" class="nav-link {% if request.url.path == '/info' %}active{% endif %}">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                </svg>
+                <span>{% if lang == 'uz' %}Ma'lumot{% else %}Info{% endif %}</span>
+            </a>
+
+            <a href="/profile" class="nav-link {% if request.url.path == '/profile' %}active{% endif %}">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
+                <span>{% if lang == 'uz' %}Profil{% else %}Profile{% endif %}</span>
+            </a>
+        </nav>
+
+        <!-- User Card -->
         {% if user %}
-        <div class="p-4 border-b border-[#1f2937]">
-            <div class="user-badge rounded-xl p-4">
+        <div class="p-4 border-t-2 border-[#37464F]">
+            <div class="duo-card p-4">
                 <div class="flex items-center gap-3 mb-3">
                     {% if user.avatar %}
-                    <img src="{{ user.avatar }}" alt="" class="w-10 h-10 rounded-full border-2 border-[#00D4AA]">
+                    <img src="{{ user.avatar }}" alt="" class="w-12 h-12 rounded-full border-3 border-[#58CC02]">
                     {% else %}
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#00D4AA] to-[#00B894] text-[#0B1628] flex items-center justify-center text-sm font-bold">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#58CC02] to-[#89E219] flex items-center justify-center text-white text-lg font-bold">
                         {{ (user.name or user.email)[0]|upper }}
                     </div>
                     {% endif %}
                     <div class="flex-1 min-w-0">
-                        <div class="text-sm font-semibold text-white truncate">{{ user.name or user.email.split('@')[0] }}</div>
-                        <div class="text-xs text-gray-400 truncate">{{ user.email }}</div>
+                        <div class="text-sm font-bold text-white truncate">{{ user.name or user.email.split('@')[0] }}</div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[#FFC800] text-xs font-bold">{{ (user.free_tests or 0) + (user.purchased_tests or 0) }}</span>
+                            <span class="text-gray-400 text-xs">{% if lang == 'uz' %}test qoldi{% else %}tests left{% endif %}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="flex items-center justify-between">
-                    <span class="text-xs text-gray-400">{% if lang == 'uz' %}Testlar{% else %}Tests{% endif %}</span>
-                    <span class="credits-badge text-xs font-bold px-2 py-1 rounded-full">
-                        {{ (user.free_tests or 0) + (user.purchased_tests or 0) }}
-                    </span>
                 </div>
             </div>
         </div>
         {% endif %}
-
-        <!-- Navigation -->
-        <nav class="flex-1 py-4">
-            <div class="px-4 mb-2">
-                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">{% if lang == 'uz' %}Menyu{% else %}Menu{% endif %}</span>
-            </div>
-
-            <a href="/" class="sidebar-link {% if request.url.path == '/' %}active{% endif %}">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                <span>{% if lang == 'uz' %}Bosh sahifa{% else %}Home{% endif %}</span>
-            </a>
-
-            <a href="/start" class="sidebar-link {% if request.url.path == '/start' %}active{% endif %}">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-                <span>{{ t.start_test }}</span>
-            </a>
-
-            {% if user %}
-            <a href="/profile" class="sidebar-link {% if request.url.path == '/profile' %}active{% endif %}">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                <span>{% if lang == 'uz' %}Profil{% else %}Profile{% endif %}</span>
-            </a>
-            {% else %}
-            <a href="/login?next_url=/start" class="sidebar-link {% if request.url.path == '/login' %}active{% endif %}">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
-                <span>{% if lang == 'uz' %}Kirish{% else %}Login{% endif %}</span>
-            </a>
-            {% endif %}
-
-            <div class="px-4 mt-6 mb-2">
-                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wider">{% if lang == 'uz' %}Qo'shimcha{% else %}More{% endif %}</span>
-            </div>
-
-            <a href="/pricing" class="sidebar-link {% if request.url.path == '/pricing' %}active{% endif %}">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                <span>{{ t.pricing }}</span>
-            </a>
-
-            <a href="/about" class="sidebar-link {% if request.url.path == '/about' %}active{% endif %}">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                <span>{{ t.about }}</span>
-            </a>
-        </nav>
-
-        <!-- Bottom Section -->
-        <div class="p-4 border-t border-[#1f2937]">
-            <!-- Language Switcher -->
-            <div class="flex items-center gap-2 mb-4">
-                <a href="/lang/uz" class="flex-1 text-center py-2 text-sm font-medium rounded-lg transition {% if lang == 'uz' %}bg-[#00D4AA]/10 text-[#00D4AA] border border-[#00D4AA]/30{% else %}text-gray-500 hover:text-gray-300{% endif %}">
-                    O'zbek
-                </a>
-                <a href="/lang/en" class="flex-1 text-center py-2 text-sm font-medium rounded-lg transition {% if lang == 'en' %}bg-[#00D4AA]/10 text-[#00D4AA] border border-[#00D4AA]/30{% else %}text-gray-500 hover:text-gray-300{% endif %}">
-                    English
-                </a>
-            </div>
-
-            {% if user %}
-            <a href="/logout" class="flex items-center justify-center gap-2 w-full py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded-lg transition">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
-                <span>{% if lang == 'uz' %}Chiqish{% else %}Logout{% endif %}</span>
-            </a>
-            {% endif %}
-        </div>
     </aside>
 
     <!-- Main Content -->
-    <div class="app-layout">
-        <main class="app-main">
-            {% block content %}{% endblock %}
-        </main>
-    </div>
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
 
     <!-- Mobile Bottom Navigation -->
-    <nav class="bottom-nav">
-        <a href="/" class="mobile-nav-link {% if request.url.path == '/' %}active{% endif %}">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-            <span>{% if lang == 'uz' %}Bosh{% else %}Home{% endif %}</span>
+    <nav class="mobile-nav">
+        <a href="/dashboard" class="mobile-link {% if request.url.path == '/dashboard' or request.url.path == '/start' %}active{% endif %}">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+            </svg>
+            <span>{% if lang == 'uz' %}Testlar{% else %}Tests{% endif %}</span>
         </a>
 
-        <a href="/start" class="mobile-nav-link {% if request.url.path == '/start' %}active{% endif %}">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-            <span>Test</span>
+        <a href="/practice" class="mobile-link {% if request.url.path == '/practice' %}active{% endif %}">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/>
+            </svg>
+            <span>{% if lang == 'uz' %}Praktika{% else %}Practice{% endif %}</span>
         </a>
 
-        {% if user %}
-        <a href="/profile" class="mobile-nav-link {% if request.url.path == '/profile' %}active{% endif %}">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        <a href="/info" class="mobile-link {% if request.url.path == '/info' %}active{% endif %}">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+            </svg>
+            <span>Info</span>
+        </a>
+
+        <a href="/profile" class="mobile-link {% if request.url.path == '/profile' %}active{% endif %}">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
             <span>{% if lang == 'uz' %}Profil{% else %}Profile{% endif %}</span>
-        </a>
-        {% else %}
-        <a href="/login?next_url=/start" class="mobile-nav-link {% if request.url.path == '/login' %}active{% endif %}">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
-            <span>{% if lang == 'uz' %}Kirish{% else %}Login{% endif %}</span>
-        </a>
-        {% endif %}
-
-        <a href="/pricing" class="mobile-nav-link {% if request.url.path == '/pricing' %}active{% endif %}">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <span>{% if lang == 'uz' %}Narx{% else %}Price{% endif %}</span>
         </a>
     </nav>
 

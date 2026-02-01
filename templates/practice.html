@@ -1,0 +1,66 @@
+{% extends "base_app.html" %}
+{% block title %}{% if lang == 'uz' %}Praktika{% else %}Practice{% endif %} - CEFR Level{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 md:px-6 py-8">
+    <div class="text-center py-16">
+        <!-- Coming Soon Badge -->
+        <div class="inline-flex items-center gap-2 bg-[#FF9600]/20 text-[#FF9600] px-4 py-2 rounded-full font-bold text-sm mb-8">
+            <span class="w-2 h-2 bg-[#FF9600] rounded-full animate-pulse"></span>
+            {% if lang == 'uz' %}Tez kunda{% else %}Coming Soon{% endif %}
+        </div>
+
+        <!-- Icon -->
+        <div class="w-32 h-32 bg-gradient-to-br from-[#CE82FF]/20 to-[#1CB0F6]/20 rounded-full flex items-center justify-center mx-auto mb-8 mascot-bounce">
+            <svg class="w-16 h-16 text-[#CE82FF]" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/>
+            </svg>
+        </div>
+
+        <h1 class="text-4xl md:text-5xl font-black text-white mb-4">
+            {% if lang == 'uz' %}Praktika{% else %}Practice{% endif %} 🎯
+        </h1>
+
+        <p class="text-[#93A8B1] text-lg max-w-md mx-auto mb-8">
+            {% if lang == 'uz' %}
+                Bu bo'limda siz ingliz tilini mustaqil mashq qilishingiz mumkin bo'ladi. Tez kunda!
+            {% else %}
+                In this section, you'll be able to practice English on your own. Coming soon!
+            {% endif %}
+        </p>
+
+        <!-- Features Preview -->
+        <div class="grid md:grid-cols-3 gap-4 max-w-2xl mx-auto mb-10">
+            <div class="duo-card p-5 text-center opacity-60">
+                <div class="w-12 h-12 bg-[#58CC02]/20 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <span class="text-2xl">📚</span>
+                </div>
+                <h3 class="font-bold text-white mb-1">Vocabulary</h3>
+                <p class="text-[#93A8B1] text-sm">{% if lang == 'uz' %}So'z boyligini oshiring{% else %}Build your vocabulary{% endif %}</p>
+            </div>
+            <div class="duo-card p-5 text-center opacity-60">
+                <div class="w-12 h-12 bg-[#1CB0F6]/20 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <span class="text-2xl">🎯</span>
+                </div>
+                <h3 class="font-bold text-white mb-1">Grammar</h3>
+                <p class="text-[#93A8B1] text-sm">{% if lang == 'uz' %}Grammatikani o'rganing{% else %}Learn grammar rules{% endif %}</p>
+            </div>
+            <div class="duo-card p-5 text-center opacity-60">
+                <div class="w-12 h-12 bg-[#CE82FF]/20 rounded-xl flex items-center justify-center mx-auto mb-3">
+                    <span class="text-2xl">🎮</span>
+                </div>
+                <h3 class="font-bold text-white mb-1">Mini Games</h3>
+                <p class="text-[#93A8B1] text-sm">{% if lang == 'uz' %}O'yin orqali o'rganing{% else %}Learn through games{% endif %}</p>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="duo-card p-6 max-w-md mx-auto">
+            <p class="text-[#93A8B1] mb-4">{% if lang == 'uz' %}Hozircha asosiy testni topshiring:{% else %}Meanwhile, take the main test:{% endif %}</p>
+            <a href="/dashboard" class="btn-3d inline-block px-8 py-3">
+                {% if lang == 'uz' %}Testga o'tish{% else %}Go to Tests{% endif %}
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

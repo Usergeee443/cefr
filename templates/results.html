@@ -462,11 +462,11 @@
 
             <!-- Actions -->
             <div class="text-center flex flex-col sm:flex-row gap-3 justify-center pt-6">
-                <a href="/start" class="inline-block bg-[#00D4AA] text-[#0B1628] px-8 py-3 font-bold hover:bg-[#00B894] transition-colors">
-                    Take Another Test
+                <a href="/dashboard" class="btn-3d px-8 py-3">
+                    {% if lang == 'uz' %}Dashboardga qaytish{% else %}Back to Dashboard{% endif %}
                 </a>
-                <a href="/" class="inline-block border border-gray-600 text-gray-300 px-8 py-3 font-semibold hover:border-[#00D4AA] hover:text-[#00D4AA] transition-colors">
-                    Back to Home
+                <a href="/test/reading" class="btn-3d btn-3d-blue px-8 py-3">
+                    {% if lang == 'uz' %}Yangi test{% else %}Take Another Test{% endif %}
                 </a>
             </div>
         </div>
