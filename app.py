@@ -1497,17 +1497,8 @@ async def onboarding_submit(request: Request, name: str = Form("")):
 
 @app.get("/start", response_class=HTMLResponse)
 async def start_test(request: Request):
-    user = get_current_user(request)
-    if not user:
-        return RedirectResponse(url="/login?next_url=/start", status_code=302)
-    sid = str(uuid.uuid4())
-    s = get_session(sid)
-    s["user_id"] = user["id"]
-    t = get_translations(request)
-    lang = get_lang(request)
-    resp = templates.TemplateResponse("start.html", {"request": request, "session_id": sid, "t": t, "lang": lang, "user": user})
-    resp.set_cookie(key="session_id", value=sid, max_age=7200)
-    return resp
+    # Redirect /start to /dashboard - /start is deprecated
+    return RedirectResponse(url="/dashboard", status_code=302)
 
 @app.get("/dashboard", response_class=HTMLResponse)
 async def dashboard_page(request: Request):
@@ -1546,13 +1537,36 @@ async def info_page(request: Request):
 
 @app.get("/test/reading", response_class=HTMLResponse)
 async def reading_test(request: Request):
+    user = get_current_user(request)
+    if not user:
+        return RedirectResponse(url="/login?next_url=/test/reading", status_code=302)
+
     sid = request.cookies.get("session_id")
-    if not sid: return RedirectResponse(url="/start", status_code=302)
+    # Create new session if none exists
+    if not sid:
+        # Check if user has test credits
+        total_tests = (user.get("free_tests") or 0) + (user.get("purchased_tests") or 0)
+        if total_tests <= 0:
+            return RedirectResponse(url="/dashboard?error=no_tests", status_code=302)
+
+        # Deduct one test credit
+        if user.get("free_tests", 0) > 0:
+            update_user(user["id"], free_tests=user["free_tests"] - 1)
+        elif user.get("purchased_tests", 0) > 0:
+            update_user(user["id"], purchased_tests=user["purchased_tests"] - 1)
+
+        # Create new session
+        sid = str(uuid.uuid4())
+        s = get_session(sid)
+        s["user_id"] = user["id"]
+
     tests = get_reading_tests()
     test = tests[0] if tests else DEFAULT_READING
     t = get_translations(request)
     lang = get_lang(request)
-    return templates.TemplateResponse("test_reading.html", {"request": request, "test_data": test, "session_id": sid, "t": t, "lang": lang})
+    resp = templates.TemplateResponse("test_reading.html", {"request": request, "test_data": test, "session_id": sid, "t": t, "lang": lang, "user": user})
+    resp.set_cookie(key="session_id", value=sid, max_age=7200)
+    return resp
 
 @app.post("/test/reading/submit")
 async def submit_reading(request: Request):
@@ -1570,7 +1584,7 @@ async def submit_reading(request: Request):
 @app.get("/test/listening", response_class=HTMLResponse)
 async def listening_test(request: Request):
     sid = request.cookies.get("session_id")
-    if not sid: return RedirectResponse(url="/start", status_code=302)
+    if not sid: return RedirectResponse(url="/dashboard", status_code=302)
     tests = get_listening_tests()
     test = tests[0] if tests else DEFAULT_LISTENING
     t = get_translations(request)
@@ -1593,7 +1607,7 @@ async def submit_listening(request: Request):
 @app.get("/test/writing", response_class=HTMLResponse)
 async def writing_test(request: Request):
     sid = request.cookies.get("session_id")
-    if not sid: return RedirectResponse(url="/start", status_code=302)
+    if not sid: return RedirectResponse(url="/dashboard", status_code=302)
     tests = get_writing_tests()
     test = tests[0] if tests else DEFAULT_WRITING
     t = get_translations(request)
@@ -1624,10 +1638,10 @@ async def submit_writing(request: Request):
 @app.get("/results", response_class=HTMLResponse)
 async def results(request: Request):
     sid = request.cookies.get("session_id")
-    if not sid: return RedirectResponse(url="/start", status_code=302)
+    if not sid: return RedirectResponse(url="/dashboard", status_code=302)
     s = get_session(sid)
     if not all([s.get("reading", {}).get("completed"), s.get("listening", {}).get("completed"), s.get("writing", {}).get("completed")]):
-        return RedirectResponse(url="/start", status_code=302)
+        return RedirectResponse(url="/dashboard", status_code=302)
     save_test_result(s)  # profil tarixiga saqlash
     t = get_translations(request)
     lang = get_lang(request)

@@ -5,178 +5,259 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reading Test - CEFR Level</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        * { font-family: 'Inter', sans-serif; }
-        body { background-color: #111827; }
+        * { font-family: 'Nunito', sans-serif; }
+
+        :root {
+            --primary: #FF6B6B;
+            --primary-dark: #E85555;
+            --secondary: #4ECDC4;
+            --secondary-dark: #3DB8B0;
+            --accent: #FFE66D;
+            --info: #45B7D1;
+            --purple: #A78BFA;
+            --orange: #FF9F43;
+            --bg: #0F172A;
+            --card: #1E293B;
+            --border: #334155;
+        }
+
+        body { background: linear-gradient(180deg, var(--bg) 0%, #0D1321 100%); }
 
         .passage-text {
-            line-height: 2;
-            color: #e5e7eb;
+            line-height: 2.2;
+            color: #e2e8f0;
+            font-size: 16px;
         }
 
         .gap-input {
-            width: 120px;
-            border-bottom: 2px solid #00D4AA;
+            width: 130px;
+            border: none;
+            border-bottom: 3px solid var(--info);
             text-align: center;
-            background: transparent;
+            background: rgba(69, 183, 209, 0.1);
             color: #fff;
             outline: none;
-            font-family: 'Inter', sans-serif;
-            padding: 4px 8px;
-            margin: 0 4px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            padding: 6px 12px;
+            margin: 0 6px;
+            border-radius: 8px 8px 0 0;
             transition: all 0.2s ease;
         }
         .gap-input:focus {
-            border-color: #00B894;
-            background: rgba(0, 212, 170, 0.05);
+            border-color: var(--secondary);
+            background: rgba(78, 205, 196, 0.15);
+            box-shadow: 0 4px 12px rgba(69, 183, 209, 0.2);
         }
-        .gap-input::placeholder { color: #6b7280; }
+        .gap-input::placeholder { color: #64748b; }
 
         .option-btn {
             transition: all 0.2s ease;
-            border: 1px solid #374151;
-            background: #1f2937;
+            border: 2px solid var(--border);
+            background: var(--card);
+            border-radius: 16px;
         }
         .option-btn:hover {
-            border-color: #00D4AA;
-            background: rgba(0, 212, 170, 0.05);
+            border-color: var(--info);
+            background: rgba(69, 183, 209, 0.1);
+            transform: translateY(-2px);
         }
         .option-btn.selected {
-            background: linear-gradient(135deg, #00D4AA 0%, #00B894 100%) !important;
-            color: #0d0d0d !important;
-            border-color: #00D4AA !important;
-            font-weight: 700;
+            background: linear-gradient(135deg, var(--info) 0%, var(--secondary) 100%) !important;
+            color: white !important;
+            border-color: var(--info) !important;
+            font-weight: 800;
+            box-shadow: 0 4px 0 var(--secondary-dark), 0 6px 20px rgba(69, 183, 209, 0.3);
         }
 
         .timer-normal {
-            background: #1f2937;
-            border: 1px solid #374151;
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 16px;
         }
         .timer-warning {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.5);
-            color: #f87171 !important;
+            background: rgba(255, 107, 107, 0.15);
+            border: 2px solid var(--primary);
+            color: var(--primary) !important;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
 
         .test-card {
-            background: linear-gradient(180deg, #1f2937 0%, #111827 100%);
-            border: 1px solid #374151;
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 24px;
         }
 
         .test-header {
-            background: linear-gradient(180deg, #0d1117 0%, #111827 100%);
-            border-bottom: 1px solid #1f2937;
+            background: linear-gradient(180deg, var(--bg) 0%, rgba(15, 23, 42, 0.98) 100%);
+            border-bottom: 2px solid var(--border);
+            backdrop-filter: blur(10px);
         }
 
         .passage-card {
-            background: #0d1117;
-            border: 1px solid #1f2937;
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px solid var(--border);
+            border-radius: 20px;
         }
 
         .question-card {
-            background: #1f2937;
-            border: 1px solid #374151;
-            transition: all 0.2s ease;
+            background: rgba(30, 41, 59, 0.8);
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            transition: all 0.3s ease;
         }
         .question-card:hover {
-            border-color: #4b5563;
-        }
-
-        .nav-btn {
-            transition: all 0.2s ease;
-        }
-        .nav-btn:hover {
+            border-color: #475569;
             transform: translateY(-2px);
         }
 
+        .btn-3d {
+            background: linear-gradient(135deg, var(--info) 0%, var(--secondary) 100%);
+            color: white;
+            font-weight: 800;
+            border-radius: 16px;
+            box-shadow: 0 6px 0 var(--secondary-dark), 0 8px 20px rgba(78, 205, 196, 0.3);
+            transition: all 0.15s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .btn-3d:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 0 var(--secondary-dark), 0 12px 30px rgba(78, 205, 196, 0.4);
+        }
+        .btn-3d:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 var(--secondary-dark);
+        }
+
+        .btn-3d-coral {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--orange) 100%);
+            box-shadow: 0 6px 0 var(--primary-dark), 0 8px 20px rgba(255, 107, 107, 0.3);
+        }
+        .btn-3d-coral:hover {
+            box-shadow: 0 8px 0 var(--primary-dark), 0 12px 30px rgba(255, 107, 107, 0.4);
+        }
+
         .progress-bar {
-            background: linear-gradient(90deg, #00D4AA 0%, #00B894 100%);
+            background: linear-gradient(90deg, var(--info) 0%, var(--secondary) 100%);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .part-indicator {
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 4px 16px;
         }
 
         /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #1f2937; }
-        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+        ::-webkit-scrollbar { width: 10px; height: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--orange) 50%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .step-badge {
+            background: linear-gradient(135deg, var(--info) 0%, var(--secondary) 100%);
+            color: white;
+            font-weight: 800;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
-<body class="min-h-screen text-white bg-[#111827]">
+<body class="min-h-screen text-white">
 
     <!-- Header Bar -->
     <div class="test-header fixed top-0 left-0 right-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center gap-4">
-                <div class="w-10 h-10 bg-gradient-to-br from-[#00D4AA] to-[#00B894] flex items-center justify-center text-[#0d0d0d] font-black text-lg rounded-lg">
+                <div class="w-12 h-12 bg-gradient-to-br from-[#FF6B6B] via-[#FF9F43] to-[#FFE66D] flex items-center justify-center text-white font-black text-xl rounded-xl shadow-lg">
                     C
                 </div>
                 <div>
-                    <span class="text-sm font-bold text-[#00D4AA] uppercase tracking-wider">Reading Test</span>
-                    <div class="text-xs text-gray-500">Section 1 of 3</div>
+                    <span class="text-lg font-black gradient-text uppercase tracking-wider">Reading Test</span>
+                    <div class="text-sm text-gray-400 font-bold">Section 1 of 3</div>
                 </div>
             </div>
             <div class="flex items-center gap-6">
-                <div class="flex items-center gap-3">
-                    <span class="text-sm text-gray-400">Progress:</span>
-                    <span id="progress" class="text-lg font-bold text-[#00D4AA]">0</span>
-                    <span class="text-sm text-gray-500">%</span>
+                <div class="part-indicator flex items-center gap-3">
+                    <span class="text-sm text-gray-400 font-bold">Progress:</span>
+                    <span id="progress" class="text-xl font-black text-[#4ECDC4]">0</span>
+                    <span class="text-sm text-gray-400 font-bold">%</span>
                 </div>
-                <div id="timer" class="timer-normal text-xl font-mono font-bold px-4 py-2 rounded-lg text-white">60:00</div>
+                <div id="timer" class="timer-normal text-2xl font-mono font-black px-6 py-3 text-white">60:00</div>
             </div>
         </div>
-        <div class="w-full h-1 bg-gray-800">
-            <div id="progress-bar" class="progress-bar h-full transition-all duration-300" style="width: 0%"></div>
+        <div class="w-full h-2 bg-[#1E293B]">
+            <div id="progress-bar" class="progress-bar h-full" style="width: 0%"></div>
         </div>
     </div>
 
-    <main class="pt-24 pb-32 px-4">
+    <main class="pt-28 pb-36 px-4">
         <div class="max-w-7xl mx-auto">
             <form id="reading-form">
                 {% for part in test_data.parts %}
                 <section class="part-section mb-0 hidden" data-part="{{ part.part_number }}">
-                    <div class="test-card rounded-2xl overflow-hidden">
+                    <div class="test-card overflow-hidden">
                         <!-- Part Header -->
-                        <div class="p-6 border-b border-gray-700">
-                            <div class="flex items-center gap-4 mb-3">
-                                <div class="w-12 h-12 bg-gradient-to-br from-[#00D4AA] to-[#00B894] rounded-xl flex items-center justify-center text-[#0d0d0d] font-bold text-lg">
+                        <div class="p-8 border-b-2 border-[#334155] bg-gradient-to-r from-[#1E293B] to-[#0F172A]">
+                            <div class="flex items-center gap-5 mb-4">
+                                <div class="w-16 h-16 bg-gradient-to-br from-[#45B7D1] to-[#4ECDC4] rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-lg">
                                     {{ part.part_number }}
                                 </div>
                                 <div>
-                                    <h2 class="text-2xl font-bold text-white">{{ part.title }}</h2>
-                                    <span class="text-sm text-gray-400">Part {{ part.part_number }} of {{ test_data.parts|length }}</span>
+                                    <h2 class="text-3xl font-black text-white">{{ part.title }}</h2>
+                                    <span class="text-base text-gray-400 font-bold">Part {{ part.part_number }} of {{ test_data.parts|length }}</span>
                                 </div>
                             </div>
-                            <p class="text-gray-400 ml-16">{{ part.instruction }}</p>
+                            <p class="text-gray-300 ml-[84px] text-lg font-medium">{{ part.instruction }}</p>
                         </div>
 
-                        <div class="p-6">
+                        <div class="p-8">
                             {% if part.type == "multiple_choice_cloze" %}
                             <!-- Part 1: Multiple Choice Cloze -->
-                            <div class="grid lg:grid-cols-2 gap-6 min-h-[500px]">
-                                <div class="passage-card rounded-xl p-6 overflow-y-auto max-h-[70vh]">
-                                    <h4 class="text-[#00D4AA] font-semibold text-sm uppercase tracking-wider mb-4 flex items-center gap-2">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                            <div class="grid lg:grid-cols-2 gap-8 min-h-[500px]">
+                                <div class="passage-card p-8 overflow-y-auto max-h-[70vh]">
+                                    <h4 class="text-[#45B7D1] font-black text-sm uppercase tracking-wider mb-6 flex items-center gap-3">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                                         Passage
                                     </h4>
                                     <div class="passage-text">
-                                        {{ part.text | replace("(1)_____", "<span class='inline-block bg-[#00D4AA]/20 text-[#00D4AA] px-2 py-0.5 font-bold rounded'>(1)</span>") | replace("(2)_____", "<span class='inline-block bg-[#00D4AA]/20 text-[#00D4AA] px-2 py-0.5 font-bold rounded'>(2)</span>") | replace("(3)_____", "<span class='inline-block bg-[#00D4AA]/20 text-[#00D4AA] px-2 py-0.5 font-bold rounded'>(3)</span>") | replace("(4)_____", "<span class='inline-block bg-[#00D4AA]/20 text-[#00D4AA] px-2 py-0.5 font-bold rounded'>(4)</span>") | replace("(5)_____", "<span class='inline-block bg-[#00D4AA]/20 text-[#00D4AA] px-2 py-0.5 font-bold rounded'>(5)</span>") | replace("(6)_____", "<span class='inline-block bg-[#00D4AA]/20 text-[#00D4AA] px-2 py-0.5 font-bold rounded'>(6)</span>") | replace("(7)_____", "<span class='inline-block bg-[#00D4AA]/20 text-[#00D4AA] px-2 py-0.5 font-bold rounded'>(7)</span>") | replace("(8)_____", "<span class='inline-block bg-[#00D4AA]/20 text-[#00D4AA] px-2 py-0.5 font-bold rounded'>(8)</span>") | safe }}
+                                        {{ part.text | replace("(1)_____", "<span class='inline-block bg-[#45B7D1]/20 text-[#45B7D1] px-3 py-1 font-black rounded-lg'>(1)</span>") | replace("(2)_____", "<span class='inline-block bg-[#45B7D1]/20 text-[#45B7D1] px-3 py-1 font-black rounded-lg'>(2)</span>") | replace("(3)_____", "<span class='inline-block bg-[#45B7D1]/20 text-[#45B7D1] px-3 py-1 font-black rounded-lg'>(3)</span>") | replace("(4)_____", "<span class='inline-block bg-[#45B7D1]/20 text-[#45B7D1] px-3 py-1 font-black rounded-lg'>(4)</span>") | replace("(5)_____", "<span class='inline-block bg-[#45B7D1]/20 text-[#45B7D1] px-3 py-1 font-black rounded-lg'>(5)</span>") | replace("(6)_____", "<span class='inline-block bg-[#45B7D1]/20 text-[#45B7D1] px-3 py-1 font-black rounded-lg'>(6)</span>") | replace("(7)_____", "<span class='inline-block bg-[#45B7D1]/20 text-[#45B7D1] px-3 py-1 font-black rounded-lg'>(7)</span>") | replace("(8)_____", "<span class='inline-block bg-[#45B7D1]/20 text-[#45B7D1] px-3 py-1 font-black rounded-lg'>(8)</span>") | safe }}
                                     </div>
                                 </div>
-                                <div class="space-y-4 overflow-y-auto max-h-[70vh] pr-2">
-                                    <h4 class="text-[#00D4AA] font-semibold text-sm uppercase tracking-wider mb-4 flex items-center gap-2">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                                <div class="space-y-5 overflow-y-auto max-h-[70vh] pr-3">
+                                    <h4 class="text-[#A78BFA] font-black text-sm uppercase tracking-wider mb-6 flex items-center gap-3">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
                                         Questions
                                     </h4>
                                     {% for q in part.questions %}
-                                    <div class="question-card rounded-xl p-4" data-question="{{ q.number }}">
-                                        <div class="font-medium text-gray-400 mb-3 text-sm">Question {{ q.number }}</div>
-                                        <div class="grid grid-cols-2 gap-2">
+                                    <div class="question-card p-5" data-question="{{ q.number }}">
+                                        <div class="font-bold text-gray-400 mb-4 text-sm uppercase tracking-wider">Question {{ q.number }}</div>
+                                        <div class="grid grid-cols-2 gap-3">
                                             {% for letter, option in q.options.items() %}
                                             <button type="button"
-                                                    class="option-btn p-3 rounded-lg text-left text-sm text-gray-300"
+                                                    class="option-btn p-4 text-left text-sm text-gray-200 font-medium"
                                                     data-question="{{ q.number }}"
                                                     data-value="{{ letter }}">
-                                                <span class="font-bold text-[#00D4AA] mr-2">{{ letter }}.</span>{{ option }}
+                                                <span class="font-black text-[#45B7D1] mr-2">{{ letter }}.</span>{{ option }}
                                             </button>
                                             {% endfor %}
                                         </div>
@@ -188,14 +269,14 @@
 
                             {% elif part.type == "open_cloze" %}
                             <!-- Part 2: Open Cloze -->
-                            <div class="grid lg:grid-cols-2 gap-6 min-h-[500px]">
-                                <div class="space-y-4">
-                                    <div class="bg-[#00D4AA]/10 border border-[#00D4AA]/30 rounded-xl p-4">
-                                        <p class="text-sm text-gray-300">Fill in each gap with <strong class="text-[#00D4AA]">ONE word only</strong>.</p>
+                            <div class="grid lg:grid-cols-2 gap-8 min-h-[500px]">
+                                <div class="space-y-5">
+                                    <div class="bg-[#A78BFA]/10 border-2 border-[#A78BFA]/30 rounded-2xl p-5">
+                                        <p class="text-base text-gray-200 font-medium">Fill in each gap with <strong class="text-[#A78BFA]">ONE word only</strong>.</p>
                                     </div>
-                                    <div class="passage-card rounded-xl p-6 overflow-y-auto max-h-[60vh]">
-                                        <h4 class="text-[#00D4AA] font-semibold text-sm uppercase tracking-wider mb-4 flex items-center gap-2">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                                    <div class="passage-card p-8 overflow-y-auto max-h-[60vh]">
+                                        <h4 class="text-[#A78BFA] font-black text-sm uppercase tracking-wider mb-6 flex items-center gap-3">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                                             Passage
                                         </h4>
                                         <div class="passage-text">
@@ -203,12 +284,12 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="passage-card rounded-xl p-6">
-                                    <h4 class="text-[#00D4AA] font-semibold text-sm uppercase tracking-wider mb-4 flex items-center gap-2">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <div class="passage-card p-8">
+                                    <h4 class="text-[#FFE66D] font-black text-sm uppercase tracking-wider mb-6 flex items-center gap-3">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                         Instructions
                                     </h4>
-                                    <div class="space-y-4 text-gray-400">
+                                    <div class="space-y-5 text-gray-300 text-lg font-medium">
                                         <p>Type one word in each gap in the passage on the left.</p>
                                         <p>Use only <strong class="text-white">ONE</strong> word for each gap.</p>
                                         <p>Contractions count as two words (e.g., "don't" = "do not").</p>
@@ -218,31 +299,31 @@
 
                             {% elif part.type == "multiple_choice_comprehension" %}
                             <!-- Part 3: Multiple Choice Comprehension -->
-                            <div class="grid lg:grid-cols-2 gap-6 min-h-[500px]">
-                                <div class="passage-card rounded-xl p-6 overflow-y-auto max-h-[70vh]">
-                                    <h4 class="text-[#00D4AA] font-semibold text-sm uppercase tracking-wider mb-4 flex items-center gap-2">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                            <div class="grid lg:grid-cols-2 gap-8 min-h-[500px]">
+                                <div class="passage-card p-8 overflow-y-auto max-h-[70vh]">
+                                    <h4 class="text-[#FF6B6B] font-black text-sm uppercase tracking-wider mb-6 flex items-center gap-3">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                                         Passage
                                     </h4>
                                     <div class="passage-text">{{ part.text | safe }}</div>
                                 </div>
-                                <div class="space-y-4 overflow-y-auto max-h-[70vh] pr-2">
-                                    <h4 class="text-[#00D4AA] font-semibold text-sm uppercase tracking-wider mb-4 flex items-center gap-2">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <div class="space-y-5 overflow-y-auto max-h-[70vh] pr-3">
+                                    <h4 class="text-[#FF9F43] font-black text-sm uppercase tracking-wider mb-6 flex items-center gap-3">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                         Questions
                                     </h4>
                                     {% for q in part.questions %}
-                                    <div class="question-card rounded-xl p-4" data-question="{{ q.number }}">
-                                        <div class="font-medium text-white mb-3">
-                                            <span class="text-[#00D4AA] font-bold mr-2">{{ q.number }}.</span>{{ q.question }}
+                                    <div class="question-card p-5" data-question="{{ q.number }}">
+                                        <div class="font-bold text-white mb-4 text-base">
+                                            <span class="text-[#FF6B6B] font-black mr-2">{{ q.number }}.</span>{{ q.question }}
                                         </div>
-                                        <div class="space-y-2">
+                                        <div class="space-y-3">
                                             {% for letter, option in q.options.items() %}
                                             <button type="button"
-                                                    class="option-btn w-full p-3 rounded-lg text-left text-sm text-gray-300 flex items-start gap-3"
+                                                    class="option-btn w-full p-4 text-left text-base text-gray-200 flex items-start gap-4 font-medium"
                                                     data-question="{{ q.number }}"
                                                     data-value="{{ letter }}">
-                                                <span class="font-bold text-[#00D4AA]">{{ letter }}.</span>
+                                                <span class="font-black text-[#FF6B6B]">{{ letter }}.</span>
                                                 <span>{{ option }}</span>
                                             </button>
                                             {% endfor %}
@@ -255,40 +336,40 @@
 
                             {% elif part.type == "gapped_text" %}
                             <!-- Part 4: Gapped Text -->
-                            <div class="grid lg:grid-cols-2 gap-6 min-h-[500px]">
-                                <div class="passage-card rounded-xl p-6 overflow-y-auto max-h-[70vh]">
-                                    <h4 class="text-[#00D4AA] font-semibold text-sm uppercase tracking-wider mb-4 flex items-center gap-2">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
+                            <div class="grid lg:grid-cols-2 gap-8 min-h-[500px]">
+                                <div class="passage-card p-8 overflow-y-auto max-h-[70vh]">
+                                    <h4 class="text-[#4ECDC4] font-black text-sm uppercase tracking-wider mb-6 flex items-center gap-3">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
                                         Text with Gaps
                                     </h4>
                                     <div class="passage-text">
-                                        {{ part.text | replace("(23)_____", "<span class='inline-block bg-gradient-to-r from-[#00D4AA] to-[#00B894] text-[#0d0d0d] px-3 py-1 font-bold text-sm rounded'>23</span>") | replace("(24)_____", "<span class='inline-block bg-gradient-to-r from-[#00D4AA] to-[#00B894] text-[#0d0d0d] px-3 py-1 font-bold text-sm rounded'>24</span>") | replace("(25)_____", "<span class='inline-block bg-gradient-to-r from-[#00D4AA] to-[#00B894] text-[#0d0d0d] px-3 py-1 font-bold text-sm rounded'>25</span>") | replace("(26)_____", "<span class='inline-block bg-gradient-to-r from-[#00D4AA] to-[#00B894] text-[#0d0d0d] px-3 py-1 font-bold text-sm rounded'>26</span>") | replace("(27)_____", "<span class='inline-block bg-gradient-to-r from-[#00D4AA] to-[#00B894] text-[#0d0d0d] px-3 py-1 font-bold text-sm rounded'>27</span>") | replace("(28)_____", "<span class='inline-block bg-gradient-to-r from-[#00D4AA] to-[#00B894] text-[#0d0d0d] px-3 py-1 font-bold text-sm rounded'>28</span>") | safe }}
+                                        {{ part.text | replace("(23)_____", "<span class='inline-block bg-gradient-to-r from-[#4ECDC4] to-[#45B7D1] text-white px-4 py-1 font-black text-sm rounded-lg shadow-lg'>23</span>") | replace("(24)_____", "<span class='inline-block bg-gradient-to-r from-[#4ECDC4] to-[#45B7D1] text-white px-4 py-1 font-black text-sm rounded-lg shadow-lg'>24</span>") | replace("(25)_____", "<span class='inline-block bg-gradient-to-r from-[#4ECDC4] to-[#45B7D1] text-white px-4 py-1 font-black text-sm rounded-lg shadow-lg'>25</span>") | replace("(26)_____", "<span class='inline-block bg-gradient-to-r from-[#4ECDC4] to-[#45B7D1] text-white px-4 py-1 font-black text-sm rounded-lg shadow-lg'>26</span>") | replace("(27)_____", "<span class='inline-block bg-gradient-to-r from-[#4ECDC4] to-[#45B7D1] text-white px-4 py-1 font-black text-sm rounded-lg shadow-lg'>27</span>") | replace("(28)_____", "<span class='inline-block bg-gradient-to-r from-[#4ECDC4] to-[#45B7D1] text-white px-4 py-1 font-black text-sm rounded-lg shadow-lg'>28</span>") | safe }}
                                     </div>
                                 </div>
-                                <div class="space-y-6 overflow-y-auto max-h-[70vh] pr-2">
+                                <div class="space-y-8 overflow-y-auto max-h-[70vh] pr-3">
                                     <div>
-                                        <h4 class="text-[#00D4AA] font-semibold text-sm uppercase tracking-wider mb-4 flex items-center gap-2">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                                        <h4 class="text-[#FFE66D] font-black text-sm uppercase tracking-wider mb-5 flex items-center gap-3">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
                                             Removed Sentences
                                         </h4>
-                                        <div class="space-y-3">
+                                        <div class="space-y-4">
                                             {% for letter, sentence in part.removed_sentences.items() %}
-                                            <div class="passage-card rounded-xl p-4 text-sm text-gray-300">
-                                                <span class="font-bold text-[#00D4AA]">{{ letter }}.</span> {{ sentence }}
+                                            <div class="passage-card p-5 text-base text-gray-200 font-medium">
+                                                <span class="font-black text-[#FFE66D]">{{ letter }}.</span> {{ sentence }}
                                             </div>
                                             {% endfor %}
                                         </div>
                                     </div>
                                     <div>
-                                        <h4 class="text-[#00D4AA] font-semibold text-sm uppercase tracking-wider mb-4 flex items-center gap-2">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                                        <h4 class="text-[#4ECDC4] font-black text-sm uppercase tracking-wider mb-5 flex items-center gap-3">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
                                             Your Answers
                                         </h4>
-                                        <div class="space-y-3">
+                                        <div class="space-y-4">
                                             {% for q in part.questions %}
-                                            <div class="flex items-center gap-4">
-                                                <span class="font-medium text-gray-400 text-sm w-20">Gap {{ q.number }}:</span>
-                                                <select name="{{ q.number }}" class="flex-1 bg-[#0d1117] border border-gray-700 text-white px-4 py-3 rounded-xl focus:border-[#00D4AA] outline-none">
+                                            <div class="flex items-center gap-5">
+                                                <span class="font-bold text-gray-300 text-base w-24">Gap {{ q.number }}:</span>
+                                                <select name="{{ q.number }}" class="flex-1 bg-[#0F172A] border-2 border-[#334155] text-white px-5 py-4 rounded-xl focus:border-[#4ECDC4] outline-none font-bold text-base">
                                                     <option value="">Select answer...</option>
                                                     <option value="A">A</option>
                                                     <option value="B">B</option>
@@ -311,39 +392,39 @@
                 {% endfor %}
 
                 <!-- Part Navigation -->
-                <div id="part-nav" class="flex justify-between items-center mt-8 p-6 test-card rounded-2xl">
-                    <button type="button" id="btn-prev-part" class="nav-btn px-6 py-3 border border-gray-600 text-gray-300 font-semibold rounded-xl hover:border-[#00D4AA] hover:text-white transition hidden flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                <div id="part-nav" class="flex justify-between items-center mt-10 p-8 test-card">
+                    <button type="button" id="btn-prev-part" class="px-8 py-4 border-2 border-[#475569] text-gray-300 font-bold rounded-xl hover:border-[#4ECDC4] hover:text-white transition hidden flex items-center gap-3 text-base">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
                         Previous Part
                     </button>
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-3">
                         {% for part in test_data.parts %}
-                        <div class="part-dot w-3 h-3 rounded-full bg-gray-600 transition" data-part="{{ part.part_number }}"></div>
+                        <div class="part-dot w-4 h-4 rounded-full bg-[#475569] transition-all duration-300" data-part="{{ part.part_number }}"></div>
                         {% endfor %}
                     </div>
-                    <button type="button" id="btn-next-part" class="nav-btn px-6 py-3 bg-gradient-to-r from-[#00D4AA] to-[#00B894] text-[#0d0d0d] font-bold rounded-xl hover:shadow-lg hover:shadow-[#00D4AA]/30 transition flex items-center gap-2">
+                    <button type="button" id="btn-next-part" class="btn-3d px-8 py-4 flex items-center gap-3 text-base">
                         Next Part
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                     </button>
                 </div>
 
-                <div id="submit-wrap" class="text-center mt-8 hidden">
-                    <button type="submit" class="nav-btn bg-gradient-to-r from-[#00D4AA] to-[#00B894] text-[#0d0d0d] px-12 py-5 font-bold text-xl rounded-xl hover:shadow-lg hover:shadow-[#00D4AA]/30 transition flex items-center gap-3 mx-auto">
+                <div id="submit-wrap" class="text-center mt-10 hidden">
+                    <button type="submit" class="btn-3d-coral px-14 py-6 font-black text-xl flex items-center gap-4 mx-auto">
                         <span>Submit & Continue to Listening</span>
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                     </button>
-                    <p class="text-gray-500 text-sm mt-4">Continue to Listening section after submission</p>
+                    <p class="text-gray-400 text-base mt-5 font-medium">Continue to Listening section after submission</p>
                 </div>
             </form>
         </div>
     </main>
 
     <!-- Loading Overlay -->
-    <div id="loading-overlay" class="fixed inset-0 bg-[#111827]/95 flex items-center justify-center z-50 hidden">
-        <div class="test-card rounded-2xl p-10 text-center max-w-md">
-            <div class="w-16 h-16 border-4 border-[#00D4AA]/20 border-t-[#00D4AA] rounded-full animate-spin mx-auto mb-6"></div>
-            <h3 class="text-xl font-bold text-white mb-2">Submitting Your Answers</h3>
-            <p class="text-gray-400">Please wait while we process your responses...</p>
+    <div id="loading-overlay" class="fixed inset-0 bg-[#0F172A]/98 flex items-center justify-center z-50 hidden backdrop-blur-lg">
+        <div class="test-card p-12 text-center max-w-md">
+            <div class="w-20 h-20 border-4 border-[#4ECDC4]/20 border-t-[#4ECDC4] rounded-full animate-spin mx-auto mb-8"></div>
+            <h3 class="text-2xl font-black text-white mb-3">Submitting Your Answers</h3>
+            <p class="text-gray-400 text-lg font-medium">Please wait while we process your responses...</p>
         </div>
     </div>
 
@@ -382,8 +463,15 @@
                 p.classList.toggle('hidden', i !== index);
             });
             partDots.forEach((dot, i) => {
-                dot.classList.toggle('bg-[#00D4AA]', i <= index);
-                dot.classList.toggle('bg-gray-600', i > index);
+                if (i <= index) {
+                    dot.classList.remove('bg-[#475569]');
+                    dot.classList.add('bg-[#4ECDC4]');
+                    dot.style.transform = i === index ? 'scale(1.3)' : 'scale(1)';
+                } else {
+                    dot.classList.add('bg-[#475569]');
+                    dot.classList.remove('bg-[#4ECDC4]');
+                    dot.style.transform = 'scale(1)';
+                }
             });
             document.getElementById('btn-prev-part').classList.toggle('hidden', index === 0);
             if (index === totalParts - 1) {
