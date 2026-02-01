@@ -5,109 +5,146 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>{% block title %}CEFR Level{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        * { font-family: 'Inter', sans-serif; }
-        body { background-color: #0d0d0d; }
+        * { font-family: 'Nunito', sans-serif; }
+
+        :root {
+            --primary: #FF6B6B;
+            --primary-dark: #E85555;
+            --secondary: #4ECDC4;
+            --secondary-dark: #3DB8B0;
+            --accent: #FFE66D;
+            --info: #45B7D1;
+            --purple: #A78BFA;
+            --orange: #FF9F43;
+            --bg: #0F172A;
+            --card: #1E293B;
+            --border: #334155;
+        }
+
+        body {
+            background: linear-gradient(180deg, #0F172A 0%, #0D1321 50%, #0F172A 100%);
+        }
+
         .header-link {
-            color: #9ca3af;
+            color: #94A3B8;
             text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: color 0.2s;
-            padding: 8px 12px;
-            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 700;
+            transition: all 0.2s;
+            padding: 10px 16px;
+            border-radius: 12px;
         }
         .header-link:hover {
             color: #fff;
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 107, 107, 0.1);
         }
+
         .btn-ghost {
-            color: #9ca3af;
-            font-weight: 600;
-            padding: 10px 20px;
-            border-radius: 10px;
+            color: #94A3B8;
+            font-weight: 700;
+            padding: 12px 24px;
+            border-radius: 14px;
             transition: all 0.2s;
-            border: 1px solid transparent;
+            border: 2px solid transparent;
         }
         .btn-ghost:hover {
             color: #fff;
-            background: rgba(255,255,255,0.08);
-            border-color: rgba(255,255,255,0.1);
+            background: rgba(255, 107, 107, 0.1);
+            border-color: rgba(255, 107, 107, 0.3);
         }
+
         .btn-primary {
-            background: linear-gradient(135deg, #00D4AA 0%, #00B894 100%);
-            color: #0d0d0d;
-            font-weight: 600;
-            padding: 10px 24px;
-            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--orange) 100%);
+            color: white;
+            font-weight: 800;
+            padding: 12px 28px;
+            border-radius: 14px;
             transition: all 0.2s;
+            box-shadow: 0 4px 0 #C44545, 0 6px 20px rgba(255, 107, 107, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .btn-primary:hover {
-            transform: scale(1.02);
-            box-shadow: 0 4px 20px rgba(0, 212, 170, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #C44545, 0 10px 30px rgba(255, 107, 107, 0.4);
         }
+        .btn-primary:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #C44545;
+        }
+
         .lang-switch {
             display: flex;
             align-items: center;
-            background: rgba(255,255,255,0.05);
-            border-radius: 8px;
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
             padding: 4px;
         }
         .lang-btn {
-            font-size: 12px;
-            font-weight: 600;
-            padding: 6px 12px;
-            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 8px 14px;
+            border-radius: 8px;
             transition: all 0.2s;
-            color: #6b7280;
+            color: #64748B;
         }
         .lang-btn:hover {
-            color: #9ca3af;
+            color: #94A3B8;
         }
         .lang-btn.active {
-            background: #00D4AA;
-            color: #0d0d0d;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--orange) 100%);
+            color: white;
         }
+
         /* Mobile menu */
         .mobile-menu {
             display: none;
             position: fixed;
-            top: 64px;
+            top: 72px;
             left: 0;
             right: 0;
             bottom: 0;
-            background: #0d0d0d;
+            background: linear-gradient(180deg, #0F172A 0%, #0D1321 100%);
             z-index: 40;
             padding: 24px;
             flex-direction: column;
-            gap: 16px;
+            gap: 12px;
         }
         .mobile-menu.open {
             display: flex;
         }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--orange) 50%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
     </style>
     {% block head %}{% endblock %}
 </head>
-<body class="min-h-screen text-white bg-[#0d0d0d] antialiased">
-    <header class="fixed top-0 left-0 right-0 z-50 border-b border-[#1f1f1f] bg-[#0d0d0d]/95 backdrop-blur-md">
-        <div class="max-w-6xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
+<body class="min-h-screen text-white antialiased">
+    <header class="fixed top-0 left-0 right-0 z-50 border-b border-[#334155] bg-[#0F172A]/95 backdrop-blur-xl">
+        <div class="max-w-6xl mx-auto px-4 md:px-6 h-[72px] flex items-center justify-between">
             <!-- Logo -->
-            <a href="/" class="flex items-center gap-2.5 group">
-                <span class="w-9 h-9 bg-gradient-to-br from-[#00D4AA] to-[#00B894] flex items-center justify-center text-[#0d0d0d] font-black text-sm rounded-lg shadow-lg shadow-[#00D4AA]/20 group-hover:shadow-[#00D4AA]/40 transition-shadow">C</span>
-                <span class="text-lg font-bold text-white">CEFR</span>
-                <span class="text-lg font-bold text-[#00D4AA]">Level</span>
+            <a href="/" class="flex items-center gap-3 group">
+                <span class="w-11 h-11 bg-gradient-to-br from-[#FF6B6B] via-[#FF9F43] to-[#FFE66D] flex items-center justify-center text-white font-black text-lg rounded-xl shadow-lg shadow-[#FF6B6B]/20 group-hover:shadow-[#FF6B6B]/40 transition-all transform group-hover:rotate-3">C</span>
+                <span class="text-xl font-black text-white">CEFR</span>
+                <span class="text-xl font-black gradient-text">Level</span>
             </a>
 
             <!-- Desktop Navigation -->
-            <nav class="hidden md:flex items-center gap-2">
+            <nav class="hidden md:flex items-center gap-1">
                 <a href="/#how-it-works" class="header-link">{% if lang == 'uz' %}Qanday ishlaydi{% else %}How It Works{% endif %}</a>
                 <a href="/#pricing" class="header-link">{{ t.pricing }}</a>
                 <a href="/about" class="header-link">{{ t.about }}</a>
             </nav>
 
             <!-- Right Side -->
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-4">
                 <!-- Language Switcher -->
                 <div class="lang-switch">
                     <a href="/lang/uz" class="lang-btn {% if lang == 'uz' %}active{% endif %}">UZ</a>
@@ -116,29 +153,29 @@
 
                 {% if user %}
                 <!-- Logged in state -->
-                <div class="hidden md:flex items-center gap-2">
+                <div class="hidden md:flex items-center gap-3">
                     <a href="/profile" class="header-link flex items-center gap-2">
                         {% if user.avatar %}
-                        <img src="{{ user.avatar }}" alt="" class="w-7 h-7 rounded-full">
+                        <img src="{{ user.avatar }}" alt="" class="w-8 h-8 rounded-full border-2 border-[#FF6B6B]">
                         {% else %}
-                        <div class="w-7 h-7 bg-[#1f2937] rounded-full flex items-center justify-center text-xs font-bold text-[#00D4AA]">
+                        <div class="w-8 h-8 bg-gradient-to-br from-[#FF6B6B] to-[#FF9F43] rounded-full flex items-center justify-center text-xs font-bold text-white">
                             {{ (user.name or user.email)[0]|upper }}
                         </div>
                         {% endif %}
                         <span class="max-w-[100px] truncate">{{ user.name or 'Profile' }}</span>
                     </a>
-                    <a href="/start" class="btn-primary text-sm">{{ t.start_test }}</a>
+                    <a href="/dashboard" class="btn-primary text-sm">{{ t.start_test }}</a>
                 </div>
                 {% else %}
                 <!-- Logged out state -->
-                <div class="hidden md:flex items-center gap-2">
-                    <a href="/auth/google?next_url=/start" class="btn-ghost text-sm">{% if lang == 'uz' %}Kirish{% else %}Log in{% endif %}</a>
-                    <a href="/auth/google?next_url=/start" class="btn-primary text-sm">{% if lang == 'uz' %}Boshlash{% else %}Get Started{% endif %}</a>
+                <div class="hidden md:flex items-center gap-3">
+                    <a href="/login" class="btn-ghost text-sm">{% if lang == 'uz' %}Kirish{% else %}Log in{% endif %}</a>
+                    <a href="/auth/google?next_url=/dashboard" class="btn-primary text-sm">{% if lang == 'uz' %}Boshlash{% else %}Start{% endif %}</a>
                 </div>
                 {% endif %}
 
                 <!-- Mobile Menu Button -->
-                <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-gray-400 hover:text-white transition">
+                <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-gray-400 hover:text-white transition rounded-lg hover:bg-[#1E293B]">
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                     </svg>
@@ -149,41 +186,41 @@
 
     <!-- Mobile Menu -->
     <div id="mobileMenu" class="mobile-menu">
-        <a href="/#how-it-works" class="text-gray-300 hover:text-white py-3 border-b border-[#1f2937]" onclick="toggleMobileMenu()">
+        <a href="/#how-it-works" class="text-gray-300 hover:text-white py-4 border-b border-[#334155] font-bold" onclick="toggleMobileMenu()">
             {% if lang == 'uz' %}Qanday ishlaydi{% else %}How It Works{% endif %}
         </a>
-        <a href="/#pricing" class="text-gray-300 hover:text-white py-3 border-b border-[#1f2937]" onclick="toggleMobileMenu()">
+        <a href="/#pricing" class="text-gray-300 hover:text-white py-4 border-b border-[#334155] font-bold" onclick="toggleMobileMenu()">
             {{ t.pricing }}
         </a>
-        <a href="/about" class="text-gray-300 hover:text-white py-3 border-b border-[#1f2937]" onclick="toggleMobileMenu()">
+        <a href="/about" class="text-gray-300 hover:text-white py-4 border-b border-[#334155] font-bold" onclick="toggleMobileMenu()">
             {{ t.about }}
         </a>
 
         {% if user %}
-        <a href="/profile" class="text-gray-300 hover:text-white py-3 border-b border-[#1f2937] flex items-center gap-3" onclick="toggleMobileMenu()">
+        <a href="/profile" class="text-gray-300 hover:text-white py-4 border-b border-[#334155] flex items-center gap-3 font-bold" onclick="toggleMobileMenu()">
             {% if user.avatar %}
-            <img src="{{ user.avatar }}" alt="" class="w-8 h-8 rounded-full">
+            <img src="{{ user.avatar }}" alt="" class="w-10 h-10 rounded-full border-2 border-[#FF6B6B]">
             {% else %}
-            <div class="w-8 h-8 bg-[#1f2937] rounded-full flex items-center justify-center text-sm font-bold text-[#00D4AA]">
+            <div class="w-10 h-10 bg-gradient-to-br from-[#FF6B6B] to-[#FF9F43] rounded-full flex items-center justify-center text-sm font-bold text-white">
                 {{ (user.name or user.email)[0]|upper }}
             </div>
             {% endif %}
             {{ user.name or 'Profile' }}
         </a>
-        <a href="/start" class="btn-primary text-center mt-4" onclick="toggleMobileMenu()">{{ t.start_test }}</a>
-        <a href="/logout" class="text-gray-500 hover:text-white text-center py-3" onclick="toggleMobileMenu()">
+        <a href="/dashboard" class="btn-primary text-center mt-6" onclick="toggleMobileMenu()">{{ t.start_test }}</a>
+        <a href="/logout" class="text-gray-500 hover:text-white text-center py-4 font-bold" onclick="toggleMobileMenu()">
             {% if lang == 'uz' %}Chiqish{% else %}Log out{% endif %}
         </a>
         {% else %}
-        <div class="mt-4 space-y-3">
-            <a href="/auth/google?next_url=/start" class="btn-primary block text-center" onclick="toggleMobileMenu()">
+        <div class="mt-6 space-y-4">
+            <a href="/auth/google?next_url=/dashboard" class="btn-primary block text-center" onclick="toggleMobileMenu()">
                 {% if lang == 'uz' %}Google bilan boshlash{% else %}Get Started with Google{% endif %}
             </a>
         </div>
         {% endif %}
     </div>
 
-    <main class="pt-16 min-h-screen">
+    <main class="pt-[72px] min-h-screen">
         {% block content %}{% endblock %}
     </main>
 
