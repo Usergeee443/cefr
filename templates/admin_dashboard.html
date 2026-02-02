@@ -3,86 +3,341 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - OSCO.</title>
+    <title>Admin Dashboard - CEFR Test Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        * { font-family: 'Inter', sans-serif; }
-        *, *::before, *::after { border-radius: 0 !important; }
-        body { background-color: #0B1628; }
-        .tab-btn.active { background-color: #00D4AA; color: #0B1628; }
+        * { font-family: 'Nunito', sans-serif; }
+        body { background-color: #0F172A; }
+
+        :root {
+            --primary: #FF6B6B;
+            --secondary: #4ECDC4;
+            --info: #45B7D1;
+            --accent: #FFE66D;
+            --purple: #A78BFA;
+            --orange: #FF9F43;
+            --bg: #0F172A;
+            --card: #1E293B;
+            --border: #334155;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #4ECDC4 0%, #45B7D1 100%);
+            color: #0F172A;
+            border-color: #4ECDC4;
+        }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+
+        .stat-card {
+            background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
+            border: 2px solid #334155;
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            border-color: #4ECDC4;
+            transform: translateY(-2px);
+        }
+
+        .admin-card {
+            background: #1E293B;
+            border: 2px solid #334155;
+            border-radius: 16px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4ECDC4 0%, #45B7D1 100%);
+            color: #0F172A;
+            font-weight: 700;
+            padding: 10px 20px;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 0 #3da69f;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #3da69f;
+        }
+        .btn-primary:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #3da69f;
+        }
+
+        .btn-coral {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF9F43 100%);
+            color: white;
+            font-weight: 700;
+            padding: 10px 20px;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 0 #cc5555;
+        }
+        .btn-coral:hover {
+            transform: translateY(-2px);
+        }
+        .btn-coral:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #cc5555;
+        }
+
+        .form-input {
+            background: #0F172A;
+            border: 2px solid #334155;
+            border-radius: 12px;
+            color: white;
+            padding: 12px 16px;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+        .form-input:focus {
+            border-color: #4ECDC4;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(78, 205, 196, 0.15);
+        }
+        .form-input::placeholder {
+            color: #64748b;
+        }
+
+        .question-card {
+            background: #0F172A;
+            border: 2px solid #334155;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .option-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .option-label {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #334155;
+            border-radius: 8px;
+            font-weight: 700;
+            color: #94a3b8;
+        }
+
+        .correct-radio:checked + .option-label {
+            background: linear-gradient(135deg, #4ECDC4 0%, #45B7D1 100%);
+            color: #0F172A;
+        }
+
+        .modal-overlay {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(8px);
+        }
+
+        .logo-box {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF9F43 100%);
+            box-shadow: 0 4px 0 #cc5555;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #1E293B; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        /* Wizard steps */
+        .wizard-step {
+            display: none;
+        }
+        .wizard-step.active {
+            display: block;
+        }
+        .step-indicator {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            background: #334155;
+            color: #64748b;
+            transition: all 0.3s ease;
+        }
+        .step-indicator.active {
+            background: linear-gradient(135deg, #4ECDC4 0%, #45B7D1 100%);
+            color: #0F172A;
+        }
+        .step-indicator.completed {
+            background: #4ECDC4;
+            color: #0F172A;
+        }
     </style>
 </head>
 <body class="min-h-screen text-white">
 
     <!-- Header -->
-    <header class="border-b border-gray-800">
+    <header class="border-b-2 border-[#334155] bg-[#1E293B]">
         <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
             <div class="flex items-center gap-4">
-                <a href="/" class="text-2xl font-black">
-                    <span class="text-[#00D4AA]">OSCO</span><span class="text-white">.</span>
+                <a href="/" class="flex items-center gap-3">
+                    <div class="logo-box w-10 h-10 flex items-center justify-center text-white font-black text-lg rounded-xl">
+                        C
+                    </div>
+                    <span class="text-xl font-black text-white">CEFR Test</span>
                 </a>
-                <div class="h-5 w-px bg-gray-700"></div>
-                <span class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Admin Panel</span>
+                <div class="h-6 w-px bg-[#334155]"></div>
+                <span class="px-3 py-1 bg-gradient-to-r from-[#A78BFA]/20 to-[#45B7D1]/20 text-[#A78BFA] text-xs font-bold rounded-full border border-[#A78BFA]/30">ADMIN</span>
             </div>
-            <a href="/admin/logout" class="text-red-400 hover:text-red-300 text-sm font-medium">Chiqish</a>
+            <div class="flex items-center gap-4">
+                <a href="/dashboard" class="text-gray-400 hover:text-[#4ECDC4] text-sm font-bold transition">Asosiy Sayt</a>
+                <a href="/admin/logout" class="text-[#FF6B6B] hover:text-[#FF9F43] text-sm font-bold transition">Chiqish</a>
+            </div>
         </div>
     </header>
 
     <main class="max-w-7xl mx-auto px-6 py-8">
         <!-- Stats Overview -->
-        <div class="grid md:grid-cols-4 gap-6 mb-8">
-            <div class="bg-[#0F2035] border border-gray-800 p-6">
-                <div class="text-3xl font-bold text-[#00D4AA]">{{ reading_count }}</div>
-                <div class="text-sm text-gray-400 mt-1">Reading Testlar</div>
+        <div class="grid md:grid-cols-5 gap-4 mb-8">
+            <div class="stat-card p-5">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 bg-[#A78BFA]/20 rounded-xl flex items-center justify-center">
+                        <svg class="w-5 h-5 text-[#A78BFA]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="text-3xl font-black text-[#A78BFA]">{{ reading_count }}</div>
+                <div class="text-sm text-gray-400 font-bold mt-1">Reading</div>
             </div>
-            <div class="bg-[#0F2035] border border-gray-800 p-6">
-                <div class="text-3xl font-bold text-[#00D4AA]">{{ listening_count }}</div>
-                <div class="text-sm text-gray-400 mt-1">Listening Testlar</div>
+            <div class="stat-card p-5">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 bg-[#45B7D1]/20 rounded-xl flex items-center justify-center">
+                        <svg class="w-5 h-5 text-[#45B7D1]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="text-3xl font-black text-[#45B7D1]">{{ listening_count }}</div>
+                <div class="text-sm text-gray-400 font-bold mt-1">Listening</div>
             </div>
-            <div class="bg-[#0F2035] border border-gray-800 p-6">
-                <div class="text-3xl font-bold text-[#00D4AA]">{{ writing_count }}</div>
-                <div class="text-sm text-gray-400 mt-1">Writing Testlar</div>
+            <div class="stat-card p-5">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 bg-[#FF9F43]/20 rounded-xl flex items-center justify-center">
+                        <svg class="w-5 h-5 text-[#FF9F43]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="text-3xl font-black text-[#FF9F43]">{{ writing_count }}</div>
+                <div class="text-sm text-gray-400 font-bold mt-1">Writing</div>
             </div>
-            <div class="bg-[#0F2035] border border-gray-800 p-6">
-                <div class="text-3xl font-bold text-yellow-400">{{ feedback_count }}</div>
-                <div class="text-sm text-gray-400 mt-1">Feedbacklar</div>
+            <div class="stat-card p-5">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 bg-[#4ECDC4]/20 rounded-xl flex items-center justify-center">
+                        <svg class="w-5 h-5 text-[#4ECDC4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="text-3xl font-black text-[#4ECDC4]">{{ user_count }}</div>
+                <div class="text-sm text-gray-400 font-bold mt-1">Foydalanuvchilar</div>
+            </div>
+            <div class="stat-card p-5">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 bg-[#FFE66D]/20 rounded-xl flex items-center justify-center">
+                        <svg class="w-5 h-5 text-[#FFE66D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="text-3xl font-black text-[#FFE66D]">{{ feedback_count }}</div>
+                <div class="text-sm text-gray-400 font-bold mt-1">Feedbacklar</div>
             </div>
         </div>
 
         <!-- Tabs -->
-        <div class="flex gap-2 mb-6 border-b border-gray-800 pb-4">
-            <button class="tab-btn active px-6 py-2 border border-gray-700 bg-[#0F2035] text-gray-300 font-medium text-sm hover:border-[#00D4AA] transition" data-tab="reading">Reading</button>
-            <button class="tab-btn px-6 py-2 border border-gray-700 bg-[#0F2035] text-gray-300 font-medium text-sm hover:border-[#00D4AA] transition" data-tab="listening">Listening</button>
-            <button class="tab-btn px-6 py-2 border border-gray-700 bg-[#0F2035] text-gray-300 font-medium text-sm hover:border-[#00D4AA] transition" data-tab="writing">Writing</button>
-            <button class="tab-btn px-6 py-2 border border-gray-700 bg-[#0F2035] text-gray-300 font-medium text-sm hover:border-[#00D4AA] transition" data-tab="feedback">Feedbacklar</button>
+        <div class="flex flex-wrap gap-2 mb-6 border-b-2 border-[#334155] pb-4">
+            <button class="tab-btn active px-5 py-2.5 border-2 border-[#334155] bg-[#1E293B] text-gray-300 font-bold text-sm rounded-xl transition" data-tab="reading">
+                <span class="flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                    Reading
+                </span>
+            </button>
+            <button class="tab-btn px-5 py-2.5 border-2 border-[#334155] bg-[#1E293B] text-gray-300 font-bold text-sm rounded-xl transition" data-tab="listening">
+                <span class="flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+                    Listening
+                </span>
+            </button>
+            <button class="tab-btn px-5 py-2.5 border-2 border-[#334155] bg-[#1E293B] text-gray-300 font-bold text-sm rounded-xl transition" data-tab="writing">
+                <span class="flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    Writing
+                </span>
+            </button>
+            <button class="tab-btn px-5 py-2.5 border-2 border-[#334155] bg-[#1E293B] text-gray-300 font-bold text-sm rounded-xl transition" data-tab="users">
+                <span class="flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    Foydalanuvchilar
+                </span>
+            </button>
+            <button class="tab-btn px-5 py-2.5 border-2 border-[#334155] bg-[#1E293B] text-gray-300 font-bold text-sm rounded-xl transition" data-tab="feedback">
+                <span class="flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+                    Feedbacklar
+                </span>
+            </button>
+            <button class="tab-btn px-5 py-2.5 border-2 border-[#334155] bg-[#1E293B] text-gray-300 font-bold text-sm rounded-xl transition" data-tab="advanced">
+                <span class="flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    Kengaytirilgan
+                </span>
+            </button>
         </div>
 
         <!-- Reading Tab -->
         <div id="reading-tab" class="tab-content active">
-            <div class="bg-[#0F2035] border border-gray-800 p-6">
+            <div class="admin-card p-6">
                 <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-xl font-bold text-white">Reading Testlar</h2>
-                    <button onclick="showModal('reading')" class="bg-[#00D4AA] text-[#0B1628] px-4 py-2 font-semibold text-sm hover:bg-[#00B894] transition">
+                    <h2 class="text-xl font-black text-white flex items-center gap-3">
+                        <div class="w-10 h-10 bg-[#A78BFA]/20 rounded-xl flex items-center justify-center">
+                            <svg class="w-5 h-5 text-[#A78BFA]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                        </div>
+                        Reading Testlar
+                    </h2>
+                    <button onclick="showAddModal('reading')" class="btn-primary text-sm">
                         + Yangi Test
                     </button>
                 </div>
-                <div class="space-y-4">
+                <div class="space-y-3">
                     {% for test in reading_tests %}
-                    <div class="bg-[#0B1628] border border-gray-800 p-4 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-semibold text-white">{{ test.title }}</h3>
-                            <p class="text-sm text-gray-500">{{ test.parts | length }} qism | {{ test.time_limit }} daqiqa</p>
+                    <div class="bg-[#0F172A] border-2 border-[#334155] rounded-xl p-4 flex items-center justify-between hover:border-[#4ECDC4]/50 transition">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-[#A78BFA]/20 rounded-xl flex items-center justify-center text-[#A78BFA] font-black">
+                                {{ loop.index }}
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-white">{{ test.title }}</h3>
+                                <p class="text-sm text-gray-500 font-medium">{{ test.parts | length }} qism | {{ test.time_limit }} daqiqa</p>
+                            </div>
                         </div>
                         <div class="flex gap-2">
-                            <button onclick="editTest('reading', '{{ test.id }}')" class="px-3 py-1 border border-gray-700 text-gray-400 hover:text-[#00D4AA] hover:border-[#00D4AA] text-sm">Tahrirlash</button>
-                            <button onclick="deleteTest('reading', '{{ test.id }}')" class="px-3 py-1 border border-red-500/30 text-red-400 hover:bg-red-500/20 text-sm">O'chirish</button>
+                            <button onclick="editTest('reading', '{{ test.id }}')" class="px-4 py-2 border-2 border-[#334155] text-gray-400 hover:text-[#4ECDC4] hover:border-[#4ECDC4] rounded-lg text-sm font-bold transition">Tahrirlash</button>
+                            <button onclick="deleteTest('reading', '{{ test.id }}')" class="px-4 py-2 border-2 border-[#FF6B6B]/30 text-[#FF6B6B] hover:bg-[#FF6B6B]/20 rounded-lg text-sm font-bold transition">O'chirish</button>
                         </div>
                     </div>
                     {% else %}
-                    <p class="text-gray-500 text-center py-8">Hozircha testlar yo'q</p>
+                    <div class="text-center py-12">
+                        <div class="w-16 h-16 bg-[#334155] rounded-2xl flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                        </div>
+                        <p class="text-gray-500 font-bold">Hozircha testlar yo'q</p>
+                        <button onclick="showAddModal('reading')" class="btn-primary mt-4 text-sm">Birinchi testni qo'shing</button>
+                    </div>
                     {% endfor %}
                 </div>
             </div>
@@ -90,27 +345,43 @@
 
         <!-- Listening Tab -->
         <div id="listening-tab" class="tab-content">
-            <div class="bg-[#0F2035] border border-gray-800 p-6">
+            <div class="admin-card p-6">
                 <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-xl font-bold text-white">Listening Testlar</h2>
-                    <button onclick="showModal('listening')" class="bg-[#00D4AA] text-[#0B1628] px-4 py-2 font-semibold text-sm hover:bg-[#00B894] transition">
+                    <h2 class="text-xl font-black text-white flex items-center gap-3">
+                        <div class="w-10 h-10 bg-[#45B7D1]/20 rounded-xl flex items-center justify-center">
+                            <svg class="w-5 h-5 text-[#45B7D1]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+                        </div>
+                        Listening Testlar
+                    </h2>
+                    <button onclick="showAddModal('listening')" class="btn-primary text-sm">
                         + Yangi Test
                     </button>
                 </div>
-                <div class="space-y-4">
+                <div class="space-y-3">
                     {% for test in listening_tests %}
-                    <div class="bg-[#0B1628] border border-gray-800 p-4 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-semibold text-white">{{ test.title }}</h3>
-                            <p class="text-sm text-gray-500">{{ test.parts | length }} qism | {{ test.time_limit }} daqiqa</p>
+                    <div class="bg-[#0F172A] border-2 border-[#334155] rounded-xl p-4 flex items-center justify-between hover:border-[#4ECDC4]/50 transition">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-[#45B7D1]/20 rounded-xl flex items-center justify-center text-[#45B7D1] font-black">
+                                {{ loop.index }}
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-white">{{ test.title }}</h3>
+                                <p class="text-sm text-gray-500 font-medium">{{ test.parts | length }} qism | {{ test.time_limit }} daqiqa</p>
+                            </div>
                         </div>
                         <div class="flex gap-2">
-                            <button onclick="editTest('listening', '{{ test.id }}')" class="px-3 py-1 border border-gray-700 text-gray-400 hover:text-[#00D4AA] hover:border-[#00D4AA] text-sm">Tahrirlash</button>
-                            <button onclick="deleteTest('listening', '{{ test.id }}')" class="px-3 py-1 border border-red-500/30 text-red-400 hover:bg-red-500/20 text-sm">O'chirish</button>
+                            <button onclick="editTest('listening', '{{ test.id }}')" class="px-4 py-2 border-2 border-[#334155] text-gray-400 hover:text-[#4ECDC4] hover:border-[#4ECDC4] rounded-lg text-sm font-bold transition">Tahrirlash</button>
+                            <button onclick="deleteTest('listening', '{{ test.id }}')" class="px-4 py-2 border-2 border-[#FF6B6B]/30 text-[#FF6B6B] hover:bg-[#FF6B6B]/20 rounded-lg text-sm font-bold transition">O'chirish</button>
                         </div>
                     </div>
                     {% else %}
-                    <p class="text-gray-500 text-center py-8">Hozircha testlar yo'q</p>
+                    <div class="text-center py-12">
+                        <div class="w-16 h-16 bg-[#334155] rounded-2xl flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+                        </div>
+                        <p class="text-gray-500 font-bold">Hozircha testlar yo'q</p>
+                        <button onclick="showAddModal('listening')" class="btn-primary mt-4 text-sm">Birinchi testni qo'shing</button>
+                    </div>
                     {% endfor %}
                 </div>
             </div>
@@ -118,110 +389,323 @@
 
         <!-- Writing Tab -->
         <div id="writing-tab" class="tab-content">
-            <div class="bg-[#0F2035] border border-gray-800 p-6">
+            <div class="admin-card p-6">
                 <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-xl font-bold text-white">Writing Testlar</h2>
-                    <button onclick="showModal('writing')" class="bg-[#00D4AA] text-[#0B1628] px-4 py-2 font-semibold text-sm hover:bg-[#00B894] transition">
+                    <h2 class="text-xl font-black text-white flex items-center gap-3">
+                        <div class="w-10 h-10 bg-[#FF9F43]/20 rounded-xl flex items-center justify-center">
+                            <svg class="w-5 h-5 text-[#FF9F43]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                        </div>
+                        Writing Testlar
+                    </h2>
+                    <button onclick="showAddModal('writing')" class="btn-primary text-sm">
                         + Yangi Test
                     </button>
                 </div>
-                <div class="space-y-4">
+                <div class="space-y-3">
                     {% for test in writing_tests %}
-                    <div class="bg-[#0B1628] border border-gray-800 p-4 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-semibold text-white">{{ test.title }}</h3>
-                            <p class="text-sm text-gray-500">{{ test.parts | length }} qism | {{ test.time_limit }} daqiqa</p>
+                    <div class="bg-[#0F172A] border-2 border-[#334155] rounded-xl p-4 flex items-center justify-between hover:border-[#4ECDC4]/50 transition">
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-[#FF9F43]/20 rounded-xl flex items-center justify-center text-[#FF9F43] font-black">
+                                {{ loop.index }}
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-white">{{ test.title }}</h3>
+                                <p class="text-sm text-gray-500 font-medium">{{ test.parts | length }} qism | {{ test.time_limit }} daqiqa</p>
+                            </div>
                         </div>
                         <div class="flex gap-2">
-                            <button onclick="editTest('writing', '{{ test.id }}')" class="px-3 py-1 border border-gray-700 text-gray-400 hover:text-[#00D4AA] hover:border-[#00D4AA] text-sm">Tahrirlash</button>
-                            <button onclick="deleteTest('writing', '{{ test.id }}')" class="px-3 py-1 border border-red-500/30 text-red-400 hover:bg-red-500/20 text-sm">O'chirish</button>
+                            <button onclick="editTest('writing', '{{ test.id }}')" class="px-4 py-2 border-2 border-[#334155] text-gray-400 hover:text-[#4ECDC4] hover:border-[#4ECDC4] rounded-lg text-sm font-bold transition">Tahrirlash</button>
+                            <button onclick="deleteTest('writing', '{{ test.id }}')" class="px-4 py-2 border-2 border-[#FF6B6B]/30 text-[#FF6B6B] hover:bg-[#FF6B6B]/20 rounded-lg text-sm font-bold transition">O'chirish</button>
                         </div>
                     </div>
                     {% else %}
-                    <p class="text-gray-500 text-center py-8">Hozircha testlar yo'q</p>
+                    <div class="text-center py-12">
+                        <div class="w-16 h-16 bg-[#334155] rounded-2xl flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                        </div>
+                        <p class="text-gray-500 font-bold">Hozircha testlar yo'q</p>
+                        <button onclick="showAddModal('writing')" class="btn-primary mt-4 text-sm">Birinchi testni qo'shing</button>
+                    </div>
                     {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Users Tab -->
+        <div id="users-tab" class="tab-content">
+            <div class="admin-card p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-black text-white flex items-center gap-3">
+                        <div class="w-10 h-10 bg-[#4ECDC4]/20 rounded-xl flex items-center justify-center">
+                            <svg class="w-5 h-5 text-[#4ECDC4]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                        </div>
+                        Foydalanuvchilar
+                    </h2>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-[#0F172A] border-b-2 border-[#334155]">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-sm font-bold text-gray-400">Foydalanuvchi</th>
+                                <th class="px-4 py-3 text-left text-sm font-bold text-gray-400">Email</th>
+                                <th class="px-4 py-3 text-center text-sm font-bold text-gray-400">Bepul testlar</th>
+                                <th class="px-4 py-3 text-center text-sm font-bold text-gray-400">Sotib olingan</th>
+                                <th class="px-4 py-3 text-left text-sm font-bold text-gray-400">Ro'yxatdan o'tgan</th>
+                                <th class="px-4 py-3 text-center text-sm font-bold text-gray-400">Amallar</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y-2 divide-[#334155]">
+                            {% for user in users %}
+                            <tr class="hover:bg-[#0F172A]/50 transition">
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center gap-3">
+                                        {% if user.picture %}
+                                        <img src="{{ user.picture }}" class="w-10 h-10 rounded-xl" alt="">
+                                        {% else %}
+                                        <div class="w-10 h-10 bg-gradient-to-br from-[#4ECDC4] to-[#45B7D1] rounded-xl flex items-center justify-center text-white font-bold">
+                                            {{ user.name[0] if user.name else 'U' }}
+                                        </div>
+                                        {% endif %}
+                                        <span class="font-bold text-white">{{ user.name or 'Noma\'lum' }}</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3 text-gray-400 font-medium">{{ user.email }}</td>
+                                <td class="px-4 py-3 text-center">
+                                    <span class="px-3 py-1 bg-[#4ECDC4]/20 text-[#4ECDC4] rounded-lg font-bold">{{ user.free_tests or 0 }}</span>
+                                </td>
+                                <td class="px-4 py-3 text-center">
+                                    <span class="px-3 py-1 bg-[#FFE66D]/20 text-[#FFE66D] rounded-lg font-bold">{{ user.purchased_tests or 0 }}</span>
+                                </td>
+                                <td class="px-4 py-3 text-gray-500 text-sm font-medium">{{ user.created_at[:10] if user.created_at else '-' }}</td>
+                                <td class="px-4 py-3 text-center">
+                                    <button onclick="editUser('{{ user.id }}')" class="px-3 py-1 border-2 border-[#334155] text-gray-400 hover:text-[#4ECDC4] hover:border-[#4ECDC4] rounded-lg text-sm font-bold transition">Tahrirlash</button>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="6" class="px-4 py-12 text-center text-gray-500 font-bold">Hozircha foydalanuvchilar yo'q</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
 
         <!-- Feedback Tab -->
         <div id="feedback-tab" class="tab-content">
-            <div class="bg-[#0F2035] border border-gray-800 p-6">
-                <h2 class="text-xl font-bold text-white mb-6">Foydalanuvchi Feedbacklari</h2>
+            <div class="admin-card p-6">
+                <h2 class="text-xl font-black text-white mb-6 flex items-center gap-3">
+                    <div class="w-10 h-10 bg-[#FFE66D]/20 rounded-xl flex items-center justify-center">
+                        <svg class="w-5 h-5 text-[#FFE66D]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+                    </div>
+                    Foydalanuvchi Feedbacklari
+                </h2>
                 <div class="space-y-4">
                     {% for fb in feedbacks %}
-                    <div class="bg-[#0B1628] border border-gray-800 p-4">
-                        <div class="flex items-center justify-between mb-3">
+                    <div class="bg-[#0F172A] border-2 border-[#334155] rounded-xl p-5">
+                        <div class="flex items-center justify-between mb-4">
                             <div class="flex items-center gap-4">
                                 {% if fb.rating %}
-                                <div class="flex items-center gap-1">
-                                    <span class="text-[#00D4AA] font-bold">{{ fb.rating }}</span>
-                                    <span class="text-gray-500">/5</span>
+                                <div class="flex items-center gap-2 px-3 py-1.5 bg-[#4ECDC4]/20 rounded-lg">
+                                    <svg class="w-4 h-4 text-[#4ECDC4]" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                    <span class="text-[#4ECDC4] font-bold">{{ fb.rating }}/5</span>
                                 </div>
                                 {% endif %}
                                 {% if fb.difficulty %}
-                                <span class="px-2 py-1 bg-[#0F2035] border border-gray-700 text-xs text-gray-400">{{ fb.difficulty }}</span>
+                                <span class="px-3 py-1.5 bg-[#334155] text-gray-400 text-xs font-bold rounded-lg">{{ fb.difficulty }}</span>
                                 {% endif %}
                                 {% if fb.accuracy %}
-                                <span class="px-2 py-1 bg-[#0F2035] border border-gray-700 text-xs text-gray-400">{{ fb.accuracy }}</span>
+                                <span class="px-3 py-1.5 bg-[#334155] text-gray-400 text-xs font-bold rounded-lg">{{ fb.accuracy }}</span>
                                 {% endif %}
                             </div>
-                            <span class="text-xs text-gray-600">{{ fb.submitted_at[:10] if fb.submitted_at else '' }}</span>
+                            <span class="text-xs text-gray-600 font-bold">{{ fb.submitted_at[:10] if fb.submitted_at else '' }}</span>
                         </div>
                         {% if fb.best_part %}
-                        <div class="mb-2">
-                            <span class="text-xs text-green-400 uppercase">Yaxshi:</span>
-                            <p class="text-sm text-gray-300">{{ fb.best_part }}</p>
+                        <div class="mb-3 p-3 bg-[#4ECDC4]/10 border border-[#4ECDC4]/30 rounded-lg">
+                            <span class="text-xs text-[#4ECDC4] uppercase font-bold block mb-1">Yaxshi:</span>
+                            <p class="text-sm text-gray-300 font-medium">{{ fb.best_part }}</p>
                         </div>
                         {% endif %}
                         {% if fb.worst_part %}
-                        <div class="mb-2">
-                            <span class="text-xs text-red-400 uppercase">Yomon:</span>
-                            <p class="text-sm text-gray-300">{{ fb.worst_part }}</p>
+                        <div class="mb-3 p-3 bg-[#FF6B6B]/10 border border-[#FF6B6B]/30 rounded-lg">
+                            <span class="text-xs text-[#FF6B6B] uppercase font-bold block mb-1">Yaxshilash kerak:</span>
+                            <p class="text-sm text-gray-300 font-medium">{{ fb.worst_part }}</p>
                         </div>
                         {% endif %}
                         {% if fb.suggestions %}
-                        <div class="mb-2">
-                            <span class="text-xs text-yellow-400 uppercase">Takliflar:</span>
-                            <p class="text-sm text-gray-300">{{ fb.suggestions }}</p>
+                        <div class="mb-3 p-3 bg-[#FFE66D]/10 border border-[#FFE66D]/30 rounded-lg">
+                            <span class="text-xs text-[#FFE66D] uppercase font-bold block mb-1">Takliflar:</span>
+                            <p class="text-sm text-gray-300 font-medium">{{ fb.suggestions }}</p>
                         </div>
                         {% endif %}
                         {% if fb.name or fb.email %}
-                        <div class="mt-3 pt-3 border-t border-gray-800 text-xs text-gray-500">
+                        <div class="mt-4 pt-4 border-t border-[#334155] text-xs text-gray-500 font-bold">
                             {% if fb.name %}{{ fb.name }}{% endif %}
                             {% if fb.email %} ({{ fb.email }}){% endif %}
                         </div>
                         {% endif %}
                     </div>
                     {% else %}
-                    <p class="text-gray-500 text-center py-8">Hozircha feedbacklar yo'q</p>
+                    <div class="text-center py-12">
+                        <div class="w-16 h-16 bg-[#334155] rounded-2xl flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
+                        </div>
+                        <p class="text-gray-500 font-bold">Hozircha feedbacklar yo'q</p>
+                    </div>
                     {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Advanced Tab (JSON Editor) -->
+        <div id="advanced-tab" class="tab-content">
+            <div class="admin-card p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-black text-white flex items-center gap-3">
+                        <div class="w-10 h-10 bg-[#FF6B6B]/20 rounded-xl flex items-center justify-center">
+                            <svg class="w-5 h-5 text-[#FF6B6B]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        </div>
+                        Kengaytirilgan Tahrirlash (JSON)
+                    </h2>
+                </div>
+                <div class="bg-[#FF6B6B]/10 border-2 border-[#FF6B6B]/30 rounded-xl p-4 mb-6">
+                    <p class="text-[#FF6B6B] text-sm font-bold flex items-center gap-2">
+                        <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                        Diqqat! Bu bo'lim faqat tajribali foydalanuvchilar uchun. JSON formatida xato qilsangiz, ma'lumotlar buzilishi mumkin.
+                    </p>
+                </div>
+                <div class="grid md:grid-cols-3 gap-4 mb-6">
+                    <button onclick="loadJsonEditor('reading')" class="p-4 bg-[#0F172A] border-2 border-[#334155] rounded-xl hover:border-[#A78BFA] transition text-left">
+                        <div class="w-10 h-10 bg-[#A78BFA]/20 rounded-xl flex items-center justify-center mb-3">
+                            <svg class="w-5 h-5 text-[#A78BFA]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                        </div>
+                        <h3 class="font-bold text-white">Reading Tests</h3>
+                        <p class="text-xs text-gray-500 font-medium">JSON tahrirlash</p>
+                    </button>
+                    <button onclick="loadJsonEditor('listening')" class="p-4 bg-[#0F172A] border-2 border-[#334155] rounded-xl hover:border-[#45B7D1] transition text-left">
+                        <div class="w-10 h-10 bg-[#45B7D1]/20 rounded-xl flex items-center justify-center mb-3">
+                            <svg class="w-5 h-5 text-[#45B7D1]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+                        </div>
+                        <h3 class="font-bold text-white">Listening Tests</h3>
+                        <p class="text-xs text-gray-500 font-medium">JSON tahrirlash</p>
+                    </button>
+                    <button onclick="loadJsonEditor('writing')" class="p-4 bg-[#0F172A] border-2 border-[#334155] rounded-xl hover:border-[#FF9F43] transition text-left">
+                        <div class="w-10 h-10 bg-[#FF9F43]/20 rounded-xl flex items-center justify-center mb-3">
+                            <svg class="w-5 h-5 text-[#FF9F43]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                        </div>
+                        <h3 class="font-bold text-white">Writing Tests</h3>
+                        <p class="text-xs text-gray-500 font-medium">JSON tahrirlash</p>
+                    </button>
+                </div>
+                <div id="json-editor-container" class="hidden">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 id="json-editor-title" class="text-lg font-bold text-white"></h3>
+                        <button onclick="closeJsonEditor()" class="text-gray-400 hover:text-white">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </button>
+                    </div>
+                    <textarea id="json-editor" class="w-full h-96 bg-[#0F172A] border-2 border-[#334155] text-white p-4 font-mono text-sm rounded-xl focus:border-[#4ECDC4] outline-none"></textarea>
+                    <div class="flex gap-4 mt-4">
+                        <button onclick="saveJsonEditor()" class="btn-primary">Saqlash</button>
+                        <button onclick="closeJsonEditor()" class="px-6 py-2 border-2 border-[#334155] text-gray-400 hover:border-[#4ECDC4] hover:text-[#4ECDC4] rounded-xl font-bold transition">Bekor qilish</button>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Modal for editing tests -->
-    <div id="edit-modal" class="fixed inset-0 bg-[#0B1628]/95 flex items-center justify-center z-50 hidden">
-        <div class="bg-[#0F2035] border border-gray-800 p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+    <!-- Add/Edit Test Modal -->
+    <div id="test-modal" class="fixed inset-0 modal-overlay flex items-center justify-center z-50 hidden">
+        <div class="bg-[#1E293B] border-2 border-[#334155] rounded-2xl p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between mb-6">
-                <h3 id="modal-title" class="text-xl font-bold text-white">Test Tahrirlash</h3>
-                <button onclick="closeModal()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                <h3 id="modal-title" class="text-xl font-black text-white">Yangi Test Qo'shish</h3>
+                <button onclick="closeTestModal()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
             </div>
-            <div id="modal-content">
-                <p class="text-gray-400 mb-4">Test ma'lumotlarini JSON formatida tahrirlang:</p>
-                <textarea id="test-json" class="w-full h-96 bg-[#0B1628] border border-gray-700 text-white p-4 font-mono text-sm focus:border-[#00D4AA] outline-none"></textarea>
-                <div class="flex gap-4 mt-6">
-                    <button onclick="saveTest()" class="bg-[#00D4AA] text-[#0B1628] px-6 py-2 font-bold hover:bg-[#00B894] transition">Saqlash</button>
-                    <button onclick="closeModal()" class="border border-gray-700 text-gray-400 px-6 py-2 hover:border-[#00D4AA] hover:text-[#00D4AA] transition">Bekor qilish</button>
+
+            <!-- Simple Form for Basic Info -->
+            <form id="test-form">
+                <input type="hidden" id="test-section" value="">
+                <input type="hidden" id="test-id" value="">
+
+                <div class="grid md:grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-300 mb-2">Test nomi</label>
+                        <input type="text" id="test-title" class="form-input" placeholder="Masalan: Reading Test 1" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-300 mb-2">Vaqt chegarasi (daqiqa)</label>
+                        <input type="number" id="test-time" class="form-input" placeholder="60" value="60" required>
+                    </div>
                 </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-bold text-gray-300 mb-2">Test ma'lumotlari (JSON)</label>
+                    <p class="text-xs text-gray-500 mb-2">Quyida test "parts" massivini JSON formatida kiriting:</p>
+                    <textarea id="test-parts-json" class="form-input font-mono text-sm h-64" placeholder='[
+  {
+    "part_number": 1,
+    "title": "Part 1: Multiple Choice",
+    "instruction": "Savollarni o'\''qing va to'\''g'\''ri javobni tanlang.",
+    "type": "multiple_choice",
+    "questions": [...]
+  }
+]'></textarea>
+                </div>
+
+                <div class="bg-[#0F172A] border-2 border-[#334155] rounded-xl p-4 mb-6">
+                    <h4 class="font-bold text-[#4ECDC4] mb-3 text-sm">Yordam: Part strukturasi</h4>
+                    <div class="text-xs text-gray-400 font-mono space-y-1">
+                        <p><span class="text-[#A78BFA]">part_number</span>: Qism raqami (1, 2, 3...)</p>
+                        <p><span class="text-[#A78BFA]">title</span>: Qism nomi</p>
+                        <p><span class="text-[#A78BFA]">instruction</span>: Ko'rsatma matni</p>
+                        <p><span class="text-[#A78BFA]">type</span>: multiple_choice, multiple_choice_cloze, open_cloze, key_word, gapped_text, matching</p>
+                        <p><span class="text-[#A78BFA]">text</span>: Asosiy matn (agar kerak bo'lsa)</p>
+                        <p><span class="text-[#A78BFA]">questions</span>: Savollar massivi</p>
+                    </div>
+                </div>
+
+                <div class="flex gap-4">
+                    <button type="submit" class="btn-primary">Saqlash</button>
+                    <button type="button" onclick="closeTestModal()" class="px-6 py-2 border-2 border-[#334155] text-gray-400 hover:border-[#4ECDC4] hover:text-[#4ECDC4] rounded-xl font-bold transition">Bekor qilish</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- User Edit Modal -->
+    <div id="user-modal" class="fixed inset-0 modal-overlay flex items-center justify-center z-50 hidden">
+        <div class="bg-[#1E293B] border-2 border-[#334155] rounded-2xl p-6 max-w-md w-full mx-4">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-black text-white">Foydalanuvchini Tahrirlash</h3>
+                <button onclick="closeUserModal()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
             </div>
+
+            <form id="user-form">
+                <input type="hidden" id="user-id" value="">
+
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-gray-300 mb-2">Bepul testlar soni</label>
+                    <input type="number" id="user-free-tests" class="form-input" min="0" value="0">
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-bold text-gray-300 mb-2">Sotib olingan testlar soni</label>
+                    <input type="number" id="user-purchased-tests" class="form-input" min="0" value="0">
+                </div>
+
+                <div class="flex gap-4">
+                    <button type="submit" class="btn-primary">Saqlash</button>
+                    <button type="button" onclick="closeUserModal()" class="px-6 py-2 border-2 border-[#334155] text-gray-400 hover:border-[#4ECDC4] hover:text-[#4ECDC4] rounded-xl font-bold transition">Bekor qilish</button>
+                </div>
+            </form>
         </div>
     </div>
 
     <script>
         let currentSection = null;
         let currentTests = [];
+        let allUsers = {{ users | tojson | safe }};
 
         // Tab switching
         document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -244,56 +728,94 @@
             }
         }
 
-        async function showModal(section) {
+        // Show Add Modal
+        function showAddModal(section) {
             currentSection = section;
-            currentTests = await loadTests(section);
-            document.getElementById('modal-title').textContent = section.charAt(0).toUpperCase() + section.slice(1) + ' Testlarni Tahrirlash';
-            document.getElementById('test-json').value = JSON.stringify(currentTests, null, 2);
-            document.getElementById('edit-modal').classList.remove('hidden');
+            document.getElementById('modal-title').textContent = section.charAt(0).toUpperCase() + section.slice(1) + ' - Yangi Test';
+            document.getElementById('test-section').value = section;
+            document.getElementById('test-id').value = '';
+            document.getElementById('test-title').value = '';
+            document.getElementById('test-time').value = '60';
+            document.getElementById('test-parts-json').value = '';
+            document.getElementById('test-modal').classList.remove('hidden');
         }
 
-        function closeModal() {
-            document.getElementById('edit-modal').classList.add('hidden');
-            currentSection = null;
-        }
-
-        async function saveTest() {
-            try {
-                const jsonText = document.getElementById('test-json').value;
-                const tests = JSON.parse(jsonText);
-
-                const response = await fetch(`/admin/data/${currentSection}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ tests: tests })
-                });
-
-                if (response.ok) {
-                    alert('Saqlandi!');
-                    location.reload();
-                } else {
-                    alert('Xatolik yuz berdi');
-                }
-            } catch (error) {
-                alert('JSON format xato: ' + error.message);
-            }
-        }
-
+        // Edit Test
         async function editTest(section, testId) {
             currentSection = section;
             currentTests = await loadTests(section);
             const test = currentTests.find(t => t.id === testId);
             if (test) {
                 document.getElementById('modal-title').textContent = 'Test Tahrirlash: ' + test.title;
-                document.getElementById('test-json').value = JSON.stringify([test], null, 2);
-                document.getElementById('edit-modal').classList.remove('hidden');
+                document.getElementById('test-section').value = section;
+                document.getElementById('test-id').value = testId;
+                document.getElementById('test-title').value = test.title;
+                document.getElementById('test-time').value = test.time_limit;
+                document.getElementById('test-parts-json').value = JSON.stringify(test.parts, null, 2);
+                document.getElementById('test-modal').classList.remove('hidden');
             }
         }
+
+        function closeTestModal() {
+            document.getElementById('test-modal').classList.add('hidden');
+        }
+
+        // Form submission
+        document.getElementById('test-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const section = document.getElementById('test-section').value;
+            const testId = document.getElementById('test-id').value;
+            const title = document.getElementById('test-title').value;
+            const timeLimit = parseInt(document.getElementById('test-time').value);
+            const partsJson = document.getElementById('test-parts-json').value;
+
+            let parts;
+            try {
+                parts = JSON.parse(partsJson);
+            } catch (error) {
+                alert('JSON format xato: ' + error.message);
+                return;
+            }
+
+            currentTests = await loadTests(section);
+
+            if (testId) {
+                // Update existing
+                const index = currentTests.findIndex(t => t.id === testId);
+                if (index !== -1) {
+                    currentTests[index].title = title;
+                    currentTests[index].time_limit = timeLimit;
+                    currentTests[index].parts = parts;
+                }
+            } else {
+                // Add new
+                const newTest = {
+                    id: section + '_' + (currentTests.length + 1),
+                    title: title,
+                    time_limit: timeLimit,
+                    parts: parts
+                };
+                currentTests.push(newTest);
+            }
+
+            const response = await fetch(`/admin/data/${section}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tests: currentTests })
+            });
+
+            if (response.ok) {
+                alert('Saqlandi!');
+                location.reload();
+            } else {
+                alert('Xatolik yuz berdi');
+            }
+        });
 
         async function deleteTest(section, testId) {
             if (!confirm('Rostdan o\'chirmoqchimisiz?')) return;
 
-            currentSection = section;
             currentTests = await loadTests(section);
             currentTests = currentTests.filter(t => t.id !== testId);
 
@@ -307,6 +829,80 @@
                 location.reload();
             } else {
                 alert('Xatolik yuz berdi');
+            }
+        }
+
+        // User Modal
+        function editUser(userId) {
+            const user = allUsers.find(u => u.id === userId);
+            if (user) {
+                document.getElementById('user-id').value = userId;
+                document.getElementById('user-free-tests').value = user.free_tests || 0;
+                document.getElementById('user-purchased-tests').value = user.purchased_tests || 0;
+                document.getElementById('user-modal').classList.remove('hidden');
+            }
+        }
+
+        function closeUserModal() {
+            document.getElementById('user-modal').classList.add('hidden');
+        }
+
+        document.getElementById('user-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const userId = document.getElementById('user-id').value;
+            const freeTests = parseInt(document.getElementById('user-free-tests').value);
+            const purchasedTests = parseInt(document.getElementById('user-purchased-tests').value);
+
+            const response = await fetch(`/admin/user/${userId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ free_tests: freeTests, purchased_tests: purchasedTests })
+            });
+
+            if (response.ok) {
+                alert('Saqlandi!');
+                location.reload();
+            } else {
+                alert('Xatolik yuz berdi');
+            }
+        });
+
+        // JSON Editor (Advanced)
+        let currentJsonSection = null;
+
+        async function loadJsonEditor(section) {
+            currentJsonSection = section;
+            const tests = await loadTests(section);
+            document.getElementById('json-editor-title').textContent = section.charAt(0).toUpperCase() + section.slice(1) + ' Tests JSON';
+            document.getElementById('json-editor').value = JSON.stringify(tests, null, 2);
+            document.getElementById('json-editor-container').classList.remove('hidden');
+        }
+
+        function closeJsonEditor() {
+            document.getElementById('json-editor-container').classList.add('hidden');
+            currentJsonSection = null;
+        }
+
+        async function saveJsonEditor() {
+            try {
+                const jsonText = document.getElementById('json-editor').value;
+                const tests = JSON.parse(jsonText);
+
+                const response = await fetch(`/admin/data/${currentJsonSection}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tests: tests })
+                });
+
+                if (response.ok) {
+                    alert('Saqlandi!');
+                    location.reload();
+                } else {
+                    alert('Xatolik yuz berdi');
+                }
+            } catch (error) {
+                alert('JSON format xato: ' + error.message);
             }
         }
     </script>

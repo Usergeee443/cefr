@@ -1701,16 +1701,20 @@ async def admin_dashboard(request: Request):
     listening = get_listening_tests()
     writing = get_writing_tests()
     fbs = get_feedbacks()
+    users_data = load_users()
+    users_list = list(users_data.values())
     return templates.TemplateResponse("admin_dashboard.html", {
         "request": request,
         "reading_count": len(reading),
         "listening_count": len(listening),
         "writing_count": len(writing),
         "feedback_count": len(fbs),
+        "user_count": len(users_list),
         "feedbacks": fbs[-20:],
         "reading_tests": reading,
         "listening_tests": listening,
-        "writing_tests": writing
+        "writing_tests": writing,
+        "users": users_list
     })
 
 @app.get("/admin/data/{section}", response_class=JSONResponse)
@@ -1735,6 +1739,17 @@ async def admin_save_data(request: Request, section: str):
     else:
         return JSONResponse({"error": "Unknown section"}, status_code=400)
     return JSONResponse({"success": True})
+
+@app.post("/admin/user/{user_id}")
+async def admin_update_user(request: Request, user_id: str):
+    if not check_admin(request): return JSONResponse({"error": "Unauthorized"}, status_code=401)
+    body = await request.json()
+    free_tests = body.get("free_tests", 0)
+    purchased_tests = body.get("purchased_tests", 0)
+    updated = update_user(user_id, free_tests=free_tests, purchased_tests=purchased_tests)
+    if updated:
+        return JSONResponse({"success": True})
+    return JSONResponse({"error": "User not found"}, status_code=404)
 
 @app.get("/health")
 async def health():

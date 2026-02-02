@@ -3,50 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - OSCO.</title>
+    <title>Admin Login - CEFR Test Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        * { font-family: 'Inter', sans-serif; }
-        *, *::before, *::after { border-radius: 0 !important; }
-        body { background-color: #0B1628; }
+        * { font-family: 'Nunito', sans-serif; }
+        body { background-color: #0F172A; }
+
+        .logo-box {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF9F43 100%);
+            box-shadow: 0 4px 0 #cc5555;
+        }
+
+        .login-card {
+            background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
+            border: 2px solid #334155;
+        }
+
+        .form-input {
+            background: #0F172A;
+            border: 2px solid #334155;
+            color: white;
+            padding: 12px 16px;
+            width: 100%;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+        .form-input:focus {
+            border-color: #4ECDC4;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(78, 205, 196, 0.15);
+        }
+        .form-input::placeholder {
+            color: #64748b;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4ECDC4 0%, #45B7D1 100%);
+            color: #0F172A;
+            font-weight: 700;
+            padding: 14px 24px;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 0 #3da69f;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #3da69f;
+        }
+        .btn-primary:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #3da69f;
+        }
     </style>
 </head>
 <body class="min-h-screen text-white flex items-center justify-center">
     <div class="w-full max-w-md p-6">
         <div class="text-center mb-8">
-            <a href="/" class="text-3xl font-black">
-                <span class="text-[#00D4AA]">OSCO</span><span class="text-white">.</span>
+            <a href="/" class="flex items-center justify-center gap-3">
+                <div class="logo-box w-12 h-12 flex items-center justify-center text-white font-black text-xl rounded-xl">
+                    C
+                </div>
+                <span class="text-2xl font-black text-white">CEFR Test</span>
             </a>
-            <p class="text-gray-500 text-sm mt-2">Admin Panel</p>
+            <div class="flex items-center justify-center gap-2 mt-4">
+                <span class="px-3 py-1 bg-gradient-to-r from-[#A78BFA]/20 to-[#45B7D1]/20 text-[#A78BFA] text-xs font-bold rounded-full border border-[#A78BFA]/30">ADMIN</span>
+            </div>
         </div>
 
-        <div class="bg-[#0F2035] border border-gray-800 p-8">
-            <h1 class="text-xl font-bold text-white mb-6">Kirish</h1>
+        <div class="login-card rounded-2xl p-8">
+            <h1 class="text-xl font-black text-white mb-6 flex items-center gap-3">
+                <div class="w-10 h-10 bg-[#4ECDC4]/20 rounded-xl flex items-center justify-center">
+                    <svg class="w-5 h-5 text-[#4ECDC4]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                    </svg>
+                </div>
+                Admin Kirish
+            </h1>
 
             {% if error %}
-            <div class="bg-red-500/20 border border-red-500/50 text-red-400 p-3 mb-6 text-sm">
+            <div class="bg-[#FF6B6B]/20 border-2 border-[#FF6B6B]/50 text-[#FF6B6B] p-4 mb-6 text-sm font-bold rounded-xl flex items-center gap-3">
+                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
                 {{ error }}
             </div>
             {% endif %}
 
             <form method="POST" action="/admin/login">
                 <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Parol</label>
+                    <label class="block text-sm font-bold text-gray-300 mb-3">Parol</label>
                     <input type="password" name="password" required
-                           class="w-full bg-[#0B1628] border border-gray-700 text-white px-4 py-3 focus:border-[#00D4AA] outline-none"
+                           class="form-input"
                            placeholder="Admin parolini kiriting">
                 </div>
 
-                <button type="submit"
-                        class="w-full bg-[#00D4AA] text-[#0B1628] px-6 py-3 font-bold hover:bg-[#00B894] transition-colors">
+                <button type="submit" class="btn-primary w-full text-lg">
                     Kirish
                 </button>
             </form>
         </div>
 
         <div class="text-center mt-6">
-            <a href="/" class="text-gray-500 hover:text-[#00D4AA] text-sm">Bosh sahifaga qaytish</a>
+            <a href="/" class="text-gray-500 hover:text-[#4ECDC4] text-sm font-bold transition">Bosh sahifaga qaytish</a>
         </div>
     </div>
 </body>
