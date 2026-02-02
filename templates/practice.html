@@ -1,66 +1,519 @@
 {% extends "base_app.html" %}
-{% block title %}{% if lang == 'uz' %}Praktika{% else %}Practice{% endif %} - CEFR Level{% endblock %}
+{% block title %}{% if lang == 'uz' %}Praktika{% else %}Practice{% endif %} - CEFR Test{% endblock %}
+
+{% block head %}
+<style>
+    .practice-card {
+        background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
+        border: 2px solid #334155;
+        border-radius: 16px;
+        transition: all 0.3s ease;
+    }
+    .practice-card:hover {
+        border-color: #4ECDC4;
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+    }
+    .skill-badge {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+    .level-a1 { background: #4ECDC4; color: #0F172A; }
+    .level-a2 { background: #45B7D1; color: #0F172A; }
+    .level-b1 { background: #FFE66D; color: #0F172A; }
+    .level-b2 { background: #FF9F43; color: white; }
+    .level-c1 { background: #A78BFA; color: white; }
+    .level-c2 { background: #FF6B6B; color: white; }
+
+    .quiz-option {
+        background: #0F172A;
+        border: 2px solid #334155;
+        border-radius: 12px;
+        padding: 16px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .quiz-option:hover {
+        border-color: #4ECDC4;
+        background: #1E293B;
+    }
+    .quiz-option.selected {
+        border-color: #4ECDC4;
+        background: rgba(78, 205, 196, 0.1);
+    }
+    .quiz-option.correct {
+        border-color: #4ECDC4;
+        background: rgba(78, 205, 196, 0.2);
+    }
+    .quiz-option.wrong {
+        border-color: #FF6B6B;
+        background: rgba(255, 107, 107, 0.2);
+    }
+
+    .progress-ring {
+        transform: rotate(-90deg);
+    }
+    .progress-ring-circle {
+        transition: stroke-dashoffset 0.5s ease;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="max-w-3xl mx-auto px-4 md:px-6 py-8">
-    <div class="text-center py-16">
-        <!-- Coming Soon Badge -->
-        <div class="inline-flex items-center gap-2 bg-[#FF9600]/20 text-[#FF9600] px-4 py-2 rounded-full font-bold text-sm mb-8">
-            <span class="w-2 h-2 bg-[#FF9600] rounded-full animate-pulse"></span>
-            {% if lang == 'uz' %}Tez kunda{% else %}Coming Soon{% endif %}
-        </div>
-
-        <!-- Icon -->
-        <div class="w-32 h-32 bg-gradient-to-br from-[#CE82FF]/20 to-[#1CB0F6]/20 rounded-full flex items-center justify-center mx-auto mb-8 mascot-bounce">
-            <svg class="w-16 h-16 text-[#CE82FF]" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/>
-            </svg>
-        </div>
-
-        <h1 class="text-4xl md:text-5xl font-black text-white mb-4">
-            {% if lang == 'uz' %}Praktika{% else %}Practice{% endif %} 🎯
+<div class="max-w-5xl mx-auto px-4 md:px-6 py-8 pb-24">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl md:text-4xl font-black text-white mb-3 flex items-center gap-3">
+            <div class="w-12 h-12 bg-gradient-to-br from-[#A78BFA] to-[#FF6B6B] rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                </svg>
+            </div>
+            {% if lang == 'uz' %}Praktika{% else %}Practice{% endif %}
         </h1>
+        <p class="text-gray-400 font-medium">{% if lang == 'uz' %}Ingliz tilingizni har kuni mashq qiling{% else %}Practice your English every day{% endif %}</p>
+    </div>
 
-        <p class="text-[#93A8B1] text-lg max-w-md mx-auto mb-8">
-            {% if lang == 'uz' %}
-                Bu bo'limda siz ingliz tilini mustaqil mashq qilishingiz mumkin bo'ladi. Tez kunda!
-            {% else %}
-                In this section, you'll be able to practice English on your own. Coming soon!
-            {% endif %}
-        </p>
+    <!-- Daily Challenge Banner -->
+    <div class="app-card p-6 mb-8 bg-gradient-to-r from-[#FF6B6B]/10 via-[#FFE66D]/10 to-[#4ECDC4]/10 border-[#FFE66D]/30">
+        <div class="flex items-center justify-between flex-wrap gap-4">
+            <div class="flex items-center gap-4">
+                <div class="w-16 h-16 bg-gradient-to-br from-[#FFE66D] to-[#FF9F43] rounded-2xl flex items-center justify-center text-3xl shadow-lg">
+                    🔥
+                </div>
+                <div>
+                    <h2 class="text-xl font-black text-white">{% if lang == 'uz' %}Kunlik mashq{% else %}Daily Challenge{% endif %}</h2>
+                    <p class="text-gray-400 font-medium">{% if lang == 'uz' %}Bugun 5 ta mashqni bajaring{% else %}Complete 5 exercises today{% endif %}</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="text-center">
+                    <div class="text-3xl font-black text-[#FFE66D]">3/5</div>
+                    <div class="text-xs text-gray-500 font-bold">{% if lang == 'uz' %}Bajarildi{% else %}Completed{% endif %}</div>
+                </div>
+                <div class="w-16 h-16">
+                    <svg class="progress-ring" width="64" height="64">
+                        <circle stroke="#334155" stroke-width="6" fill="transparent" r="26" cx="32" cy="32"/>
+                        <circle class="progress-ring-circle" stroke="#FFE66D" stroke-width="6" fill="transparent" r="26" cx="32" cy="32"
+                                stroke-dasharray="163.36" stroke-dashoffset="65.34" stroke-linecap="round"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        <!-- Features Preview -->
-        <div class="grid md:grid-cols-3 gap-4 max-w-2xl mx-auto mb-10">
-            <div class="duo-card p-5 text-center opacity-60">
-                <div class="w-12 h-12 bg-[#58CC02]/20 rounded-xl flex items-center justify-center mx-auto mb-3">
+    <!-- Practice Categories -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <!-- Vocabulary -->
+        <div class="practice-card p-6">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-14 h-14 bg-gradient-to-br from-[#4ECDC4] to-[#45B7D1] rounded-xl flex items-center justify-center shadow-lg">
                     <span class="text-2xl">📚</span>
                 </div>
-                <h3 class="font-bold text-white mb-1">Vocabulary</h3>
-                <p class="text-[#93A8B1] text-sm">{% if lang == 'uz' %}So'z boyligini oshiring{% else %}Build your vocabulary{% endif %}</p>
+                <span class="skill-badge level-b1">B1-B2</span>
             </div>
-            <div class="duo-card p-5 text-center opacity-60">
-                <div class="w-12 h-12 bg-[#1CB0F6]/20 rounded-xl flex items-center justify-center mx-auto mb-3">
-                    <span class="text-2xl">🎯</span>
+            <h3 class="text-xl font-black text-white mb-2">Vocabulary</h3>
+            <p class="text-gray-400 text-sm font-medium mb-4">{% if lang == 'uz' %}So'z boyligini oshiring{% else %}Build your word power{% endif %}</p>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 text-sm text-gray-500">
+                    <span class="w-2 h-2 bg-[#4ECDC4] rounded-full"></span>
+                    <span class="font-bold">12 {% if lang == 'uz' %}mashq{% else %}exercises{% endif %}</span>
                 </div>
-                <h3 class="font-bold text-white mb-1">Grammar</h3>
-                <p class="text-[#93A8B1] text-sm">{% if lang == 'uz' %}Grammatikani o'rganing{% else %}Learn grammar rules{% endif %}</p>
-            </div>
-            <div class="duo-card p-5 text-center opacity-60">
-                <div class="w-12 h-12 bg-[#CE82FF]/20 rounded-xl flex items-center justify-center mx-auto mb-3">
-                    <span class="text-2xl">🎮</span>
-                </div>
-                <h3 class="font-bold text-white mb-1">Mini Games</h3>
-                <p class="text-[#93A8B1] text-sm">{% if lang == 'uz' %}O'yin orqali o'rganing{% else %}Learn through games{% endif %}</p>
+                <button onclick="startPractice('vocabulary')" class="btn-3d px-4 py-2 text-sm">{% if lang == 'uz' %}Boshlash{% else %}Start{% endif %}</button>
             </div>
         </div>
 
-        <!-- CTA -->
-        <div class="duo-card p-6 max-w-md mx-auto">
-            <p class="text-[#93A8B1] mb-4">{% if lang == 'uz' %}Hozircha asosiy testni topshiring:{% else %}Meanwhile, take the main test:{% endif %}</p>
-            <a href="/dashboard" class="btn-3d inline-block px-8 py-3">
-                {% if lang == 'uz' %}Testga o'tish{% else %}Go to Tests{% endif %}
-            </a>
+        <!-- Grammar -->
+        <div class="practice-card p-6">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-14 h-14 bg-gradient-to-br from-[#A78BFA] to-[#45B7D1] rounded-xl flex items-center justify-center shadow-lg">
+                    <span class="text-2xl">🎯</span>
+                </div>
+                <span class="skill-badge level-a2">A2-B1</span>
+            </div>
+            <h3 class="text-xl font-black text-white mb-2">Grammar</h3>
+            <p class="text-gray-400 text-sm font-medium mb-4">{% if lang == 'uz' %}Grammatika qoidalarini o'rganing{% else %}Master grammar rules{% endif %}</p>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 text-sm text-gray-500">
+                    <span class="w-2 h-2 bg-[#A78BFA] rounded-full"></span>
+                    <span class="font-bold">15 {% if lang == 'uz' %}mavzu{% else %}topics{% endif %}</span>
+                </div>
+                <button onclick="startPractice('grammar')" class="btn-3d px-4 py-2 text-sm">{% if lang == 'uz' %}Boshlash{% else %}Start{% endif %}</button>
+            </div>
+        </div>
+
+        <!-- Reading -->
+        <div class="practice-card p-6">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-14 h-14 bg-gradient-to-br from-[#FFE66D] to-[#FF9F43] rounded-xl flex items-center justify-center shadow-lg">
+                    <span class="text-2xl">📖</span>
+                </div>
+                <span class="skill-badge level-b2">B1-C1</span>
+            </div>
+            <h3 class="text-xl font-black text-white mb-2">Reading</h3>
+            <p class="text-gray-400 text-sm font-medium mb-4">{% if lang == 'uz' %}O'qish ko'nikmalarini rivojlantiring{% else %}Improve reading skills{% endif %}</p>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 text-sm text-gray-500">
+                    <span class="w-2 h-2 bg-[#FFE66D] rounded-full"></span>
+                    <span class="font-bold">8 {% if lang == 'uz' %}matn{% else %}texts{% endif %}</span>
+                </div>
+                <button onclick="startPractice('reading')" class="btn-3d px-4 py-2 text-sm">{% if lang == 'uz' %}Boshlash{% else %}Start{% endif %}</button>
+            </div>
+        </div>
+
+        <!-- Listening -->
+        <div class="practice-card p-6">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-14 h-14 bg-gradient-to-br from-[#45B7D1] to-[#4ECDC4] rounded-xl flex items-center justify-center shadow-lg">
+                    <span class="text-2xl">🎧</span>
+                </div>
+                <span class="skill-badge level-a2">A2-B2</span>
+            </div>
+            <h3 class="text-xl font-black text-white mb-2">Listening</h3>
+            <p class="text-gray-400 text-sm font-medium mb-4">{% if lang == 'uz' %}Eshitish qobiliyatini oshiring{% else %}Enhance listening comprehension{% endif %}</p>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 text-sm text-gray-500">
+                    <span class="w-2 h-2 bg-[#45B7D1] rounded-full"></span>
+                    <span class="font-bold">10 {% if lang == 'uz' %}audio{% else %}audios{% endif %}</span>
+                </div>
+                <button onclick="startPractice('listening')" class="btn-3d px-4 py-2 text-sm">{% if lang == 'uz' %}Boshlash{% else %}Start{% endif %}</button>
+            </div>
+        </div>
+
+        <!-- Writing -->
+        <div class="practice-card p-6">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-14 h-14 bg-gradient-to-br from-[#FF6B6B] to-[#FF9F43] rounded-xl flex items-center justify-center shadow-lg">
+                    <span class="text-2xl">✍️</span>
+                </div>
+                <span class="skill-badge level-b1">B1-C1</span>
+            </div>
+            <h3 class="text-xl font-black text-white mb-2">Writing</h3>
+            <p class="text-gray-400 text-sm font-medium mb-4">{% if lang == 'uz' %}Yozish malakasini rivojlantiring{% else %}Develop writing skills{% endif %}</p>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 text-sm text-gray-500">
+                    <span class="w-2 h-2 bg-[#FF6B6B] rounded-full"></span>
+                    <span class="font-bold">6 {% if lang == 'uz' %}topshiriq{% else %}tasks{% endif %}</span>
+                </div>
+                <button onclick="startPractice('writing')" class="btn-3d px-4 py-2 text-sm">{% if lang == 'uz' %}Boshlash{% else %}Start{% endif %}</button>
+            </div>
+        </div>
+
+        <!-- Quick Quiz -->
+        <div class="practice-card p-6 border-[#4ECDC4]/50">
+            <div class="flex items-center justify-between mb-4">
+                <div class="w-14 h-14 bg-gradient-to-br from-[#4ECDC4] to-[#A78BFA] rounded-xl flex items-center justify-center shadow-lg">
+                    <span class="text-2xl">⚡</span>
+                </div>
+                <span class="px-3 py-1 bg-[#4ECDC4] text-[#0F172A] text-xs font-black rounded-full">NEW</span>
+            </div>
+            <h3 class="text-xl font-black text-white mb-2">Quick Quiz</h3>
+            <p class="text-gray-400 text-sm font-medium mb-4">{% if lang == 'uz' %}5 daqiqali tezkor test{% else %}5-minute speed challenge{% endif %}</p>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 text-sm text-gray-500">
+                    <span class="w-2 h-2 bg-[#4ECDC4] rounded-full animate-pulse"></span>
+                    <span class="font-bold">{% if lang == 'uz' %}Aralash savollar{% else %}Mixed questions{% endif %}</span>
+                </div>
+                <button onclick="startQuickQuiz()" class="btn-3d px-4 py-2 text-sm">{% if lang == 'uz' %}Boshlash{% else %}Start{% endif %}</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Quiz Section (Initially Hidden) -->
+    <div id="quiz-section" class="app-card p-6 mb-8 hidden">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-black text-white flex items-center gap-3">
+                <span class="text-2xl">⚡</span>
+                Quick Quiz
+            </h2>
+            <div class="flex items-center gap-4">
+                <div class="text-center">
+                    <div id="quiz-score" class="text-2xl font-black text-[#4ECDC4]">0/0</div>
+                    <div class="text-xs text-gray-500 font-bold">Score</div>
+                </div>
+                <button onclick="closeQuiz()" class="text-gray-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div id="quiz-content">
+            <!-- Quiz questions will be loaded here -->
+        </div>
+
+        <div id="quiz-result" class="hidden text-center py-8">
+            <div class="w-24 h-24 bg-gradient-to-br from-[#4ECDC4] to-[#45B7D1] rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <span class="text-4xl">🎉</span>
+            </div>
+            <h3 class="text-2xl font-black text-white mb-2">{% if lang == 'uz' %}Ajoyib!{% else %}Great Job!{% endif %}</h3>
+            <p id="quiz-final-score" class="text-gray-400 font-medium mb-6"></p>
+            <button onclick="startQuickQuiz()" class="btn-3d px-8 py-3">{% if lang == 'uz' %}Qayta boshlash{% else %}Try Again{% endif %}</button>
+        </div>
+    </div>
+
+    <!-- Writing Practice Section -->
+    <div id="writing-section" class="app-card p-6 mb-8 hidden">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-black text-white flex items-center gap-3">
+                <span class="text-2xl">✍️</span>
+                {% if lang == 'uz' %}Yozish mashqi{% else %}Writing Practice{% endif %}
+            </h2>
+            <button onclick="closeWriting()" class="text-gray-400 hover:text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="bg-[#0F172A] border-2 border-[#334155] rounded-xl p-5 mb-6">
+            <h3 class="font-bold text-[#FFE66D] mb-2">{% if lang == 'uz' %}Topshiriq{% else %}Task{% endif %}:</h3>
+            <p id="writing-prompt" class="text-gray-300 font-medium"></p>
+            <div class="flex items-center gap-4 mt-4 text-sm text-gray-500">
+                <span>📝 {% if lang == 'uz' %}Minimum 80 so'z{% else %}Minimum 80 words{% endif %}</span>
+                <span>⏱️ {% if lang == 'uz' %}10 daqiqa{% else %}10 minutes{% endif %}</span>
+            </div>
+        </div>
+
+        <textarea id="writing-input" class="w-full h-48 bg-[#0F172A] border-2 border-[#334155] rounded-xl p-4 text-white font-medium resize-none focus:border-[#4ECDC4] outline-none transition" placeholder="{% if lang == 'uz' %}Bu yerga yozing...{% else %}Write here...{% endif %}"></textarea>
+
+        <div class="flex items-center justify-between mt-4">
+            <div id="word-count" class="text-gray-500 font-bold">0 {% if lang == 'uz' %}so'z{% else %}words{% endif %}</div>
+            <button onclick="submitWriting()" class="btn-3d px-6 py-2">{% if lang == 'uz' %}Yuborish{% else %}Submit{% endif %}</button>
+        </div>
+
+        <div id="writing-feedback" class="hidden mt-6 bg-[#4ECDC4]/10 border-2 border-[#4ECDC4]/30 rounded-xl p-5">
+            <h4 class="font-bold text-[#4ECDC4] mb-2">{% if lang == 'uz' %}Natija{% else %}Feedback{% endif %}:</h4>
+            <p id="writing-feedback-text" class="text-gray-300 font-medium"></p>
+        </div>
+    </div>
+
+    <!-- Tips Section -->
+    <div class="app-card p-6">
+        <h2 class="text-xl font-black text-white mb-6 flex items-center gap-3">
+            <div class="w-10 h-10 bg-[#FFE66D]/20 rounded-xl flex items-center justify-center">
+                <span class="text-xl">💡</span>
+            </div>
+            {% if lang == 'uz' %}Foydali maslahatlar{% else %}Helpful Tips{% endif %}
+        </h2>
+        <div class="grid md:grid-cols-2 gap-4">
+            <div class="bg-[#0F172A] border-2 border-[#334155] rounded-xl p-4">
+                <h4 class="font-bold text-[#4ECDC4] mb-2">📚 Vocabulary</h4>
+                <p class="text-gray-400 text-sm font-medium">{% if lang == 'uz' %}Har kuni 5-10 ta yangi so'z o'rganing va ularni jumlada ishlating{% else %}Learn 5-10 new words daily and use them in sentences{% endif %}</p>
+            </div>
+            <div class="bg-[#0F172A] border-2 border-[#334155] rounded-xl p-4">
+                <h4 class="font-bold text-[#A78BFA] mb-2">🎯 Grammar</h4>
+                <p class="text-gray-400 text-sm font-medium">{% if lang == 'uz' %}Grammatika qoidalarini amalda qo'llang, faqat yodlash yetarli emas{% else %}Apply grammar rules in practice, not just memorization{% endif %}</p>
+            </div>
+            <div class="bg-[#0F172A] border-2 border-[#334155] rounded-xl p-4">
+                <h4 class="font-bold text-[#FFE66D] mb-2">📖 Reading</h4>
+                <p class="text-gray-400 text-sm font-medium">{% if lang == 'uz' %}Ingliz tilidagi maqola va kitoblarni o'qing, yangi so'zlarni yozib oling{% else %}Read English articles and books, note down new words{% endif %}</p>
+            </div>
+            <div class="bg-[#0F172A] border-2 border-[#334155] rounded-xl p-4">
+                <h4 class="font-bold text-[#FF6B6B] mb-2">✍️ Writing</h4>
+                <p class="text-gray-400 text-sm font-medium">{% if lang == 'uz' %}Har kuni kamida 100 so'z yozing - kundalik, email yoki esse{% else %}Write at least 100 words daily - diary, email, or essay{% endif %}</p>
+            </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const quizQuestions = [
+    {
+        type: 'vocabulary',
+        question: 'What is the synonym of "happy"?',
+        options: ['Sad', 'Joyful', 'Angry', 'Tired'],
+        correct: 1
+    },
+    {
+        type: 'grammar',
+        question: 'Choose the correct form: "She ___ to school every day."',
+        options: ['go', 'goes', 'going', 'gone'],
+        correct: 1
+    },
+    {
+        type: 'vocabulary',
+        question: 'What is the opposite of "expensive"?',
+        options: ['Costly', 'Cheap', 'Rich', 'Poor'],
+        correct: 1
+    },
+    {
+        type: 'grammar',
+        question: 'Which sentence is correct?',
+        options: ['I have went there', 'I have gone there', 'I have go there', 'I has gone there'],
+        correct: 1
+    },
+    {
+        type: 'vocabulary',
+        question: '"Necessary" means:',
+        options: ['Optional', 'Required', 'Forbidden', 'Possible'],
+        correct: 1
+    },
+    {
+        type: 'grammar',
+        question: 'Choose: "If I ___ rich, I would travel."',
+        options: ['am', 'was', 'were', 'be'],
+        correct: 2
+    },
+    {
+        type: 'vocabulary',
+        question: 'A "decade" is:',
+        options: ['100 years', '10 years', '50 years', '1000 years'],
+        correct: 1
+    },
+    {
+        type: 'grammar',
+        question: '"The book ___ by millions." (passive)',
+        options: ['read', 'is reading', 'has been read', 'reads'],
+        correct: 2
+    },
+    {
+        type: 'vocabulary',
+        question: '"Enormous" means:',
+        options: ['Small', 'Medium', 'Very large', 'Normal'],
+        correct: 2
+    },
+    {
+        type: 'grammar',
+        question: 'Correct: "Neither Tom ___ Jerry is here."',
+        options: ['or', 'and', 'nor', 'but'],
+        correct: 2
+    }
+];
+
+const writingPrompts = [
+    "Write an email to a friend inviting them to your birthday party. Include the date, time, location, and what activities you have planned.",
+    "Describe your favorite place to visit. Explain why you like it and what activities you can do there.",
+    "Write a review of a movie or book you recently enjoyed. Explain the plot briefly and give your opinion.",
+    "Describe your typical daily routine. What time do you wake up, what do you do, and when do you go to sleep?",
+    "Write about the advantages and disadvantages of social media for students.",
+    "Describe your dream job. What would you do, why do you want it, and what skills do you need?"
+];
+
+let currentQuestion = 0;
+let score = 0;
+let shuffledQuestions = [];
+
+function startQuickQuiz() {
+    document.getElementById('quiz-section').classList.remove('hidden');
+    document.getElementById('quiz-result').classList.add('hidden');
+    document.getElementById('quiz-content').classList.remove('hidden');
+    currentQuestion = 0;
+    score = 0;
+    shuffledQuestions = [...quizQuestions].sort(() => Math.random() - 0.5).slice(0, 5);
+    showQuestion();
+    // Scroll to quiz
+    document.getElementById('quiz-section').scrollIntoView({ behavior: 'smooth' });
+}
+
+function showQuestion() {
+    if (currentQuestion >= shuffledQuestions.length) {
+        showResult();
+        return;
+    }
+
+    const q = shuffledQuestions[currentQuestion];
+    document.getElementById('quiz-score').textContent = `${score}/${currentQuestion}`;
+
+    let html = `
+        <div class="mb-4">
+            <span class="px-3 py-1 bg-[#334155] text-gray-400 text-xs font-bold rounded-full">${currentQuestion + 1}/${shuffledQuestions.length}</span>
+            <span class="ml-2 px-3 py-1 ${q.type === 'vocabulary' ? 'bg-[#4ECDC4]/20 text-[#4ECDC4]' : 'bg-[#A78BFA]/20 text-[#A78BFA]'} text-xs font-bold rounded-full">${q.type}</span>
+        </div>
+        <h3 class="text-lg font-bold text-white mb-6">${q.question}</h3>
+        <div class="space-y-3">
+    `;
+
+    q.options.forEach((opt, idx) => {
+        html += `<div class="quiz-option" onclick="selectAnswer(${idx})">${opt}</div>`;
+    });
+
+    html += '</div>';
+    document.getElementById('quiz-content').innerHTML = html;
+}
+
+function selectAnswer(idx) {
+    const q = shuffledQuestions[currentQuestion];
+    const options = document.querySelectorAll('.quiz-option');
+
+    options.forEach((opt, i) => {
+        opt.onclick = null;
+        if (i === q.correct) {
+            opt.classList.add('correct');
+        } else if (i === idx && idx !== q.correct) {
+            opt.classList.add('wrong');
+        }
+    });
+
+    if (idx === q.correct) {
+        score++;
+    }
+
+    setTimeout(() => {
+        currentQuestion++;
+        showQuestion();
+    }, 1000);
+}
+
+function showResult() {
+    document.getElementById('quiz-content').classList.add('hidden');
+    document.getElementById('quiz-result').classList.remove('hidden');
+    document.getElementById('quiz-score').textContent = `${score}/${shuffledQuestions.length}`;
+    const percentage = Math.round((score / shuffledQuestions.length) * 100);
+    document.getElementById('quiz-final-score').textContent = `{% if lang == 'uz' %}Siz ${score}/${shuffledQuestions.length} to'g'ri javob berdingiz (${percentage}%){% else %}You got ${score}/${shuffledQuestions.length} correct (${percentage}%){% endif %}`.replace(/\$\{score\}/g, score).replace(/\$\{shuffledQuestions\.length\}/g, shuffledQuestions.length).replace(/\$\{percentage\}/g, percentage);
+}
+
+function closeQuiz() {
+    document.getElementById('quiz-section').classList.add('hidden');
+}
+
+function startPractice(type) {
+    if (type === 'writing') {
+        document.getElementById('writing-section').classList.remove('hidden');
+        const prompt = writingPrompts[Math.floor(Math.random() * writingPrompts.length)];
+        document.getElementById('writing-prompt').textContent = prompt;
+        document.getElementById('writing-input').value = '';
+        document.getElementById('word-count').textContent = '0 {% if lang == "uz" %}so\'z{% else %}words{% endif %}';
+        document.getElementById('writing-feedback').classList.add('hidden');
+        document.getElementById('writing-section').scrollIntoView({ behavior: 'smooth' });
+    } else {
+        // For other types, start the quick quiz with filtered questions
+        startQuickQuiz();
+    }
+}
+
+function closeWriting() {
+    document.getElementById('writing-section').classList.add('hidden');
+}
+
+// Word count
+document.getElementById('writing-input').addEventListener('input', function() {
+    const words = this.value.trim().split(/\s+/).filter(w => w.length > 0).length;
+    document.getElementById('word-count').textContent = `${words} {% if lang == 'uz' %}so'z{% else %}words{% endif %}`;
+});
+
+function submitWriting() {
+    const text = document.getElementById('writing-input').value.trim();
+    const words = text.split(/\s+/).filter(w => w.length > 0).length;
+
+    let feedback = '';
+    if (words < 30) {
+        feedback = "{% if lang == 'uz' %}Juda qisqa! Kamida 80 so'z yozing.{% else %}Too short! Write at least 80 words.{% endif %}";
+    } else if (words < 80) {
+        feedback = "{% if lang == 'uz' %}Yaxshi boshlanish! Yana bir oz yozing - 80 so'zga yetkazing.{% else %}Good start! Write a bit more - aim for 80 words.{% endif %}";
+    } else if (words < 120) {
+        feedback = "{% if lang == 'uz' %}Ajoyib! Siz 80 so'zdan oshib ketdingiz. Endi grammatika va so'z xilma-xilligiga e'tibor bering.{% else %}Great! You've exceeded 80 words. Now focus on grammar and vocabulary variety.{% endif %}";
+    } else {
+        feedback = "{% if lang == 'uz' %}Zo'r! Siz juda yaxshi yozdingiz. Davom eting!{% else %}Excellent! You've written a substantial piece. Keep it up!{% endif %}";
+    }
+
+    document.getElementById('writing-feedback').classList.remove('hidden');
+    document.getElementById('writing-feedback-text').textContent = feedback;
+}
+</script>
 {% endblock %}

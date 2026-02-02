@@ -1,37 +1,44 @@
 {% extends "base_app.html" %}
-{% block title %}{% if lang == 'uz' %}Profil{% else %}Profile{% endif %} - CEFR Level{% endblock %}
+{% block title %}{% if lang == 'uz' %}Profil{% else %}Profile{% endif %} - CEFR Test{% endblock %}
 
 {% block content %}
 <div class="max-w-3xl mx-auto px-4 md:px-6 py-8 pb-24">
     <!-- Header -->
-    <h1 class="text-3xl md:text-4xl font-black text-white mb-8">
-        {% if lang == 'uz' %}Profil{% else %}Profile{% endif %} ⚙️
+    <h1 class="text-3xl md:text-4xl font-black text-white mb-8 flex items-center gap-3">
+        <div class="w-12 h-12 bg-gradient-to-br from-[#A78BFA] to-[#45B7D1] rounded-xl flex items-center justify-center">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+            </svg>
+        </div>
+        {% if lang == 'uz' %}Profil{% else %}Profile{% endif %}
     </h1>
 
     <!-- Account Section -->
-    <div class="duo-card mb-6 overflow-hidden">
-        <div class="p-5 border-b-2 border-[#37464F]">
+    <div class="app-card mb-6 overflow-hidden">
+        <div class="p-5 border-b-2 border-[#334155] bg-gradient-to-r from-[#1E293B] to-[#0F172A]">
             <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                <svg class="w-5 h-5 text-[#1CB0F6]" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                </svg>
+                <div class="w-8 h-8 bg-[#4ECDC4]/20 rounded-lg flex items-center justify-center">
+                    <svg class="w-4 h-4 text-[#4ECDC4]" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                </div>
                 {% if lang == 'uz' %}Akkaunt{% else %}Account{% endif %}
             </h2>
         </div>
         <div class="p-5">
             <div class="flex items-center gap-4 mb-6">
-                {% if user.avatar %}
-                <img src="{{ user.avatar }}" alt="" class="w-20 h-20 rounded-2xl border-4 border-[#58CC02]">
+                {% if user.picture %}
+                <img src="{{ user.picture }}" alt="" class="w-20 h-20 rounded-2xl border-4 border-[#4ECDC4]">
                 {% else %}
-                <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#58CC02] to-[#89E219] flex items-center justify-center text-white text-3xl font-bold">
+                <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#4ECDC4] to-[#45B7D1] flex items-center justify-center text-white text-3xl font-black shadow-lg">
                     {{ (user.name or user.email)[0]|upper }}
                 </div>
                 {% endif %}
                 <div>
-                    <h3 class="text-xl font-bold text-white">{{ user.name or user.email.split('@')[0] }}</h3>
-                    <p class="text-[#93A8B1]">{{ user.email }}</p>
+                    <h3 class="text-xl font-black text-white">{{ user.name or user.email.split('@')[0] }}</h3>
+                    <p class="text-gray-400 font-medium">{{ user.email }}</p>
                     {% if user.google_id %}
-                    <span class="inline-flex items-center gap-1 bg-[#223D45] text-[#93A8B1] text-xs font-bold px-2 py-1 rounded-lg mt-2">
+                    <span class="inline-flex items-center gap-1 bg-[#334155] text-gray-400 text-xs font-bold px-3 py-1 rounded-lg mt-2">
                         <svg class="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/>
                         </svg>
@@ -42,59 +49,61 @@
             </div>
 
             <div class="grid grid-cols-2 gap-4">
-                <div class="bg-[#223D45] rounded-xl p-4">
-                    <div class="text-[#93A8B1] text-sm mb-1">{% if lang == 'uz' %}Ro'yxatdan o'tgan{% else %}Joined{% endif %}</div>
-                    <div class="text-white font-bold">{{ user.created_at[:10] if user.created_at else '—' }}</div>
+                <div class="bg-[#0F172A] border-2 border-[#334155] rounded-xl p-4">
+                    <div class="text-gray-400 text-sm mb-1 font-medium">{% if lang == 'uz' %}Ro'yxatdan o'tgan{% else %}Joined{% endif %}</div>
+                    <div class="text-white font-black">{{ user.created_at[:10] if user.created_at else '—' }}</div>
                 </div>
-                <div class="bg-[#223D45] rounded-xl p-4">
-                    <div class="text-[#93A8B1] text-sm mb-1">{% if lang == 'uz' %}Testlar{% else %}Tests{% endif %}</div>
-                    <div class="text-white font-bold">{{ test_history|length if test_history else 0 }} {% if lang == 'uz' %}ta{% endif %}</div>
+                <div class="bg-[#0F172A] border-2 border-[#334155] rounded-xl p-4">
+                    <div class="text-gray-400 text-sm mb-1 font-medium">{% if lang == 'uz' %}Testlar{% else %}Tests{% endif %}</div>
+                    <div class="text-white font-black">{{ test_history|length if test_history else 0 }} {% if lang == 'uz' %}ta{% endif %}</div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Tariff Section -->
-    <div class="duo-card mb-6 overflow-hidden">
-        <div class="p-5 border-b-2 border-[#37464F]">
+    <div class="app-card mb-6 overflow-hidden">
+        <div class="p-5 border-b-2 border-[#334155] bg-gradient-to-r from-[#1E293B] to-[#0F172A]">
             <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                <svg class="w-5 h-5 text-[#FFC800]" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/>
-                </svg>
+                <div class="w-8 h-8 bg-[#FFE66D]/20 rounded-lg flex items-center justify-center">
+                    <svg class="w-4 h-4 text-[#FFE66D]" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/>
+                    </svg>
+                </div>
                 {% if lang == 'uz' %}Tarif{% else %}Plan{% endif %}
             </h2>
         </div>
         <div class="p-5">
             <div class="flex items-center justify-between mb-6">
                 <div>
-                    <div class="text-[#93A8B1] text-sm mb-1">{% if lang == 'uz' %}Qolgan testlar{% else %}Tests Remaining{% endif %}</div>
-                    <div class="text-4xl font-black text-[#FFC800]">{{ (user.free_tests or 0) + (user.purchased_tests or 0) }}</div>
+                    <div class="text-gray-400 text-sm mb-1 font-medium">{% if lang == 'uz' %}Qolgan testlar{% else %}Tests Remaining{% endif %}</div>
+                    <div class="text-5xl font-black bg-gradient-to-r from-[#FFE66D] to-[#FF9F43] bg-clip-text text-transparent">{{ (user.free_tests or 0) + (user.purchased_tests or 0) }}</div>
                 </div>
                 <div class="text-right">
-                    <div class="text-[#93A8B1] text-sm mb-1">{% if lang == 'uz' %}Bepul{% else %}Free{% endif %}: <span class="text-[#58CC02] font-bold">{{ user.free_tests or 0 }}</span></div>
-                    <div class="text-[#93A8B1] text-sm">{% if lang == 'uz' %}Sotib olingan{% else %}Purchased{% endif %}: <span class="text-[#1CB0F6] font-bold">{{ user.purchased_tests or 0 }}</span></div>
+                    <div class="text-gray-400 text-sm mb-1 font-medium">{% if lang == 'uz' %}Bepul{% else %}Free{% endif %}: <span class="text-[#4ECDC4] font-bold">{{ user.free_tests or 0 }}</span></div>
+                    <div class="text-gray-400 text-sm">{% if lang == 'uz' %}Sotib olingan{% else %}Purchased{% endif %}: <span class="text-[#45B7D1] font-bold">{{ user.purchased_tests or 0 }}</span></div>
                 </div>
             </div>
 
-            <div class="bg-[#223D45] rounded-xl p-4 mb-4">
+            <div class="bg-[#0F172A] border-2 border-[#334155] rounded-xl p-4 mb-4">
                 <div class="flex items-center justify-between">
                     <div>
                         <div class="font-bold text-white mb-1">{% if lang == 'uz' %}Test sotib olish{% else %}Buy Tests{% endif %}</div>
-                        <div class="text-[#93A8B1] text-sm">1 test = 2,990 so'm</div>
+                        <div class="text-gray-400 text-sm font-medium">1 test = 2,990 so'm</div>
                     </div>
-                    <a href="/pricing" class="btn-3d btn-3d-orange px-6 py-2 text-sm">
+                    <a href="/pricing" class="btn-3d px-6 py-2 text-sm">
                         {% if lang == 'uz' %}Sotib olish{% else %}Buy{% endif %}
                     </a>
                 </div>
             </div>
 
             {% if user.free_tests and user.free_tests > 0 %}
-            <div class="bg-[#58CC02]/10 border-2 border-[#58CC02]/30 rounded-xl p-4">
+            <div class="bg-[#4ECDC4]/10 border-2 border-[#4ECDC4]/30 rounded-xl p-4">
                 <div class="flex items-center gap-3">
                     <span class="text-2xl">🎁</span>
                     <div>
-                        <div class="font-bold text-[#58CC02]">{% if lang == 'uz' %}Beta bonus{% else %}Beta Bonus{% endif %}</div>
-                        <div class="text-[#93A8B1] text-sm">{% if lang == 'uz' %}Sizda {{ user.free_tests }} ta bepul test bor!{% else %}You have {{ user.free_tests }} free tests!{% endif %}</div>
+                        <div class="font-bold text-[#4ECDC4]">{% if lang == 'uz' %}Beta bonus{% else %}Beta Bonus{% endif %}</div>
+                        <div class="text-gray-400 text-sm font-medium">{% if lang == 'uz' %}Sizda {{ user.free_tests }} ta bepul test bor!{% else %}You have {{ user.free_tests }} free tests!{% endif %}</div>
                     </div>
                 </div>
             </div>
@@ -102,24 +111,62 @@
         </div>
     </div>
 
-    <!-- Language Section -->
-    <div class="duo-card mb-6 overflow-hidden">
-        <div class="p-5 border-b-2 border-[#37464F]">
+    <!-- Test History Section -->
+    {% if test_history and test_history|length > 0 %}
+    <div class="app-card mb-6 overflow-hidden">
+        <div class="p-5 border-b-2 border-[#334155] bg-gradient-to-r from-[#1E293B] to-[#0F172A]">
             <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                <svg class="w-5 h-5 text-[#CE82FF]" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/>
-                </svg>
+                <div class="w-8 h-8 bg-[#45B7D1]/20 rounded-lg flex items-center justify-center">
+                    <svg class="w-4 h-4 text-[#45B7D1]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+                    </svg>
+                </div>
+                {% if lang == 'uz' %}Test tarixi{% else %}Test History{% endif %}
+            </h2>
+        </div>
+        <div class="p-5 space-y-3">
+            {% for test in test_history[-5:]|reverse %}
+            <a href="/profile/result/{{ test.session_id }}" class="block bg-[#0F172A] border-2 border-[#334155] rounded-xl p-4 hover:border-[#4ECDC4]/50 transition">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <div class="w-14 h-14 bg-gradient-to-br from-[#4ECDC4]/20 to-[#45B7D1]/20 rounded-xl flex items-center justify-center">
+                            <span class="text-2xl font-black text-[#4ECDC4]">{{ test.cefr_level }}</span>
+                        </div>
+                        <div>
+                            <div class="font-bold text-white">{{ test.overall_score }}%</div>
+                            <div class="text-gray-500 text-sm font-medium">{{ test.completed_at[:10] if test.completed_at else '—' }}</div>
+                        </div>
+                    </div>
+                    <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Language Section -->
+    <div class="app-card mb-6 overflow-hidden">
+        <div class="p-5 border-b-2 border-[#334155] bg-gradient-to-r from-[#1E293B] to-[#0F172A]">
+            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                <div class="w-8 h-8 bg-[#A78BFA]/20 rounded-lg flex items-center justify-center">
+                    <svg class="w-4 h-4 text-[#A78BFA]" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/>
+                    </svg>
+                </div>
                 {% if lang == 'uz' %}Til{% else %}Language{% endif %}
             </h2>
         </div>
         <div class="p-5">
             <div class="flex gap-3">
-                <a href="/lang/uz" class="flex-1 p-4 rounded-xl text-center font-bold transition
-                    {% if lang == 'uz' %}bg-[#CE82FF]/20 border-2 border-[#CE82FF] text-[#CE82FF]{% else %}bg-[#223D45] border-2 border-transparent text-[#93A8B1] hover:border-[#37464F]{% endif %}">
+                <a href="/lang/uz" class="flex-1 p-4 rounded-xl text-center font-bold transition border-2
+                    {% if lang == 'uz' %}bg-[#A78BFA]/20 border-[#A78BFA] text-[#A78BFA]{% else %}bg-[#0F172A] border-[#334155] text-gray-400 hover:border-[#A78BFA]/50{% endif %}">
                     🇺🇿 O'zbek
                 </a>
-                <a href="/lang/en" class="flex-1 p-4 rounded-xl text-center font-bold transition
-                    {% if lang == 'en' %}bg-[#CE82FF]/20 border-2 border-[#CE82FF] text-[#CE82FF]{% else %}bg-[#223D45] border-2 border-transparent text-[#93A8B1] hover:border-[#37464F]{% endif %}">
+                <a href="/lang/en" class="flex-1 p-4 rounded-xl text-center font-bold transition border-2
+                    {% if lang == 'en' %}bg-[#A78BFA]/20 border-[#A78BFA] text-[#A78BFA]{% else %}bg-[#0F172A] border-[#334155] text-gray-400 hover:border-[#A78BFA]/50{% endif %}">
                     🇬🇧 English
                 </a>
             </div>
@@ -127,40 +174,44 @@
     </div>
 
     <!-- Contact Section -->
-    <div class="duo-card mb-6 overflow-hidden">
-        <div class="p-5 border-b-2 border-[#37464F]">
+    <div class="app-card mb-6 overflow-hidden">
+        <div class="p-5 border-b-2 border-[#334155] bg-gradient-to-r from-[#1E293B] to-[#0F172A]">
             <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                <svg class="w-5 h-5 text-[#58CC02]" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                </svg>
+                <div class="w-8 h-8 bg-[#4ECDC4]/20 rounded-lg flex items-center justify-center">
+                    <svg class="w-4 h-4 text-[#4ECDC4]" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                    </svg>
+                </div>
                 {% if lang == 'uz' %}Bog'lanish{% else %}Contact{% endif %}
             </h2>
         </div>
         <div class="p-5">
             <div class="space-y-3">
-                <a href="mailto:{{ contact.email }}" class="flex items-center gap-3 bg-[#223D45] rounded-xl p-3 hover:bg-[#2a4a52] transition">
+                <a href="mailto:{{ contact.email }}" class="flex items-center gap-3 bg-[#0F172A] border-2 border-[#334155] rounded-xl p-3 hover:border-[#4ECDC4]/50 transition">
                     <span class="text-xl">📧</span>
-                    <span class="text-[#93A8B1]">{{ contact.email }}</span>
+                    <span class="text-gray-400 font-medium">{{ contact.email }}</span>
                 </a>
-                <a href="https://t.me/{{ contact.telegram|replace('@','') }}" target="_blank" class="flex items-center gap-3 bg-[#223D45] rounded-xl p-3 hover:bg-[#2a4a52] transition">
+                <a href="https://t.me/{{ contact.telegram|replace('@','') }}" target="_blank" class="flex items-center gap-3 bg-[#0F172A] border-2 border-[#334155] rounded-xl p-3 hover:border-[#4ECDC4]/50 transition">
                     <span class="text-xl">💬</span>
-                    <span class="text-[#93A8B1]">{{ contact.telegram }}</span>
+                    <span class="text-gray-400 font-medium">{{ contact.telegram }}</span>
                 </a>
-                <div class="flex items-center gap-3 bg-[#223D45] rounded-xl p-3">
+                <div class="flex items-center gap-3 bg-[#0F172A] border-2 border-[#334155] rounded-xl p-3">
                     <span class="text-xl">📞</span>
-                    <span class="text-[#93A8B1]">{{ contact.phone }}</span>
+                    <span class="text-gray-400 font-medium">{{ contact.phone }}</span>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Feedback Section -->
-    <div class="duo-card mb-6 overflow-hidden">
-        <div class="p-5 border-b-2 border-[#37464F]">
+    <div class="app-card mb-6 overflow-hidden">
+        <div class="p-5 border-b-2 border-[#334155] bg-gradient-to-r from-[#1E293B] to-[#0F172A]">
             <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                <svg class="w-5 h-5 text-[#1CB0F6]" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm0-4h-2V6h2v4z"/>
-                </svg>
+                <div class="w-8 h-8 bg-[#45B7D1]/20 rounded-lg flex items-center justify-center">
+                    <svg class="w-4 h-4 text-[#45B7D1]" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm0-4h-2V6h2v4z"/>
+                    </svg>
+                </div>
                 {% if lang == 'uz' %}Fikr-mulohaza{% else %}Feedback{% endif %}
             </h2>
         </div>
@@ -169,26 +220,28 @@
                 <textarea
                     name="message"
                     rows="3"
-                    class="w-full bg-[#223D45] border-2 border-[#37464F] rounded-xl p-4 text-white placeholder-[#93A8B1] resize-none focus:border-[#1CB0F6] outline-none transition"
+                    class="w-full bg-[#0F172A] border-2 border-[#334155] rounded-xl p-4 text-white placeholder-gray-500 resize-none focus:border-[#4ECDC4] outline-none transition font-medium"
                     placeholder="{% if lang == 'uz' %}Fikringizni yozing...{% else %}Write your feedback...{% endif %}"
                 ></textarea>
-                <button type="submit" class="btn-3d btn-3d-blue mt-3 px-6 py-2 text-sm">
+                <button type="submit" class="btn-3d mt-3 px-6 py-2 text-sm">
                     {% if lang == 'uz' %}Yuborish{% else %}Send{% endif %}
                 </button>
             </form>
-            <p id="feedbackStatus" class="mt-3 text-sm hidden"></p>
+            <p id="feedbackStatus" class="mt-3 text-sm hidden font-bold"></p>
         </div>
     </div>
 
     <!-- Logout -->
-    <a href="/logout" class="duo-card p-5 flex items-center justify-between hover:border-[#FF4B4B] transition group">
+    <a href="/logout" class="app-card p-5 flex items-center justify-between hover:border-[#FF6B6B] transition group">
         <div class="flex items-center gap-3">
-            <svg class="w-6 h-6 text-[#FF4B4B]" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
-            </svg>
-            <span class="font-bold text-[#FF4B4B]">{% if lang == 'uz' %}Chiqish{% else %}Logout{% endif %}</span>
+            <div class="w-10 h-10 bg-[#FF6B6B]/20 rounded-xl flex items-center justify-center">
+                <svg class="w-5 h-5 text-[#FF6B6B]" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+                </svg>
+            </div>
+            <span class="font-bold text-[#FF6B6B]">{% if lang == 'uz' %}Chiqish{% else %}Logout{% endif %}</span>
         </div>
-        <svg class="w-5 h-5 text-[#FF4B4B] group-hover:translate-x-1 transition-transform" viewBox="0 0 24 24" fill="currentColor">
+        <svg class="w-5 h-5 text-[#FF6B6B] group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 24 24">
             <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
         </svg>
     </a>
@@ -211,16 +264,16 @@ document.getElementById('feedbackForm').addEventListener('submit', async functio
         status.classList.remove('hidden');
         if (data.success) {
             status.textContent = "{{ 'Fikr yuborildi, rahmat!' if lang == 'uz' else 'Feedback sent, thank you!' }}";
-            status.className = 'mt-3 text-sm text-[#58CC02]';
+            status.className = 'mt-3 text-sm text-[#4ECDC4] font-bold';
             form.reset();
         } else {
             status.textContent = "{{ 'Xatolik. Qaytadan urinib ko\\'ring.' if lang == 'uz' else 'Error. Please try again.' }}";
-            status.className = 'mt-3 text-sm text-[#FF4B4B]';
+            status.className = 'mt-3 text-sm text-[#FF6B6B] font-bold';
         }
     } catch (err) {
         status.classList.remove('hidden');
         status.textContent = "{{ 'Xatolik.' if lang == 'uz' else 'Error.' }}";
-        status.className = 'mt-3 text-sm text-[#FF4B4B]';
+        status.className = 'mt-3 text-sm text-[#FF6B6B] font-bold';
     }
     btn.disabled = false;
 });

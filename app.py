@@ -734,6 +734,32 @@ def detect_spam_advanced(text: str) -> dict:
     if len(weird_words) > wc * 0.2:
         return {"is_spam": True, "score": 1, "reason": "Too many nonsense/gibberish words - Band 1."}
 
+    # CRITICAL: Check if words are actual English words
+    common_english = {
+        'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'i', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at',
+        'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she', 'or', 'an', 'will', 'my', 'one', 'all', 'would', 'there',
+        'their', 'what', 'so', 'up', 'out', 'if', 'about', 'who', 'get', 'which', 'go', 'me', 'when', 'make', 'can', 'like', 'time', 'no',
+        'just', 'him', 'know', 'take', 'people', 'into', 'year', 'your', 'good', 'some', 'could', 'them', 'see', 'other', 'than', 'then',
+        'now', 'look', 'only', 'come', 'its', 'over', 'think', 'also', 'back', 'after', 'use', 'two', 'how', 'our', 'work', 'first', 'well',
+        'way', 'even', 'new', 'want', 'because', 'any', 'these', 'give', 'day', 'most', 'us', 'very', 'much', 'before', 'too', 'same',
+        'been', 'has', 'more', 'made', 'did', 'down', 'here', 'still', 'own', 'find', 'world', 'again', 'hand', 'part', 'place', 'during',
+        'where', 'off', 'right', 'man', 'always', 'however', 'another', 'never', 'while', 'last', 'might', 'under', 'such', 'through',
+        'life', 'being', 'long', 'little', 'got', 'those', 'great', 'old', 'many', 'must', 'home', 'big', 'around', 'high', 'each', 'read',
+        'need', 'few', 'between', 'without', 'head', 'small', 'every', 'next', 'something', 'since', 'best', 'both', 'ask', 'house',
+        'why', 'found', 'put', 'does', 'end', 'keep', 'let', 'thought', 'going', 'help', 'nothing', 'really', 'point', 'though', 'went',
+        'better', 'enough', 'money', 'school', 'told', 'turn', 'water', 'three', 'face', 'thing', 'things', 'became', 'believe', 'second',
+        'am', 'is', 'are', 'was', 'were', 'hello', 'dear', 'sincerely', 'regards', 'thanks', 'thank', 'please', 'sorry', 'hope', 'looking',
+        'forward', 'hearing', 'soon', 'write', 'writing', 'touch', 'contact', 'happy', 'sad', 'today', 'morning', 'love', 'book', 'word'
+    }
+    clean_lw = [w.strip('.,!?;:"\'()[]{}') for w in lw if w.strip('.,!?;:"\'()[]{}').isalpha()]
+    if clean_lw:
+        english_count = sum(1 for w in clean_lw if w in common_english)
+        english_ratio = english_count / len(clean_lw)
+        if english_ratio < 0.2:
+            return {"is_spam": True, "score": 0, "reason": f"Gibberish detected - only {int(english_ratio*100)}% recognizable English words - 0%."}
+        if english_ratio < 0.3:
+            return {"is_spam": True, "score": 1, "reason": f"Mostly gibberish - only {int(english_ratio*100)}% recognizable English words - Band 1."}
+
     return {"is_spam": False, "score": None, "reason": None}
 
 
@@ -949,31 +975,110 @@ async def evaluate_writing_with_ai(task1: str, task2: str, essay: str, writing_t
     }
 
 
+COMMON_ENGLISH_WORDS = {
+    'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'i', 'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at',
+    'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she', 'or', 'an', 'will', 'my', 'one', 'all', 'would', 'there',
+    'their', 'what', 'so', 'up', 'out', 'if', 'about', 'who', 'get', 'which', 'go', 'me', 'when', 'make', 'can', 'like', 'time', 'no',
+    'just', 'him', 'know', 'take', 'people', 'into', 'year', 'your', 'good', 'some', 'could', 'them', 'see', 'other', 'than', 'then',
+    'now', 'look', 'only', 'come', 'its', 'over', 'think', 'also', 'back', 'after', 'use', 'two', 'how', 'our', 'work', 'first', 'well',
+    'way', 'even', 'new', 'want', 'because', 'any', 'these', 'give', 'day', 'most', 'us', 'very', 'much', 'before', 'too', 'same',
+    'been', 'has', 'more', 'made', 'did', 'down', 'here', 'still', 'own', 'find', 'world', 'again', 'hand', 'part', 'place', 'during',
+    'where', 'off', 'right', 'man', 'always', 'however', 'another', 'never', 'while', 'last', 'might', 'under', 'such', 'through',
+    'life', 'being', 'long', 'little', 'got', 'those', 'great', 'old', 'many', 'must', 'home', 'big', 'around', 'high', 'each', 'read',
+    'need', 'few', 'between', 'without', 'head', 'small', 'every', 'next', 'something', 'still', 'since', 'best', 'both', 'ask', 'house',
+    'why', 'found', 'put', 'does', 'end', 'keep', 'let', 'thought', 'going', 'help', 'nothing', 'really', 'point', 'though', 'went',
+    'better', 'enough', 'money', 'school', 'told', 'turn', 'water', 'three', 'face', 'thing', 'things', 'became', 'believe', 'second',
+    'person', 'state', 'night', 'away', 'having', 'room', 'should', 'number', 'yes', 'called', 'family', 'feel', 'began', 'sure', 'name',
+    'become', 'important', 'business', 'looking', 'children', 'rather', 'later', 'used', 'kind', 'once', 'four', 'five', 'six', 'seven',
+    'eight', 'nine', 'ten', 'today', 'morning', 'love', 'book', 'write', 'writing', 'written', 'wrote', 'word', 'words', 'english',
+    'test', 'email', 'letter', 'review', 'essay', 'opinion', 'agree', 'disagree', 'think', 'believe', 'feel', 'suggest', 'recommend',
+    'therefore', 'moreover', 'furthermore', 'however', 'although', 'nevertheless', 'conclusion', 'finally', 'firstly', 'secondly',
+    'addition', 'example', 'instance', 'order', 'result', 'reason', 'fact', 'indeed', 'certainly', 'course', 'generally', 'usually',
+    'often', 'sometimes', 'always', 'never', 'perhaps', 'probably', 'possible', 'impossible', 'necessary', 'important', 'different',
+    'interesting', 'beautiful', 'wonderful', 'excellent', 'amazing', 'terrible', 'horrible', 'difficult', 'easy', 'simple', 'hard',
+    'experience', 'education', 'environment', 'technology', 'information', 'communication', 'development', 'opportunity', 'community',
+    'restaurant', 'hotel', 'movie', 'film', 'music', 'sport', 'travel', 'friend', 'friends', 'dear', 'sincerely', 'regards', 'best',
+    'thanks', 'thank', 'please', 'sorry', 'hope', 'looking', 'forward', 'hearing', 'soon', 'write', 'writing', 'touch', 'contact',
+    'happy', 'sad', 'angry', 'excited', 'worried', 'surprised', 'disappointed', 'satisfied', 'comfortable', 'uncomfortable',
+    'would', 'could', 'should', 'might', 'may', 'must', 'will', 'shall', 'can', 'able', 'unable', 'doing', 'done', 'seen', 'took',
+    'gave', 'came', 'knew', 'thought', 'wanted', 'needed', 'tried', 'started', 'began', 'finished', 'ended', 'continued', 'stopped'
+}
+
 async def get_strict_ai_score(text: str, task_type: str) -> int:
-    """Fallback score when AI is unavailable - fair band by word count and diversity"""
+    """ULTRA-STRICT fallback score when AI is unavailable - properly detects gibberish"""
     words = text.split()
     wc = len(words)
-    # Task1/Task2: 120–150 words; Essay: 250–300
-    target_min = 120 if task_type != "essay" else 250
-    target_ok = wc >= target_min * 0.8  # 80% of target = reasonable attempt
 
-    if wc < 30:
+    # Absolute minimums
+    if wc < 20:
+        return 0
+    if wc < 40:
         return 1
-    if wc < 60:
-        return 2
-    if wc < 90:
-        return 3
 
-    unique = len(set(w.lower() for w in words))
-    diversity = unique / wc if wc else 0
-    if diversity < 0.25:
+    # Clean words (lowercase, alphabetic only)
+    clean_words = [w.lower().strip('.,!?;:"\'()[]{}') for w in words]
+    clean_words = [w for w in clean_words if w.isalpha() and len(w) > 1]
+
+    if len(clean_words) < 15:
+        return 0
+
+    # Check how many words are actual English words
+    english_word_count = sum(1 for w in clean_words if w in COMMON_ENGLISH_WORDS)
+    english_ratio = english_word_count / len(clean_words) if clean_words else 0
+
+    # STRICT: If less than 30% recognized English words = gibberish
+    if english_ratio < 0.25:
+        return 0  # Completely gibberish
+    if english_ratio < 0.35:
+        return 1  # Mostly gibberish
+    if english_ratio < 0.45:
+        return 2  # Significant gibberish
+
+    # Check word diversity
+    unique = len(set(clean_words))
+    diversity = unique / len(clean_words) if clean_words else 0
+
+    if diversity < 0.2:
+        return 1  # Too repetitive
+    if diversity < 0.3:
         return 2
-    if diversity < 0.35:
-        return 3
-    if diversity < 0.5:
-        return 4
-    # Adequate length and diversity: band 4–5 so user sees ~44–55% when AI is off
-    return 5 if target_ok else 4
+
+    # Check sentence structure
+    sentences = re.split(r'[.!?]+', text)
+    sentences = [s.strip() for s in sentences if len(s.strip()) > 3]
+
+    if len(sentences) < 2:
+        return 2  # No real sentence structure
+
+    # Check average sentence length (too short = gibberish)
+    avg_sent_len = sum(len(s.split()) for s in sentences) / len(sentences) if sentences else 0
+    if avg_sent_len < 5:
+        return 1  # Fragmented text
+
+    # Target word counts: Task1/Task2: 120-150, Essay: 250-300
+    target_min = 120 if task_type != "essay" else 250
+
+    # Score based on content quality
+    base_score = 3  # Start at band 3
+
+    # Adjust for word count
+    if wc < target_min * 0.5:
+        base_score = 2
+    elif wc < target_min * 0.7:
+        base_score = 3
+    elif wc < target_min * 0.9:
+        base_score = 4
+    else:
+        base_score = 4
+
+    # Adjust for English quality
+    if english_ratio > 0.6:
+        base_score = min(base_score + 1, 5)
+    elif english_ratio < 0.5:
+        base_score = max(base_score - 1, 2)
+
+    # Cap at 5 without proper AI evaluation
+    return min(base_score, 5)
 
 
 async def try_ai_evaluation(task1, task2, essay, writing_test, parts_to_eval) -> dict:
