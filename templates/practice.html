@@ -4,99 +4,92 @@
 {% block head %}
 <style>
     .practice-card {
-        background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
-        border: 2px solid #334155;
-        border-radius: 16px;
-        transition: all 0.3s ease;
+        background: var(--bg-card);
+        border: 2px solid var(--border-color);
+        border-radius: 20px;
+        transition: all 0.15s ease;
     }
     .practice-card:hover {
-        border-color: #4ECDC4;
+        border-color: var(--border-light);
         transform: translateY(-4px);
-        box-shadow: 0 12px 24px rgba(0,0,0,0.3);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.3);
     }
     .skill-badge {
-        padding: 4px 12px;
+        padding: 6px 14px;
         border-radius: 20px;
         font-size: 12px;
-        font-weight: 700;
+        font-weight: 800;
     }
-    .level-a1 { background: #4ECDC4; color: #0F172A; }
-    .level-a2 { background: #45B7D1; color: #0F172A; }
-    .level-b1 { background: #FFE66D; color: #0F172A; }
-    .level-b2 { background: #FF9F43; color: white; }
-    .level-c1 { background: #A78BFA; color: white; }
-    .level-c2 { background: #FF6B6B; color: white; }
+    .level-a1 { background: var(--duo-green); color: white; box-shadow: 0 2px 0 var(--duo-green-dark); }
+    .level-a2 { background: var(--duo-blue); color: white; box-shadow: 0 2px 0 var(--duo-blue-dark); }
+    .level-b1 { background: var(--duo-yellow); color: #1A2C32; box-shadow: 0 2px 0 var(--duo-yellow-dark); }
+    .level-b2 { background: var(--duo-orange); color: white; box-shadow: 0 2px 0 var(--duo-orange-dark); }
+    .level-c1 { background: var(--duo-purple); color: white; box-shadow: 0 2px 0 var(--duo-purple-dark); }
+    .level-c2 { background: var(--duo-red); color: white; box-shadow: 0 2px 0 var(--duo-red-dark); }
 
     .quiz-option {
-        background: #0F172A;
-        border: 2px solid #334155;
-        border-radius: 12px;
+        background: var(--bg-main);
+        border: 2px solid var(--border-color);
+        border-radius: 16px;
         padding: 16px;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all 0.1s ease;
+        font-weight: 700;
     }
     .quiz-option:hover {
-        border-color: #4ECDC4;
-        background: #1E293B;
-    }
-    .quiz-option.selected {
-        border-color: #4ECDC4;
-        background: rgba(78, 205, 196, 0.1);
+        border-color: var(--duo-blue);
+        background: rgba(28, 176, 246, 0.1);
+        transform: translateY(-2px);
     }
     .quiz-option.correct {
-        border-color: #4ECDC4;
-        background: rgba(78, 205, 196, 0.2);
+        border-color: var(--duo-green);
+        background: rgba(88, 204, 2, 0.15);
+        box-shadow: 0 3px 0 var(--duo-green-dark);
+        color: var(--duo-green);
     }
     .quiz-option.wrong {
-        border-color: #FF6B6B;
-        background: rgba(255, 107, 107, 0.2);
+        border-color: var(--duo-red);
+        background: rgba(255, 75, 75, 0.15);
+        box-shadow: 0 3px 0 var(--duo-red-dark);
+        color: var(--duo-red);
     }
 
-    .progress-ring {
-        transform: rotate(-90deg);
-    }
-    .progress-ring-circle {
-        transition: stroke-dashoffset 0.5s ease;
-    }
+    .progress-ring { transform: rotate(-90deg); }
+    .progress-ring-circle { transition: stroke-dashoffset 0.5s ease; }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="max-w-5xl mx-auto px-4 md:px-6 py-8 pb-24">
     <!-- Header -->
-    <div class="mb-8">
-        <h1 class="text-3xl md:text-4xl font-black text-white mb-3 flex items-center gap-3">
-            <div class="w-12 h-12 bg-gradient-to-br from-[#A78BFA] to-[#FF6B6B] rounded-xl flex items-center justify-center">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-                </svg>
-            </div>
-            {% if lang == 'uz' %}Praktika{% else %}Practice{% endif %}
+    <div class="mb-6 md:mb-8">
+        <h1 class="text-3xl md:text-4xl font-black text-white mb-2 md:mb-3">
+            &#128170; {% if lang == 'uz' %}Praktika{% else %}Practice{% endif %}
         </h1>
-        <p class="text-gray-400 font-medium">{% if lang == 'uz' %}Ingliz tilingizni har kuni mashq qiling{% else %}Practice your English every day{% endif %}</p>
+        <p class="text-[#AFAFAF] font-medium">{% if lang == 'uz' %}Ingliz tilingizni har kuni mashq qiling{% else %}Practice your English every day{% endif %}</p>
     </div>
 
     <!-- Daily Challenge Banner -->
-    <div class="app-card p-6 mb-8 bg-gradient-to-r from-[#FF6B6B]/10 via-[#FFE66D]/10 to-[#4ECDC4]/10 border-[#FFE66D]/30">
+    <div class="duo-card p-5 md:p-6 mb-6 md:mb-8" style="background: linear-gradient(135deg, var(--bg-card) 0%, #1E3A42 100%);">
         <div class="flex items-center justify-between flex-wrap gap-4">
             <div class="flex items-center gap-4">
-                <div class="w-16 h-16 bg-gradient-to-br from-[#FFE66D] to-[#FF9F43] rounded-2xl flex items-center justify-center text-3xl shadow-lg">
-                    🔥
+                <div class="w-14 h-14 md:w-16 md:h-16 bg-[#FF9600] rounded-2xl flex items-center justify-center text-2xl md:text-3xl" style="box-shadow: 0 4px 0 var(--duo-orange-dark);">
+                    &#128293;
                 </div>
                 <div>
-                    <h2 class="text-xl font-black text-white">{% if lang == 'uz' %}Kunlik mashq{% else %}Daily Challenge{% endif %}</h2>
-                    <p class="text-gray-400 font-medium">{% if lang == 'uz' %}Bugun 5 ta mashqni bajaring{% else %}Complete 5 exercises today{% endif %}</p>
+                    <h2 class="text-lg md:text-xl font-black text-white">{% if lang == 'uz' %}Kunlik mashq{% else %}Daily Challenge{% endif %}</h2>
+                    <p class="text-[#AFAFAF] font-medium text-sm">{% if lang == 'uz' %}Bugun 5 ta mashqni bajaring{% else %}Complete 5 exercises today{% endif %}</p>
                 </div>
             </div>
             <div class="flex items-center gap-4">
                 <div class="text-center">
-                    <div class="text-3xl font-black text-[#FFE66D]">3/5</div>
-                    <div class="text-xs text-gray-500 font-bold">{% if lang == 'uz' %}Bajarildi{% else %}Completed{% endif %}</div>
+                    <div class="text-2xl md:text-3xl font-black text-[#FFC800]">3/5</div>
+                    <div class="text-xs text-[#777] font-bold">{% if lang == 'uz' %}Bajarildi{% else %}Done{% endif %}</div>
                 </div>
-                <div class="w-16 h-16">
+                <div class="w-14 h-14 md:w-16 md:h-16">
                     <svg class="progress-ring" width="64" height="64">
-                        <circle stroke="#334155" stroke-width="6" fill="transparent" r="26" cx="32" cy="32"/>
-                        <circle class="progress-ring-circle" stroke="#FFE66D" stroke-width="6" fill="transparent" r="26" cx="32" cy="32"
+                        <circle stroke="var(--border-color)" stroke-width="6" fill="transparent" r="26" cx="32" cy="32"/>
+                        <circle class="progress-ring-circle" stroke="#FFC800" stroke-width="6" fill="transparent" r="26" cx="32" cy="32"
                                 stroke-dasharray="163.36" stroke-dashoffset="65.34" stroke-linecap="round"/>
                     </svg>
                 </div>
@@ -105,135 +98,74 @@
     </div>
 
     <!-- Practice Categories -->
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-5 mb-6 md:mb-8">
         <!-- Vocabulary -->
-        <div class="practice-card p-6">
-            <div class="flex items-center justify-between mb-4">
-                <div class="w-14 h-14 bg-gradient-to-br from-[#4ECDC4] to-[#45B7D1] rounded-xl flex items-center justify-center shadow-lg">
-                    <span class="text-2xl">📚</span>
-                </div>
-                <span class="skill-badge level-b1">B1-B2</span>
-            </div>
-            <h3 class="text-xl font-black text-white mb-2">Vocabulary</h3>
-            <p class="text-gray-400 text-sm font-medium mb-4">{% if lang == 'uz' %}So'z boyligini oshiring{% else %}Build your word power{% endif %}</p>
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2 text-sm text-gray-500">
-                    <span class="w-2 h-2 bg-[#4ECDC4] rounded-full"></span>
-                    <span class="font-bold">12 {% if lang == 'uz' %}mashq{% else %}exercises{% endif %}</span>
-                </div>
-                <button onclick="startPractice('vocabulary')" class="btn-3d px-4 py-2 text-sm">{% if lang == 'uz' %}Boshlash{% else %}Start{% endif %}</button>
-            </div>
+        <div class="practice-card p-4 md:p-6">
+            <div class="text-3xl md:text-4xl mb-3">&#128218;</div>
+            <span class="skill-badge level-b1 mb-2 inline-block">B1-B2</span>
+            <h3 class="text-base md:text-xl font-black text-white mb-1 md:mb-2">Vocabulary</h3>
+            <p class="text-[#AFAFAF] text-xs md:text-sm font-medium mb-3 md:mb-4 hidden md:block">{% if lang == 'uz' %}So'z boyligini oshiring{% else %}Build your word power{% endif %}</p>
+            <button onclick="startPractice('vocabulary')" class="btn-duo btn-duo-green w-full py-2 md:py-3 text-xs md:text-sm">{% if lang == 'uz' %}Boshlash{% else %}Start{% endif %}</button>
         </div>
 
         <!-- Grammar -->
-        <div class="practice-card p-6">
-            <div class="flex items-center justify-between mb-4">
-                <div class="w-14 h-14 bg-gradient-to-br from-[#A78BFA] to-[#45B7D1] rounded-xl flex items-center justify-center shadow-lg">
-                    <span class="text-2xl">🎯</span>
-                </div>
-                <span class="skill-badge level-a2">A2-B1</span>
-            </div>
-            <h3 class="text-xl font-black text-white mb-2">Grammar</h3>
-            <p class="text-gray-400 text-sm font-medium mb-4">{% if lang == 'uz' %}Grammatika qoidalarini o'rganing{% else %}Master grammar rules{% endif %}</p>
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2 text-sm text-gray-500">
-                    <span class="w-2 h-2 bg-[#A78BFA] rounded-full"></span>
-                    <span class="font-bold">15 {% if lang == 'uz' %}mavzu{% else %}topics{% endif %}</span>
-                </div>
-                <button onclick="startPractice('grammar')" class="btn-3d px-4 py-2 text-sm">{% if lang == 'uz' %}Boshlash{% else %}Start{% endif %}</button>
-            </div>
+        <div class="practice-card p-4 md:p-6">
+            <div class="text-3xl md:text-4xl mb-3">&#127919;</div>
+            <span class="skill-badge level-a2 mb-2 inline-block">A2-B1</span>
+            <h3 class="text-base md:text-xl font-black text-white mb-1 md:mb-2">Grammar</h3>
+            <p class="text-[#AFAFAF] text-xs md:text-sm font-medium mb-3 md:mb-4 hidden md:block">{% if lang == 'uz' %}Grammatika qoidalari{% else %}Master grammar rules{% endif %}</p>
+            <button onclick="startPractice('grammar')" class="btn-duo btn-duo-blue w-full py-2 md:py-3 text-xs md:text-sm">{% if lang == 'uz' %}Boshlash{% else %}Start{% endif %}</button>
         </div>
 
         <!-- Reading -->
-        <div class="practice-card p-6">
-            <div class="flex items-center justify-between mb-4">
-                <div class="w-14 h-14 bg-gradient-to-br from-[#FFE66D] to-[#FF9F43] rounded-xl flex items-center justify-center shadow-lg">
-                    <span class="text-2xl">📖</span>
-                </div>
-                <span class="skill-badge level-b2">B1-C1</span>
-            </div>
-            <h3 class="text-xl font-black text-white mb-2">Reading</h3>
-            <p class="text-gray-400 text-sm font-medium mb-4">{% if lang == 'uz' %}O'qish ko'nikmalarini rivojlantiring{% else %}Improve reading skills{% endif %}</p>
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2 text-sm text-gray-500">
-                    <span class="w-2 h-2 bg-[#FFE66D] rounded-full"></span>
-                    <span class="font-bold">8 {% if lang == 'uz' %}matn{% else %}texts{% endif %}</span>
-                </div>
-                <button onclick="startPractice('reading')" class="btn-3d px-4 py-2 text-sm">{% if lang == 'uz' %}Boshlash{% else %}Start{% endif %}</button>
-            </div>
+        <div class="practice-card p-4 md:p-6">
+            <div class="text-3xl md:text-4xl mb-3">&#128214;</div>
+            <span class="skill-badge level-b2 mb-2 inline-block">B1-C1</span>
+            <h3 class="text-base md:text-xl font-black text-white mb-1 md:mb-2">Reading</h3>
+            <p class="text-[#AFAFAF] text-xs md:text-sm font-medium mb-3 md:mb-4 hidden md:block">{% if lang == 'uz' %}O'qish ko'nikmalari{% else %}Improve reading{% endif %}</p>
+            <button onclick="startPractice('reading')" class="btn-duo btn-duo-purple w-full py-2 md:py-3 text-xs md:text-sm">{% if lang == 'uz' %}Boshlash{% else %}Start{% endif %}</button>
         </div>
 
         <!-- Listening -->
-        <div class="practice-card p-6">
-            <div class="flex items-center justify-between mb-4">
-                <div class="w-14 h-14 bg-gradient-to-br from-[#45B7D1] to-[#4ECDC4] rounded-xl flex items-center justify-center shadow-lg">
-                    <span class="text-2xl">🎧</span>
-                </div>
-                <span class="skill-badge level-a2">A2-B2</span>
-            </div>
-            <h3 class="text-xl font-black text-white mb-2">Listening</h3>
-            <p class="text-gray-400 text-sm font-medium mb-4">{% if lang == 'uz' %}Eshitish qobiliyatini oshiring{% else %}Enhance listening comprehension{% endif %}</p>
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2 text-sm text-gray-500">
-                    <span class="w-2 h-2 bg-[#45B7D1] rounded-full"></span>
-                    <span class="font-bold">10 {% if lang == 'uz' %}audio{% else %}audios{% endif %}</span>
-                </div>
-                <button onclick="startPractice('listening')" class="btn-3d px-4 py-2 text-sm">{% if lang == 'uz' %}Boshlash{% else %}Start{% endif %}</button>
-            </div>
+        <div class="practice-card p-4 md:p-6">
+            <div class="text-3xl md:text-4xl mb-3">&#127911;</div>
+            <span class="skill-badge level-a2 mb-2 inline-block">A2-B2</span>
+            <h3 class="text-base md:text-xl font-black text-white mb-1 md:mb-2">Listening</h3>
+            <p class="text-[#AFAFAF] text-xs md:text-sm font-medium mb-3 md:mb-4 hidden md:block">{% if lang == 'uz' %}Eshitish qobiliyati{% else %}Listening skills{% endif %}</p>
+            <button onclick="startPractice('listening')" class="btn-duo btn-duo-blue w-full py-2 md:py-3 text-xs md:text-sm">{% if lang == 'uz' %}Boshlash{% else %}Start{% endif %}</button>
         </div>
 
         <!-- Writing -->
-        <div class="practice-card p-6">
-            <div class="flex items-center justify-between mb-4">
-                <div class="w-14 h-14 bg-gradient-to-br from-[#FF6B6B] to-[#FF9F43] rounded-xl flex items-center justify-center shadow-lg">
-                    <span class="text-2xl">✍️</span>
-                </div>
-                <span class="skill-badge level-b1">B1-C1</span>
-            </div>
-            <h3 class="text-xl font-black text-white mb-2">Writing</h3>
-            <p class="text-gray-400 text-sm font-medium mb-4">{% if lang == 'uz' %}Yozish malakasini rivojlantiring{% else %}Develop writing skills{% endif %}</p>
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2 text-sm text-gray-500">
-                    <span class="w-2 h-2 bg-[#FF6B6B] rounded-full"></span>
-                    <span class="font-bold">6 {% if lang == 'uz' %}topshiriq{% else %}tasks{% endif %}</span>
-                </div>
-                <button onclick="startPractice('writing')" class="btn-3d px-4 py-2 text-sm">{% if lang == 'uz' %}Boshlash{% else %}Start{% endif %}</button>
-            </div>
+        <div class="practice-card p-4 md:p-6">
+            <div class="text-3xl md:text-4xl mb-3">&#9997;&#65039;</div>
+            <span class="skill-badge level-b1 mb-2 inline-block">B1-C1</span>
+            <h3 class="text-base md:text-xl font-black text-white mb-1 md:mb-2">Writing</h3>
+            <p class="text-[#AFAFAF] text-xs md:text-sm font-medium mb-3 md:mb-4 hidden md:block">{% if lang == 'uz' %}Yozish malakasi{% else %}Writing skills{% endif %}</p>
+            <button onclick="startPractice('writing')" class="btn-duo btn-duo-orange w-full py-2 md:py-3 text-xs md:text-sm">{% if lang == 'uz' %}Boshlash{% else %}Start{% endif %}</button>
         </div>
 
         <!-- Quick Quiz -->
-        <div class="practice-card p-6 border-[#4ECDC4]/50">
-            <div class="flex items-center justify-between mb-4">
-                <div class="w-14 h-14 bg-gradient-to-br from-[#4ECDC4] to-[#A78BFA] rounded-xl flex items-center justify-center shadow-lg">
-                    <span class="text-2xl">⚡</span>
-                </div>
-                <span class="px-3 py-1 bg-[#4ECDC4] text-[#0F172A] text-xs font-black rounded-full">NEW</span>
-            </div>
-            <h3 class="text-xl font-black text-white mb-2">Quick Quiz</h3>
-            <p class="text-gray-400 text-sm font-medium mb-4">{% if lang == 'uz' %}5 daqiqali tezkor test{% else %}5-minute speed challenge{% endif %}</p>
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2 text-sm text-gray-500">
-                    <span class="w-2 h-2 bg-[#4ECDC4] rounded-full animate-pulse"></span>
-                    <span class="font-bold">{% if lang == 'uz' %}Aralash savollar{% else %}Mixed questions{% endif %}</span>
-                </div>
-                <button onclick="startQuickQuiz()" class="btn-3d px-4 py-2 text-sm">{% if lang == 'uz' %}Boshlash{% else %}Start{% endif %}</button>
-            </div>
+        <div class="practice-card p-4 md:p-6 border-[#58CC02]/40">
+            <div class="text-3xl md:text-4xl mb-3">&#9889;</div>
+            <span class="px-3 py-1 bg-[#58CC02] text-white text-xs font-black rounded-full inline-block mb-2" style="box-shadow: 0 2px 0 #46A302;">NEW</span>
+            <h3 class="text-base md:text-xl font-black text-white mb-1 md:mb-2">Quick Quiz</h3>
+            <p class="text-[#AFAFAF] text-xs md:text-sm font-medium mb-3 md:mb-4 hidden md:block">{% if lang == 'uz' %}Tezkor test{% else %}Speed challenge{% endif %}</p>
+            <button onclick="startQuickQuiz()" class="btn-duo btn-duo-green w-full py-2 md:py-3 text-xs md:text-sm">{% if lang == 'uz' %}Boshlash{% else %}Start{% endif %}</button>
         </div>
     </div>
 
     <!-- Quick Quiz Section (Initially Hidden) -->
-    <div id="quiz-section" class="app-card p-6 mb-8 hidden">
+    <div id="quiz-section" class="duo-card p-5 md:p-6 mb-6 md:mb-8 hidden">
         <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl font-black text-white flex items-center gap-3">
-                <span class="text-2xl">⚡</span>
-                Quick Quiz
+            <h2 class="text-lg md:text-xl font-black text-white flex items-center gap-3">
+                &#9889; Quick Quiz
             </h2>
             <div class="flex items-center gap-4">
                 <div class="text-center">
-                    <div id="quiz-score" class="text-2xl font-black text-[#4ECDC4]">0/0</div>
-                    <div class="text-xs text-gray-500 font-bold">Score</div>
+                    <div id="quiz-score" class="text-xl md:text-2xl font-black text-[#58CC02]">0/0</div>
+                    <div class="text-xs text-[#777] font-bold">Score</div>
                 </div>
-                <button onclick="closeQuiz()" class="text-gray-400 hover:text-white">
+                <button onclick="closeQuiz()" class="text-[#AFAFAF] hover:text-white p-2 rounded-xl hover:bg-[#2B4148] transition">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
@@ -241,80 +173,74 @@
             </div>
         </div>
 
-        <div id="quiz-content">
-            <!-- Quiz questions will be loaded here -->
-        </div>
+        <div id="quiz-content"></div>
 
-        <div id="quiz-result" class="hidden text-center py-8">
-            <div class="w-24 h-24 bg-gradient-to-br from-[#4ECDC4] to-[#45B7D1] rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-                <span class="text-4xl">🎉</span>
-            </div>
+        <div id="quiz-result" class="hidden text-center py-6 md:py-8">
+            <div class="text-6xl mb-4">&#127881;</div>
             <h3 class="text-2xl font-black text-white mb-2">{% if lang == 'uz' %}Ajoyib!{% else %}Great Job!{% endif %}</h3>
-            <p id="quiz-final-score" class="text-gray-400 font-medium mb-6"></p>
-            <button onclick="startQuickQuiz()" class="btn-3d px-8 py-3">{% if lang == 'uz' %}Qayta boshlash{% else %}Try Again{% endif %}</button>
+            <p id="quiz-final-score" class="text-[#AFAFAF] font-medium mb-6"></p>
+            <button onclick="startQuickQuiz()" class="btn-duo btn-duo-green px-8 py-3">{% if lang == 'uz' %}Qayta boshlash{% else %}Try Again{% endif %}</button>
         </div>
     </div>
 
     <!-- Writing Practice Section -->
-    <div id="writing-section" class="app-card p-6 mb-8 hidden">
+    <div id="writing-section" class="duo-card p-5 md:p-6 mb-6 md:mb-8 hidden">
         <div class="flex items-center justify-between mb-6">
-            <h2 class="text-xl font-black text-white flex items-center gap-3">
-                <span class="text-2xl">✍️</span>
-                {% if lang == 'uz' %}Yozish mashqi{% else %}Writing Practice{% endif %}
-            </h2>
-            <button onclick="closeWriting()" class="text-gray-400 hover:text-white">
+            <h2 class="text-lg md:text-xl font-black text-white">&#9997;&#65039; {% if lang == 'uz' %}Yozish mashqi{% else %}Writing Practice{% endif %}</h2>
+            <button onclick="closeWriting()" class="text-[#AFAFAF] hover:text-white p-2 rounded-xl hover:bg-[#2B4148] transition">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
             </button>
         </div>
 
-        <div class="bg-[#0F172A] border-2 border-[#334155] rounded-xl p-5 mb-6">
-            <h3 class="font-bold text-[#FFE66D] mb-2">{% if lang == 'uz' %}Topshiriq{% else %}Task{% endif %}:</h3>
-            <p id="writing-prompt" class="text-gray-300 font-medium"></p>
-            <div class="flex items-center gap-4 mt-4 text-sm text-gray-500">
-                <span>📝 {% if lang == 'uz' %}Minimum 80 so'z{% else %}Minimum 80 words{% endif %}</span>
-                <span>⏱️ {% if lang == 'uz' %}10 daqiqa{% else %}10 minutes{% endif %}</span>
+        <div class="bg-[#131F24] border-2 border-[#2B4148] rounded-xl p-5 mb-6">
+            <h3 class="font-bold text-[#FFC800] mb-2">{% if lang == 'uz' %}Topshiriq{% else %}Task{% endif %}:</h3>
+            <p id="writing-prompt" class="text-[#AFAFAF] font-medium"></p>
+            <div class="flex items-center gap-4 mt-4 text-sm text-[#777]">
+                <span>&#128221; Min 80 {% if lang == 'uz' %}so'z{% else %}words{% endif %}</span>
+                <span>&#9201;&#65039; 10 {% if lang == 'uz' %}daqiqa{% else %}min{% endif %}</span>
             </div>
         </div>
 
-        <textarea id="writing-input" class="w-full h-48 bg-[#0F172A] border-2 border-[#334155] rounded-xl p-4 text-white font-medium resize-none focus:border-[#4ECDC4] outline-none transition" placeholder="{% if lang == 'uz' %}Bu yerga yozing...{% else %}Write here...{% endif %}"></textarea>
+        <textarea id="writing-input" class="w-full h-48 bg-var(--bg-main) border-2 border-[#2B4148] rounded-xl p-4 text-white font-medium resize-none focus:border-[#58CC02] outline-none transition" style="background: var(--bg-main);" placeholder="{% if lang == 'uz' %}Bu yerga yozing...{% else %}Write here...{% endif %}"></textarea>
 
         <div class="flex items-center justify-between mt-4">
-            <div id="word-count" class="text-gray-500 font-bold">0 {% if lang == 'uz' %}so'z{% else %}words{% endif %}</div>
-            <button onclick="submitWriting()" class="btn-3d px-6 py-2">{% if lang == 'uz' %}Yuborish{% else %}Submit{% endif %}</button>
+            <div id="word-count" class="text-[#777] font-bold">0 {% if lang == 'uz' %}so'z{% else %}words{% endif %}</div>
+            <button onclick="submitWriting()" class="btn-duo btn-duo-green px-6 py-2 text-sm">{% if lang == 'uz' %}Yuborish{% else %}Submit{% endif %}</button>
         </div>
 
-        <div id="writing-feedback" class="hidden mt-6 bg-[#4ECDC4]/10 border-2 border-[#4ECDC4]/30 rounded-xl p-5">
-            <h4 class="font-bold text-[#4ECDC4] mb-2">{% if lang == 'uz' %}Natija{% else %}Feedback{% endif %}:</h4>
-            <p id="writing-feedback-text" class="text-gray-300 font-medium"></p>
+        <div id="writing-feedback" class="hidden mt-6 bg-[#58CC02]/10 border-2 border-[#58CC02]/30 rounded-xl p-5">
+            <h4 class="font-bold text-[#58CC02] mb-2">{% if lang == 'uz' %}Natija{% else %}Feedback{% endif %}:</h4>
+            <p id="writing-feedback-text" class="text-[#AFAFAF] font-medium"></p>
         </div>
     </div>
 
     <!-- Tips Section -->
-    <div class="app-card p-6">
-        <h2 class="text-xl font-black text-white mb-6 flex items-center gap-3">
-            <div class="w-10 h-10 bg-[#FFE66D]/20 rounded-xl flex items-center justify-center">
-                <span class="text-xl">💡</span>
-            </div>
-            {% if lang == 'uz' %}Foydali maslahatlar{% else %}Helpful Tips{% endif %}
+    <div class="duo-card p-5 md:p-6">
+        <h2 class="text-lg md:text-xl font-black text-white mb-5 md:mb-6">
+            &#128161; {% if lang == 'uz' %}Foydali maslahatlar{% else %}Helpful Tips{% endif %}
         </h2>
-        <div class="grid md:grid-cols-2 gap-4">
-            <div class="bg-[#0F172A] border-2 border-[#334155] rounded-xl p-4">
-                <h4 class="font-bold text-[#4ECDC4] mb-2">📚 Vocabulary</h4>
-                <p class="text-gray-400 text-sm font-medium">{% if lang == 'uz' %}Har kuni 5-10 ta yangi so'z o'rganing va ularni jumlada ishlating{% else %}Learn 5-10 new words daily and use them in sentences{% endif %}</p>
+        <div class="grid grid-cols-2 gap-3 md:gap-4">
+            <div class="bg-[#1CB0F6]/10 border-2 border-[#1CB0F6]/30 rounded-xl p-3 md:p-4">
+                <div class="text-2xl mb-2">&#128218;</div>
+                <h4 class="font-bold text-[#1CB0F6] text-sm mb-1">Vocabulary</h4>
+                <p class="text-[#AFAFAF] text-xs md:text-sm font-medium">{% if lang == 'uz' %}Har kuni 5-10 ta yangi so'z o'rganing{% else %}Learn 5-10 new words daily{% endif %}</p>
             </div>
-            <div class="bg-[#0F172A] border-2 border-[#334155] rounded-xl p-4">
-                <h4 class="font-bold text-[#A78BFA] mb-2">🎯 Grammar</h4>
-                <p class="text-gray-400 text-sm font-medium">{% if lang == 'uz' %}Grammatika qoidalarini amalda qo'llang, faqat yodlash yetarli emas{% else %}Apply grammar rules in practice, not just memorization{% endif %}</p>
+            <div class="bg-[#CE82FF]/10 border-2 border-[#CE82FF]/30 rounded-xl p-3 md:p-4">
+                <div class="text-2xl mb-2">&#127919;</div>
+                <h4 class="font-bold text-[#CE82FF] text-sm mb-1">Grammar</h4>
+                <p class="text-[#AFAFAF] text-xs md:text-sm font-medium">{% if lang == 'uz' %}Qoidalarni amalda qo'llang{% else %}Apply rules in practice{% endif %}</p>
             </div>
-            <div class="bg-[#0F172A] border-2 border-[#334155] rounded-xl p-4">
-                <h4 class="font-bold text-[#FFE66D] mb-2">📖 Reading</h4>
-                <p class="text-gray-400 text-sm font-medium">{% if lang == 'uz' %}Ingliz tilidagi maqola va kitoblarni o'qing, yangi so'zlarni yozib oling{% else %}Read English articles and books, note down new words{% endif %}</p>
+            <div class="bg-[#FF9600]/10 border-2 border-[#FF9600]/30 rounded-xl p-3 md:p-4">
+                <div class="text-2xl mb-2">&#128214;</div>
+                <h4 class="font-bold text-[#FF9600] text-sm mb-1">Reading</h4>
+                <p class="text-[#AFAFAF] text-xs md:text-sm font-medium">{% if lang == 'uz' %}Inglizcha maqolalar o'qing{% else %}Read English articles{% endif %}</p>
             </div>
-            <div class="bg-[#0F172A] border-2 border-[#334155] rounded-xl p-4">
-                <h4 class="font-bold text-[#FF6B6B] mb-2">✍️ Writing</h4>
-                <p class="text-gray-400 text-sm font-medium">{% if lang == 'uz' %}Har kuni kamida 100 so'z yozing - kundalik, email yoki esse{% else %}Write at least 100 words daily - diary, email, or essay{% endif %}</p>
+            <div class="bg-[#58CC02]/10 border-2 border-[#58CC02]/30 rounded-xl p-3 md:p-4">
+                <div class="text-2xl mb-2">&#9997;&#65039;</div>
+                <h4 class="font-bold text-[#58CC02] text-sm mb-1">Writing</h4>
+                <p class="text-[#AFAFAF] text-xs md:text-sm font-medium">{% if lang == 'uz' %}Har kuni kamida 100 so'z yozing{% else %}Write 100+ words daily{% endif %}</p>
             </div>
         </div>
     </div>

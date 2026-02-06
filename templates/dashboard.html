@@ -1,131 +1,260 @@
 {% extends "base_app.html" %}
 {% block title %}{% if lang == 'uz' %}Mening testlarim{% else %}My Tests{% endif %} - CEFR Level{% endblock %}
 
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    .hero-card {
+        background: linear-gradient(135deg, var(--bg-card) 0%, #1E3A42 100%);
+        border: 2px solid var(--border-color);
+        border-radius: 28px;
+        position: relative;
+        overflow: hidden;
+    }
+    .hero-card::before {
+        content: '';
+        position: absolute;
+        top: -60px;
+        right: -60px;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, rgba(88, 204, 2, 0.15) 0%, transparent 70%);
+        border-radius: 50%;
+    }
+    .hero-card::after {
+        content: '';
+        position: absolute;
+        bottom: -40px;
+        left: -40px;
+        width: 150px;
+        height: 150px;
+        background: radial-gradient(circle, rgba(28, 176, 246, 0.1) 0%, transparent 70%);
+        border-radius: 50%;
+    }
+
+    .mascot {
+        font-size: 64px;
+        line-height: 1;
+    }
+
+    .skill-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border-radius: 30px;
+        font-weight: 800;
+        font-size: 13px;
+    }
+
+    .streak-flame {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 150, 0, 0.15);
+        border: 2px solid rgba(255, 150, 0, 0.3);
+        border-radius: 20px;
+        padding: 10px 20px;
+        font-weight: 800;
+        color: var(--duo-orange);
+    }
+
+    .stat-3d {
+        background: var(--bg-card);
+        border: 2px solid var(--border-color);
+        border-radius: 20px;
+        padding: 24px 20px;
+        text-align: center;
+        transition: all 0.15s ease;
+        cursor: default;
+    }
+    .stat-3d:hover {
+        transform: translateY(-4px);
+        border-color: var(--border-light);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+
+    .history-item {
+        background: var(--bg-card);
+        border: 2px solid var(--border-color);
+        border-radius: 20px;
+        padding: 20px 24px;
+        transition: all 0.2s ease;
+    }
+    .history-item:hover {
+        border-color: var(--border-light);
+        transform: translateY(-2px);
+    }
+
+    .tip-card {
+        border-radius: 20px;
+        padding: 24px;
+        transition: all 0.2s ease;
+    }
+    .tip-card:hover {
+        transform: translateY(-4px);
+    }
+
+    @keyframes wave {
+        0%, 100% { transform: rotate(0deg); }
+        25% { transform: rotate(20deg); }
+        75% { transform: rotate(-15deg); }
+    }
+    .wave-hand { display: inline-block; animation: wave 2s ease-in-out infinite; transform-origin: 70% 70%; }
+
+    @keyframes pop-in {
+        0% { transform: scale(0.8); opacity: 0; }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    .pop-in { animation: pop-in 0.5s ease-out forwards; }
+    .pop-in-delay-1 { animation-delay: 0.1s; opacity: 0; }
+    .pop-in-delay-2 { animation-delay: 0.2s; opacity: 0; }
+    .pop-in-delay-3 { animation-delay: 0.3s; opacity: 0; }
+    .pop-in-delay-4 { animation-delay: 0.4s; opacity: 0; }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="max-w-4xl mx-auto px-4 md:px-6 py-8">
-    <!-- Header with greeting -->
-    <div class="mb-10">
-        <h1 class="text-4xl md:text-5xl font-black text-white mb-3">
-            {% if lang == 'uz' %}Salom, {{ user.name or user.email.split('@')[0] }}!{% else %}Hi, {{ user.name or user.email.split('@')[0] }}!{% endif %}
+<div class="max-w-4xl mx-auto px-4 md:px-6 py-6 md:py-8">
+    <!-- Greeting -->
+    <div class="mb-8 md:mb-10">
+        <h1 class="text-3xl md:text-5xl font-black text-white mb-2 md:mb-3">
+            {% if lang == 'uz' %}Salom{% else %}Hi{% endif %}, {{ user.name or user.email.split('@')[0] }}! <span class="wave-hand">&#128075;</span>
         </h1>
-        <p class="text-gray-400 text-lg font-medium">
+        <p class="text-[#AFAFAF] text-base md:text-lg font-medium">
             {% if lang == 'uz' %}CEFR darajangizni aniqlashga tayyormisiz?{% else %}Ready to discover your CEFR level?{% endif %}
         </p>
     </div>
 
-    <!-- Start Test Card -->
-    <div class="app-card p-8 mb-10 relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-[#FF6B6B]/20 to-transparent rounded-full -mr-16 -mt-16"></div>
-        <div class="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-[#4ECDC4]/20 to-transparent rounded-full -ml-12 -mb-12"></div>
+    <!-- Streak & Tests Badge -->
+    <div class="flex flex-wrap items-center gap-3 mb-8">
+        <div class="streak-flame">
+            &#128293;
+            <span>{{ test_history|length if test_history else 0 }} {% if lang == 'uz' %}test topshirildi{% else %}tests completed{% endif %}</span>
+        </div>
+        <div class="xp-badge">
+            &#11088;
+            {{ (user.free_tests or 0) + (user.purchased_tests or 0) }} {% if lang == 'uz' %}ta test qoldi{% else %}tests left{% endif %}
+        </div>
+    </div>
 
+    <!-- Start Test Hero Card -->
+    <div class="hero-card p-6 md:p-10 mb-8 md:mb-10 pop-in">
         <div class="relative z-10">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
-                <div>
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="w-16 h-16 bg-gradient-to-br from-[#FF6B6B] to-[#FF9F43] rounded-2xl flex items-center justify-center shadow-lg transform rotate-3">
-                            <svg class="w-9 h-9 text-white" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-                            </svg>
-                        </div>
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6 md:gap-8">
+                <div class="flex-1">
+                    <div class="flex items-center gap-4 mb-4 md:mb-5">
+                        <div class="mascot">&#128218;</div>
                         <div>
-                            <h2 class="text-3xl font-black text-white">{% if lang == 'uz' %}Yangi test{% else %}New Test{% endif %}</h2>
-                            <p class="text-gray-400 font-bold">Reading • Listening • Writing</p>
+                            <h2 class="text-2xl md:text-3xl font-black text-white">{% if lang == 'uz' %}Yangi Test{% else %}New Test{% endif %}</h2>
+                            <p class="text-[#AFAFAF] font-bold text-sm md:text-base">Reading + Listening + Writing</p>
                         </div>
                     </div>
 
-                    <div class="flex flex-wrap gap-3 mb-2">
-                        <span class="bg-[#45B7D1]/15 text-[#45B7D1] text-sm font-bold px-4 py-2 rounded-full border border-[#45B7D1]/30">~3 {% if lang == 'uz' %}soat{% else %}hours{% endif %}</span>
-                        <span class="bg-[#A78BFA]/15 text-[#A78BFA] text-sm font-bold px-4 py-2 rounded-full border border-[#A78BFA]/30">AI {% if lang == 'uz' %}baholash{% else %}evaluation{% endif %}</span>
-                        <span class="bg-[#FFE66D]/15 text-[#FFE66D] text-sm font-bold px-4 py-2 rounded-full border border-[#FFE66D]/30">CEFR A1-C2</span>
+                    <div class="flex flex-wrap gap-2 md:gap-3">
+                        <span class="skill-pill bg-[#1CB0F6]/15 text-[#1CB0F6] border border-[#1CB0F6]/30">&#128214; Reading</span>
+                        <span class="skill-pill bg-[#CE82FF]/15 text-[#CE82FF] border border-[#CE82FF]/30">&#127911; Listening</span>
+                        <span class="skill-pill bg-[#58CC02]/15 text-[#58CC02] border border-[#58CC02]/30">&#9997;&#65039; Writing</span>
+                        <span class="skill-pill bg-[#FF9600]/15 text-[#FF9600] border border-[#FF9600]/30">&#129302; AI</span>
                     </div>
                 </div>
 
-                <div class="flex flex-col items-center gap-4">
-                    <a href="/test/reading" class="btn-3d px-12 py-5 text-xl">
-                        {% if lang == 'uz' %}Boshlash{% else %}Start Test{% endif %}
+                <div class="flex flex-col items-center md:items-end gap-3">
+                    <a href="/test/reading" class="btn-duo btn-duo-green px-10 md:px-14 py-4 md:py-5 text-lg md:text-xl w-full md:w-auto text-center">
+                        {% if lang == 'uz' %}Boshlash{% else %}Start{% endif %} &#127919;
                     </a>
-                    <p class="text-gray-400 text-sm font-medium">
-                        <span class="text-[#FFE66D] font-black text-lg">{{ (user.free_tests or 0) + (user.purchased_tests or 0) }}</span>
-                        {% if lang == 'uz' %}ta test qoldi{% else %}tests remaining{% endif %}
-                    </p>
+                    <span class="text-[#AFAFAF] text-sm font-bold">~3 {% if lang == 'uz' %}soat{% else %}hours{% endif %} | CEFR A1-C2</span>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Statistics Cards -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-5 mb-10">
-        <div class="stat-card">
-            <div class="text-4xl font-black text-[#4ECDC4] mb-2">{{ test_history|length if test_history else 0 }}</div>
-            <div class="text-gray-400 text-sm font-bold uppercase tracking-wider">{% if lang == 'uz' %}Jami{% else %}Total{% endif %}</div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-5 mb-8 md:mb-10">
+        <div class="stat-3d pop-in pop-in-delay-1">
+            <div class="text-3xl md:text-4xl font-black text-[#58CC02] mb-1 md:mb-2">{{ test_history|length if test_history else 0 }}</div>
+            <div class="text-[#777] text-xs md:text-sm font-bold uppercase tracking-wider">{% if lang == 'uz' %}Jami{% else %}Total{% endif %}</div>
         </div>
-        <div class="stat-card">
-            <div class="text-4xl font-black text-[#45B7D1] mb-2">
-                {% if test_history and test_history|length > 0 %}
-                    {{ test_history[0].cefr_level or '—' }}
-                {% else %}
-                    —
-                {% endif %}
+        <div class="stat-3d pop-in pop-in-delay-2">
+            <div class="text-3xl md:text-4xl font-black text-[#1CB0F6] mb-1 md:mb-2">
+                {% if test_history and test_history|length > 0 %}{{ test_history[0].cefr_level or '—' }}{% else %}—{% endif %}
             </div>
-            <div class="text-gray-400 text-sm font-bold uppercase tracking-wider">{% if lang == 'uz' %}Daraja{% else %}Level{% endif %}</div>
+            <div class="text-[#777] text-xs md:text-sm font-bold uppercase tracking-wider">{% if lang == 'uz' %}Daraja{% else %}Level{% endif %}</div>
         </div>
-        <div class="stat-card">
-            <div class="text-4xl font-black text-[#A78BFA] mb-2">
-                {% if test_history and test_history|length > 0 %}
-                    {{ ((test_history[0].reading_score or 0) / (test_history[0].reading_total or 1) * 100)|round|int }}%
-                {% else %}
-                    —
-                {% endif %}
+        <div class="stat-3d pop-in pop-in-delay-3">
+            <div class="text-3xl md:text-4xl font-black text-[#CE82FF] mb-1 md:mb-2">
+                {% if test_history and test_history|length > 0 %}{{ ((test_history[0].reading_score or 0) / (test_history[0].reading_total or 1) * 100)|round|int }}%{% else %}—{% endif %}
             </div>
-            <div class="text-gray-400 text-sm font-bold uppercase tracking-wider">Reading</div>
+            <div class="text-[#777] text-xs md:text-sm font-bold uppercase tracking-wider">Reading</div>
         </div>
-        <div class="stat-card">
-            <div class="text-4xl font-black text-[#FF9F43] mb-2">
-                {% if test_history and test_history|length > 0 %}
-                    {{ test_history[0].writing_percentage or 0 }}%
-                {% else %}
-                    —
-                {% endif %}
+        <div class="stat-3d pop-in pop-in-delay-4">
+            <div class="text-3xl md:text-4xl font-black text-[#FF9600] mb-1 md:mb-2">
+                {% if test_history and test_history|length > 0 %}{{ test_history[0].writing_percentage or 0 }}%{% else %}—{% endif %}
             </div>
-            <div class="text-gray-400 text-sm font-bold uppercase tracking-wider">Writing</div>
+            <div class="text-[#777] text-xs md:text-sm font-bold uppercase tracking-wider">Writing</div>
         </div>
     </div>
 
-    <!-- Test History -->
-    <div class="app-card overflow-hidden">
-        <div class="p-6 border-b-2 border-[#334155] bg-gradient-to-r from-[#1E293B] to-[#0F172A]">
-            <h3 class="text-xl font-black text-white flex items-center gap-3">
-                <svg class="w-7 h-7 text-[#45B7D1]" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/>
-                </svg>
-                {% if lang == 'uz' %}Test tarixi{% else %}Test History{% endif %}
+    {% if test_history and test_history|length > 1 %}
+    <!-- Progress Charts -->
+    <div class="grid md:grid-cols-2 gap-4 md:gap-6 mb-8 md:mb-10">
+        <div class="duo-card p-5 md:p-6">
+            <h3 class="text-base md:text-lg font-black text-white mb-4 flex items-center gap-3">
+                &#127919; {% if lang == 'uz' %}Ko'nikmalar{% else %}Skills{% endif %}
             </h3>
+            <div class="h-56 md:h-64">
+                <canvas id="skillsChart"></canvas>
+            </div>
         </div>
+        <div class="duo-card p-5 md:p-6">
+            <h3 class="text-base md:text-lg font-black text-white mb-4 flex items-center gap-3">
+                &#128200; {% if lang == 'uz' %}Progress{% else %}Progress{% endif %}
+            </h3>
+            <div class="h-56 md:h-64">
+                <canvas id="progressChart"></canvas>
+            </div>
+        </div>
+    </div>
+    {% elif test_history and test_history|length == 1 %}
+    <div class="duo-card p-5 md:p-6 mb-8 md:mb-10">
+        <h3 class="text-base md:text-lg font-black text-white mb-4 flex items-center gap-3">
+            &#128202; {% if lang == 'uz' %}So'nggi test natijalari{% else %}Latest Test Results{% endif %}
+        </h3>
+        <div class="h-56 md:h-64">
+            <canvas id="singleTestChart"></canvas>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Test History -->
+    <div class="mb-8 md:mb-10">
+        <h3 class="text-xl md:text-2xl font-black text-white mb-5 md:mb-6 flex items-center gap-3">
+            &#128197; {% if lang == 'uz' %}Test tarixi{% else %}Test History{% endif %}
+        </h3>
 
         {% if test_history and test_history|length > 0 %}
-        <div class="divide-y-2 divide-[#334155]">
+        <div class="space-y-3 md:space-y-4">
             {% for h in test_history[:5] %}
-            <div class="p-6 hover:bg-[#334155]/50 transition-colors">
-                <div class="flex items-center justify-between gap-4">
-                    <div class="flex items-center gap-5">
-                        <!-- CEFR Badge -->
-                        <div class="w-16 h-16 rounded-2xl flex items-center justify-center font-black text-xl shadow-lg
-                            {% if h.cefr_level in ['C1', 'C2'] %}level-c1
-                            {% elif h.cefr_level in ['B1', 'B2'] %}level-b1
-                            {% else %}level-a1{% endif %}">
+            <div class="history-item">
+                <div class="flex items-center justify-between gap-3 md:gap-4">
+                    <div class="flex items-center gap-3 md:gap-5">
+                        <div class="w-12 h-12 md:w-16 md:h-16 rounded-2xl flex items-center justify-center font-black text-lg md:text-xl text-white flex-shrink-0
+                            {% if h.cefr_level in ['C1', 'C2'] %}bg-[#FF4B4B]{% elif h.cefr_level in ['B1', 'B2'] %}bg-[#CE82FF]{% else %}bg-[#58CC02]{% endif %}"
+                            style="box-shadow: 0 4px 0 {% if h.cefr_level in ['C1', 'C2'] %}#EA2B2B{% elif h.cefr_level in ['B1', 'B2'] %}#A560E8{% else %}#46A302{% endif %};">
                             {{ h.cefr_level or '—' }}
                         </div>
                         <div>
-                            <div class="font-bold text-white text-lg mb-2">{{ h.completed_at[:10] if h.completed_at else '—' }}</div>
-                            <div class="flex items-center gap-4 text-sm font-bold">
-                                <span class="text-[#A78BFA]">R: {{ h.reading_score or 0 }}/{{ h.reading_total or 0 }}</span>
-                                <span class="text-[#45B7D1]">L: {{ h.listening_score or 0 }}/{{ h.listening_total or 0 }}</span>
-                                <span class="text-[#FF9F43]">W: {{ h.writing_percentage or 0 }}%</span>
+                            <div class="font-bold text-white text-sm md:text-lg mb-1">{{ h.completed_at[:10] if h.completed_at else '—' }}</div>
+                            <div class="flex flex-wrap items-center gap-2 md:gap-4 text-xs md:text-sm font-bold">
+                                <span class="text-[#1CB0F6]">R: {{ h.reading_score or 0 }}/{{ h.reading_total or 0 }}</span>
+                                <span class="text-[#CE82FF]">L: {{ h.listening_score or 0 }}/{{ h.listening_total or 0 }}</span>
+                                <span class="text-[#FF9600]">W: {{ h.writing_percentage or 0 }}%</span>
                             </div>
                         </div>
                     </div>
                     {% if h.session_id %}
-                    <a href="/profile/result/{{ h.session_id }}" class="btn-3d btn-3d-blue px-6 py-3 text-sm">
+                    <a href="/profile/result/{{ h.session_id }}" class="btn-duo btn-duo-blue px-4 md:px-6 py-2 md:py-3 text-xs md:text-sm flex-shrink-0">
                         {% if lang == 'uz' %}Ko'rish{% else %}View{% endif %}
                     </a>
                     {% endif %}
@@ -134,60 +263,126 @@
             {% endfor %}
         </div>
         {% else %}
-        <div class="p-16 text-center">
-            <div class="w-24 h-24 bg-[#334155] rounded-full flex items-center justify-center mx-auto mb-6 float-animation">
-                <svg class="w-12 h-12 text-gray-500" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
-                </svg>
-            </div>
-            <h4 class="text-2xl font-black text-white mb-3">{% if lang == 'uz' %}Hali test topshirmagansiz{% else %}No tests yet{% endif %}</h4>
-            <p class="text-gray-400 mb-8 text-lg font-medium max-w-sm mx-auto">{% if lang == 'uz' %}Birinchi testingizni boshlang va CEFR darajangizni bilib oling!{% else %}Start your first test and discover your CEFR level!{% endif %}</p>
-            <a href="/test/reading" class="btn-3d inline-block px-10 py-4 text-lg">
-                {% if lang == 'uz' %}Testni boshlash{% else %}Start Test{% endif %}
+        <div class="duo-card p-10 md:p-16 text-center">
+            <div class="text-6xl md:text-7xl mb-5 md:mb-6 float-animation">&#128218;</div>
+            <h4 class="text-xl md:text-2xl font-black text-white mb-3">{% if lang == 'uz' %}Hali test topshirmagansiz{% else %}No tests yet{% endif %}</h4>
+            <p class="text-[#AFAFAF] mb-6 md:mb-8 text-base md:text-lg font-medium max-w-sm mx-auto">
+                {% if lang == 'uz' %}Birinchi testingizni boshlang va CEFR darajangizni bilib oling!{% else %}Start your first test and discover your CEFR level!{% endif %}
+            </p>
+            <a href="/test/reading" class="btn-duo btn-duo-green px-10 py-4 text-lg inline-flex">
+                {% if lang == 'uz' %}Testni boshlash{% else %}Start Test{% endif %} &#127919;
             </a>
         </div>
         {% endif %}
     </div>
 
     <!-- Tips Section -->
-    <div class="mt-10 app-card p-8">
-        <h3 class="text-xl font-black text-white mb-6 flex items-center gap-3">
-            <div class="w-10 h-10 bg-[#FFE66D]/20 rounded-xl flex items-center justify-center">
-                <svg class="w-6 h-6 text-[#FFE66D]" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
-                </svg>
-            </div>
-            {% if lang == 'uz' %}Maslahatlar{% else %}Tips{% endif %}
+    <div class="mb-8">
+        <h3 class="text-xl md:text-2xl font-black text-white mb-5 md:mb-6 flex items-center gap-3">
+            &#128161; {% if lang == 'uz' %}Maslahatlar{% else %}Tips{% endif %}
         </h3>
-        <div class="grid md:grid-cols-3 gap-5">
-            <div class="bg-gradient-to-br from-[#45B7D1]/10 to-transparent border-2 border-[#45B7D1]/30 rounded-2xl p-5">
-                <div class="flex items-center gap-3 mb-3">
-                    <div class="w-10 h-10 bg-[#45B7D1]/20 rounded-xl flex items-center justify-center">
-                        <svg class="w-5 h-5 text-[#45B7D1]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                    </div>
-                    <span class="text-[#45B7D1] font-black">Reading</span>
-                </div>
-                <p class="text-gray-400 font-medium">{% if lang == 'uz' %}Matnni diqqat bilan o'qing, kalit so'zlarga e'tibor bering{% else %}Read carefully, pay attention to key words{% endif %}</p>
+        <div class="grid md:grid-cols-3 gap-3 md:gap-5">
+            <div class="tip-card bg-[#1CB0F6]/10 border-2 border-[#1CB0F6]/30">
+                <div class="text-3xl md:text-4xl mb-3">&#128214;</div>
+                <span class="text-[#1CB0F6] font-black text-sm md:text-base">Reading</span>
+                <p class="text-[#AFAFAF] font-medium text-sm mt-2">{% if lang == 'uz' %}Matnni diqqat bilan o'qing, kalit so'zlarga e'tibor bering{% else %}Read carefully, pay attention to key words{% endif %}</p>
             </div>
-            <div class="bg-gradient-to-br from-[#A78BFA]/10 to-transparent border-2 border-[#A78BFA]/30 rounded-2xl p-5">
-                <div class="flex items-center gap-3 mb-3">
-                    <div class="w-10 h-10 bg-[#A78BFA]/20 rounded-xl flex items-center justify-center">
-                        <svg class="w-5 h-5 text-[#A78BFA]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
-                    </div>
-                    <span class="text-[#A78BFA] font-black">Listening</span>
-                </div>
-                <p class="text-gray-400 font-medium">{% if lang == 'uz' %}Transkriptni diqqat bilan o'qing{% else %}Read transcripts carefully{% endif %}</p>
+            <div class="tip-card bg-[#CE82FF]/10 border-2 border-[#CE82FF]/30">
+                <div class="text-3xl md:text-4xl mb-3">&#127911;</div>
+                <span class="text-[#CE82FF] font-black text-sm md:text-base">Listening</span>
+                <p class="text-[#AFAFAF] font-medium text-sm mt-2">{% if lang == 'uz' %}Audio diqqat bilan tinglang yoki transkript o'qing{% else %}Listen carefully or read transcripts{% endif %}</p>
             </div>
-            <div class="bg-gradient-to-br from-[#4ECDC4]/10 to-transparent border-2 border-[#4ECDC4]/30 rounded-2xl p-5">
-                <div class="flex items-center gap-3 mb-3">
-                    <div class="w-10 h-10 bg-[#4ECDC4]/20 rounded-xl flex items-center justify-center">
-                        <svg class="w-5 h-5 text-[#4ECDC4]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                    </div>
-                    <span class="text-[#4ECDC4] font-black">Writing</span>
-                </div>
-                <p class="text-gray-400 font-medium">{% if lang == 'uz' %}So'z soniga rioya qiling, grammatikaga e'tibor bering{% else %}Follow word count, focus on grammar{% endif %}</p>
+            <div class="tip-card bg-[#58CC02]/10 border-2 border-[#58CC02]/30">
+                <div class="text-3xl md:text-4xl mb-3">&#9997;&#65039;</div>
+                <span class="text-[#58CC02] font-black text-sm md:text-base">Writing</span>
+                <p class="text-[#AFAFAF] font-medium text-sm mt-2">{% if lang == 'uz' %}So'z soniga rioya qiling, grammatikaga e'tibor bering{% else %}Follow word count, focus on grammar{% endif %}</p>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+{% if test_history and test_history|length > 0 %}
+    Chart.defaults.color = '#777';
+    Chart.defaults.font.family = 'Nunito';
+    Chart.defaults.font.weight = 700;
+
+    {% if test_history|length > 1 %}
+    // Skills Radar
+    new Chart(document.getElementById('skillsChart').getContext('2d'), {
+        type: 'radar',
+        data: {
+            labels: ['Reading', 'Listening', 'Writing'],
+            datasets: [{
+                label: 'Score',
+                data: [
+                    {{ ((test_history[0].reading_score or 0) / (test_history[0].reading_total or 1) * 100)|round|int }},
+                    {{ ((test_history[0].listening_score or 0) / (test_history[0].listening_total or 1) * 100)|round|int }},
+                    {{ test_history[0].writing_percentage or 0 }}
+                ],
+                backgroundColor: 'rgba(88, 204, 2, 0.15)',
+                borderColor: '#58CC02',
+                borderWidth: 3,
+                pointBackgroundColor: '#58CC02',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: '#58CC02',
+                pointRadius: 6
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            scales: { r: { beginAtZero: true, max: 100, ticks: { stepSize: 25, backdropColor: 'transparent', font: { size: 11 } }, grid: { color: 'rgba(43, 65, 72, 0.6)' }, pointLabels: { font: { size: 13, weight: '800' } } } },
+            plugins: { legend: { display: false } }
+        }
+    });
+
+    // Progress Line
+    const hd = [{% for h in test_history[:10]|reverse %}{ d: '{{ h.completed_at[:10] if h.completed_at else "Test" }}', s: {{ h.overall_score or 0 }} }{% if not loop.last %},{% endif %}{% endfor %}];
+    new Chart(document.getElementById('progressChart').getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: hd.map(x => x.d),
+            datasets: [{
+                data: hd.map(x => x.s),
+                borderColor: '#1CB0F6', backgroundColor: 'rgba(28, 176, 246, 0.1)',
+                borderWidth: 3, fill: true, tension: 0.4,
+                pointBackgroundColor: '#1CB0F6', pointBorderColor: '#fff', pointBorderWidth: 2, pointRadius: 5, pointHoverRadius: 7
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true, max: 100, grid: { color: 'rgba(43, 65, 72, 0.6)' } }, x: { grid: { color: 'rgba(43, 65, 72, 0.3)' }, ticks: { font: { size: 10 } } } },
+            plugins: { legend: { display: false } }
+        }
+    });
+    {% else %}
+    // Single Test Bar
+    new Chart(document.getElementById('singleTestChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: ['Reading', 'Listening', 'Writing', '{% if lang == "uz" %}Umumiy{% else %}Overall{% endif %}'],
+            datasets: [{
+                data: [
+                    {{ ((test_history[0].reading_score or 0) / (test_history[0].reading_total or 1) * 100)|round|int }},
+                    {{ ((test_history[0].listening_score or 0) / (test_history[0].listening_total or 1) * 100)|round|int }},
+                    {{ test_history[0].writing_percentage or 0 }},
+                    {{ test_history[0].overall_score or 0 }}
+                ],
+                backgroundColor: ['rgba(28, 176, 246, 0.7)', 'rgba(206, 130, 255, 0.7)', 'rgba(88, 204, 2, 0.7)', 'rgba(255, 150, 0, 0.7)'],
+                borderColor: ['#1CB0F6', '#CE82FF', '#58CC02', '#FF9600'],
+                borderWidth: 2, borderRadius: 12
+            }]
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            scales: { y: { beginAtZero: true, max: 100, grid: { color: 'rgba(43, 65, 72, 0.6)' }, ticks: { callback: v => v + '%' } }, x: { grid: { display: false } } },
+            plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ctx.parsed.y + '%' } } }
+        }
+    });
+    {% endif %}
+{% endif %}
+</script>
 {% endblock %}

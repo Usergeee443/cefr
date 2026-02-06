@@ -2,180 +2,112 @@
 {% block title %}{% if lang == 'uz' %}CEFR haqida{% else %}About CEFR{% endif %} - CEFR Level{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto px-4 md:px-6 py-8">
+<div class="max-w-4xl mx-auto px-4 md:px-6 py-6 md:py-8 pb-24">
     <!-- Header -->
-    <div class="text-center mb-10">
-        <h1 class="text-4xl md:text-5xl font-black text-white mb-4">
-            {% if lang == 'uz' %}CEFR nima? 📚{% else %}What is CEFR? 📚{% endif %}
+    <div class="text-center mb-8 md:mb-10">
+        <div class="text-4xl md:text-5xl mb-3">&#128218;</div>
+        <h1 class="text-3xl md:text-4xl font-black text-white mb-3">
+            {% if lang == 'uz' %}CEFR nima?{% else %}What is CEFR?{% endif %}
         </h1>
-        <p class="text-[#93A8B1] text-lg max-w-2xl mx-auto">
-            {% if lang == 'uz' %}
-                Common European Framework of Reference for Languages - Yevropa til bilish darajalari standardi
-            {% else %}
-                Common European Framework of Reference for Languages - The European standard for language proficiency
-            {% endif %}
+        <p class="text-[#AFAFAF] text-sm md:text-lg max-w-2xl mx-auto font-medium">
+            {% if lang == 'uz' %}Yevropa til bilish darajalari standarti{% else %}European standard for language proficiency{% endif %}
         </p>
     </div>
 
     <!-- CEFR Levels -->
-    <div class="space-y-4 mb-10">
-        <!-- C2 -->
-        <div class="duo-card p-5 border-l-4 border-[#FFC800]">
-            <div class="flex items-start gap-4">
-                <div class="w-14 h-14 bg-gradient-to-br from-[#FFC800] to-[#FF9600] rounded-2xl flex items-center justify-center text-[#131F24] font-black text-xl flex-shrink-0">
-                    C2
-                </div>
+    <div class="space-y-3 md:space-y-4 mb-8 md:mb-10">
+        <div class="duo-card p-4 md:p-5 border-l-4 border-[#FFC800]">
+            <div class="flex items-start gap-3 md:gap-4">
+                <div class="w-12 h-12 md:w-14 md:h-14 bg-[#FFC800] rounded-2xl flex items-center justify-center text-[#131F24] font-black text-lg md:text-xl flex-shrink-0" style="box-shadow: 0 3px 0 #E6B400;">C2</div>
                 <div class="flex-1">
-                    <h3 class="text-xl font-bold text-[#FFC800] mb-1">{% if lang == 'uz' %}Mastery{% else %}Mastery{% endif %}</h3>
-                    <p class="text-[#93A8B1]">
-                        {% if lang == 'uz' %}
-                            Tilni ona tili darajasida egallagan. Murakkab matnlarni tushunadi, nuanslarni sezadi. Professional darajada yozma va og'zaki muloqot qiladi.
-                        {% else %}
-                            Near-native proficiency. Understands virtually everything heard or read. Can summarize information from different sources, reconstructing arguments and accounts in a coherent presentation.
-                        {% endif %}
-                    </p>
+                    <h3 class="text-lg md:text-xl font-black text-[#FFC800] mb-1">Mastery</h3>
+                    <p class="text-[#AFAFAF] text-sm">{% if lang == 'uz' %}Tilni ona tili darajasida egallagan. Murakkab matnlarni tushunadi, nuanslarni sezadi.{% else %}Near-native proficiency. Understands virtually everything heard or read.{% endif %}</p>
                 </div>
             </div>
         </div>
 
-        <!-- C1 -->
-        <div class="duo-card p-5 border-l-4 border-[#FF9600]">
-            <div class="flex items-start gap-4">
-                <div class="w-14 h-14 bg-gradient-to-br from-[#FF9600] to-[#FF4B4B] rounded-2xl flex items-center justify-center text-white font-black text-xl flex-shrink-0">
-                    C1
-                </div>
+        <div class="duo-card p-4 md:p-5 border-l-4 border-[#FF9600]">
+            <div class="flex items-start gap-3 md:gap-4">
+                <div class="w-12 h-12 md:w-14 md:h-14 bg-[#FF9600] rounded-2xl flex items-center justify-center text-white font-black text-lg md:text-xl flex-shrink-0" style="box-shadow: 0 3px 0 #E68600;">C1</div>
                 <div class="flex-1">
-                    <h3 class="text-xl font-bold text-[#FF9600] mb-1">{% if lang == 'uz' %}Advanced{% else %}Advanced{% endif %}</h3>
-                    <p class="text-[#93A8B1]">
-                        {% if lang == 'uz' %}
-                            Murakkab, uzun matnlarni tushunadi. Ravon va spontan muloqot qiladi. Akademik va professional maqsadlarda tildan foydalana oladi.
-                        {% else %}
-                            Can understand a wide range of demanding, longer texts. Can express ideas fluently and spontaneously. Can use language flexibly for social, academic, and professional purposes.
-                        {% endif %}
-                    </p>
+                    <h3 class="text-lg md:text-xl font-black text-[#FF9600] mb-1">Advanced</h3>
+                    <p class="text-[#AFAFAF] text-sm">{% if lang == 'uz' %}Murakkab matnlarni tushunadi. Ravon va spontan muloqot qiladi. Akademik va professional maqsadlarda foydalanadi.{% else %}Can understand demanding texts. Can express ideas fluently. Can use language for academic and professional purposes.{% endif %}</p>
                 </div>
             </div>
         </div>
 
-        <!-- B2 -->
-        <div class="duo-card p-5 border-l-4 border-[#58CC02]">
-            <div class="flex items-start gap-4">
-                <div class="w-14 h-14 bg-gradient-to-br from-[#58CC02] to-[#89E219] rounded-2xl flex items-center justify-center text-white font-black text-xl flex-shrink-0">
-                    B2
-                </div>
+        <div class="duo-card p-4 md:p-5 border-l-4 border-[#FF4B4B]">
+            <div class="flex items-start gap-3 md:gap-4">
+                <div class="w-12 h-12 md:w-14 md:h-14 bg-[#FF4B4B] rounded-2xl flex items-center justify-center text-white font-black text-lg md:text-xl flex-shrink-0" style="box-shadow: 0 3px 0 #EA2B2B;">B2</div>
                 <div class="flex-1">
-                    <h3 class="text-xl font-bold text-[#58CC02] mb-1">{% if lang == 'uz' %}Upper Intermediate{% else %}Upper Intermediate{% endif %}</h3>
-                    <p class="text-[#93A8B1]">
-                        {% if lang == 'uz' %}
-                            Murakkab matnlarning asosiy mazmunini tushunadi. Ona tilida so'zlashuvchilar bilan bemalol muloqot qiladi. Turli mavzularda batafsil yozadi.
-                        {% else %}
-                            Can understand the main ideas of complex text. Can interact with a degree of fluency and spontaneity with native speakers. Can produce clear, detailed text on a wide range of subjects.
-                        {% endif %}
-                    </p>
+                    <h3 class="text-lg md:text-xl font-black text-[#FF4B4B] mb-1">Upper Intermediate</h3>
+                    <p class="text-[#AFAFAF] text-sm">{% if lang == 'uz' %}Murakkab matnlarning asosiy mazmunini tushunadi. Ona tilida so'zlashuvchilar bilan bemalol muloqot qiladi.{% else %}Can understand complex texts. Can interact with native speakers with fluency.{% endif %}</p>
                 </div>
             </div>
         </div>
 
-        <!-- B1 -->
-        <div class="duo-card p-5 border-l-4 border-[#89E219]">
-            <div class="flex items-start gap-4">
-                <div class="w-14 h-14 bg-gradient-to-br from-[#89E219] to-[#58CC02] rounded-2xl flex items-center justify-center text-white font-black text-xl flex-shrink-0">
-                    B1
-                </div>
+        <div class="duo-card p-4 md:p-5 border-l-4 border-[#CE82FF]">
+            <div class="flex items-start gap-3 md:gap-4">
+                <div class="w-12 h-12 md:w-14 md:h-14 bg-[#CE82FF] rounded-2xl flex items-center justify-center text-white font-black text-lg md:text-xl flex-shrink-0" style="box-shadow: 0 3px 0 #A560E8;">B1</div>
                 <div class="flex-1">
-                    <h3 class="text-xl font-bold text-[#89E219] mb-1">{% if lang == 'uz' %}Intermediate{% else %}Intermediate{% endif %}</h3>
-                    <p class="text-[#93A8B1]">
-                        {% if lang == 'uz' %}
-                            Tanish mavzulardagi asosiy fikrlarni tushunadi. Sayohatda yuzaga keladigan vaziyatlardan chiqadi. Oddiy bog'langan matn yozadi.
-                        {% else %}
-                            Can understand the main points of clear standard input on familiar matters. Can deal with most situations likely to arise while traveling. Can produce simple connected text on familiar topics.
-                        {% endif %}
-                    </p>
+                    <h3 class="text-lg md:text-xl font-black text-[#CE82FF] mb-1">Intermediate</h3>
+                    <p class="text-[#AFAFAF] text-sm">{% if lang == 'uz' %}Tanish mavzulardagi asosiy fikrlarni tushunadi. Sayohatda yuzaga keladigan vaziyatlardan chiqadi.{% else %}Can understand main points of familiar matters. Can deal with situations while traveling.{% endif %}</p>
                 </div>
             </div>
         </div>
 
-        <!-- A2 -->
-        <div class="duo-card p-5 border-l-4 border-[#1CB0F6]">
-            <div class="flex items-start gap-4">
-                <div class="w-14 h-14 bg-gradient-to-br from-[#1CB0F6] to-[#1899D6] rounded-2xl flex items-center justify-center text-white font-black text-xl flex-shrink-0">
-                    A2
-                </div>
+        <div class="duo-card p-4 md:p-5 border-l-4 border-[#1CB0F6]">
+            <div class="flex items-start gap-3 md:gap-4">
+                <div class="w-12 h-12 md:w-14 md:h-14 bg-[#1CB0F6] rounded-2xl flex items-center justify-center text-white font-black text-lg md:text-xl flex-shrink-0" style="box-shadow: 0 3px 0 #1899D6;">A2</div>
                 <div class="flex-1">
-                    <h3 class="text-xl font-bold text-[#1CB0F6] mb-1">{% if lang == 'uz' %}Elementary{% else %}Elementary{% endif %}</h3>
-                    <p class="text-[#93A8B1]">
-                        {% if lang == 'uz' %}
-                            Eng ko'p ishlatiladigan iboralarni tushunadi. Oddiy kundalik vazifalarni bajarish uchun muloqot qiladi. Shaxsiy ma'lumotlarni oddiy tilda tasvirlaydi.
-                        {% else %}
-                            Can understand sentences and frequently used expressions. Can communicate in simple and routine tasks. Can describe in simple terms aspects of their background.
-                        {% endif %}
-                    </p>
+                    <h3 class="text-lg md:text-xl font-black text-[#1CB0F6] mb-1">Elementary</h3>
+                    <p class="text-[#AFAFAF] text-sm">{% if lang == 'uz' %}Eng ko'p ishlatiladigan iboralarni tushunadi. Oddiy kundalik vazifalarni bajara oladi.{% else %}Can understand frequently used expressions. Can communicate in simple routine tasks.{% endif %}</p>
                 </div>
             </div>
         </div>
 
-        <!-- A1 -->
-        <div class="duo-card p-5 border-l-4 border-[#CE82FF]">
-            <div class="flex items-start gap-4">
-                <div class="w-14 h-14 bg-gradient-to-br from-[#CE82FF] to-[#a855f7] rounded-2xl flex items-center justify-center text-white font-black text-xl flex-shrink-0">
-                    A1
-                </div>
+        <div class="duo-card p-4 md:p-5 border-l-4 border-[#58CC02]">
+            <div class="flex items-start gap-3 md:gap-4">
+                <div class="w-12 h-12 md:w-14 md:h-14 bg-[#58CC02] rounded-2xl flex items-center justify-center text-white font-black text-lg md:text-xl flex-shrink-0" style="box-shadow: 0 3px 0 #46A302;">A1</div>
                 <div class="flex-1">
-                    <h3 class="text-xl font-bold text-[#CE82FF] mb-1">{% if lang == 'uz' %}Beginner{% else %}Beginner{% endif %}</h3>
-                    <p class="text-[#93A8B1]">
-                        {% if lang == 'uz' %}
-                            Oddiy iboralar va kundalik so'zlarni tushunadi. O'zini va boshqalarni tanishtiradi. Juda oddiy savollarga javob beradi.
-                        {% else %}
-                            Can understand and use familiar everyday expressions. Can introduce themselves and others. Can ask and answer questions about personal details.
-                        {% endif %}
-                    </p>
+                    <h3 class="text-lg md:text-xl font-black text-[#58CC02] mb-1">Beginner</h3>
+                    <p class="text-[#AFAFAF] text-sm">{% if lang == 'uz' %}Oddiy iboralar va kundalik so'zlarni tushunadi. O'zini tanishtira oladi.{% else %}Can understand familiar expressions. Can introduce themselves.{% endif %}</p>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Test Structure -->
-    <div class="duo-card p-6 mb-8">
-        <h2 class="text-2xl font-black text-white mb-6 flex items-center gap-3">
-            <span class="text-3xl">📝</span>
-            {% if lang == 'uz' %}Test tuzilishi{% else %}Test Structure{% endif %}
+    <div class="duo-card p-5 md:p-6 mb-6 md:mb-8">
+        <h2 class="text-xl md:text-2xl font-black text-white mb-5 md:mb-6">
+            &#128221; {% if lang == 'uz' %}Test tuzilishi{% else %}Test Structure{% endif %}
         </h2>
-
-        <div class="grid md:grid-cols-3 gap-4">
-            <div class="bg-[#223D45] rounded-xl p-5">
-                <div class="w-12 h-12 bg-[#CE82FF]/20 rounded-xl flex items-center justify-center mb-3">
-                    <span class="text-2xl">📖</span>
-                </div>
-                <h3 class="font-bold text-[#CE82FF] text-lg mb-2">Reading</h3>
-                <ul class="text-[#93A8B1] text-sm space-y-1">
-                    <li>• 4 ta part</li>
-                    <li>• 40 ta savol</li>
-                    <li>• 60 daqiqa</li>
+        <div class="grid grid-cols-3 gap-2 md:gap-4">
+            <div class="bg-[#1CB0F6]/10 border-2 border-[#1CB0F6]/30 rounded-xl p-3 md:p-5 text-center">
+                <div class="text-2xl md:text-3xl mb-2">&#128214;</div>
+                <h3 class="font-black text-[#1CB0F6] text-sm md:text-lg mb-2">Reading</h3>
+                <ul class="text-[#AFAFAF] text-xs space-y-1 font-medium">
+                    <li>4 Part</li>
+                    <li>40 {% if lang == 'uz' %}savol{% else %}Q{% endif %}</li>
+                    <li>60 {% if lang == 'uz' %}daq{% else %}min{% endif %}</li>
                 </ul>
             </div>
-
-            <div class="bg-[#223D45] rounded-xl p-5">
-                <div class="w-12 h-12 bg-[#1CB0F6]/20 rounded-xl flex items-center justify-center mb-3">
-                    <span class="text-2xl">🎧</span>
-                </div>
-                <h3 class="font-bold text-[#1CB0F6] text-lg mb-2">Listening</h3>
-                <ul class="text-[#93A8B1] text-sm space-y-1">
-                    <li>• 4 ta part</li>
-                    <li>• 30 ta savol</li>
-                    <li>• 40 daqiqa</li>
+            <div class="bg-[#CE82FF]/10 border-2 border-[#CE82FF]/30 rounded-xl p-3 md:p-5 text-center">
+                <div class="text-2xl md:text-3xl mb-2">&#127911;</div>
+                <h3 class="font-black text-[#CE82FF] text-sm md:text-lg mb-2">Listening</h3>
+                <ul class="text-[#AFAFAF] text-xs space-y-1 font-medium">
+                    <li>4 Part</li>
+                    <li>30 {% if lang == 'uz' %}savol{% else %}Q{% endif %}</li>
+                    <li>40 {% if lang == 'uz' %}daq{% else %}min{% endif %}</li>
                 </ul>
             </div>
-
-            <div class="bg-[#223D45] rounded-xl p-5">
-                <div class="w-12 h-12 bg-[#FF9600]/20 rounded-xl flex items-center justify-center mb-3">
-                    <span class="text-2xl">✍️</span>
-                </div>
-                <h3 class="font-bold text-[#FF9600] text-lg mb-2">Writing</h3>
-                <ul class="text-[#93A8B1] text-sm space-y-1">
-                    <li>• 2 ta part</li>
-                    <li>• 3 ta task</li>
-                    <li>• 80 daqiqa</li>
-                    <li>• AI baholash</li>
+            <div class="bg-[#58CC02]/10 border-2 border-[#58CC02]/30 rounded-xl p-3 md:p-5 text-center">
+                <div class="text-2xl md:text-3xl mb-2">&#9997;&#65039;</div>
+                <h3 class="font-black text-[#58CC02] text-sm md:text-lg mb-2">Writing</h3>
+                <ul class="text-[#AFAFAF] text-xs space-y-1 font-medium">
+                    <li>3 Task</li>
+                    <li>80 {% if lang == 'uz' %}daq{% else %}min{% endif %}</li>
+                    <li>&#129302; AI</li>
                 </ul>
             </div>
         </div>
@@ -183,8 +115,8 @@
 
     <!-- CTA -->
     <div class="text-center">
-        <a href="/dashboard" class="btn-3d inline-block px-10 py-4 text-lg">
-            {% if lang == 'uz' %}Testni boshlash{% else %}Start Test{% endif %}
+        <a href="/dashboard" class="btn-duo btn-duo-green px-10 py-4 text-lg inline-flex">
+            {% if lang == 'uz' %}Testni boshlash{% else %}Start Test{% endif %} &#127919;
         </a>
     </div>
 </div>

@@ -2,42 +2,54 @@
 {% block title %}{% if lang == 'uz' %}Biz haqimizda{% else %}About Us{% endif %} - CEFR{% endblock %}
 {% block content %}
 <div class="max-w-4xl mx-auto px-4 md:px-6 py-8 md:py-12 pb-24">
-    <div class="text-center mb-10 md:mb-16">
-        <h1 class="text-3xl md:text-4xl font-black mb-4">{% if lang == 'uz' %}Biz haqimizda{% else %}About Us{% endif %}</h1>
+    <div class="text-center mb-8 md:mb-12">
+        <div class="text-4xl md:text-5xl mb-3">&#127891;</div>
+        <h1 class="text-3xl md:text-4xl font-black text-white mb-3">{% if lang == 'uz' %}Biz haqimizda{% else %}About Us{% endif %}</h1>
     </div>
-    <div class="space-y-6 md:space-y-8">
-        <div class="bg-[#0F2035] border border-gray-800 p-6 md:p-8">
-            <h2 class="text-xl md:text-2xl font-bold text-[#00D4AA] mb-4">CEFR Level</h2>
+    <div class="space-y-4 md:space-y-6">
+        <div class="bg-[#1A2C32] border-2 border-[#2B4148] rounded-2xl p-5 md:p-8">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-12 h-12 bg-[#58CC02] rounded-2xl flex items-center justify-center text-white font-black text-xl" style="box-shadow: 0 3px 0 #46A302;">C</div>
+                <h2 class="text-xl md:text-2xl font-black text-[#58CC02]">CEFR Level</h2>
+            </div>
             {% if lang == 'uz' %}
-            <p class="text-gray-400 leading-relaxed mb-4">CEFR Level - ingliz tili darajangizni aniqlash uchun platforma. Reading, Listening va Writing baholanadi, CEFR (A1–C2) natija beriladi.</p>
-            <p class="text-gray-400 leading-relaxed">Writing qismini AI baholaydi.</p>
+            <p class="text-[#AFAFAF] leading-relaxed mb-3 font-medium">CEFR Level - ingliz tili darajangizni aniqlash uchun platforma. Reading, Listening va Writing baholanadi, CEFR (A1–C2) natija beriladi.</p>
+            <p class="text-[#AFAFAF] leading-relaxed font-medium">Writing qismini AI baholaydi.</p>
             {% else %}
-            <p class="text-gray-400 leading-relaxed mb-4">CEFR Level is a platform to determine your English level. Reading, Listening, and Writing are evaluated; you get a CEFR result (A1–C2).</p>
-            <p class="text-gray-400 leading-relaxed">Writing is evaluated by AI.</p>
+            <p class="text-[#AFAFAF] leading-relaxed mb-3 font-medium">CEFR Level is a platform to determine your English level. Reading, Listening, and Writing are evaluated; you get a CEFR result (A1–C2).</p>
+            <p class="text-[#AFAFAF] leading-relaxed font-medium">Writing is evaluated by AI.</p>
             {% endif %}
         </div>
-        <div class="bg-[#0F2035] border border-gray-800 p-6 md:p-8">
-            <h2 class="text-xl md:text-2xl font-bold text-[#00D4AA] mb-4">OSCO</h2>
+        <div class="bg-[#1A2C32] border-2 border-[#2B4148] rounded-2xl p-5 md:p-8">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-12 h-12 bg-[#1CB0F6] rounded-2xl flex items-center justify-center text-white font-black text-lg" style="box-shadow: 0 3px 0 #1899D6;">&#128187;</div>
+                <h2 class="text-xl md:text-2xl font-black text-[#1CB0F6]">OSCO</h2>
+            </div>
             {% if lang == 'uz' %}
-            <p class="text-gray-400 leading-relaxed mb-4">OSCO - zamonaviy IT mahsulotlar ishlab chiqaruvchi kompaniya. CEFR Level - OSCO ning ta'lim sohasidagi loyihasi.</p>
+            <p class="text-[#AFAFAF] leading-relaxed font-medium">OSCO - zamonaviy IT mahsulotlar ishlab chiqaruvchi kompaniya. CEFR Level - OSCO ning ta'lim sohasidagi loyihasi.</p>
             {% else %}
-            <p class="text-gray-400 leading-relaxed mb-4">OSCO is a company that develops modern IT products. CEFR Level is OSCO's project in education.</p>
+            <p class="text-[#AFAFAF] leading-relaxed font-medium">OSCO is a company that develops modern IT products. CEFR Level is OSCO's project in education.</p>
             {% endif %}
         </div>
-        <div class="bg-[#0F2035] border border-gray-800 p-6 md:p-8">
-            <h2 class="text-xl md:text-2xl font-bold text-[#00D4AA] mb-4">CEFR</h2>
-            <p class="text-gray-400 leading-relaxed mb-4">{% if lang == 'uz' %}CEFR - til darajasini baholash uchun xalqaro standart. 6 daraja: A1, A2, B1, B2, C1, C2.{% else %}CEFR is an international standard for language proficiency. Six levels: A1, A2, B1, B2, C1, C2.{% endif %}</p>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
-                <div class="bg-[#0B1628] border border-gray-800 p-3"><span class="text-lg font-black text-[#00D4AA]">A1</span><span class="text-xs text-gray-500 ml-2">Beginner</span></div>
-                <div class="bg-[#0B1628] border border-gray-800 p-3"><span class="text-lg font-black text-[#00D4AA]">A2</span><span class="text-xs text-gray-500 ml-2">Elementary</span></div>
-                <div class="bg-[#0B1628] border border-gray-800 p-3"><span class="text-lg font-black text-[#00D4AA]">B1</span><span class="text-xs text-gray-500 ml-2">Intermediate</span></div>
-                <div class="bg-[#0B1628] border border-gray-800 p-3"><span class="text-lg font-black text-[#00D4AA]">B2</span><span class="text-xs text-gray-500 ml-2">Upper Int.</span></div>
-                <div class="bg-[#0B1628] border border-gray-800 p-3"><span class="text-lg font-black text-[#00D4AA]">C1</span><span class="text-xs text-gray-500 ml-2">Advanced</span></div>
-                <div class="bg-[#0B1628] border border-gray-800 p-3"><span class="text-lg font-black text-[#00D4AA]">C2</span><span class="text-xs text-gray-500 ml-2">Mastery</span></div>
+        <div class="bg-[#1A2C32] border-2 border-[#2B4148] rounded-2xl p-5 md:p-8">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-12 h-12 bg-[#CE82FF] rounded-2xl flex items-center justify-center text-white font-black text-lg" style="box-shadow: 0 3px 0 #A560E8;">&#128218;</div>
+                <h2 class="text-xl md:text-2xl font-black text-[#CE82FF]">CEFR</h2>
+            </div>
+            <p class="text-[#AFAFAF] leading-relaxed mb-4 font-medium">{% if lang == 'uz' %}CEFR - til darajasini baholash uchun xalqaro standart. 6 daraja:{% else %}CEFR is an international standard for language proficiency. Six levels:{% endif %}</p>
+            <div class="grid grid-cols-3 md:grid-cols-6 gap-2">
+                <div class="bg-[#58CC02] rounded-xl p-2 text-center" style="box-shadow: 0 3px 0 #46A302;"><span class="text-lg font-black text-white">A1</span></div>
+                <div class="bg-[#1CB0F6] rounded-xl p-2 text-center" style="box-shadow: 0 3px 0 #1899D6;"><span class="text-lg font-black text-white">A2</span></div>
+                <div class="bg-[#CE82FF] rounded-xl p-2 text-center" style="box-shadow: 0 3px 0 #A560E8;"><span class="text-lg font-black text-white">B1</span></div>
+                <div class="bg-[#FF9600] rounded-xl p-2 text-center" style="box-shadow: 0 3px 0 #E68600;"><span class="text-lg font-black text-white">B2</span></div>
+                <div class="bg-[#FF4B4B] rounded-xl p-2 text-center" style="box-shadow: 0 3px 0 #EA2B2B;"><span class="text-lg font-black text-white">C1</span></div>
+                <div class="bg-[#FFC800] rounded-xl p-2 text-center" style="box-shadow: 0 3px 0 #E6B400;"><span class="text-lg font-black text-[#1A2C32]">C2</span></div>
             </div>
         </div>
-        <div class="text-center">
-            <a href="/start" class="inline-block bg-[#00D4AA] text-[#0B1628] px-10 py-4 font-bold hover:bg-[#00B894] transition">{{ t.start_test }}</a>
+        <div class="text-center pt-4">
+            <a href="/dashboard" class="btn-duo-green inline-flex items-center justify-center gap-2 text-white px-10 py-4 font-black text-lg rounded-2xl" style="box-shadow: 0 5px 0 #46A302; background: #58CC02;">
+                {% if lang == 'uz' %}Testni boshlash{% else %}Start Test{% endif %} &#127919;
+            </a>
         </div>
     </div>
 </div>

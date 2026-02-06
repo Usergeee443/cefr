@@ -5,43 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Listening Test - CEFR Level</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * { font-family: 'Nunito', sans-serif; }
 
+        /* DUOLINGO COLOR PALETTE */
         :root {
-            --primary: #FF6B6B;
-            --primary-dark: #E85555;
-            --secondary: #4ECDC4;
-            --secondary-dark: #3DB8B0;
-            --accent: #FFE66D;
-            --info: #45B7D1;
-            --purple: #A78BFA;
-            --orange: #FF9F43;
-            --bg: #0F172A;
-            --card: #1E293B;
-            --border: #334155;
+            --duo-green: #58CC02;
+            --duo-green-dark: #46A302;
+            --duo-blue: #1CB0F6;
+            --duo-blue-dark: #1899D6;
+            --duo-purple: #CE82FF;
+            --duo-purple-dark: #A560E8;
+            --duo-red: #FF4B4B;
+            --duo-red-dark: #EA2B2B;
+            --duo-orange: #FF9600;
+            --duo-yellow: #FFC800;
+            --bg-main: #131F24;
+            --bg-card: #1A2C32;
+            --border-color: #2B4148;
+            --border-light: #3D5A63;
         }
 
-        body { background: linear-gradient(180deg, var(--bg) 0%, #0D1321 100%); }
+        body { background: var(--bg-main); }
 
+        /* 3D Option Buttons */
         .option-btn {
-            transition: all 0.2s ease;
-            border: 2px solid var(--border);
-            background: var(--card);
+            transition: all 0.1s ease;
+            border: 2px solid var(--border-color);
+            background: var(--bg-card);
             border-radius: 16px;
         }
         .option-btn:hover {
-            border-color: var(--info);
-            background: rgba(69, 183, 209, 0.1);
+            border-color: var(--duo-blue);
+            background: rgba(28, 176, 246, 0.1);
             transform: translateY(-2px);
         }
         .option-btn.selected {
-            background: linear-gradient(135deg, var(--info) 0%, var(--secondary) 100%) !important;
+            background: var(--duo-green) !important;
             color: white !important;
-            border-color: var(--info) !important;
+            border-color: var(--duo-green) !important;
             font-weight: 800;
-            box-shadow: 0 4px 0 var(--secondary-dark), 0 6px 20px rgba(69, 183, 209, 0.3);
+            box-shadow: 0 4px 0 var(--duo-green-dark), 0 6px 15px rgba(88, 204, 2, 0.3);
+            transform: translateY(-2px);
+        }
+        .option-btn.selected:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 var(--duo-green-dark);
         }
 
         .transcript-content {
@@ -55,15 +67,15 @@
             padding: 1.25rem;
         }
 
-        .timer-normal {
-            background: var(--card);
-            border: 2px solid var(--border);
+        .timer-box {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
             border-radius: 16px;
         }
         .timer-warning {
-            background: rgba(255, 107, 107, 0.15);
-            border: 2px solid var(--primary);
-            color: var(--primary) !important;
+            background: rgba(255, 75, 75, 0.15);
+            border: 2px solid var(--duo-red);
+            color: var(--duo-red) !important;
             animation: pulse 1s infinite;
         }
         @keyframes pulse {
@@ -72,56 +84,61 @@
         }
 
         .test-card {
-            background: var(--card);
-            border: 2px solid var(--border);
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
             border-radius: 24px;
         }
 
         .test-header {
-            background: linear-gradient(180deg, var(--bg) 0%, rgba(15, 23, 42, 0.98) 100%);
-            border-bottom: 2px solid var(--border);
+            background: var(--bg-main);
+            border-bottom: 2px solid var(--border-color);
             backdrop-filter: blur(10px);
         }
 
         .question-card {
-            background: rgba(30, 41, 59, 0.8);
-            border: 2px solid var(--border);
+            background: rgba(26, 44, 50, 0.8);
+            border: 2px solid var(--border-color);
             border-radius: 20px;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
         .question-card:hover {
-            border-color: #475569;
-            transform: translateY(-2px);
+            border-color: var(--border-light);
+        }
+        .question-card.answered {
+            border-color: var(--duo-green);
+            background: rgba(88, 204, 2, 0.05);
         }
 
+        /* Transcript Button - 3D Style */
         .transcript-btn {
-            background: rgba(167, 139, 250, 0.15);
-            border: 2px solid rgba(167, 139, 250, 0.4);
-            color: var(--purple);
-            transition: all 0.2s ease;
+            background: rgba(206, 130, 255, 0.15);
+            border: 2px solid rgba(206, 130, 255, 0.4);
+            color: var(--duo-purple);
+            transition: all 0.1s ease;
             border-radius: 12px;
             font-weight: 700;
         }
         .transcript-btn:hover {
-            background: rgba(167, 139, 250, 0.25);
+            background: rgba(206, 130, 255, 0.25);
             transform: translateY(-2px);
         }
         .transcript-btn.active {
-            background: linear-gradient(135deg, var(--purple) 0%, var(--info) 100%);
+            background: var(--duo-purple);
             color: white;
-            border-color: var(--purple);
+            border-color: var(--duo-purple);
+            box-shadow: 0 4px 0 var(--duo-purple-dark);
         }
 
         .transcript-box {
-            background: rgba(15, 23, 42, 0.8);
-            border: 2px solid var(--border);
+            background: rgba(19, 31, 36, 0.8);
+            border: 2px solid var(--border-color);
             border-radius: 16px;
         }
 
         .text-input {
-            background: rgba(69, 183, 209, 0.1);
+            background: rgba(28, 176, 246, 0.1);
             border: none;
-            border-bottom: 3px solid var(--info);
+            border-bottom: 3px solid var(--duo-blue);
             color: #fff;
             transition: all 0.2s ease;
             padding: 6px 12px;
@@ -129,176 +146,346 @@
             font-weight: 700;
         }
         .text-input:focus {
-            border-color: var(--secondary);
-            background: rgba(78, 205, 196, 0.15);
-            box-shadow: 0 4px 12px rgba(69, 183, 209, 0.2);
+            border-color: var(--duo-green);
+            background: rgba(88, 204, 2, 0.15);
+            box-shadow: 0 4px 12px rgba(88, 204, 2, 0.2);
             outline: none;
+        }
+        .text-input.filled {
+            border-color: var(--duo-green);
+            background: rgba(88, 204, 2, 0.1);
         }
 
         .progress-bar {
-            background: linear-gradient(90deg, var(--info) 0%, var(--secondary) 100%);
+            background: linear-gradient(90deg, var(--duo-green) 0%, var(--duo-blue) 100%);
             border-radius: 4px;
             transition: width 0.5s ease;
         }
 
-        .btn-3d {
-            background: linear-gradient(135deg, var(--info) 0%, var(--secondary) 100%);
-            color: white;
-            font-weight: 800;
+        /* DUOLINGO 3D BUTTONS */
+        .btn-duo {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 32px;
+            border: none;
             border-radius: 16px;
-            box-shadow: 0 6px 0 var(--secondary-dark), 0 8px 20px rgba(78, 205, 196, 0.3);
-            transition: all 0.15s ease;
+            font-weight: 800;
+            font-size: 16px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            text-decoration: none;
+            color: white;
         }
-        .btn-3d:hover {
+        
+        .btn-duo-green {
+            background: var(--duo-green);
+            box-shadow: 0 5px 0 var(--duo-green-dark), 0 7px 15px rgba(88, 204, 2, 0.35);
+        }
+        .btn-duo-green:hover {
+            filter: brightness(1.05);
             transform: translateY(-2px);
-            box-shadow: 0 8px 0 var(--secondary-dark), 0 12px 30px rgba(78, 205, 196, 0.4);
+            box-shadow: 0 7px 0 var(--duo-green-dark), 0 10px 20px rgba(88, 204, 2, 0.4);
         }
-        .btn-3d:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 var(--secondary-dark);
+        .btn-duo-green:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 var(--duo-green-dark);
         }
 
-        .btn-3d-coral {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--orange) 100%);
-            box-shadow: 0 6px 0 var(--primary-dark), 0 8px 20px rgba(255, 107, 107, 0.3);
+        .btn-duo-blue {
+            background: var(--duo-blue);
+            box-shadow: 0 5px 0 var(--duo-blue-dark), 0 7px 15px rgba(28, 176, 246, 0.35);
         }
-        .btn-3d-coral:hover {
-            box-shadow: 0 8px 0 var(--primary-dark), 0 12px 30px rgba(255, 107, 107, 0.4);
+        .btn-duo-blue:hover {
+            filter: brightness(1.05);
+            transform: translateY(-2px);
         }
-        .btn-3d-coral:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 var(--primary-dark);
+        .btn-duo-blue:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 var(--duo-blue-dark);
+        }
+
+        .btn-duo-orange {
+            background: var(--duo-orange);
+            box-shadow: 0 5px 0 #E68600, 0 7px 15px rgba(255, 150, 0, 0.35);
+        }
+        .btn-duo-orange:hover {
+            filter: brightness(1.05);
+            transform: translateY(-2px);
+        }
+        .btn-duo-orange:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #E68600;
+        }
+
+        /* Play Button Style */
+        .audio-play-btn {
+            background: var(--duo-blue);
+            box-shadow: 0 4px 0 var(--duo-blue-dark);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            transition: all 0.1s ease;
+        }
+        .audio-play-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 var(--duo-blue-dark);
+        }
+        .audio-play-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 var(--duo-blue-dark);
+        }
+        .audio-play-btn.playing {
+            background: var(--duo-orange);
+            box-shadow: 0 4px 0 #E68600;
         }
 
         .part-indicator {
-            background: var(--card);
-            border: 2px solid var(--border);
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
             border-radius: 12px;
             padding: 4px 16px;
         }
 
         /* Scrollbar */
         ::-webkit-scrollbar { width: 10px; height: 10px; }
-        ::-webkit-scrollbar-track { background: var(--bg); border-radius: 5px; }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 5px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        ::-webkit-scrollbar-track { background: var(--bg-main); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--border-light); }
 
-        .gradient-text {
-            background: linear-gradient(135deg, var(--purple) 0%, var(--info) 50%, var(--secondary) 100%);
+        .gradient-text-green {
+            background: linear-gradient(135deg, var(--duo-green) 0%, #7ED321 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
         .info-box {
-            background: rgba(167, 139, 250, 0.1);
-            border: 2px solid rgba(167, 139, 250, 0.3);
+            background: rgba(206, 130, 255, 0.1);
+            border: 2px solid rgba(206, 130, 255, 0.3);
             border-radius: 20px;
         }
 
-        .part-header-gradient {
-            background: linear-gradient(135deg, var(--purple) 0%, var(--info) 100%);
+        .part-header-badge {
+            background: var(--duo-purple);
+            box-shadow: 0 4px 0 var(--duo-purple-dark);
+        }
+
+        /* Test layout: 1 oyna, har part alohida oyna */
+        .test-layout {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .test-main-scroll {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+        }
+        .test-footer-bar {
+            flex-shrink: 0;
+            background: var(--bg-main);
+            border-top: 2px solid var(--border-color);
+            padding: 12px 16px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        .question-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .kbd {
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #777;
+        }
+        
+        .q-nav-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 13px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-main);
+            color: #777;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            flex-shrink: 0;
+        }
+        .q-nav-btn:hover {
+            border-color: var(--duo-blue);
+            color: var(--duo-blue);
+            transform: translateY(-2px);
+        }
+        .q-nav-btn.answered {
+            background: var(--duo-green);
+            border-color: var(--duo-green);
+            color: white;
+            box-shadow: 0 3px 0 var(--duo-green-dark);
+        }
+        .q-nav-btn.current {
+            border-color: var(--duo-blue);
+            color: var(--duo-blue);
+            box-shadow: 0 0 0 3px rgba(28, 176, 246, 0.3);
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--duo-green);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            box-shadow: 0 4px 0 var(--duo-green-dark), 0 10px 30px rgba(0,0,0,0.3);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 200;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Part navigation dots */
+        .part-dot {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .part-dot:hover {
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .test-footer-bar { padding: 8px 12px; gap: 8px; }
+            .question-nav { max-width: 100%; overflow-x: auto; justify-content: flex-start; }
+            .q-nav-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 11px;
+                flex-shrink: 0;
+            }
         }
     </style>
 </head>
-<body class="min-h-screen text-white">
+<body class="text-white test-layout">
 
-    <!-- Header Bar -->
-    <div class="test-header fixed top-0 left-0 right-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+    <!-- Header Bar (qimirlamaydi) -->
+    <header class="test-header flex-shrink-0">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-gradient-to-br from-[#A78BFA] via-[#45B7D1] to-[#4ECDC4] flex items-center justify-center text-white font-black text-xl rounded-xl shadow-lg">
+                <div class="w-12 h-12 bg-[#58CC02] flex items-center justify-center text-white font-black text-xl rounded-xl" style="box-shadow: 0 4px 0 #46A302;">
                     C
                 </div>
                 <div>
-                    <span class="text-lg font-black gradient-text uppercase tracking-wider">Listening Test</span>
-                    <div class="text-sm text-gray-400 font-bold">Section 2 of 3</div>
+                    <span class="text-lg font-black gradient-text-green uppercase tracking-wider">Listening Test</span>
+                    <div class="text-sm text-[#777] font-bold">Section 2 of 3</div>
                 </div>
             </div>
-            <div class="flex items-center gap-6">
-                <div class="part-indicator flex items-center gap-3">
-                    <span class="text-sm text-gray-400 font-bold">Progress:</span>
-                    <span id="progress" class="text-xl font-black text-[#4ECDC4]">0</span>
-                    <span class="text-sm text-gray-400 font-bold">%</span>
+            <div class="flex items-center gap-4 md:gap-6">
+                <div class="part-indicator flex items-center gap-2 md:gap-3">
+                    <span class="text-sm text-[#777] font-bold hidden md:inline">Progress:</span>
+                    <span id="progress" class="text-xl font-black text-[#58CC02]">0</span>
+                    <span class="text-sm text-[#777] font-bold">%</span>
                 </div>
-                <div id="timer" class="timer-normal text-2xl font-mono font-black px-6 py-3 text-white">40:00</div>
+                <div id="timer" class="timer-box text-lg md:text-2xl font-mono font-black px-4 md:px-6 py-2 md:py-3 text-white">40:00</div>
             </div>
         </div>
-        <div class="w-full h-2 bg-[#1E293B]">
+        <div class="max-w-6xl mx-auto px-4 py-2 flex flex-wrap items-center justify-between gap-2 border-t border-[#2B4148]/50">
+            <span class="text-[#AFAFAF] text-sm font-medium flex items-center gap-2 flex-wrap">
+                <span class="kbd">A</span><span class="kbd">B</span><span class="kbd">C</span><span class="kbd">D</span> javoblarni tanlash,
+                <span class="kbd">←</span><span class="kbd">→</span> partlar orasida o'tish
+            </span>
+            <span class="text-xs text-[#777] flex items-center gap-3">
+                <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-[#58CC02]"></span> Javob berilgan</span>
+                <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded bg-[#1CB0F6]"></span> Hozirgi</span>
+            </span>
+        </div>
+        <div class="w-full h-2 bg-[#2B4148]">
             <div id="progress-bar" class="progress-bar h-full" style="width: 0%"></div>
         </div>
-    </div>
+    </header>
 
-    <main class="pt-28 pb-36 px-4">
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">Javob saqlandi!</div>
+
+    <!-- O'rta qism: faqat joriy part, scroll faqat shu joyda -->
+    <main class="test-main-scroll px-4 py-4">
         <div class="max-w-6xl mx-auto">
-            <!-- Instructions -->
-            <div class="info-box p-6 mb-10">
-                <div class="flex items-start gap-5">
-                    <div class="w-14 h-14 bg-gradient-to-br from-[#A78BFA] to-[#45B7D1] rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg">
-                        <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="font-black text-[#A78BFA] text-xl mb-2">Instructions</h3>
-                        <p class="text-gray-300 text-lg font-medium">Read the transcript for each audio and answer the questions. In a real CEFR exam, you would listen to audio recordings. Click "Show Transcript" to reveal the audio content.</p>
-                    </div>
-                </div>
-            </div>
-
             <form id="listening-form">
                 {% for part in test_data.parts %}
-                <section class="part-section mb-12" data-part="{{ part.part_number }}">
+                <section class="part-section mb-8 md:mb-12 hidden" data-part="{{ part.part_number }}">
                     <div class="test-card overflow-hidden">
                         <!-- Part Header -->
-                        <div class="p-8 border-b-2 border-[#334155] bg-gradient-to-r from-[#1E293B] to-[#0F172A]">
-                            <div class="flex items-center gap-5 mb-4">
-                                <div class="w-16 h-16 part-header-gradient rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-lg">
+                        <div class="p-6 md:p-8 border-b-2 border-[#2B4148] bg-gradient-to-r from-[#1A2C32] to-[#131F24]">
+                            <div class="flex items-center gap-4 md:gap-5 mb-4">
+                                <div class="part-header-badge w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center text-white font-black text-xl md:text-2xl">
                                     {{ part.part_number }}
                                 </div>
                                 <div>
-                                    <h2 class="text-3xl font-black text-white">{{ part.title }}</h2>
-                                    <span class="text-base text-gray-400 font-bold">Part {{ part.part_number }} of {{ test_data.parts|length }}</span>
+                                    <h2 class="text-2xl md:text-3xl font-black text-white">{{ part.title }}</h2>
+                                    <span class="text-sm md:text-base text-[#777] font-bold">Part {{ part.part_number }} of {{ test_data.parts|length }}</span>
                                 </div>
                             </div>
-                            <p class="text-gray-300 ml-[84px] text-lg font-medium">{{ part.instruction }}</p>
+                            <p class="text-[#AFAFAF] ml-0 md:ml-[84px] text-base md:text-lg font-medium">{{ part.instruction }}</p>
                         </div>
 
-                        <div class="p-8">
+                        <div class="p-5 md:p-8">
                             {% if part.type == "short_conversations" %}
-                            <!-- Part 1: Short Conversations -->
-                            <div class="space-y-6">
+                            <!-- Part 1: bitta ovoz — Part 1 ning barcha matni -->
+                            <div class="mb-6 md:mb-8">
+                                <div class="flex flex-wrap items-center gap-3 md:gap-4 mb-4">
+                                    <button type="button" class="audio-play-btn px-5 md:px-6 py-3 md:py-4 text-sm md:text-base flex items-center gap-2 md:gap-3"
+                                            data-transcript="{{ part.questions | map(attribute='transcript') | join('\n\n') }}" data-part="{{ part.part_number }}">
+                                        <svg class="w-5 h-5 md:w-6 md:h-6 play-icon" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M8 5v14l11-7z"/>
+                                        </svg>
+                                        <svg class="w-5 h-5 md:w-6 md:h-6 loading-icon hidden animate-spin" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        <span class="btn-text">Play Part 1</span>
+                                    </button>
+                                    <span class="text-[#777] font-medium text-sm md:text-base">8 ta savol uchun bitta ovoz</span>
+                                </div>
+                                <audio class="audio-player w-full mb-4 hidden" controls data-part="{{ part.part_number }}"></audio>
+                            </div>
+                            <div class="space-y-5 md:space-y-6">
                                 {% for q in part.questions %}
-                                <div class="question-card p-6" data-question="{{ q.number }}">
-                                    <div class="flex items-center justify-between mb-5">
-                                        <span class="font-black text-white text-xl">Question {{ q.number }}</span>
-                                        <button type="button" class="transcript-btn px-5 py-3 text-base flex items-center gap-3">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
-                                            </svg>
-                                            Show Transcript
-                                        </button>
+                                <div class="question-card p-5 md:p-6" data-question="{{ q.number }}" id="q-{{ q.number }}">
+                                    <div class="font-black text-white text-lg md:text-xl flex items-center gap-3 mb-2">
+                                        <span class="w-8 h-8 bg-[#1CB0F6] rounded-lg flex items-center justify-center text-white text-sm font-black">{{ q.number }}</span>
+                                        Question {{ q.number }}
                                     </div>
-
-                                    <div class="text-base text-gray-400 mb-4 italic font-medium">
-                                        {{ q.audio_description }}
-                                    </div>
-
-                                    <div class="transcript-content transcript-box mb-5">
-                                        <p class="text-gray-300 whitespace-pre-line leading-relaxed text-base font-medium">{{ q.transcript }}</p>
-                                    </div>
-
-                                    <div class="font-bold text-white mb-5 text-lg">{{ q.question }}</div>
-
-                                    <div class="space-y-3">
+                                    <div class="text-sm md:text-base text-[#777] mb-3 italic font-medium">{{ q.audio_description }}</div>
+                                    <div class="font-bold text-white mb-4 md:mb-5 text-base md:text-lg">{{ q.question }}</div>
+                                    <div class="space-y-2 md:space-y-3">
                                         {% for letter, option in q.options.items() %}
                                         <button type="button"
-                                                class="option-btn w-full p-4 text-left text-base text-gray-200 flex items-start gap-4 font-medium"
+                                                class="option-btn w-full p-3 md:p-4 text-left text-sm md:text-base text-[#AFAFAF] flex items-start gap-3 md:gap-4 font-medium"
                                                 data-question="{{ q.number }}"
                                                 data-value="{{ letter }}">
-                                            <span class="font-black text-[#45B7D1]">{{ letter }}.</span>
+                                            <span class="font-black text-[#1CB0F6]">{{ letter }}.</span>
                                             <span>{{ option }}</span>
                                         </button>
                                         {% endfor %}
@@ -310,64 +497,81 @@
 
                             {% elif part.type == "sentence_completion" %}
                             <!-- Part 2: Sentence Completion -->
-                            <div class="mb-8">
-                                <button type="button" class="transcript-btn w-full p-5 flex items-center justify-between text-base">
-                                    <span class="font-bold flex items-center gap-4">
-                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
+                            <div class="mb-6 md:mb-8">
+                                <div class="flex flex-wrap items-center gap-3 md:gap-4 mb-4">
+                                    <button type="button" class="audio-play-btn px-5 md:px-6 py-3 md:py-4 text-sm md:text-base flex items-center gap-2 md:gap-3 bg-[#CE82FF]" style="box-shadow: 0 4px 0 #A560E8;"
+                                            data-transcript="{{ part.transcript }}" data-part="{{ part.part_number }}">
+                                        <svg class="w-5 h-5 md:w-6 md:h-6 play-icon" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M8 5v14l11-7z"/>
                                         </svg>
-                                        {{ part.audio_description }}
-                                    </span>
-                                    <span class="text-sm font-bold">Click to show transcript</span>
-                                </button>
-                                <div class="transcript-content transcript-box mt-3">
-                                    <p class="text-gray-300 whitespace-pre-line leading-relaxed text-base font-medium">{{ part.transcript }}</p>
+                                        <svg class="w-5 h-5 md:w-6 md:h-6 loading-icon hidden animate-spin" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        <span class="btn-text">Play Lecture</span>
+                                    </button>
+                                    <span class="text-[#777] font-medium text-sm md:text-base">{{ part.audio_description }}</span>
                                 </div>
+                                
+                                <audio class="audio-player w-full mb-4 hidden" controls data-part="{{ part.part_number }}"></audio>
                             </div>
 
-                            <div class="space-y-4">
+                            <div class="space-y-3 md:space-y-4">
                                 {% for q in part.questions %}
-                                <div class="question-card p-5 flex items-center gap-5" data-question="{{ q.number }}">
-                                    <span class="font-black text-[#45B7D1] text-xl">{{ q.number }}.</span>
-                                    <div class="flex-1 text-gray-300 text-lg font-medium">
-                                        {{ q.question | replace("_____", "<input type='text' name='" ~ q.number ~ "' class='text-input px-3 py-2 w-36 text-center' placeholder='answer'>") | safe }}
+                                <div class="question-card p-4 md:p-5 flex flex-col md:flex-row md:items-center gap-3 md:gap-5" data-question="{{ q.number }}" id="q-{{ q.number }}">
+                                    <span class="font-black text-[#1CB0F6] text-lg md:text-xl flex items-center gap-2">
+                                        <span class="w-8 h-8 bg-[#1CB0F6] rounded-lg flex items-center justify-center text-white text-sm">{{ q.number }}</span>
+                                    </span>
+                                    <div class="flex-1 text-[#AFAFAF] text-base md:text-lg font-medium">
+                                        {{ q.question | replace("_____", "<input type='text' name='" ~ q.number ~ "' class='text-input px-3 py-2 w-28 md:w-36 text-center' placeholder='answer' data-question='" ~ q.number ~ "'>") | safe }}
                                     </div>
                                 </div>
                                 {% endfor %}
                             </div>
 
-                            {% elif part.type == "multiple_matching" %}
-                            <!-- Part 3: Multiple Matching -->
-                            <div class="mb-8">
-                                <h4 class="font-black text-[#FFE66D] mb-5 text-sm uppercase tracking-wider flex items-center gap-3">
+                            {% elif part.type == "speaker_matching" or part.type == "multiple_matching" %}
+                            <!-- Part 3: bitta ovoz — barcha spikerlar -->
+                            <div class="mb-6 md:mb-8">
+                                <div class="flex flex-wrap items-center gap-3 md:gap-4 mb-4">
+                                    <button type="button" class="audio-play-btn px-5 md:px-6 py-3 md:py-4 text-sm md:text-base flex items-center gap-2 md:gap-3 bg-[#FFC800] text-[#1A2C32]" style="box-shadow: 0 4px 0 #E6B400;"
+                                            data-transcript="{{ part.speakers | map(attribute='transcript') | join('\n\n') }}" data-part="{{ part.part_number }}">
+                                        <svg class="w-5 h-5 md:w-6 md:h-6 play-icon" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M8 5v14l11-7z"/>
+                                        </svg>
+                                        <svg class="w-5 h-5 md:w-6 md:h-6 loading-icon hidden animate-spin" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        <span class="btn-text">Play Part 3</span>
+                                    </button>
+                                    <span class="text-[#777] font-medium text-sm md:text-base">4 ta spiker uchun bitta ovoz</span>
+                                </div>
+                                <audio class="audio-player w-full mb-4 hidden" controls data-part="{{ part.part_number }}"></audio>
+                            </div>
+                            <div class="mb-6 md:mb-8">
+                                <h4 class="font-black text-[#FFC800] mb-4 md:mb-5 text-sm uppercase tracking-wider flex items-center gap-3">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
                                     Options
                                 </h4>
-                                <div class="grid md:grid-cols-2 gap-4">
+                                <div class="grid md:grid-cols-2 gap-3 md:gap-4">
                                     {% for letter, option in part.options.items() %}
-                                    <div class="transcript-box p-4 text-base text-gray-200 font-medium">
-                                        <span class="font-black text-[#FFE66D]">{{ letter }}.</span> {{ option }}
+                                    <div class="transcript-box p-3 md:p-4 text-sm md:text-base text-[#AFAFAF] font-medium">
+                                        <span class="font-black text-[#FFC800]">{{ letter }}.</span> {{ option }}
                                     </div>
                                     {% endfor %}
                                 </div>
                             </div>
-
-                            <div class="space-y-6">
+                            <div class="space-y-5 md:space-y-6">
                                 {% for speaker in part.speakers %}
-                                <div class="question-card p-6" data-question="{{ speaker.number }}">
-                                    <div class="flex items-center justify-between mb-5">
-                                        <span class="font-black text-white text-lg">{{ speaker.name }} <span class="text-gray-400 font-bold">(Question {{ speaker.number }})</span></span>
-                                        <button type="button" class="transcript-btn px-5 py-3 text-base font-bold">
-                                            Show Transcript
-                                        </button>
+                                <div class="question-card p-5 md:p-6" data-question="{{ speaker.number }}" id="q-{{ speaker.number }}">
+                                    <div class="font-black text-white text-base md:text-lg flex items-center gap-2 mb-4">
+                                        <span class="w-8 h-8 bg-[#FFC800] rounded-lg flex items-center justify-center text-[#1A2C32] text-sm font-black">{{ speaker.number }}</span>
+                                        {{ speaker.name }}
                                     </div>
-                                    <div class="transcript-content transcript-box mb-5">
-                                        <p class="text-gray-300 italic font-medium text-base">{{ speaker.transcript }}</p>
-                                    </div>
-                                    <div class="flex items-center gap-5">
-                                        <span class="text-gray-300 font-bold text-base">What does {{ speaker.name }} say?</span>
-                                        <select name="{{ speaker.number }}" class="bg-[#0F172A] border-2 border-[#334155] text-white px-5 py-4 rounded-xl focus:border-[#4ECDC4] outline-none font-bold text-base">
-                                            <option value="">Select answer...</option>
+                                    <div class="flex flex-col md:flex-row md:items-center gap-3 md:gap-5">
+                                        <span class="text-[#AFAFAF] font-bold text-sm md:text-base">{{ speaker.name }} nima deydi?</span>
+                                        <select name="{{ speaker.number }}" data-question="{{ speaker.number }}" class="bg-[#131F24] border-2 border-[#2B4148] text-white px-4 md:px-5 py-3 md:py-4 rounded-xl focus:border-[#58CC02] outline-none font-bold text-sm md:text-base">
+                                            <option value="">Javob tanlang...</option>
                                             {% for letter in part.options.keys() %}
                                             <option value="{{ letter }}">{{ letter }}</option>
                                             {% endfor %}
@@ -377,36 +581,90 @@
                                 {% endfor %}
                             </div>
 
-                            {% elif part.type == "interview" %}
-                            <!-- Part 4: Interview -->
-                            <div class="mb-8">
-                                <button type="button" class="transcript-btn w-full p-5 flex items-center justify-between text-base">
-                                    <span class="font-bold flex items-center gap-4">
-                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
+                            {% elif part.type == "map_labeling" %}
+                            <!-- Part 4: Map Labeling -->
+                            <div class="mb-6 md:mb-8">
+                                <div class="flex flex-wrap items-center gap-3 md:gap-4 mb-4">
+                                    <button type="button" class="audio-play-btn px-5 md:px-6 py-3 md:py-4 text-sm md:text-base flex items-center gap-2 md:gap-3 bg-[#FF9600]" style="box-shadow: 0 4px 0 #E68600;"
+                                            data-transcript="{{ part.transcript }}" data-part="{{ part.part_number }}">
+                                        <svg class="w-5 h-5 md:w-6 md:h-6 play-icon" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M8 5v14l11-7z"/>
                                         </svg>
-                                        {{ part.audio_description }}
-                                    </span>
-                                    <span class="text-sm font-bold">Click to show transcript</span>
-                                </button>
-                                <div class="transcript-content transcript-box mt-3 max-h-72 overflow-y-auto">
-                                    <p class="text-gray-300 whitespace-pre-line leading-relaxed text-base font-medium">{{ part.transcript }}</p>
+                                        <svg class="w-5 h-5 md:w-6 md:h-6 loading-icon hidden animate-spin" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        <span class="btn-text">Play Audio</span>
+                                    </button>
+                                    <span class="text-[#777] font-medium text-sm md:text-base">{{ part.audio_description }}</span>
+                                </div>
+                                
+                                <audio class="audio-player w-full mb-4 hidden" controls data-part="{{ part.part_number }}"></audio>
+                            </div>
+
+                            <!-- Map Labels legend -->
+                            <div class="mb-6 md:mb-8">
+                                <h4 class="font-black text-[#FF9600] mb-3 text-sm uppercase tracking-wider">Xaritadagi harflar:</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    {% for label in part.map_labels %}
+                                    <span class="w-10 h-10 rounded-xl bg-[#FF9600]/20 border-2 border-[#FF9600]/40 flex items-center justify-center text-[#FF9600] font-black text-lg">{{ label }}</span>
+                                    {% endfor %}
                                 </div>
                             </div>
 
-                            <div class="space-y-5">
-                                {% for q in part.questions %}
-                                <div class="question-card p-6" data-question="{{ q.number }}">
-                                    <div class="font-bold text-white mb-5 text-lg">
-                                        <span class="text-[#FF6B6B] font-black mr-2">{{ q.number }}.</span> {{ q.question }}
+                            <div class="space-y-4 md:space-y-5">
+                                {% for place in part.places %}
+                                <div class="question-card p-5 md:p-6 flex flex-col md:flex-row md:items-center gap-3 md:gap-5" data-question="{{ place.number }}" id="q-{{ place.number }}">
+                                    <span class="w-8 h-8 bg-[#FF9600] rounded-lg flex items-center justify-center text-white text-sm font-black flex-shrink-0">{{ place.number }}</span>
+                                    <span class="font-bold text-white text-base md:text-lg flex-1">{{ place.name }}</span>
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-[#777] font-bold text-sm">=</span>
+                                        <select name="{{ place.number }}" data-question="{{ place.number }}" class="bg-[#131F24] border-2 border-[#2B4148] text-white px-4 md:px-5 py-3 md:py-4 rounded-xl focus:border-[#FF9600] outline-none font-bold text-sm md:text-base min-w-[80px]">
+                                            <option value="">?</option>
+                                            {% for label in part.map_labels %}
+                                            <option value="{{ label }}">{{ label }}</option>
+                                            {% endfor %}
+                                        </select>
                                     </div>
-                                    <div class="space-y-3">
+                                </div>
+                                {% endfor %}
+                            </div>
+
+                            {% elif part.type == "interview" %}
+                            <!-- Part 5: Interview / Multiple Choice -->
+                            <div class="mb-6 md:mb-8">
+                                <div class="flex flex-wrap items-center gap-3 md:gap-4 mb-4">
+                                    <button type="button" class="audio-play-btn px-5 md:px-6 py-3 md:py-4 text-sm md:text-base flex items-center gap-2 md:gap-3 bg-[#FF4B4B]" style="box-shadow: 0 4px 0 #EA2B2B;"
+                                            data-transcript="{{ part.transcript }}" data-part="{{ part.part_number }}">
+                                        <svg class="w-5 h-5 md:w-6 md:h-6 play-icon" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M8 5v14l11-7z"/>
+                                        </svg>
+                                        <svg class="w-5 h-5 md:w-6 md:h-6 loading-icon hidden animate-spin" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        <span class="btn-text">Play Interview</span>
+                                    </button>
+                                    <span class="text-[#777] font-medium text-sm md:text-base">{{ part.audio_description }}</span>
+                                </div>
+                                
+                                <audio class="audio-player w-full mb-4 hidden" controls data-part="{{ part.part_number }}"></audio>
+                            </div>
+
+                            <div class="space-y-4 md:space-y-5">
+                                {% for q in part.questions %}
+                                <div class="question-card p-5 md:p-6" data-question="{{ q.number }}" id="q-{{ q.number }}">
+                                    <div class="font-bold text-white mb-4 md:mb-5 text-base md:text-lg flex items-start gap-3">
+                                        <span class="w-8 h-8 bg-[#FF4B4B] rounded-lg flex items-center justify-center text-white text-sm font-black flex-shrink-0">{{ q.number }}</span>
+                                        <span>{{ q.question }}</span>
+                                    </div>
+                                    <div class="space-y-2 md:space-y-3">
                                         {% for letter, option in q.options.items() %}
                                         <button type="button"
-                                                class="option-btn w-full p-4 text-left text-base text-gray-200 flex items-start gap-4 font-medium"
+                                                class="option-btn w-full p-3 md:p-4 text-left text-sm md:text-base text-[#AFAFAF] flex items-start gap-3 md:gap-4 font-medium"
                                                 data-question="{{ q.number }}"
                                                 data-value="{{ letter }}">
-                                            <span class="font-black text-[#FF6B6B]">{{ letter }}.</span>
+                                            <span class="font-black text-[#FF4B4B]">{{ letter }}.</span>
                                             <span>{{ option }}</span>
                                         </button>
                                         {% endfor %}
@@ -415,32 +673,82 @@
                                 </div>
                                 {% endfor %}
                             </div>
+
+                            {% elif part.type == "note_completion" %}
+                            <!-- Part 6: Note Completion -->
+                            <div class="mb-6 md:mb-8">
+                                <div class="flex flex-wrap items-center gap-3 md:gap-4 mb-4">
+                                    <button type="button" class="audio-play-btn px-5 md:px-6 py-3 md:py-4 text-sm md:text-base flex items-center gap-2 md:gap-3 bg-[#58CC02]" style="box-shadow: 0 4px 0 #46A302;"
+                                            data-transcript="{{ part.transcript }}" data-part="{{ part.part_number }}">
+                                        <svg class="w-5 h-5 md:w-6 md:h-6 play-icon" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M8 5v14l11-7z"/>
+                                        </svg>
+                                        <svg class="w-5 h-5 md:w-6 md:h-6 loading-icon hidden animate-spin" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        <span class="btn-text">Play Talk</span>
+                                    </button>
+                                    <span class="text-[#777] font-medium text-sm md:text-base">{{ part.audio_description }}</span>
+                                </div>
+                                
+                                <audio class="audio-player w-full mb-4 hidden" controls data-part="{{ part.part_number }}"></audio>
+                            </div>
+
+                            <div class="space-y-3 md:space-y-4">
+                                {% for q in part.questions %}
+                                <div class="question-card p-4 md:p-5 flex flex-col md:flex-row md:items-center gap-3 md:gap-5" data-question="{{ q.number }}" id="q-{{ q.number }}">
+                                    <span class="font-black text-[#58CC02] text-lg md:text-xl flex items-center gap-2">
+                                        <span class="w-8 h-8 bg-[#58CC02] rounded-lg flex items-center justify-center text-white text-sm">{{ q.number }}</span>
+                                    </span>
+                                    <div class="flex-1 text-[#AFAFAF] text-base md:text-lg font-medium">
+                                        {{ q.question | replace("_____", "<input type='text' name='" ~ q.number ~ "' class='text-input px-3 py-2 w-28 md:w-36 text-center' placeholder='answer' data-question='" ~ q.number ~ "'>") | safe }}
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
                             {% endif %}
                         </div>
                     </div>
                 </section>
                 {% endfor %}
-
-                <!-- Submit Button -->
-                <div class="text-center mt-12">
-                    <button type="submit" class="btn-3d-coral px-14 py-6 font-black text-xl flex items-center gap-4 mx-auto">
-                        <span>Submit & Continue to Writing</span>
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-                        </svg>
-                    </button>
-                    <p class="text-gray-400 text-base mt-5 font-medium">Continue to Writing section after submission</p>
-                </div>
             </form>
         </div>
     </main>
 
+    <!-- Pastki qism (footer): part raqamlari + savol raqamlari -->
+    <footer class="test-footer-bar" id="test-footer">
+        <div class="flex items-center gap-2 md:gap-3 flex-shrink-0">
+            <span class="text-xs text-[#777] font-bold hidden md:inline">Part:</span>
+            <button type="button" id="btn-prev-part" class="btn-duo btn-duo-outline px-3 md:px-4 py-2 hidden text-sm" title="Oldingi part">
+                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <div class="flex items-center gap-1 md:gap-2">
+                {% for part in test_data.parts %}
+                <button type="button" class="part-dot w-9 h-9 md:w-10 md:h-10 rounded-xl bg-[#2B4148] transition-all duration-300 font-bold text-sm text-[#777] flex items-center justify-center" data-part-btn="{{ part.part_number }}">{{ part.part_number }}</button>
+                {% endfor %}
+            </div>
+            <button type="button" id="btn-next-part" class="btn-duo btn-duo-blue px-3 md:px-4 py-2 text-sm" title="Keyingi part">
+                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </button>
+        </div>
+        <div class="question-nav bg-[#1A2C32] border-2 border-[#2B4148] rounded-xl px-3 py-2" id="question-nav">
+            <span class="text-xs text-[#777] font-bold mr-2 hidden md:inline">Savollar:</span>
+        </div>
+        <div id="submit-wrap" class="hidden flex-shrink-0">
+            <button type="submit" form="listening-form" class="btn-duo btn-duo-orange px-6 md:px-8 py-3 md:py-4 font-black text-sm md:text-base flex items-center gap-2">
+                <span>Yuborish → Writing</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+            </button>
+        </div>
+    </footer>
+
     <!-- Loading Overlay -->
-    <div id="loading-overlay" class="fixed inset-0 bg-[#0F172A]/98 flex items-center justify-center z-50 hidden backdrop-blur-lg">
-        <div class="test-card p-12 text-center max-w-md">
-            <div class="w-20 h-20 border-4 border-[#4ECDC4]/20 border-t-[#4ECDC4] rounded-full animate-spin mx-auto mb-8"></div>
-            <h3 class="text-2xl font-black text-white mb-3">Submitting Your Answers</h3>
-            <p class="text-gray-400 text-lg font-medium">Please wait while we process your responses...</p>
+    <div id="loading-overlay" class="fixed inset-0 bg-[#131F24]/98 flex items-center justify-center z-50 hidden backdrop-blur-lg">
+        <div class="test-card p-8 md:p-12 text-center max-w-md mx-4">
+            <div class="w-16 md:w-20 h-16 md:h-20 border-4 border-[#58CC02]/20 border-t-[#58CC02] rounded-full animate-spin mx-auto mb-6 md:mb-8"></div>
+            <h3 class="text-xl md:text-2xl font-black text-white mb-3">Submitting Your Answers</h3>
+            <p class="text-[#777] text-base md:text-lg font-medium">Please wait while we process your responses...</p>
         </div>
     </div>
 
@@ -455,7 +763,7 @@
             timerEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
             if (timeLeft <= 300) {
-                timerEl.classList.remove('timer-normal');
+                timerEl.classList.remove('timer-box');
                 timerEl.classList.add('timer-warning');
             }
 
@@ -468,19 +776,245 @@
         }
         updateTimer();
 
-        // Transcript toggles
-        document.querySelectorAll('.transcript-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const container = this.closest('.question-card') || this.closest('.mb-8');
-                const content = container.querySelector('.transcript-content');
-                if (content) {
-                    content.classList.toggle('open');
-                    this.classList.toggle('active');
-                    if (this.textContent.includes('Show')) {
-                        this.innerHTML = this.innerHTML.replace('Show', 'Hide');
+        // Question ranges per part
+        const partQuestions = {
+            1: [1, 2, 3, 4, 5, 6, 7, 8],
+            2: [9, 10, 11, 12, 13, 14],
+            3: [15, 16, 17, 18],
+            4: [19, 20, 21, 22, 23, 24],
+            5: [25, 26, 27, 28, 29, 30],
+            6: [31, 32, 33, 34, 35, 36]
+        };
+
+        // Part navigation (har part alohida oyna)
+        const parts = document.querySelectorAll('.part-section');
+        const partBtns = document.querySelectorAll('[data-part-btn]');
+        const totalParts = parts.length;
+        let currentPart = 1;
+
+        function showPart(partNum) {
+            currentPart = partNum;
+            parts.forEach(p => {
+                p.classList.toggle('hidden', parseInt(p.dataset.part) !== partNum);
+            });
+            partBtns.forEach(btn => {
+                const num = parseInt(btn.dataset.partBtn);
+                if (num === partNum) {
+                    btn.classList.remove('bg-[#2B4148]', 'text-[#777]');
+                    btn.classList.add('bg-[#58CC02]', 'text-white');
+                    btn.style.boxShadow = '0 4px 0 #46A302';
+                } else if (num < partNum) {
+                    btn.classList.remove('bg-[#2B4148]', 'text-[#777]', 'bg-[#58CC02]');
+                    btn.classList.add('bg-[#1CB0F6]', 'text-white');
+                    btn.style.boxShadow = '0 3px 0 #1899D6';
+                } else {
+                    btn.classList.add('bg-[#2B4148]', 'text-[#777]');
+                    btn.classList.remove('bg-[#58CC02]', 'bg-[#1CB0F6]', 'text-white');
+                    btn.style.boxShadow = 'none';
+                }
+            });
+            document.getElementById('btn-prev-part').classList.toggle('hidden', partNum === 1);
+            document.getElementById('btn-next-part').classList.toggle('hidden', partNum === totalParts);
+            document.getElementById('submit-wrap').classList.toggle('hidden', partNum !== totalParts);
+            buildQuestionNav();
+            const mainScroll = document.querySelector('.test-main-scroll');
+            if (mainScroll) mainScroll.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        partBtns.forEach(btn => {
+            btn.addEventListener('click', () => showPart(parseInt(btn.dataset.partBtn)));
+        });
+        document.getElementById('btn-prev-part').addEventListener('click', () => showPart(currentPart - 1));
+        document.getElementById('btn-next-part').addEventListener('click', () => showPart(currentPart + 1));
+        showPart(1);
+
+        // Build question navigator
+        function buildQuestionNav() {
+            const nav = document.getElementById('question-nav');
+            const questions = partQuestions[currentPart] || [];
+            
+            nav.innerHTML = '<span class="text-xs text-[#777] font-bold mr-2 hidden md:inline">Savollar:</span>';
+            
+            questions.forEach(qNum => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'q-nav-btn';
+                btn.textContent = qNum;
+                btn.dataset.question = qNum;
+                
+                // Check if answered
+                const input = document.querySelector(`input[name="${qNum}"]`) || document.querySelector(`select[name="${qNum}"]`);
+                if (input && input.value) {
+                    btn.classList.add('answered');
+                }
+                
+                btn.addEventListener('click', () => scrollToQuestion(qNum));
+                nav.appendChild(btn);
+            });
+        }
+        
+        // Update nav highlight
+        function updateQuestionNavHighlight() {
+            document.querySelectorAll('.q-nav-btn').forEach(btn => {
+                const qNum = btn.dataset.question;
+                const input = document.querySelector(`input[name="${qNum}"]`) || document.querySelector(`select[name="${qNum}"]`);
+                
+                btn.classList.remove('answered');
+                if (input && input.value) {
+                    btn.classList.add('answered');
+                }
+            });
+        }
+        
+        // Scroll to question (o'rta blok ichida)
+        function scrollToQuestion(qNum) {
+            let el = document.getElementById(`q-${qNum}`);
+            if (!el) {
+                const q = document.querySelector(`[data-question="${qNum}"]`);
+                el = q ? q.closest('.question-card') : null;
+            }
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Show toast
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        // Audio cache
+        const audioCache = {};
+        
+        // Audio play buttons
+        document.querySelectorAll('.audio-play-btn').forEach(btn => {
+            btn.addEventListener('click', async function() {
+                const transcript = this.dataset.transcript;
+                const questionNum = this.dataset.question || this.dataset.part;
+                const container = this.closest('.question-card') || this.closest('.mb-8') || this.closest('.mb-6');
+                const audioPlayer = container.querySelector('.audio-player');
+                const playIcon = this.querySelector('.play-icon');
+                const loadingIcon = this.querySelector('.loading-icon');
+                const btnText = this.querySelector('.btn-text');
+                
+                // If already playing, pause
+                if (!audioPlayer.paused) {
+                    audioPlayer.pause();
+                    btnText.textContent = 'Play';
+                    playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+                    this.classList.remove('playing');
+                    return;
+                }
+                
+                // If audio already loaded, just play
+                if (audioPlayer.src && audioPlayer.src !== window.location.href) {
+                    audioPlayer.play();
+                    audioPlayer.classList.remove('hidden');
+                    btnText.textContent = 'Pause';
+                    playIcon.innerHTML = '<path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>';
+                    this.classList.add('playing');
+                    return;
+                }
+                
+                // Check cache
+                const cacheKey = transcript.substring(0, 100);
+                if (audioCache[cacheKey]) {
+                    audioPlayer.src = audioCache[cacheKey];
+                    audioPlayer.classList.remove('hidden');
+                    audioPlayer.play();
+                    btnText.textContent = 'Pause';
+                    playIcon.innerHTML = '<path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>';
+                    this.classList.add('playing');
+                    return;
+                }
+                
+                // Show loading
+                playIcon.classList.add('hidden');
+                loadingIcon.classList.remove('hidden');
+                btnText.textContent = 'Loading...';
+                this.disabled = true;
+                
+                try {
+                    const response = await fetch('/api/tts', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            text: transcript.substring(0, 4000),
+                            voice: 'alloy'
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.audio) {
+                        // Convert base64 to blob URL
+                        const audioBlob = await fetch(`data:audio/mp3;base64,${data.audio}`).then(r => r.blob());
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        
+                        // Cache it
+                        audioCache[cacheKey] = audioUrl;
+                        
+                        // Set and play
+                        audioPlayer.src = audioUrl;
+                        audioPlayer.classList.remove('hidden');
+                        audioPlayer.play();
+                        
+                        btnText.textContent = 'Pause';
+                        playIcon.innerHTML = '<path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>';
+                        this.classList.add('playing');
                     } else {
-                        this.innerHTML = this.innerHTML.replace('Hide', 'Show');
+                        btnText.textContent = 'Unavailable';
+                        setTimeout(() => { btnText.textContent = 'Play'; }, 2000);
                     }
+                } catch (error) {
+                    console.error('TTS Error:', error);
+                    btnText.textContent = 'Error';
+                    setTimeout(() => { btnText.textContent = 'Play'; }, 2000);
+                }
+                
+                // Reset button state
+                playIcon.classList.remove('hidden');
+                loadingIcon.classList.add('hidden');
+                this.disabled = false;
+            });
+        });
+        
+        // Handle audio events
+        document.querySelectorAll('.audio-player').forEach(player => {
+            player.addEventListener('ended', function() {
+                const container = this.closest('.question-card') || this.closest('.mb-8') || this.closest('.mb-6');
+                const btn = container.querySelector('.audio-play-btn');
+                if (btn) {
+                    const playIcon = btn.querySelector('.play-icon');
+                    const btnText = btn.querySelector('.btn-text');
+                    btnText.textContent = 'Play';
+                    playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+                    btn.classList.remove('playing');
+                }
+            });
+            
+            player.addEventListener('pause', function() {
+                const container = this.closest('.question-card') || this.closest('.mb-8') || this.closest('.mb-6');
+                const btn = container.querySelector('.audio-play-btn');
+                if (btn && this.currentTime < this.duration) {
+                    const playIcon = btn.querySelector('.play-icon');
+                    const btnText = btn.querySelector('.btn-text');
+                    btnText.textContent = 'Play';
+                    playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+                    btn.classList.remove('playing');
+                }
+            });
+            
+            player.addEventListener('play', function() {
+                const container = this.closest('.question-card') || this.closest('.mb-8') || this.closest('.mb-6');
+                const btn = container.querySelector('.audio-play-btn');
+                if (btn) {
+                    const playIcon = btn.querySelector('.play-icon');
+                    const btnText = btn.querySelector('.btn-text');
+                    btnText.textContent = 'Pause';
+                    playIcon.innerHTML = '<path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>';
+                    btn.classList.add('playing');
                 }
             });
         });
@@ -497,18 +1031,50 @@
 
                 this.classList.add('selected');
                 document.querySelector(`input[name="${questionNum}"]`).value = value;
+                
+                // Update question card style
+                const card = this.closest('.question-card');
+                if (card) card.classList.add('answered');
+                
                 updateProgress();
+                updateQuestionNavHighlight();
+                showToast('Javob saqlandi!');
             });
         });
 
         // Track input and select changes
-        document.querySelectorAll('input[type="text"], select').forEach(el => {
-            el.addEventListener('change', updateProgress);
-            el.addEventListener('input', updateProgress);
+        document.querySelectorAll('input[type="text"]').forEach(el => {
+            el.addEventListener('input', function() {
+                updateProgress();
+                updateQuestionNavHighlight();
+                if (this.value.trim()) {
+                    this.classList.add('filled');
+                } else {
+                    this.classList.remove('filled');
+                }
+            });
+            el.addEventListener('blur', function() {
+                if (this.value.trim()) {
+                    showToast('Javob saqlandi!');
+                }
+            });
+        });
+        
+        document.querySelectorAll('select').forEach(el => {
+            el.addEventListener('change', function() {
+                updateProgress();
+                updateQuestionNavHighlight();
+                
+                // Update question card style
+                const card = this.closest('.question-card');
+                if (card && this.value) card.classList.add('answered');
+                
+                showToast('Javob saqlandi!');
+            });
         });
 
         function updateProgress() {
-            const totalQuestions = 30;
+            const totalQuestions = 36;
             let answered = 0;
 
             document.querySelectorAll('input[type="hidden"]').forEach(input => {
@@ -527,6 +1093,20 @@
         }
 
         // Form submission
+        // Klaviatura: ← → partlar, A B C D javob
+        document.addEventListener('keydown', function(e) {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+            if (e.key === 'ArrowLeft' && currentPart > 1) { e.preventDefault(); showPart(currentPart - 1); }
+            else if (e.key === 'ArrowRight' && currentPart < totalParts) { e.preventDefault(); showPart(currentPart + 1); }
+            else if (['A','B','C','D'].includes(e.key.toUpperCase())) {
+                const visibleCard = document.querySelector('.part-section:not(.hidden) .question-card');
+                if (visibleCard) {
+                    const btn = visibleCard.querySelector(`.option-btn[data-value="${e.key.toUpperCase()}"]`);
+                    if (btn) btn.click();
+                }
+            }
+        });
+
         document.getElementById('listening-form').addEventListener('submit', async function(e) {
             e.preventDefault();
 
@@ -554,6 +1134,7 @@
                 document.getElementById('loading-overlay').classList.add('hidden');
             }
         });
+
     </script>
 </body>
 </html>

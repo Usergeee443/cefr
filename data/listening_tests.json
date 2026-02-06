@@ -14,6 +14,7 @@
             {
               "number": 1,
               "audio_description": "A woman is talking to her colleague about a meeting.",
+              "audio_url": "https://www2.cs.uic.edu/~i101/SoundFiles/BaachToccadaandFug662.wav",
               "transcript": "Woman: Did you hear? The marketing meeting has been moved from 2pm to 4pm. The director had a last-minute conflict with the original time.\nMan: Oh, that's actually better for me. I have a client call at 2:30 that I was worried about.\nWoman: Great. See you at four then.",
               "question": "Why was the meeting time changed?",
               "options": {
@@ -111,208 +112,94 @@
         },
         {
           "part_number": 2,
-          "title": "Part 2: Sentence Completion",
-          "instruction": "You will hear a talk about the history of coffee. For questions 9-18, complete the sentences.",
+          "title": "Part 2: Gap Fill",
+          "instruction": "You will hear a talk about the history of coffee. For questions 9-14, complete the sentences with ONE word.",
           "type": "sentence_completion",
           "audio_description": "A lecturer giving a talk about the history of coffee.",
-          "transcript": "Good afternoon, everyone. Today I'm going to talk about the fascinating history of coffee.\n\nThe story of coffee begins in Ethiopia, where, according to legend, a goat herder named Kaldi noticed his goats becoming energetic after eating berries from a certain tree. This discovery dates back to approximately the 9th century.\n\nFrom Ethiopia, coffee spread to the Arabian Peninsula. By the 15th century, coffee was being grown in Yemen, and it had become an important part of social and religious life. Coffee houses, known as qahveh khaneh, began to appear in cities throughout the Middle East.\n\nEuropeans first encountered coffee in the 17th century when Venetian traders brought it to Italy. Initially, some people were suspicious and called it 'the bitter invention of Satan.' However, Pope Clement the Eighth gave coffee his approval.\n\nThe Dutch were the first Europeans to establish coffee plantations in their colonies, starting in Java, Indonesia, in the late 1600s.\n\nCoffee reached the Americas in the 18th century. Americans switched from tea to coffee after the Boston Tea Party in 1773 as a patriotic gesture.\n\nToday, coffee is the second most traded commodity in the world after oil. Over 2.25 billion cups are consumed every day. The largest producer of coffee is Brazil.",
+          "transcript": "Good afternoon, everyone. Today I'm going to talk about the fascinating history of coffee.\n\nThe story of coffee begins in Ethiopia, where, according to legend, a goat herder named Kaldi noticed his goats becoming energetic after eating berries from a certain tree.\n\nFrom Ethiopia, coffee spread to the Arabian Peninsula. By the 15th century, coffee was being grown in Yemen. Coffee houses, known as qahveh khaneh, began to appear in cities throughout the Middle East.\n\nEuropeans first encountered coffee in the 17th century when Venetian traders brought it to Italy.\n\nThe Dutch were the first Europeans to establish coffee plantations in their colonies, starting in Java, Indonesia.\n\nToday, coffee is the second most traded commodity in the world after oil. The largest producer of coffee is Brazil.",
           "questions": [
-            {
-              "number": 9,
-              "question": "According to legend, coffee was discovered by a _____ herder.",
-              "correct": "goat"
-            },
-            {
-              "number": 10,
-              "question": "Coffee originated in the country of _____.",
-              "correct": "Ethiopia"
-            },
-            {
-              "number": 11,
-              "question": "By the 15th century, coffee was being grown in _____.",
-              "correct": "Yemen"
-            },
-            {
-              "number": 12,
-              "question": "Coffee houses in the Middle East were called qahveh _____.",
-              "correct": "khaneh"
-            },
-            {
-              "number": 13,
-              "question": "Coffee was first brought to Europe by _____ traders.",
-              "correct": "Venetian"
-            },
-            {
-              "number": 14,
-              "question": "The Pope who approved coffee was Clement the _____.",
-              "correct": "Eighth"
-            },
-            {
-              "number": 15,
-              "question": "The Dutch established coffee plantations in _____, Indonesia.",
-              "correct": "Java"
-            },
-            {
-              "number": 16,
-              "question": "Americans switched from tea to coffee after the Boston Tea _____.",
-              "correct": "Party"
-            },
-            {
-              "number": 17,
-              "question": "Coffee is the second most traded commodity after _____.",
-              "correct": "oil"
-            },
-            {
-              "number": 18,
-              "question": "The largest coffee producer in the world is _____.",
-              "correct": "Brazil"
-            }
+            {"number": 9, "question": "According to legend, coffee was discovered by a _____ herder.", "correct": "goat"},
+            {"number": 10, "question": "Coffee originated in the country of _____.", "correct": "Ethiopia"},
+            {"number": 11, "question": "By the 15th century, coffee was being grown in _____.", "correct": "Yemen"},
+            {"number": 12, "question": "Coffee was first brought to Europe by _____ traders.", "correct": "Venetian"},
+            {"number": 13, "question": "The Dutch established plantations in _____, Indonesia.", "correct": "Java"},
+            {"number": 14, "question": "The largest coffee producer in the world is _____.", "correct": "Brazil"}
           ]
         },
         {
           "part_number": 3,
-          "title": "Part 3: Multiple Matching",
-          "instruction": "You will hear five people talking about learning a foreign language. For questions 19-23, choose from the list (A-H).",
-          "type": "multiple_matching",
-          "audio_description": "Five people talking about learning a foreign language.",
+          "title": "Part 3: Speaker Matching",
+          "instruction": "You will hear four people talking about learning a foreign language. For questions 15-18, match each speaker with the correct statement (A-F).",
+          "type": "speaker_matching",
+          "audio_description": "Four people talking about learning a foreign language.",
           "speakers": [
-            {
-              "number": 19,
-              "name": "Speaker 1",
-              "transcript": "When I moved to Spain for work, I was forced to learn Spanish quickly. The best thing I did was completely immerse myself - I stopped watching English TV and only listened to Spanish radio. Within six months, I was dreaming in Spanish!"
-            },
-            {
-              "number": 20,
-              "name": "Speaker 2",
-              "transcript": "I tried so many language apps and courses, but what really worked for me was finding a language exchange partner. We meet twice a week - one day we speak only German, the next only English. It's free, and I've made a great friend."
-            },
-            {
-              "number": 21,
-              "name": "Speaker 3",
-              "transcript": "Grammar books and vocabulary lists never worked for me. I learned French by watching French films with French subtitles. It was entertainment and education at the same time."
-            },
-            {
-              "number": 22,
-              "name": "Speaker 4",
-              "transcript": "The biggest mistake I made was being afraid to speak. I spent years perfecting my written Japanese but couldn't hold a conversation. Now I force myself to speak, even if I make mistakes. That's when I really started improving."
-            },
-            {
-              "number": 23,
-              "name": "Speaker 5",
-              "transcript": "I've been learning Mandarin for five years, and what kept me motivated was setting clear goals. First it was ordering food, then having a simple conversation, then reading news articles."
-            }
+            {"number": 15, "name": "Speaker 1", "transcript": "When I moved to Spain for work, I was forced to learn Spanish quickly. The best thing I did was completely immerse myself - I stopped watching English TV and only listened to Spanish radio."},
+            {"number": 16, "name": "Speaker 2", "transcript": "I tried so many language apps and courses, but what really worked for me was finding a language exchange partner. We meet twice a week - one day we speak only German, the next only English."},
+            {"number": 17, "name": "Speaker 3", "transcript": "Grammar books and vocabulary lists never worked for me. I learned French by watching French films with French subtitles. It was entertainment and education at the same time."},
+            {"number": 18, "name": "Speaker 4", "transcript": "The biggest mistake I made was being afraid to speak. I spent years perfecting my written Japanese but couldn't hold a conversation. Now I force myself to speak, even if I make mistakes."}
           ],
           "options": {
-            "A": "suggests that making mistakes is part of the learning process",
+            "A": "suggests that making mistakes is part of learning",
             "B": "recommends learning through entertainment media",
             "C": "believes total immersion is the most effective method",
-            "D": "emphasizes the importance of setting achievable targets",
-            "E": "thinks traditional learning methods are best",
-            "F": "values the social aspect of language learning",
-            "G": "suggests learning is easier for children",
-            "H": "believes language learning requires expensive courses"
+            "D": "thinks traditional learning methods are best",
+            "E": "values the social aspect of language learning",
+            "F": "believes language learning requires expensive courses"
           },
           "answers": [
-            {
-              "number": 19,
-              "correct": "C"
-            },
-            {
-              "number": 20,
-              "correct": "F"
-            },
-            {
-              "number": 21,
-              "correct": "B"
-            },
-            {
-              "number": 22,
-              "correct": "A"
-            },
-            {
-              "number": 23,
-              "correct": "D"
-            }
+            {"number": 15, "correct": "C"},
+            {"number": 16, "correct": "E"},
+            {"number": 17, "correct": "B"},
+            {"number": 18, "correct": "A"}
           ]
         },
         {
           "part_number": 4,
-          "title": "Part 4: Interview",
-          "instruction": "You will hear an interview with a marine biologist. For questions 24-30, choose the best answer (A, B or C).",
+          "title": "Part 4: Map Labeling",
+          "instruction": "You will hear a guide describing a university campus. For questions 19-24, match each place with the correct letter (A-H) on the map.",
+          "type": "map_labeling",
+          "audio_description": "A guide describing a university campus tour.",
+          "transcript": "Welcome to our university campus tour. Let me show you around. If you look straight ahead, you'll see the Main Library - that's the large building right in the center. To the left of the library is the Science Building, and right behind it is the Sports Center. If you turn right from the entrance, the first building you see is the Student Union. The Cafeteria is just next to the Student Union. And finally, the Art Gallery is the small building at the far end of the campus, near the lake.",
+          "places": [
+            {"number": 19, "name": "Main Library", "correct": "D"},
+            {"number": 20, "name": "Science Building", "correct": "C"},
+            {"number": 21, "name": "Sports Center", "correct": "F"},
+            {"number": 22, "name": "Student Union", "correct": "B"},
+            {"number": 23, "name": "Cafeteria", "correct": "A"},
+            {"number": 24, "name": "Art Gallery", "correct": "H"}
+          ],
+          "map_labels": ["A", "B", "C", "D", "E", "F", "G", "H"]
+        },
+        {
+          "part_number": 5,
+          "title": "Part 5: Multiple Choice",
+          "instruction": "You will hear an interview with a marine biologist. For questions 25-30, choose the best answer (A, B or C).",
           "type": "interview",
           "audio_description": "An interview with Dr. Sarah Chen, a marine biologist.",
-          "transcript": "Interviewer: Today we're joined by Dr. Sarah Chen, a marine biologist who has spent the last fifteen years studying ocean ecosystems.\n\nDr. Chen: Thank you for having me.\n\nInterviewer: How would you describe the current state of our oceans?\n\nDr. Chen: Our oceans are in crisis. We're seeing coral bleaching events more frequent than ever. Fish populations are declining due to overfishing. And perhaps most concerning is the plastic pollution problem - there's now plastic in every part of the ocean.\n\nInterviewer: What do you think is the biggest threat?\n\nDr. Chen: If I had to choose one, I'd say climate change. Rising ocean temperatures affect everything - they cause coral bleaching, change fish migration patterns, affect the entire food chain. And as the oceans warm, they absorb more carbon dioxide, which makes them more acidic.\n\nInterviewer: What can ordinary people do?\n\nDr. Chen: Reducing plastic use is important. Being careful about what seafood you buy matters too. But perhaps the most impactful thing is using your voice - support policies that protect marine areas, vote for leaders who take climate change seriously.\n\nInterviewer: Are there success stories?\n\nDr. Chen: Absolutely. When we protect areas properly, nature can recover remarkably quickly. I've seen damaged coral reefs begin to recover within a few years.\n\nInterviewer: What's next for your research?\n\nDr. Chen: I'm currently leading a project to map microplastic distribution in the Pacific Ocean.",
+          "transcript": "Interviewer: Today we're joined by Dr. Sarah Chen, a marine biologist who has spent the last fifteen years studying ocean ecosystems.\n\nDr. Chen: Thank you for having me.\n\nInterviewer: How would you describe the current state of our oceans?\n\nDr. Chen: Our oceans are in crisis. We're seeing coral bleaching events more frequent than ever. Fish populations are declining due to overfishing. And perhaps most concerning is the plastic pollution problem.\n\nInterviewer: What do you think is the biggest threat?\n\nDr. Chen: Climate change. Rising ocean temperatures cause coral bleaching, change fish migration patterns, and as oceans warm they absorb more carbon dioxide, making them more acidic.\n\nInterviewer: What can ordinary people do?\n\nDr. Chen: Support policies that protect marine areas. That's the most impactful thing.\n\nInterviewer: Are there success stories?\n\nDr. Chen: When we protect areas properly, nature can recover remarkably quickly.\n\nInterviewer: What's next for your research?\n\nDr. Chen: Mapping microplastic distribution in the Pacific Ocean.",
           "questions": [
-            {
-              "number": 24,
-              "question": "How long has Dr. Chen been studying ocean ecosystems?",
-              "options": {
-                "A": "Five years",
-                "B": "Ten years",
-                "C": "Fifteen years"
-              },
-              "correct": "C"
-            },
-            {
-              "number": 25,
-              "question": "According to Dr. Chen, what is now found everywhere in the ocean?",
-              "options": {
-                "A": "Fish",
-                "B": "Plastic",
-                "C": "Coral"
-              },
-              "correct": "B"
-            },
-            {
-              "number": 26,
-              "question": "What does Dr. Chen consider the biggest threat to ocean health?",
-              "options": {
-                "A": "Overfishing",
-                "B": "Plastic pollution",
-                "C": "Climate change"
-              },
-              "correct": "C"
-            },
-            {
-              "number": 27,
-              "question": "What happens when oceans absorb more carbon dioxide?",
-              "options": {
-                "A": "They become warmer.",
-                "B": "They become more acidic.",
-                "C": "They become cleaner."
-              },
-              "correct": "B"
-            },
-            {
-              "number": 28,
-              "question": "What is the most impactful action for ordinary people?",
-              "options": {
-                "A": "Reducing plastic use",
-                "B": "Buying sustainable seafood",
-                "C": "Supporting protective policies"
-              },
-              "correct": "C"
-            },
-            {
-              "number": 29,
-              "question": "What does Dr. Chen say about coral reefs?",
-              "options": {
-                "A": "They cannot recover once damaged.",
-                "B": "They can recover quickly when protected.",
-                "C": "They are not affected by climate change."
-              },
-              "correct": "B"
-            },
-            {
-              "number": 30,
-              "question": "What is Dr. Chen's current research about?",
-              "options": {
-                "A": "Coral reef restoration",
-                "B": "Fish population recovery",
-                "C": "Microplastic distribution"
-              },
-              "correct": "C"
-            }
+            {"number": 25, "question": "How long has Dr. Chen been studying ocean ecosystems?", "options": {"A": "Five years", "B": "Ten years", "C": "Fifteen years"}, "correct": "C"},
+            {"number": 26, "question": "What does Dr. Chen consider the biggest threat?", "options": {"A": "Overfishing", "B": "Plastic pollution", "C": "Climate change"}, "correct": "C"},
+            {"number": 27, "question": "What happens when oceans absorb more CO2?", "options": {"A": "They become warmer.", "B": "They become more acidic.", "C": "They become cleaner."}, "correct": "B"},
+            {"number": 28, "question": "What is the most impactful action for people?", "options": {"A": "Reducing plastic use", "B": "Buying sustainable seafood", "C": "Supporting protective policies"}, "correct": "C"},
+            {"number": 29, "question": "What does Dr. Chen say about protected areas?", "options": {"A": "They cannot recover.", "B": "They can recover quickly.", "C": "They are not affected."}, "correct": "B"},
+            {"number": 30, "question": "What is Dr. Chen's current research about?", "options": {"A": "Coral reef restoration", "B": "Fish population recovery", "C": "Microplastic distribution"}, "correct": "C"}
+          ]
+        },
+        {
+          "part_number": 6,
+          "title": "Part 6: Note Completion",
+          "instruction": "You will hear a talk about healthy eating habits. For questions 31-36, complete the notes with ONE word.",
+          "type": "note_completion",
+          "audio_description": "A nutritionist giving a talk about healthy eating habits.",
+          "transcript": "Today I want to share some simple tips for healthier eating. First, always eat a good breakfast - studies show it improves your concentration throughout the morning. Second, try to include protein in every meal, such as chicken, fish, or beans.\n\nDrinking enough water is essential - aim for at least eight glasses per day. Many people confuse thirst with hunger.\n\nWhen it comes to snacking, choose fruit or nuts instead of processed foods. Also, try to cook at home more often rather than ordering takeaway. Home-cooked meals typically contain less salt and sugar.\n\nFinally, don't skip meals. Regular eating maintains your energy levels and prevents overeating later in the day.",
+          "questions": [
+            {"number": 31, "question": "A good breakfast improves your _____ throughout the morning.", "correct": "concentration"},
+            {"number": 32, "question": "You should include _____ in every meal.", "correct": "protein"},
+            {"number": 33, "question": "You should drink at least eight _____ of water per day.", "correct": "glasses"},
+            {"number": 34, "question": "For snacks, choose fruit or _____ instead of processed foods.", "correct": "nuts"},
+            {"number": 35, "question": "Home-cooked meals typically contain less salt and _____.", "correct": "sugar"},
+            {"number": 36, "question": "Regular eating prevents _____ later in the day.", "correct": "overeating"}
           ]
         }
       ]

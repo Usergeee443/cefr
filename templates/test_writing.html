@@ -5,28 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Writing Test - CEFR Level</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * { font-family: 'Nunito', sans-serif; }
-        body { background-color: #0F172A; }
 
-        /* Gradient text effect */
-        .gradient-text {
-            background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 50%, #45B7D1 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        /* DUOLINGO COLOR PALETTE */
+        :root {
+            --duo-green: #58CC02;
+            --duo-green-dark: #46A302;
+            --duo-blue: #1CB0F6;
+            --duo-blue-dark: #1899D6;
+            --duo-purple: #CE82FF;
+            --duo-purple-dark: #A560E8;
+            --duo-red: #FF4B4B;
+            --duo-red-dark: #EA2B2B;
+            --duo-orange: #FF9600;
+            --duo-yellow: #FFC800;
+            --bg-main: #131F24;
+            --bg-card: #1A2C32;
+            --border-color: #2B4148;
+            --border-light: #3D5A63;
         }
 
-        .gradient-text-coral {
-            background: linear-gradient(135deg, #FF6B6B 0%, #FF9F43 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
+        body { background: var(--bg-main); }
 
-        .gradient-text-teal {
-            background: linear-gradient(135deg, #4ECDC4 0%, #45B7D1 100%);
+        .gradient-text-green {
+            background: linear-gradient(135deg, var(--duo-green) 0%, #7ED321 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -35,33 +41,36 @@
         textarea {
             resize: none;
             line-height: 1.8;
-            background: #0F172A;
-            border: 2px solid #334155;
+            background: var(--bg-main);
+            border: 2px solid var(--border-color);
             color: #e5e7eb;
             transition: all 0.2s ease;
             border-radius: 16px;
         }
         textarea:focus {
-            border-color: #4ECDC4;
+            border-color: var(--duo-green);
             outline: none;
-            box-shadow: 0 0 0 4px rgba(78, 205, 196, 0.15);
+            box-shadow: 0 0 0 4px rgba(88, 204, 2, 0.15);
         }
         textarea::placeholder {
-            color: #64748b;
+            color: #555;
+        }
+        textarea.has-content {
+            border-color: var(--duo-green);
         }
 
         .word-count-bar {
             transition: width 0.3s ease;
         }
 
-        .timer-normal {
-            background: #1E293B;
-            border: 2px solid #334155;
+        .timer-box {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
         }
         .timer-warning {
-            background: rgba(255, 107, 107, 0.1);
-            border: 2px solid rgba(255, 107, 107, 0.5);
-            color: #FF6B6B !important;
+            background: rgba(255, 75, 75, 0.1);
+            border: 2px solid var(--duo-red);
+            color: var(--duo-red) !important;
             animation: pulse-warning 1s infinite;
         }
 
@@ -71,350 +80,401 @@
         }
 
         .test-card {
-            background: linear-gradient(180deg, #1E293B 0%, #0F172A 100%);
-            border: 2px solid #334155;
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 24px;
         }
 
         .test-header {
-            background: linear-gradient(180deg, #0F172A 0%, #1E293B 100%);
-            border-bottom: 2px solid #334155;
+            background: var(--bg-main);
+            border-bottom: 2px solid var(--border-color);
         }
 
         .task-card {
-            background: #0F172A;
-            border: 2px solid #334155;
+            background: var(--bg-main);
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
         }
 
         .progress-bar {
-            background: linear-gradient(90deg, #FF6B6B 0%, #4ECDC4 100%);
+            background: linear-gradient(90deg, var(--duo-green) 0%, var(--duo-blue) 100%);
         }
 
+        /* AI Badge - Duolingo style */
         .ai-badge {
-            background: linear-gradient(135deg, #A78BFA 0%, #45B7D1 100%);
+            background: var(--duo-purple);
+            box-shadow: 0 3px 0 var(--duo-purple-dark);
         }
 
-        /* 3D Button Styles */
-        .btn-3d {
+        /* DUOLINGO 3D BUTTONS */
+        .btn-duo {
             position: relative;
-            transform: translateY(0);
-            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 16px;
+            font-weight: 800;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            text-decoration: none;
+            color: white;
         }
-        .btn-3d::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: -6px;
-            height: 6px;
-            border-radius: 0 0 16px 16px;
-            z-index: -1;
-            transition: all 0.15s ease;
+        
+        .btn-duo-green {
+            background: var(--duo-green);
+            box-shadow: 0 5px 0 var(--duo-green-dark), 0 7px 15px rgba(88, 204, 2, 0.35);
         }
-        .btn-3d:hover {
+        .btn-duo-green:hover {
+            filter: brightness(1.05);
             transform: translateY(-2px);
+            box-shadow: 0 7px 0 var(--duo-green-dark), 0 10px 20px rgba(88, 204, 2, 0.4);
         }
-        .btn-3d:active {
-            transform: translateY(4px);
-        }
-        .btn-3d:active::after {
-            bottom: -2px;
-            height: 2px;
+        .btn-duo-green:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 var(--duo-green-dark);
         }
 
-        .btn-coral::after {
-            background: linear-gradient(90deg, #cc5555 0%, #cc6644 100%);
+        .btn-duo-orange {
+            background: var(--duo-orange);
+            box-shadow: 0 5px 0 #E68600, 0 7px 15px rgba(255, 150, 0, 0.35);
         }
-        .btn-teal::after {
-            background: linear-gradient(90deg, #3da69f 0%, #369299 100%);
+        .btn-duo-orange:hover {
+            filter: brightness(1.05);
+            transform: translateY(-2px);
+            box-shadow: 0 7px 0 #E68600, 0 10px 20px rgba(255, 150, 0, 0.4);
         }
-
-        /* Logo styling */
-        .logo-box {
-            background: linear-gradient(135deg, #FF6B6B 0%, #FF9F43 100%);
-            box-shadow: 0 4px 0 #cc5555;
+        .btn-duo-orange:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #E68600;
         }
 
         /* Part number badge */
         .part-badge {
-            background: linear-gradient(135deg, #4ECDC4 0%, #45B7D1 100%);
-            box-shadow: 0 3px 0 #3da69f;
+            background: var(--duo-blue);
+            box-shadow: 0 4px 0 var(--duo-blue-dark);
         }
 
         /* Task number badge */
         .task-badge {
-            background: rgba(78, 205, 196, 0.15);
-            color: #4ECDC4;
+            background: var(--duo-green);
+            color: white;
+            box-shadow: 0 3px 0 var(--duo-green-dark);
         }
 
         /* Info cards */
         .info-card-purple {
-            background: rgba(167, 139, 250, 0.1);
-            border: 2px solid rgba(167, 139, 250, 0.3);
+            background: rgba(206, 130, 255, 0.1);
+            border: 2px solid rgba(206, 130, 255, 0.3);
+            border-radius: 20px;
         }
 
         .info-card-warning {
-            background: rgba(255, 107, 107, 0.1);
-            border: 2px solid rgba(255, 107, 107, 0.3);
+            background: rgba(255, 75, 75, 0.1);
+            border: 2px solid rgba(255, 75, 75, 0.3);
+            border-radius: 16px;
         }
 
         /* Score cards */
         .score-good {
-            background: rgba(78, 205, 196, 0.1);
-            border: 2px solid rgba(78, 205, 196, 0.3);
+            background: rgba(88, 204, 2, 0.1);
+            border: 2px solid rgba(88, 204, 2, 0.3);
         }
         .score-moderate {
-            background: rgba(255, 159, 67, 0.1);
-            border: 2px solid rgba(255, 159, 67, 0.3);
+            background: rgba(255, 150, 0, 0.1);
+            border: 2px solid rgba(255, 150, 0, 0.3);
         }
         .score-low {
-            background: rgba(255, 107, 107, 0.1);
-            border: 2px solid rgba(255, 107, 107, 0.3);
+            background: rgba(255, 75, 75, 0.1);
+            border: 2px solid rgba(255, 75, 75, 0.3);
         }
 
         /* Loading spinner */
         .loading-spinner {
-            border: 4px solid rgba(167, 139, 250, 0.2);
-            border-top-color: #A78BFA;
+            border: 4px solid rgba(206, 130, 255, 0.2);
+            border-top-color: var(--duo-purple);
         }
 
         /* Scrollbar */
         ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #1E293B; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        ::-webkit-scrollbar-track { background: var(--bg-card); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--border-light); }
+
+        /* Task Navigator */
+        .task-nav {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 12px 20px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        }
+        
+        .task-nav-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-main);
+            color: #777;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .task-nav-btn:hover {
+            border-color: var(--duo-blue);
+            color: var(--duo-blue);
+            transform: translateY(-2px);
+        }
+        .task-nav-btn.completed {
+            background: var(--duo-green);
+            border-color: var(--duo-green);
+            color: white;
+            box-shadow: 0 3px 0 var(--duo-green-dark);
+        }
+        .task-nav-btn.partial {
+            background: var(--duo-orange);
+            border-color: var(--duo-orange);
+            color: white;
+            box-shadow: 0 3px 0 #E68600;
+        }
+        .task-nav-btn span {
+            font-size: 9px;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--duo-green);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            box-shadow: 0 4px 0 var(--duo-green-dark), 0 10px 30px rgba(0,0,0,0.3);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 200;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Word count indicator */
+        .word-indicator {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--bg-card);
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #777;
+            border: 2px solid var(--border-color);
+        }
+        .word-indicator.good {
+            background: rgba(88, 204, 2, 0.1);
+            border-color: var(--duo-green);
+            color: var(--duo-green);
+        }
+        .word-indicator.warning {
+            background: rgba(255, 150, 0, 0.1);
+            border-color: var(--duo-orange);
+            color: var(--duo-orange);
+        }
+        .word-indicator.bad {
+            background: rgba(255, 75, 75, 0.1);
+            border-color: var(--duo-red);
+            color: var(--duo-red);
+        }
+
+        @media (max-width: 768px) {
+            .task-nav {
+                bottom: 10px;
+                padding: 8px 16px;
+                gap: 8px;
+            }
+            .task-nav-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 14px;
+            }
+        }
     </style>
 </head>
-<body class="min-h-screen text-white bg-[#0F172A]">
+<body class="min-h-screen text-white">
 
     <!-- Header Bar -->
     <div class="test-header fixed top-0 left-0 right-0 z-50">
         <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
             <div class="flex items-center gap-4">
-                <div class="logo-box w-11 h-11 flex items-center justify-center text-white font-black text-xl rounded-xl">
+                <div class="w-12 h-12 bg-[#58CC02] flex items-center justify-center text-white font-black text-xl rounded-xl" style="box-shadow: 0 4px 0 #46A302;">
                     C
                 </div>
                 <div>
-                    <span class="text-sm font-bold gradient-text-coral uppercase tracking-wider">Writing Test</span>
-                    <div class="text-xs text-slate-500">Section 3 of 3</div>
+                    <span class="text-lg font-black gradient-text-green uppercase tracking-wider">Writing Test</span>
+                    <div class="text-sm text-[#777] font-bold">Section 3 of 3</div>
                 </div>
             </div>
-            <div class="flex items-center gap-6">
-                <div class="ai-badge text-white text-xs font-bold px-4 py-1.5 rounded-full flex items-center gap-2 shadow-lg">
-                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/></svg>
-                    AI Evaluated
+            <div class="flex items-center gap-4 md:gap-6">
+                <div class="ai-badge text-white text-xs font-bold px-3 md:px-4 py-2 rounded-full flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/></svg>
+                    <span class="hidden md:inline">AI Evaluated</span>
+                    <span class="md:hidden">AI</span>
                 </div>
-                <div id="timer" class="timer-normal text-xl font-mono font-bold px-5 py-2.5 rounded-xl text-white">80:00</div>
+                <div id="timer" class="timer-box text-lg md:text-xl font-mono font-bold px-4 md:px-6 py-2 md:py-3 rounded-xl text-white">80:00</div>
             </div>
         </div>
-        <div class="w-full h-1.5 bg-slate-800">
+        <div class="w-full h-2 bg-[#2B4148]">
             <div id="progress-bar" class="progress-bar h-full transition-all duration-300 rounded-r-full" style="width: 0%"></div>
         </div>
     </div>
 
-    <main class="pt-28 pb-32 px-4">
-        <div class="max-w-5xl mx-auto">
-            <!-- AI Warning -->
-            <div class="info-card-purple rounded-2xl p-6 mb-8">
-                <div class="flex items-start gap-4">
-                    <div class="w-14 h-14 bg-[#A78BFA]/20 rounded-2xl flex items-center justify-center flex-shrink-0">
-                        <svg class="w-7 h-7 text-[#A78BFA]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-[#A78BFA] text-lg mb-3">AI Evaluation</h3>
-                        <ul class="text-slate-300 space-y-2 text-sm">
-                            <li class="flex items-center gap-2">
-                                <span class="w-1.5 h-1.5 rounded-full bg-[#A78BFA]"></span>
-                                Your writing will be evaluated by AI using strict CEFR criteria
-                            </li>
-                            <li class="flex items-center gap-2">
-                                <span class="w-1.5 h-1.5 rounded-full bg-[#A78BFA]"></span>
-                                Write genuine, thoughtful responses - spam will receive Band 1
-                            </li>
-                            <li class="flex items-center gap-2">
-                                <span class="w-1.5 h-1.5 rounded-full bg-[#A78BFA]"></span>
-                                Follow the word count requirements for each task
-                            </li>
-                            <li class="flex items-center gap-2">
-                                <span class="w-1.5 h-1.5 rounded-full bg-[#A78BFA]"></span>
-                                Evaluation considers: Content, Organization, Language, and Accuracy
-                            </li>
-                        </ul>
-                    </div>
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">Avtomatik saqlandi!</div>
+
+    <main class="pt-28 pb-24 px-4 min-h-screen">
+        <div class="max-w-6xl mx-auto">
+            <!-- AI Warning (qisqa) -->
+            <div class="info-card-purple p-3 md:p-4 mb-4 flex items-center gap-3">
+                <div class="w-10 h-10 bg-[#CE82FF] rounded-xl flex items-center justify-center flex-shrink-0" style="box-shadow: 0 3px 0 #A560E8;">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
                 </div>
+                <p class="text-[#AFAFAF] text-xs md:text-sm">AI baholaydi. Kam soʻz yozsangiz baho pastroq boʻladi; bemani yozuv 0–3% oraligʻida baholanadi.</p>
             </div>
 
             <form id="writing-form">
-                {% for part in test_data.parts %}
-                <section class="part-section mb-10" data-part="{{ part.part_number }}">
-                    <div class="test-card rounded-3xl overflow-hidden">
-                        <!-- Part Header -->
-                        <div class="p-6 border-b border-[#334155]">
-                            <div class="flex items-center gap-4 mb-3">
-                                <div class="part-badge w-14 h-14 rounded-2xl flex items-center justify-center text-white font-bold text-xl">
-                                    {{ part.part_number }}
-                                </div>
-                                <div>
-                                    <h2 class="text-2xl font-extrabold gradient-text-teal">{{ part.title }}</h2>
-                                    <span class="text-sm text-slate-500">Part {{ part.part_number }} of {{ test_data.parts|length }}</span>
-                                </div>
-                            </div>
-                            <p class="text-slate-400 ml-[72px]">{{ part.instruction }}</p>
+                {% set p1 = test_data.parts[0] %}
+                {% set p2 = test_data.parts[1] %}
+
+                <!-- Oyna 1: Task 1 -->
+                <section class="writing-step h-full" data-step="1" id="step-1">
+                    <div class="grid lg:grid-cols-2 gap-4 md:gap-6">
+                        <div class="test-card p-4 md:p-6 overflow-y-auto max-h-[calc(100vh-220px)]">
+                            <h3 class="text-lg font-black text-[#58CC02] mb-2">Task 1: {{ p1.tasks[0].title }}</h3>
+                            <h4 class="font-semibold text-white mb-3 text-sm">{{ p1.tasks[0].instruction }}</h4>
+                            <div class="text-[#AFAFAF] whitespace-pre-line text-sm leading-relaxed">{{ p1.tasks[0].situation }}</div>
                         </div>
-
-                        <div class="p-6">
-                            {% if part.part_number == 1 %}
-                            <!-- Part 1: Two Tasks -->
-                            {% for task in part.tasks %}
-                            <div class="task-block mb-10 {% if not loop.first %}pt-8 border-t border-[#334155]{% endif %}">
-                                <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-3">
-                                    <span class="task-badge w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold">{{ loop.index }}</span>
-                                    {{ task.title }}
-                                </h3>
-
-                                <div class="task-card rounded-2xl p-6 mb-6">
-                                    <h4 class="font-semibold text-[#4ECDC4] mb-3">{{ task.instruction }}</h4>
-                                    <div class="text-slate-300 whitespace-pre-line leading-relaxed">{{ task.situation }}</div>
-                                </div>
-
-                                <div class="relative">
-                                    <textarea
-                                        name="task{{ task.task_number }}"
-                                        id="task{{ task.task_number }}"
-                                        class="w-full h-64 p-5"
-                                        placeholder="Write your {{ task.type }} here..."
-                                        data-min="{{ task.min_words }}"
-                                        data-max="{{ task.max_words }}"
-                                    ></textarea>
-
-                                    <div class="mt-4 flex items-center justify-between">
-                                        <div class="flex items-center gap-4">
-                                            <span class="text-sm text-slate-500 font-medium">Word count:</span>
-                                            <span id="wc-task{{ task.task_number }}" class="font-mono font-bold text-white text-lg">0</span>
-                                            <span class="text-sm text-slate-500">/ {{ task.min_words }}-{{ task.max_words }} words</span>
-                                        </div>
-                                        <div class="w-48 h-2.5 bg-slate-700 rounded-full overflow-hidden">
-                                            <div id="wcbar-task{{ task.task_number }}" class="word-count-bar h-full bg-slate-600 rounded-full" style="width: 0%"></div>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="flex flex-col">
+                            <div class="relative flex-1 min-h-[280px]">
+                                <textarea name="task1" id="task1" class="w-full h-64 md:h-[calc(100vh-280px)] min-h-[240px] p-4 text-sm md:text-base"
+                                    placeholder="Write your email here..."
+                                    data-min="{{ p1.tasks[0].min_words }}" data-max="{{ p1.tasks[0].max_words }}" data-task="task1"></textarea>
+                                <div class="word-indicator" id="indicator-task1">0 / {{ p1.tasks[0].min_words }}+</div>
                             </div>
-                            {% endfor %}
-
-                            {% elif part.part_number == 2 %}
-                            <!-- Part 2: Essay -->
-                            <div class="task-block">
-                                <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-3">
-                                    <span class="task-badge w-9 h-9 rounded-xl flex items-center justify-center">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                                    </span>
-                                    Essay
-                                </h3>
-
-                                <div class="task-card rounded-2xl p-6 mb-6">
-                                    <div class="text-slate-300 whitespace-pre-line leading-relaxed">{{ part.prompt }}</div>
-                                </div>
-
-                                <div class="relative">
-                                    <textarea
-                                        name="essay"
-                                        id="essay"
-                                        class="w-full h-96 p-5"
-                                        placeholder="Write your essay here...
-
-Introduction:
-[Introduce the topic and state your position]
-
-Body Paragraph 1:
-[Discuss arguments for technology making life easier]
-
-Body Paragraph 2:
-[Discuss arguments for technology creating problems]
-
-Conclusion:
-[Summarize and give your opinion]"
-                                        data-min="{{ part.min_words }}"
-                                        data-max="{{ part.max_words }}"
-                                    ></textarea>
-
-                                    <div class="mt-4 flex items-center justify-between">
-                                        <div class="flex items-center gap-4">
-                                            <span class="text-sm text-slate-500 font-medium">Word count:</span>
-                                            <span id="wc-essay" class="font-mono font-bold text-white text-lg">0</span>
-                                            <span class="text-sm text-slate-500">/ {{ part.min_words }}-{{ part.max_words }} words</span>
-                                        </div>
-                                        <div class="w-48 h-2.5 bg-slate-700 rounded-full overflow-hidden">
-                                            <div id="wcbar-essay" class="word-count-bar h-full bg-slate-600 rounded-full" style="width: 0%"></div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Band Score Reference -->
-                                <div class="mt-8 task-card rounded-2xl p-6">
-                                    <h5 class="font-bold text-[#45B7D1] mb-4 text-sm uppercase tracking-wider">Band Score Reference</h5>
-                                    <div class="grid grid-cols-3 gap-4">
-                                        <div class="score-good rounded-xl p-4 text-center">
-                                            <span class="font-extrabold text-[#4ECDC4] text-2xl">7-9</span>
-                                            <p class="text-slate-400 text-xs mt-2 font-medium">Good to Expert</p>
-                                        </div>
-                                        <div class="score-moderate rounded-xl p-4 text-center">
-                                            <span class="font-extrabold text-[#FF9F43] text-2xl">5-6</span>
-                                            <p class="text-slate-400 text-xs mt-2 font-medium">Modest to Competent</p>
-                                        </div>
-                                        <div class="score-low rounded-xl p-4 text-center">
-                                            <span class="font-extrabold text-[#FF6B6B] text-2xl">1-4</span>
-                                            <p class="text-slate-400 text-xs mt-2 font-medium">Limited to Non-user</p>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div class="mt-3 flex items-center justify-between gap-3">
+                                <span id="wc-task1" class="font-mono font-bold text-white">0</span>
+                                <div class="flex-1 h-2 bg-[#2B4148] rounded-full overflow-hidden max-w-[200px]"><div id="wcbar-task1" class="word-count-bar h-full bg-[#3D5A63] rounded-full" style="width:0%"></div></div>
                             </div>
-                            {% endif %}
                         </div>
                     </div>
                 </section>
-                {% endfor %}
 
-                <!-- Submit Button -->
-                <div class="text-center mt-12">
-                    <div class="info-card-warning rounded-2xl p-5 mb-8 max-w-lg mx-auto">
-                        <p class="text-[#FF6B6B] text-sm flex items-center justify-center gap-3 font-medium">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                            <span><strong>Warning:</strong> Once submitted, your writing cannot be changed. AI evaluation will begin immediately.</span>
-                        </p>
+                <!-- Oyna 2: Task 2 -->
+                <section class="writing-step hidden h-full" data-step="2" id="step-2">
+                    <div class="grid lg:grid-cols-2 gap-4 md:gap-6">
+                        <div class="test-card p-4 md:p-6 overflow-y-auto max-h-[calc(100vh-220px)]">
+                            <h3 class="text-lg font-black text-[#58CC02] mb-2">Task 2: {{ p1.tasks[1].title }}</h3>
+                            <h4 class="font-semibold text-white mb-3 text-sm">{{ p1.tasks[1].instruction }}</h4>
+                            <div class="text-[#AFAFAF] whitespace-pre-line text-sm leading-relaxed">{{ p1.tasks[1].situation }}</div>
+                        </div>
+                        <div class="flex flex-col">
+                            <div class="relative flex-1 min-h-[280px]">
+                                <textarea name="task2" id="task2" class="w-full h-64 md:h-[calc(100vh-280px)] min-h-[240px] p-4 text-sm md:text-base"
+                                    placeholder="Write your review here..."
+                                    data-min="{{ p1.tasks[1].min_words }}" data-max="{{ p1.tasks[1].max_words }}" data-task="task2"></textarea>
+                                <div class="word-indicator" id="indicator-task2">0 / {{ p1.tasks[1].min_words }}-{{ p1.tasks[1].max_words }}</div>
+                            </div>
+                            <div class="mt-3 flex items-center justify-between gap-3">
+                                <span id="wc-task2" class="font-mono font-bold text-white">0</span>
+                                <div class="flex-1 h-2 bg-[#2B4148] rounded-full overflow-hidden max-w-[200px]"><div id="wcbar-task2" class="word-count-bar h-full bg-[#3D5A63] rounded-full" style="width:0%"></div></div>
+                            </div>
+                        </div>
                     </div>
-                    <button type="submit"
-                            id="submit-btn"
-                            class="btn-3d btn-coral bg-gradient-to-r from-[#FF6B6B] to-[#FF9F43] text-white px-14 py-5 font-bold text-xl rounded-2xl hover:shadow-xl hover:shadow-[#FF6B6B]/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center gap-3">
-                        <span>Submit Writing Test</span>
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                    </button>
-                    <p class="text-slate-500 text-sm mt-5 font-medium">View your results after submission</p>
-                </div>
+                </section>
+
+                <!-- Oyna 3: Part 2 Essay -->
+                <section class="writing-step hidden h-full" data-step="3" id="step-3">
+                    <div class="grid lg:grid-cols-2 gap-4 md:gap-6">
+                        <div class="test-card p-4 md:p-6 overflow-y-auto max-h-[calc(100vh-220px)]">
+                            <h3 class="text-lg font-black text-[#1CB0F6] mb-2">Part 2: Essay</h3>
+                            <div class="text-[#AFAFAF] whitespace-pre-line text-sm leading-relaxed">{{ p2.prompt }}</div>
+                        </div>
+                        <div class="flex flex-col">
+                            <div class="relative flex-1 min-h-[280px]">
+                                <textarea name="essay" id="essay" class="w-full h-64 md:h-[calc(100vh-280px)] min-h-[240px] p-4 text-sm md:text-base"
+                                    placeholder="Write your essay here..."
+                                    data-min="{{ p2.min_words }}" data-max="{{ p2.max_words }}" data-task="essay"></textarea>
+                                <div class="word-indicator" id="indicator-essay">0 / {{ p2.min_words }}-{{ p2.max_words }}</div>
+                            </div>
+                            <div class="mt-3 flex items-center justify-between gap-3">
+                                <span id="wc-essay" class="font-mono font-bold text-white">0</span>
+                                <div class="flex-1 h-2 bg-[#2B4148] rounded-full overflow-hidden max-w-[200px]"><div id="wcbar-essay" class="word-count-bar h-full bg-[#3D5A63] rounded-full" style="width:0%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </form>
         </div>
     </main>
 
+    <!-- Pastki: step navigatsiya + Submit -->
+    <footer class="fixed bottom-0 left-0 right-0 bg-[#131F24] border-t-2 border-[#2B4148] py-3 px-4 z-40">
+        <div class="max-w-6xl mx-auto flex items-center justify-center gap-3 flex-wrap">
+            <button type="button" id="writing-prev" class="btn-duo px-4 py-2 rounded-xl border-2 border-[#2B4148] text-sm font-bold hidden" title="Oldingi">←</button>
+            <div class="flex items-center gap-2">
+                <button type="button" class="writing-step-dot w-10 h-10 rounded-xl font-bold text-sm bg-[#58CC02] text-white" data-step="1" style="box-shadow:0 3px 0 #46A302;">T1</button>
+                <button type="button" class="writing-step-dot w-10 h-10 rounded-xl font-bold text-sm bg-[#2B4148] text-[#777]" data-step="2">T2</button>
+                <button type="button" class="writing-step-dot w-10 h-10 rounded-xl font-bold text-sm bg-[#2B4148] text-[#777]" data-step="3">P2</button>
+            </div>
+            <button type="button" id="writing-next" class="btn-duo px-4 py-2 rounded-xl bg-[#1CB0F6] text-white text-sm font-bold" style="box-shadow:0 3px 0 #1899D6;" title="Keyingi">→</button>
+            <div id="writing-submit-wrap" class="hidden">
+                <button type="submit" form="writing-form" id="submit-btn" class="btn-duo btn-duo-orange px-6 py-3 font-black text-sm">Yuborish</button>
+            </div>
+        </div>
+    </footer>
+
     <!-- Loading Overlay -->
-    <div id="loading-overlay" class="fixed inset-0 bg-[#0F172A]/95 backdrop-blur-sm flex items-center justify-center z-50 hidden">
-        <div class="test-card rounded-3xl p-10 text-center max-w-md">
-            <div class="loading-spinner w-16 h-16 rounded-full animate-spin mx-auto mb-6"></div>
-            <h3 class="text-xl font-extrabold gradient-text mb-4">AI Evaluation in Progress</h3>
-            <p class="text-slate-400 mb-8">Please wait while our AI evaluates your writing...</p>
-            <div class="space-y-4 text-left">
-                <div id="eval-task1" class="flex items-center gap-4 text-slate-500 transition-colors duration-300">
-                    <div class="w-3 h-3 rounded-full bg-slate-600 transition-colors duration-300"></div>
-                    <span class="font-medium">Task 1: Email/Letter...</span>
+    <div id="loading-overlay" class="fixed inset-0 bg-[#131F24]/95 backdrop-blur-sm flex items-center justify-center z-50 hidden">
+        <div class="test-card p-8 md:p-10 text-center max-w-md mx-4">
+            <div class="loading-spinner w-14 h-14 md:w-16 md:h-16 rounded-full animate-spin mx-auto mb-5 md:mb-6"></div>
+            <h3 class="text-lg md:text-xl font-extrabold gradient-text-green mb-3 md:mb-4">AI Evaluation in Progress</h3>
+            <p class="text-[#777] text-sm md:text-base mb-6 md:mb-8">Please wait while our AI evaluates your writing...</p>
+            <div class="space-y-3 md:space-y-4 text-left">
+                <div id="eval-task1" class="flex items-center gap-3 md:gap-4 text-[#777] transition-colors duration-300">
+                    <div class="w-3 h-3 rounded-full bg-[#3D5A63] transition-colors duration-300"></div>
+                    <span class="font-medium text-sm md:text-base">Task 1: Email/Letter...</span>
                 </div>
-                <div id="eval-task2" class="flex items-center gap-4 text-slate-500 transition-colors duration-300">
-                    <div class="w-3 h-3 rounded-full bg-slate-600 transition-colors duration-300"></div>
-                    <span class="font-medium">Task 2: Review...</span>
+                <div id="eval-task2" class="flex items-center gap-3 md:gap-4 text-[#777] transition-colors duration-300">
+                    <div class="w-3 h-3 rounded-full bg-[#3D5A63] transition-colors duration-300"></div>
+                    <span class="font-medium text-sm md:text-base">Task 2: Review...</span>
                 </div>
-                <div id="eval-essay" class="flex items-center gap-4 text-slate-500 transition-colors duration-300">
-                    <div class="w-3 h-3 rounded-full bg-slate-600 transition-colors duration-300"></div>
-                    <span class="font-medium">Essay...</span>
+                <div id="eval-essay" class="flex items-center gap-3 md:gap-4 text-[#777] transition-colors duration-300">
+                    <div class="w-3 h-3 rounded-full bg-[#3D5A63] transition-colors duration-300"></div>
+                    <span class="font-medium text-sm md:text-base">Essay...</span>
                 </div>
             </div>
         </div>
@@ -431,7 +491,7 @@ Conclusion:
             timerEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
             if (timeLeft <= 600) {
-                timerEl.classList.remove('timer-normal');
+                timerEl.classList.remove('timer-box');
                 timerEl.classList.add('timer-warning');
             }
 
@@ -444,6 +504,51 @@ Conclusion:
         }
         updateTimer();
 
+        // Show toast
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        // Step navigation (Task 1, Task 2, Part 2 alohida oyna)
+        let currentStep = 1;
+        const totalSteps = 3;
+        const stepSections = document.querySelectorAll('.writing-step');
+        const stepDots = document.querySelectorAll('.writing-step-dot');
+        const btnPrev = document.getElementById('writing-prev');
+        const btnNext = document.getElementById('writing-next');
+        const submitWrap = document.getElementById('writing-submit-wrap');
+
+        function showStep(stepNum) {
+            currentStep = stepNum;
+            stepSections.forEach(sec => {
+                sec.classList.toggle('hidden', parseInt(sec.dataset.step) !== stepNum);
+            });
+            stepDots.forEach(btn => {
+                const n = parseInt(btn.dataset.step);
+                btn.classList.remove('bg-[#58CC02]', 'text-white', 'bg-[#2B4148]', 'text-[#777]', 'bg-[#1CB0F6]');
+                btn.style.boxShadow = '';
+                if (n === stepNum) {
+                    btn.classList.add('bg-[#58CC02]', 'text-white');
+                    btn.style.boxShadow = '0 3px 0 #46A302';
+                } else if (n < stepNum) {
+                    btn.classList.add('bg-[#1CB0F6]', 'text-white');
+                    btn.style.boxShadow = '0 2px 0 #1899D6';
+                } else {
+                    btn.classList.add('bg-[#2B4148]', 'text-[#777]');
+                }
+            });
+            btnPrev.classList.toggle('hidden', stepNum === 1);
+            btnNext.classList.toggle('hidden', stepNum === totalSteps);
+            submitWrap.classList.toggle('hidden', stepNum !== totalSteps);
+        }
+
+        if (btnPrev) btnPrev.addEventListener('click', () => showStep(currentStep - 1));
+        if (btnNext) btnNext.addEventListener('click', () => showStep(currentStep + 1));
+        stepDots.forEach(btn => btn.addEventListener('click', () => showStep(parseInt(btn.dataset.step))));
+
         // Word count tracking
         function countWords(text) {
             return text.trim().split(/\s+/).filter(word => word.length > 0).length;
@@ -454,46 +559,98 @@ Conclusion:
             const words = countWords(textarea.value);
             const minWords = parseInt(textarea.dataset.min);
             const maxWords = parseInt(textarea.dataset.max);
+            const taskNum = textarea.dataset.task;
 
             const countEl = document.getElementById(`wc-${id}`);
             const barEl = document.getElementById(`wcbar-${id}`);
+            const indicatorEl = document.getElementById(`indicator-${id}`);
 
             countEl.textContent = words;
+            const maxDisplay = (textarea.dataset.task === 'task1' && maxWords > 200) ? '' : `-${maxWords}`;
+            indicatorEl.textContent = maxDisplay ? `${words} / ${minWords}${maxDisplay}` : `${words} / ${minWords}+`;
 
-            // Calculate percentage for progress bar
-            let percentage = (words / maxWords) * 100;
+            // Progress bar: for task1 (50+) use minWords as target
+            let percentage = maxWords > 200 ? (words / Math.max(minWords, 1)) * 100 : (words / maxWords) * 100;
             percentage = Math.min(percentage, 100);
             barEl.style.width = `${percentage}%`;
 
-            // Color coding with new palette
-            if (words < minWords * 0.5) {
-                barEl.classList.remove('bg-[#4ECDC4]', 'bg-[#FF9F43]', 'bg-slate-600');
-                barEl.classList.add('bg-[#FF6B6B]');
-                countEl.classList.remove('text-[#4ECDC4]', 'text-[#FF9F43]', 'text-white');
-                countEl.classList.add('text-[#FF6B6B]');
-            } else if (words < minWords) {
-                barEl.classList.remove('bg-[#4ECDC4]', 'bg-[#FF6B6B]', 'bg-slate-600');
-                barEl.classList.add('bg-[#FF9F43]');
-                countEl.classList.remove('text-[#4ECDC4]', 'text-[#FF6B6B]', 'text-white');
-                countEl.classList.add('text-[#FF9F43]');
-            } else if (words <= maxWords) {
-                barEl.classList.remove('bg-[#FF9F43]', 'bg-[#FF6B6B]', 'bg-slate-600');
-                barEl.classList.add('bg-[#4ECDC4]');
-                countEl.classList.remove('text-[#FF9F43]', 'text-[#FF6B6B]', 'text-white');
-                countEl.classList.add('text-[#4ECDC4]');
+            // Update textarea border
+            if (words >= minWords || (textarea.dataset.task === 'task1' && words > 0)) {
+                textarea.classList.add('has-content');
             } else {
-                barEl.classList.remove('bg-[#4ECDC4]', 'bg-[#FF9F43]', 'bg-slate-600');
-                barEl.classList.add('bg-[#FF6B6B]');
-                countEl.classList.remove('text-[#4ECDC4]', 'text-[#FF9F43]', 'text-white');
-                countEl.classList.add('text-[#FF6B6B]');
+                textarea.classList.remove('has-content');
+            }
+
+            // Color coding (Task 1: 50+ recommended, kam yozsa warning; Task2/Essay: min-max)
+            indicatorEl.classList.remove('good', 'warning', 'bad');
+            const isTask1 = textarea.dataset.task === 'task1';
+            if (isTask1) {
+                if (words >= minWords) {
+                    barEl.classList.remove('bg-[#FF9600]', 'bg-[#3D5A63]'); barEl.classList.add('bg-[#58CC02]');
+                    countEl.classList.remove('text-[#FF9600]', 'text-white'); countEl.classList.add('text-[#58CC02]');
+                    indicatorEl.classList.add('good');
+                } else {
+                    barEl.classList.remove('bg-[#58CC02]', 'bg-[#3D5A63]'); barEl.classList.add('bg-[#FF9600]');
+                    countEl.classList.remove('text-[#58CC02]', 'text-white'); countEl.classList.add('text-[#FF9600]');
+                    indicatorEl.classList.add('warning');
+                }
+            } else if (words < minWords * 0.5) {
+                barEl.classList.remove('bg-[#58CC02]', 'bg-[#FF9600]', 'bg-[#3D5A63]'); barEl.classList.add('bg-[#FF4B4B]');
+                countEl.classList.remove('text-[#58CC02]', 'text-[#FF9600]', 'text-white'); countEl.classList.add('text-[#FF4B4B]');
+                indicatorEl.classList.add('bad');
+            } else if (words < minWords) {
+                barEl.classList.remove('bg-[#58CC02]', 'bg-[#FF4B4B]', 'bg-[#3D5A63]'); barEl.classList.add('bg-[#FF9600]');
+                countEl.classList.remove('text-[#58CC02]', 'text-[#FF4B4B]', 'text-white'); countEl.classList.add('text-[#FF9600]');
+                indicatorEl.classList.add('warning');
+            } else if (words <= maxWords) {
+                barEl.classList.remove('bg-[#FF9600]', 'bg-[#FF4B4B]', 'bg-[#3D5A63]'); barEl.classList.add('bg-[#58CC02]');
+                countEl.classList.remove('text-[#FF9600]', 'text-[#FF4B4B]', 'text-white'); countEl.classList.add('text-[#58CC02]');
+                indicatorEl.classList.add('good');
+            } else {
+                barEl.classList.remove('bg-[#58CC02]', 'bg-[#FF9600]', 'bg-[#3D5A63]'); barEl.classList.add('bg-[#FF4B4B]');
+                countEl.classList.remove('text-[#58CC02]', 'text-[#FF9600]', 'text-white'); countEl.classList.add('text-[#FF4B4B]');
+                indicatorEl.classList.add('bad');
             }
 
             updateProgress();
+            updateTaskNav();
+        }
+
+        // Update task navigator (step dots)
+        function updateTaskNav() {
+            document.querySelectorAll('textarea').forEach(textarea => {
+                const words = countWords(textarea.value);
+                const minWords = parseInt(textarea.dataset.min);
+                const taskNum = textarea.dataset.task;
+                const stepNum = taskNum === 'task1' ? 1 : (taskNum === 'task2' ? 2 : 3);
+                const dot = document.querySelector(`.writing-step-dot[data-step="${stepNum}"]`);
+                if (dot) {
+                    if (taskNum === 'task1') {
+                        if (words >= minWords) dot.classList.add('ring-2', 'ring-[#58CC02]');
+                        else dot.classList.remove('ring-2', 'ring-[#58CC02]');
+                    } else {
+                        if (words >= minWords) dot.classList.add('ring-2', 'ring-[#58CC02]');
+                        else dot.classList.remove('ring-2', 'ring-[#58CC02]');
+                    }
+                }
+            });
+        }
+
+        // Auto-save indicator
+        let saveTimeout;
+        function triggerAutoSave() {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
+                showToast('Avtomatik saqlandi!');
+            }, 1500);
         }
 
         // Add input listeners to all textareas
         document.querySelectorAll('textarea').forEach(textarea => {
-            textarea.addEventListener('input', () => updateWordCount(textarea));
+            textarea.addEventListener('input', () => {
+                updateWordCount(textarea);
+                triggerAutoSave();
+            });
         });
 
         function updateProgress() {
@@ -515,45 +672,39 @@ Conclusion:
         document.getElementById('writing-form').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            // Validate minimum content
-            let valid = true;
+            // Minimal validation: kamida bitta soʻz yozilgan boʻlsa yuborish mumkin (baho past boʻladi)
+            let hasAny = false;
             document.querySelectorAll('textarea').forEach(textarea => {
-                const words = countWords(textarea.value);
-                if (words < 10) {
-                    valid = false;
-                    textarea.classList.add('border-[#FF6B6B]');
-                    textarea.classList.add('focus:border-[#FF6B6B]');
-                }
+                if (countWords(textarea.value) > 0) hasAny = true;
             });
-
-            if (!valid) {
-                alert('Please write at least 10 words for each task before submitting.');
+            if (!hasAny) {
+                alert('Iltimos, kamida bitta taskga javob yozing.');
                 return;
             }
 
             document.getElementById('loading-overlay').classList.remove('hidden');
 
-            // Simulate evaluation progress with new colors
+            // Simulate evaluation progress with Duolingo colors
             setTimeout(() => {
                 const el1 = document.getElementById('eval-task1');
-                el1.classList.remove('text-slate-500');
-                el1.classList.add('text-[#4ECDC4]');
-                el1.querySelector('.w-3').classList.remove('bg-slate-600');
-                el1.querySelector('.w-3').classList.add('bg-[#4ECDC4]');
+                el1.classList.remove('text-[#777]');
+                el1.classList.add('text-[#58CC02]');
+                el1.querySelector('.w-3').classList.remove('bg-[#3D5A63]');
+                el1.querySelector('.w-3').classList.add('bg-[#58CC02]');
             }, 500);
             setTimeout(() => {
                 const el2 = document.getElementById('eval-task2');
-                el2.classList.remove('text-slate-500');
-                el2.classList.add('text-[#4ECDC4]');
-                el2.querySelector('.w-3').classList.remove('bg-slate-600');
-                el2.querySelector('.w-3').classList.add('bg-[#4ECDC4]');
+                el2.classList.remove('text-[#777]');
+                el2.classList.add('text-[#58CC02]');
+                el2.querySelector('.w-3').classList.remove('bg-[#3D5A63]');
+                el2.querySelector('.w-3').classList.add('bg-[#58CC02]');
             }, 1500);
             setTimeout(() => {
                 const el3 = document.getElementById('eval-essay');
-                el3.classList.remove('text-slate-500');
-                el3.classList.add('text-[#4ECDC4]');
-                el3.querySelector('.w-3').classList.remove('bg-slate-600');
-                el3.querySelector('.w-3').classList.add('bg-[#4ECDC4]');
+                el3.classList.remove('text-[#777]');
+                el3.classList.add('text-[#58CC02]');
+                el3.querySelector('.w-3').classList.remove('bg-[#3D5A63]');
+                el3.querySelector('.w-3').classList.add('bg-[#58CC02]');
             }, 2500);
 
             const formData = new FormData(this);

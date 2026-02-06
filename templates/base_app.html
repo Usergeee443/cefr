@@ -5,104 +5,158 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>{% block title %}CEFR Level{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * { font-family: 'Nunito', sans-serif; }
 
-        /* CEFR Unique Color Palette - Cheerful & Modern */
+        /* DUOLINGO-INSPIRED COLOR PALETTE */
         :root {
-            --primary: #FF6B6B;        /* Coral - main action */
-            --primary-dark: #E85555;
-            --primary-light: #FF8A8A;
-            --secondary: #4ECDC4;      /* Teal/Mint - success */
-            --secondary-dark: #3DB8B0;
-            --info: #45B7D1;           /* Sky Blue */
-            --info-dark: #3A9CB5;
-            --accent: #FFE66D;         /* Warm Yellow */
-            --accent-dark: #E6CF5A;
-            --purple: #A78BFA;         /* Lavender */
-            --purple-dark: #8B6FE0;
-            --orange: #FF9F43;         /* Sunset Orange */
-            --orange-dark: #E68A35;
-            --bg: #0F172A;             /* Dark Navy */
-            --bg-light: #1E293B;       /* Slate */
-            --card: #1E293B;
-            --card-hover: #334155;
-            --border: #334155;
-            --border-light: #475569;
-            --text: #F1F5F9;
-            --text-muted: #94A3B8;
+            --duo-green: #58CC02;
+            --duo-green-dark: #46A302;
+            --duo-green-light: #7ED321;
+            --duo-blue: #1CB0F6;
+            --duo-blue-dark: #1899D6;
+            --duo-purple: #CE82FF;
+            --duo-purple-dark: #A560E8;
+            --duo-red: #FF4B4B;
+            --duo-red-dark: #EA2B2B;
+            --duo-orange: #FF9600;
+            --duo-orange-dark: #E68600;
+            --duo-yellow: #FFC800;
+            --duo-yellow-dark: #E6B400;
+            --duo-pink: #FF86D0;
+            
+            /* Background colors */
+            --bg-main: #131F24;
+            --bg-card: #1A2C32;
+            --bg-card-hover: #233940;
+            --border-color: #2B4148;
+            --border-light: #3D5A63;
+            
+            /* Text colors */
+            --text-white: #FFFFFF;
+            --text-light: #AFAFAF;
+            --text-muted: #777777;
         }
 
-        body { background: linear-gradient(180deg, var(--bg) 0%, #0D1321 100%); min-height: 100vh; }
+        body { 
+            background: var(--bg-main);
+            min-height: 100vh;
+        }
 
-        /* 3D Button Styles */
-        .btn-3d {
+        /* DUOLINGO 3D BUTTONS */
+        .btn-duo {
             position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 28px;
             border: none;
-            background: var(--primary);
-            color: white;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
             border-radius: 16px;
-            box-shadow: 0 6px 0 var(--primary-dark), 0 8px 20px rgba(255, 107, 107, 0.3);
-            transition: all 0.15s ease;
+            font-weight: 800;
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
             cursor: pointer;
+            transition: all 0.1s ease;
             text-decoration: none;
-            display: inline-block;
+            color: white;
         }
-        .btn-3d:hover {
-            filter: brightness(1.1);
+        
+        .btn-duo-green {
+            background: var(--duo-green);
+            box-shadow: 0 5px 0 var(--duo-green-dark), 0 7px 15px rgba(88, 204, 2, 0.35);
+        }
+        .btn-duo-green:hover {
+            filter: brightness(1.05);
             transform: translateY(-2px);
-            box-shadow: 0 8px 0 var(--primary-dark), 0 12px 25px rgba(255, 107, 107, 0.4);
+            box-shadow: 0 7px 0 var(--duo-green-dark), 0 10px 20px rgba(88, 204, 2, 0.4);
         }
-        .btn-3d:active {
-            box-shadow: 0 2px 0 var(--primary-dark);
-            transform: translateY(4px);
-        }
-
-        .btn-3d-teal {
-            background: var(--secondary);
-            box-shadow: 0 6px 0 var(--secondary-dark), 0 8px 20px rgba(78, 205, 196, 0.3);
-        }
-        .btn-3d-teal:hover {
-            box-shadow: 0 8px 0 var(--secondary-dark), 0 12px 25px rgba(78, 205, 196, 0.4);
-        }
-        .btn-3d-teal:active {
-            box-shadow: 0 2px 0 var(--secondary-dark);
+        .btn-duo-green:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 var(--duo-green-dark);
         }
 
-        .btn-3d-blue {
-            background: var(--info);
-            box-shadow: 0 6px 0 var(--info-dark), 0 8px 20px rgba(69, 183, 209, 0.3);
+        .btn-duo-blue {
+            background: var(--duo-blue);
+            box-shadow: 0 5px 0 var(--duo-blue-dark), 0 7px 15px rgba(28, 176, 246, 0.35);
         }
-        .btn-3d-blue:hover {
-            box-shadow: 0 8px 0 var(--info-dark), 0 12px 25px rgba(69, 183, 209, 0.4);
+        .btn-duo-blue:hover {
+            filter: brightness(1.05);
+            transform: translateY(-2px);
+            box-shadow: 0 7px 0 var(--duo-blue-dark), 0 10px 20px rgba(28, 176, 246, 0.4);
         }
-        .btn-3d-blue:active {
-            box-shadow: 0 2px 0 var(--info-dark);
-        }
-
-        .btn-3d-purple {
-            background: var(--purple);
-            box-shadow: 0 6px 0 var(--purple-dark), 0 8px 20px rgba(167, 139, 250, 0.3);
+        .btn-duo-blue:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 var(--duo-blue-dark);
         }
 
-        .btn-3d-orange {
-            background: var(--orange);
-            box-shadow: 0 6px 0 var(--orange-dark), 0 8px 20px rgba(255, 159, 67, 0.3);
+        .btn-duo-purple {
+            background: var(--duo-purple);
+            box-shadow: 0 5px 0 var(--duo-purple-dark), 0 7px 15px rgba(206, 130, 255, 0.35);
+        }
+        .btn-duo-purple:hover {
+            filter: brightness(1.05);
+            transform: translateY(-2px);
+            box-shadow: 0 7px 0 var(--duo-purple-dark), 0 10px 20px rgba(206, 130, 255, 0.4);
+        }
+        .btn-duo-purple:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 var(--duo-purple-dark);
         }
 
-        /* Sidebar */
+        .btn-duo-orange {
+            background: var(--duo-orange);
+            box-shadow: 0 5px 0 var(--duo-orange-dark), 0 7px 15px rgba(255, 150, 0, 0.35);
+        }
+        .btn-duo-orange:hover {
+            filter: brightness(1.05);
+            transform: translateY(-2px);
+            box-shadow: 0 7px 0 var(--duo-orange-dark), 0 10px 20px rgba(255, 150, 0, 0.4);
+        }
+        .btn-duo-orange:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 var(--duo-orange-dark);
+        }
+
+        .btn-duo-red {
+            background: var(--duo-red);
+            box-shadow: 0 5px 0 var(--duo-red-dark), 0 7px 15px rgba(255, 75, 75, 0.35);
+        }
+        .btn-duo-red:hover {
+            filter: brightness(1.05);
+            transform: translateY(-2px);
+            box-shadow: 0 7px 0 var(--duo-red-dark), 0 10px 20px rgba(255, 75, 75, 0.4);
+        }
+        .btn-duo-red:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 var(--duo-red-dark);
+        }
+
+        .btn-duo-outline {
+            background: transparent;
+            border: 2px solid var(--border-light);
+            color: var(--text-light);
+            box-shadow: none;
+        }
+        .btn-duo-outline:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--duo-blue);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* SIDEBAR - Duolingo Style */
         .sidebar {
             width: 280px;
             position: fixed;
             top: 0;
             left: 0;
             height: 100vh;
-            background: linear-gradient(180deg, var(--card) 0%, #151F32 100%);
-            border-right: 2px solid var(--border);
+            background: var(--bg-card);
+            border-right: 2px solid var(--border-color);
             z-index: 40;
             display: flex;
             flex-direction: column;
@@ -119,56 +173,32 @@
             .main-content { margin-left: 0; padding-bottom: 100px; }
         }
 
-        /* Nav Links */
+        /* NAV LINKS - Duolingo style */
         .nav-link {
             display: flex;
             align-items: center;
             gap: 16px;
             padding: 16px 24px;
-            margin: 6px 16px;
-            color: var(--text-muted);
+            margin: 4px 12px;
+            color: var(--text-light);
             text-decoration: none;
             font-size: 16px;
             font-weight: 700;
-            border-radius: 16px;
-            transition: all 0.25s ease;
+            border-radius: 14px;
+            transition: all 0.2s ease;
             border: 2px solid transparent;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .nav-link::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 4px;
-            height: 0;
-            background: var(--primary);
-            border-radius: 2px;
-            transition: height 0.25s ease;
         }
 
         .nav-link:hover {
-            color: var(--text);
-            background: var(--card-hover);
+            background: var(--bg-card-hover);
             border-color: var(--border-light);
-        }
-
-        .nav-link:hover::before {
-            height: 60%;
+            color: white;
         }
 
         .nav-link.active {
-            color: var(--primary);
-            background: rgba(255, 107, 107, 0.1);
-            border-color: rgba(255, 107, 107, 0.3);
-        }
-
-        .nav-link.active::before {
-            height: 70%;
-            background: var(--primary);
+            background: rgba(88, 204, 2, 0.15);
+            border-color: rgba(88, 204, 2, 0.4);
+            color: var(--duo-green);
         }
 
         .nav-link svg {
@@ -177,7 +207,7 @@
             flex-shrink: 0;
         }
 
-        /* Mobile Bottom Nav */
+        /* MOBILE BOTTOM NAV */
         .mobile-nav {
             display: none;
             position: fixed;
@@ -185,10 +215,9 @@
             left: 0;
             right: 0;
             z-index: 50;
-            background: linear-gradient(0deg, var(--card) 0%, rgba(30, 41, 59, 0.98) 100%);
-            border-top: 2px solid var(--border);
+            background: var(--bg-card);
+            border-top: 2px solid var(--border-color);
             padding-bottom: env(safe-area-inset-bottom);
-            backdrop-filter: blur(10px);
         }
 
         @media (max-width: 1023px) {
@@ -196,7 +225,7 @@
                 display: flex;
                 justify-content: space-around;
                 align-items: center;
-                height: 85px;
+                height: 80px;
             }
         }
 
@@ -205,115 +234,134 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            padding: 10px 18px;
+            gap: 4px;
+            padding: 8px 16px;
             color: var(--text-muted);
             text-decoration: none;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             transition: all 0.2s;
-            border-radius: 14px;
+            border-radius: 12px;
         }
 
         .mobile-link:hover,
         .mobile-link.active {
-            color: var(--primary);
+            color: var(--duo-green);
         }
 
         .mobile-link.active {
-            background: rgba(255, 107, 107, 0.1);
+            background: rgba(88, 204, 2, 0.1);
         }
 
         .mobile-link svg {
-            width: 30px;
-            height: 30px;
+            width: 28px;
+            height: 28px;
         }
 
-        /* Cards */
-        .app-card {
-            background: var(--card);
-            border: 2px solid var(--border);
-            border-radius: 24px;
-            transition: all 0.3s ease;
+        /* CARDS - Duolingo style */
+        .duo-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            transition: all 0.2s ease;
         }
 
-        .app-card:hover {
+        .duo-card:hover {
             border-color: var(--border-light);
             transform: translateY(-2px);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         }
 
-        /* Gradient Text */
-        .gradient-text {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--orange) 50%, var(--accent) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        /* STAT CARDS */
+        .stat-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+        .stat-card:hover {
+            transform: scale(1.02);
+            border-color: var(--duo-green);
         }
 
-        /* Level Badges */
+        /* LEVEL BADGES - Colorful Duolingo style */
         .level-badge {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 6px 16px;
+            padding: 8px 20px;
             border-radius: 30px;
             font-weight: 800;
             font-size: 14px;
             letter-spacing: 1px;
         }
-        .level-a1 { background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%); color: white; }
-        .level-a2 { background: linear-gradient(135deg, #45B7D1 0%, #2E86AB 100%); color: white; }
-        .level-b1 { background: linear-gradient(135deg, #A78BFA 0%, #7C3AED 100%); color: white; }
-        .level-b2 { background: linear-gradient(135deg, #FF9F43 0%, #E17055 100%); color: white; }
-        .level-c1 { background: linear-gradient(135deg, #FF6B6B 0%, #EE5A5A 100%); color: white; }
-        .level-c2 { background: linear-gradient(135deg, #FFE66D 0%, #F7D547 100%); color: #1E293B; }
+        .level-a1, .level-a2 { background: var(--duo-green); color: white; }
+        .level-b1 { background: var(--duo-blue); color: white; }
+        .level-b2 { background: var(--duo-purple); color: white; }
+        .level-c1 { background: var(--duo-orange); color: white; }
+        .level-c2 { background: var(--duo-yellow); color: #1A2C32; }
 
-        /* Animations */
+        /* PROGRESS BAR - Duolingo style */
+        .duo-progress {
+            height: 16px;
+            background: var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .duo-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--duo-green) 0%, var(--duo-green-light) 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        /* XP/STREAK BADGE */
+        .xp-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 200, 0, 0.15);
+            border: 2px solid rgba(255, 200, 0, 0.3);
+            border-radius: 30px;
+            padding: 6px 14px;
+            font-weight: 800;
+            font-size: 14px;
+            color: var(--duo-yellow);
+        }
+
+        /* ANIMATIONS */
+        @keyframes bounce-in {
+            0% { transform: scale(0.9); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .bounce-in { animation: bounce-in 0.4s ease-out; }
+
         @keyframes float {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+            50% { transform: translateY(-10px); }
         }
         .float-animation { animation: float 3s ease-in-out infinite; }
 
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(255, 107, 107, 0.3); }
-            50% { box-shadow: 0 0 40px rgba(255, 107, 107, 0.6); }
-        }
-        .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
-
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-        .shimmer {
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-            background-size: 200% 100%;
-            animation: shimmer 2s infinite;
-        }
-
-        /* Progress ring */
-        .progress-ring { transform: rotate(-90deg); }
-
-        /* Scrollbar */
+        /* SCROLLBAR */
         ::-webkit-scrollbar { width: 10px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg-main); }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 5px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--border-light); }
 
-        /* Stats Card */
-        .stat-card {
-            background: linear-gradient(135deg, var(--card) 0%, rgba(30, 41, 59, 0.8) 100%);
-            border: 2px solid var(--border);
-            border-radius: 20px;
-            padding: 24px;
-            text-align: center;
-            transition: all 0.3s ease;
+        /* Gradient text */
+        .gradient-text-green {
+            background: linear-gradient(135deg, var(--duo-green) 0%, var(--duo-green-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        .stat-card:hover {
-            transform: scale(1.02);
-            border-color: var(--primary);
-        }
+
+        /* Legacy support */
+        .app-card { @apply duo-card; }
+        .btn-3d { @apply btn-duo btn-duo-green; }
+        .btn-3d-blue { @apply btn-duo btn-duo-blue; }
     </style>
     {% block head %}{% endblock %}
 </head>
@@ -321,14 +369,14 @@
     <!-- Desktop Sidebar -->
     <aside class="sidebar hidden lg:flex flex-col">
         <!-- Logo -->
-        <div class="p-8 mb-2">
-            <div class="flex items-center gap-4">
-                <div class="w-14 h-14 bg-gradient-to-br from-[#FF6B6B] via-[#FF9F43] to-[#FFE66D] rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-lg transform rotate-3 hover:rotate-0 transition-transform">
+        <div class="p-6 mb-2">
+            <div class="flex items-center gap-3">
+                <div class="w-14 h-14 bg-[#58CC02] rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-lg" style="box-shadow: 0 4px 0 #46A302;">
                     C
                 </div>
                 <div>
-                    <span class="text-3xl font-black text-white">CEFR</span>
-                    <span class="text-3xl font-black gradient-text">Level</span>
+                    <span class="text-2xl font-black text-white">CEFR</span>
+                    <span class="text-2xl font-black gradient-text-green">Level</span>
                 </div>
             </div>
         </div>
@@ -337,16 +385,16 @@
         <nav class="flex-1 py-4">
             <a href="/dashboard" class="nav-link {% if request.url.path == '/dashboard' or request.url.path == '/start' %}active{% endif %}">
                 <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                    <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
                 </svg>
-                <span>{% if lang == 'uz' %}Mening testlarim{% else %}My Tests{% endif %}</span>
+                <span>{% if lang == 'uz' %}Dashboard{% else %}Dashboard{% endif %}</span>
             </a>
 
             <a href="/practice" class="nav-link {% if request.url.path == '/practice' %}active{% endif %}">
                 <svg viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/>
                 </svg>
-                <span>{% if lang == 'uz' %}Praktika{% else %}Practice{% endif %}</span>
+                <span>{% if lang == 'uz' %}Mashq{% else %}Practice{% endif %}</span>
             </a>
 
             <a href="/info" class="nav-link {% if request.url.path == '/info' %}active{% endif %}">
@@ -366,26 +414,23 @@
 
         <!-- User Card -->
         {% if user %}
-        <div class="p-5 border-t-2 border-[#334155]">
-            <div class="app-card p-5">
-                <div class="flex items-center gap-4">
+        <div class="p-4 border-t-2 border-[#2B4148]">
+            <div class="duo-card p-4">
+                <div class="flex items-center gap-3">
                     {% if user.avatar %}
-                    <img src="{{ user.avatar }}" alt="" class="w-14 h-14 rounded-full border-3 border-[#FF6B6B] shadow-lg">
+                    <img src="{{ user.avatar }}" alt="" class="w-12 h-12 rounded-full border-3 border-[#58CC02]">
                     {% else %}
-                    <div class="w-14 h-14 rounded-full bg-gradient-to-br from-[#FF6B6B] to-[#FF9F43] flex items-center justify-center text-white text-xl font-bold shadow-lg">
+                    <div class="w-12 h-12 rounded-full bg-[#58CC02] flex items-center justify-center text-white text-lg font-bold" style="box-shadow: 0 3px 0 #46A302;">
                         {{ (user.name or user.email)[0]|upper }}
                     </div>
                     {% endif %}
                     <div class="flex-1 min-w-0">
-                        <div class="text-base font-bold text-white truncate">{{ user.name or user.email.split('@')[0] }}</div>
-                        <div class="flex items-center gap-2 mt-1">
-                            <div class="flex items-center gap-1 bg-[#FFE66D]/20 px-3 py-1 rounded-full">
-                                <svg class="w-4 h-4 text-[#FFE66D]" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                                </svg>
-                                <span class="text-[#FFE66D] text-sm font-bold">{{ (user.free_tests or 0) + (user.purchased_tests or 0) }}</span>
-                            </div>
-                            <span class="text-gray-400 text-xs">{% if lang == 'uz' %}test{% else %}tests{% endif %}</span>
+                        <div class="text-sm font-bold text-white truncate">{{ user.name or user.email.split('@')[0] }}</div>
+                        <div class="xp-badge mt-1">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                            </svg>
+                            {{ (user.free_tests or 0) + (user.purchased_tests or 0) }} {% if lang == 'uz' %}test{% else %}tests{% endif %}
                         </div>
                     </div>
                 </div>
@@ -403,16 +448,16 @@
     <nav class="mobile-nav">
         <a href="/dashboard" class="mobile-link {% if request.url.path == '/dashboard' or request.url.path == '/start' %}active{% endif %}">
             <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
             </svg>
-            <span>{% if lang == 'uz' %}Testlar{% else %}Tests{% endif %}</span>
+            <span>{% if lang == 'uz' %}Dashboard{% else %}Home{% endif %}</span>
         </a>
 
         <a href="/practice" class="mobile-link {% if request.url.path == '/practice' %}active{% endif %}">
             <svg viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/>
             </svg>
-            <span>{% if lang == 'uz' %}Praktika{% else %}Practice{% endif %}</span>
+            <span>{% if lang == 'uz' %}Mashq{% else %}Practice{% endif %}</span>
         </a>
 
         <a href="/info" class="mobile-link {% if request.url.path == '/info' %}active{% endif %}">

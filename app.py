@@ -84,8 +84,9 @@ templates = Jinja2Templates(directory="templates")
 sessions: Dict[str, Dict] = {}
 feedbacks: List[Dict] = []
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
+# OPENAI: qo'llab-quvvatlanadi OPENAI_API_KEY va typo OPENAI_API_KE
+OPENAI_API_KEY = (os.getenv("OPENAI_API_KEY") or os.getenv("OPENAI_API_KE") or "").strip()
+ANTHROPIC_API_KEY = (os.getenv("ANTHROPIC_API_KEY") or "").strip()
 
 DATA_DIR = Path("data")
 ADMIN_PASSWORD = "osco2026"
@@ -340,6 +341,11 @@ def init_default_data():
         save_json("writing_tests.json", {"tests": [DEFAULT_WRITING]})
     if not (DATA_DIR / "feedbacks.json").exists():
         save_json("feedbacks.json", {"feedbacks": []})
+    # Writing AI: kalit yuklanganligini logda ko'rsatish
+    if OPENAI_API_KEY:
+        print("[Writing AI] OPENAI_API_KEY yuklandi – Writing bo'limida AI baholash ishlatiladi.")
+    else:
+        print("[Writing AI] OPENAI_API_KEY topilmadi. .env da OPENAI_API_KEY qo'ying. Fallback baho ishlatiladi (0% dan yuqoriga).")
 
 
 # ============ DEFAULT TEST DATA ============
@@ -351,36 +357,36 @@ DEFAULT_READING = {
     "parts": [
         {
             "part_number": 1,
-            "title": "Part 1: Multiple Choice Cloze",
-            "instruction": "For questions 1-8, read the text below and decide which answer (A, B, C or D) best fits each gap.",
-            "type": "multiple_choice_cloze",
-            "text": "The Rise of Remote Work\n\nThe COVID-19 pandemic has (1)_____ transformed the way we work. Before 2020, working from home was (2)_____ a privilege enjoyed by a small percentage of the workforce. However, the global health crisis (3)_____ companies worldwide to rapidly adopt remote work policies.\n\nThis shift has had both positive and negative (4)_____. On the one hand, employees have gained more flexibility and eliminated lengthy commutes. Many workers report feeling more (5)_____ and having a better work-life balance. On the other hand, some people struggle with isolation and find it difficult to (6)_____ work from their personal life.\n\nCompanies are now (7)_____ hybrid models that combine remote and office work. This approach aims to offer the best of both worlds, allowing employees to enjoy flexibility while still maintaining face-to-face (8)_____ with colleagues.",
+            "title": "Part 1: Open Cloze",
+            "instruction": "For questions 1-8, read the text below and think of the word which best fits each gap. Use only ONE word in each gap.",
+            "type": "open_cloze",
+            "text": "Climate Change and Its Impact\n\nClimate change is one of (1)_____ most pressing issues facing our planet today. Scientists agree that human activities, particularly the burning of fossil fuels, (2)_____ responsible for the rising global temperatures we are experiencing.\n\nThe effects of climate change are already (3)_____ felt around the world. Extreme weather events such (4)_____ hurricanes, floods, and droughts are becoming more frequent and severe. Sea levels are rising, threatening coastal communities and island nations.\n\n(5)_____ order to address this crisis, governments and individuals must take action. Reducing carbon emissions, investing in renewable energy, and protecting forests are all essential steps. However, time is running (6)_____. If we do not act quickly, the consequences (7)_____ be catastrophic.\n\nEach of us has a role to play. Simple changes in (8)_____ daily lives, such as using public transportation, reducing waste, and conserving energy, can make a difference.",
             "questions": [
-                {"number": 1, "options": {"A": "deeply", "B": "hardly", "C": "rarely", "D": "slightly"}, "correct": "A"},
-                {"number": 2, "options": {"A": "often", "B": "commonly", "C": "mainly", "D": "usually"}, "correct": "C"},
-                {"number": 3, "options": {"A": "made", "B": "forced", "C": "let", "D": "allowed"}, "correct": "B"},
-                {"number": 4, "options": {"A": "consequences", "B": "results", "C": "outcomes", "D": "effects"}, "correct": "A"},
-                {"number": 5, "options": {"A": "effective", "B": "productive", "C": "efficient", "D": "successful"}, "correct": "B"},
-                {"number": 6, "options": {"A": "divide", "B": "split", "C": "separate", "D": "part"}, "correct": "C"},
-                {"number": 7, "options": {"A": "accepting", "B": "receiving", "C": "embracing", "D": "welcoming"}, "correct": "C"},
-                {"number": 8, "options": {"A": "interaction", "B": "communication", "C": "connection", "D": "contact"}, "correct": "A"}
+                {"number": 1, "correct": "the"},
+                {"number": 2, "correct": "are"},
+                {"number": 3, "correct": "being"},
+                {"number": 4, "correct": "as"},
+                {"number": 5, "correct": "In"},
+                {"number": 6, "correct": "out"},
+                {"number": 7, "correct": "will"},
+                {"number": 8, "correct": "our"}
             ]
         },
         {
             "part_number": 2,
-            "title": "Part 2: Open Cloze",
-            "instruction": "For questions 9-16, read the text below and think of the word which best fits each gap. Use only ONE word in each gap.",
-            "type": "open_cloze",
-            "text": "Climate Change and Its Impact\n\nClimate change is one of (9)_____ most pressing issues facing our planet today. Scientists agree that human activities, particularly the burning of fossil fuels, (10)_____ responsible for the rising global temperatures we are experiencing.\n\nThe effects of climate change are already (11)_____ felt around the world. Extreme weather events such (12)_____ hurricanes, floods, and droughts are becoming more frequent and severe. Sea levels are rising, threatening coastal communities and island nations.\n\n(13)_____ order to address this crisis, governments and individuals must take action. Reducing carbon emissions, investing in renewable energy, and protecting forests are all essential steps. However, time is running (14)_____. If we do not act quickly, the consequences (15)_____ be catastrophic.\n\nEach of us has a role to play. Simple changes in (16)_____ daily lives, such as using public transportation, reducing waste, and conserving energy, can make a difference.",
+            "title": "Part 2: Multiple Choice Cloze",
+            "instruction": "For questions 9-16, read the text below and decide which answer (A, B, C or D) best fits each gap.",
+            "type": "multiple_choice_cloze",
+            "text": "The Rise of Remote Work\n\nThe COVID-19 pandemic has (9)_____ transformed the way we work. Before 2020, working from home was (10)_____ a privilege enjoyed by a small percentage of the workforce. However, the global health crisis (11)_____ companies worldwide to rapidly adopt remote work policies.\n\nThis shift has had both positive and negative (12)_____. On the one hand, employees have gained more flexibility and eliminated lengthy commutes. Many workers report feeling more (13)_____ and having a better work-life balance. On the other hand, some people struggle with isolation and find it difficult to (14)_____ work from their personal life.\n\nCompanies are now (15)_____ hybrid models that combine remote and office work. This approach aims to offer the best of both worlds, allowing employees to enjoy flexibility while still maintaining face-to-face (16)_____ with colleagues.",
             "questions": [
-                {"number": 9, "correct": "the"},
-                {"number": 10, "correct": "are"},
-                {"number": 11, "correct": "being"},
-                {"number": 12, "correct": "as"},
-                {"number": 13, "correct": "In"},
-                {"number": 14, "correct": "out"},
-                {"number": 15, "correct": "will"},
-                {"number": 16, "correct": "our"}
+                {"number": 9, "options": {"A": "deeply", "B": "hardly", "C": "rarely", "D": "slightly"}, "correct": "A"},
+                {"number": 10, "options": {"A": "often", "B": "commonly", "C": "mainly", "D": "usually"}, "correct": "C"},
+                {"number": 11, "options": {"A": "made", "B": "forced", "C": "let", "D": "allowed"}, "correct": "B"},
+                {"number": 12, "options": {"A": "consequences", "B": "results", "C": "outcomes", "D": "effects"}, "correct": "A"},
+                {"number": 13, "options": {"A": "effective", "B": "productive", "C": "efficient", "D": "successful"}, "correct": "B"},
+                {"number": 14, "options": {"A": "divide", "B": "split", "C": "separate", "D": "part"}, "correct": "C"},
+                {"number": 15, "options": {"A": "accepting", "B": "receiving", "C": "embracing", "D": "welcoming"}, "correct": "C"},
+                {"number": 16, "options": {"A": "interaction", "B": "communication", "C": "connection", "D": "contact"}, "correct": "A"}
             ]
         },
         {
@@ -432,7 +438,7 @@ DEFAULT_LISTENING = {
     "parts": [
         {
             "part_number": 1,
-            "title": "Part 1: Short Conversations",
+            "title": "Part 1: Multiple Choice",
             "instruction": "You will hear people talking in eight different situations. For questions 1-8, choose the best answer (A, B or C).",
             "type": "short_conversations",
             "questions": [
@@ -448,70 +454,94 @@ DEFAULT_LISTENING = {
         },
         {
             "part_number": 2,
-            "title": "Part 2: Sentence Completion",
-            "instruction": "You will hear a talk about the history of coffee. For questions 9-18, complete the sentences.",
+            "title": "Part 2: Gap Fill",
+            "instruction": "You will hear a talk about the history of coffee. For questions 9-14, complete the sentences with ONE word.",
             "type": "sentence_completion",
             "audio_description": "A lecturer giving a talk about the history of coffee.",
-            "transcript": "Good afternoon, everyone. Today I'm going to talk about the fascinating history of coffee.\n\nThe story of coffee begins in Ethiopia, where, according to legend, a goat herder named Kaldi noticed his goats becoming energetic after eating berries from a certain tree. This discovery dates back to approximately the 9th century.\n\nFrom Ethiopia, coffee spread to the Arabian Peninsula. By the 15th century, coffee was being grown in Yemen, and it had become an important part of social and religious life. Coffee houses, known as qahveh khaneh, began to appear in cities throughout the Middle East.\n\nEuropeans first encountered coffee in the 17th century when Venetian traders brought it to Italy. Initially, some people were suspicious and called it 'the bitter invention of Satan.' However, Pope Clement the Eighth gave coffee his approval.\n\nThe Dutch were the first Europeans to establish coffee plantations in their colonies, starting in Java, Indonesia, in the late 1600s.\n\nCoffee reached the Americas in the 18th century. Americans switched from tea to coffee after the Boston Tea Party in 1773 as a patriotic gesture.\n\nToday, coffee is the second most traded commodity in the world after oil. Over 2.25 billion cups are consumed every day. The largest producer of coffee is Brazil.",
+            "transcript": "Good afternoon, everyone. Today I'm going to talk about the fascinating history of coffee.\n\nThe story of coffee begins in Ethiopia, where, according to legend, a goat herder named Kaldi noticed his goats becoming energetic after eating berries from a certain tree.\n\nFrom Ethiopia, coffee spread to the Arabian Peninsula. By the 15th century, coffee was being grown in Yemen. Coffee houses, known as qahveh khaneh, began to appear in cities throughout the Middle East.\n\nEuropeans first encountered coffee in the 17th century when Venetian traders brought it to Italy.\n\nThe Dutch were the first Europeans to establish coffee plantations in their colonies, starting in Java, Indonesia.\n\nToday, coffee is the second most traded commodity in the world after oil. The largest producer of coffee is Brazil.",
             "questions": [
                 {"number": 9, "question": "According to legend, coffee was discovered by a _____ herder.", "correct": "goat"},
                 {"number": 10, "question": "Coffee originated in the country of _____.", "correct": "Ethiopia"},
                 {"number": 11, "question": "By the 15th century, coffee was being grown in _____.", "correct": "Yemen"},
-                {"number": 12, "question": "Coffee houses in the Middle East were called qahveh _____.", "correct": "khaneh"},
-                {"number": 13, "question": "Coffee was first brought to Europe by _____ traders.", "correct": "Venetian"},
-                {"number": 14, "question": "The Pope who approved coffee was Clement the _____.", "correct": "Eighth"},
-                {"number": 15, "question": "The Dutch established coffee plantations in _____, Indonesia.", "correct": "Java"},
-                {"number": 16, "question": "Americans switched from tea to coffee after the Boston Tea _____.", "correct": "Party"},
-                {"number": 17, "question": "Coffee is the second most traded commodity after _____.", "correct": "oil"},
-                {"number": 18, "question": "The largest coffee producer in the world is _____.", "correct": "Brazil"}
+                {"number": 12, "question": "Coffee was first brought to Europe by _____ traders.", "correct": "Venetian"},
+                {"number": 13, "question": "The Dutch established plantations in _____, Indonesia.", "correct": "Java"},
+                {"number": 14, "question": "The largest coffee producer in the world is _____.", "correct": "Brazil"}
             ]
         },
         {
             "part_number": 3,
-            "title": "Part 3: Multiple Matching",
-            "instruction": "You will hear five people talking about learning a foreign language. For questions 19-23, choose from the list (A-H).",
-            "type": "multiple_matching",
-            "audio_description": "Five people talking about learning a foreign language.",
+            "title": "Part 3: Speaker Matching",
+            "instruction": "You will hear four people talking about learning a foreign language. For questions 15-18, match each speaker with the correct statement (A-F).",
+            "type": "speaker_matching",
+            "audio_description": "Four people talking about learning a foreign language.",
             "speakers": [
-                {"number": 19, "name": "Speaker 1", "transcript": "When I moved to Spain for work, I was forced to learn Spanish quickly. The best thing I did was completely immerse myself - I stopped watching English TV and only listened to Spanish radio. Within six months, I was dreaming in Spanish!"},
-                {"number": 20, "name": "Speaker 2", "transcript": "I tried so many language apps and courses, but what really worked for me was finding a language exchange partner. We meet twice a week - one day we speak only German, the next only English. It's free, and I've made a great friend."},
-                {"number": 21, "name": "Speaker 3", "transcript": "Grammar books and vocabulary lists never worked for me. I learned French by watching French films with French subtitles. It was entertainment and education at the same time."},
-                {"number": 22, "name": "Speaker 4", "transcript": "The biggest mistake I made was being afraid to speak. I spent years perfecting my written Japanese but couldn't hold a conversation. Now I force myself to speak, even if I make mistakes. That's when I really started improving."},
-                {"number": 23, "name": "Speaker 5", "transcript": "I've been learning Mandarin for five years, and what kept me motivated was setting clear goals. First it was ordering food, then having a simple conversation, then reading news articles."}
+                {"number": 15, "name": "Speaker 1", "transcript": "When I moved to Spain for work, I was forced to learn Spanish quickly. The best thing I did was completely immerse myself - I stopped watching English TV and only listened to Spanish radio."},
+                {"number": 16, "name": "Speaker 2", "transcript": "I tried so many language apps and courses, but what really worked for me was finding a language exchange partner. We meet twice a week - one day we speak only German, the next only English."},
+                {"number": 17, "name": "Speaker 3", "transcript": "Grammar books and vocabulary lists never worked for me. I learned French by watching French films with French subtitles. It was entertainment and education at the same time."},
+                {"number": 18, "name": "Speaker 4", "transcript": "The biggest mistake I made was being afraid to speak. I spent years perfecting my written Japanese but couldn't hold a conversation. Now I force myself to speak, even if I make mistakes."}
             ],
             "options": {
-                "A": "suggests that making mistakes is part of the learning process",
+                "A": "suggests that making mistakes is part of learning",
                 "B": "recommends learning through entertainment media",
                 "C": "believes total immersion is the most effective method",
-                "D": "emphasizes the importance of setting achievable targets",
-                "E": "thinks traditional learning methods are best",
-                "F": "values the social aspect of language learning",
-                "G": "suggests learning is easier for children",
-                "H": "believes language learning requires expensive courses"
+                "D": "thinks traditional learning methods are best",
+                "E": "values the social aspect of language learning",
+                "F": "believes language learning requires expensive courses"
             },
             "answers": [
-                {"number": 19, "correct": "C"},
-                {"number": 20, "correct": "F"},
-                {"number": 21, "correct": "B"},
-                {"number": 22, "correct": "A"},
-                {"number": 23, "correct": "D"}
+                {"number": 15, "correct": "C"},
+                {"number": 16, "correct": "E"},
+                {"number": 17, "correct": "B"},
+                {"number": 18, "correct": "A"}
             ]
         },
         {
             "part_number": 4,
-            "title": "Part 4: Interview",
-            "instruction": "You will hear an interview with a marine biologist. For questions 24-30, choose the best answer (A, B or C).",
+            "title": "Part 4: Map Labeling",
+            "instruction": "You will hear a guide describing a university campus. For questions 19-24, match each place with the correct letter (A-H) on the map.",
+            "type": "map_labeling",
+            "audio_description": "A guide describing a university campus tour.",
+            "transcript": "Welcome to our university campus tour. Let me show you around. If you look straight ahead, you'll see the Main Library - that's the large building right in the center. To the left of the library is the Science Building, and right behind it is the Sports Center. If you turn right from the entrance, the first building you see is the Student Union. The Cafeteria is just next to the Student Union. And finally, the Art Gallery is the small building at the far end of the campus, near the lake.",
+            "places": [
+                {"number": 19, "name": "Main Library", "correct": "D"},
+                {"number": 20, "name": "Science Building", "correct": "C"},
+                {"number": 21, "name": "Sports Center", "correct": "F"},
+                {"number": 22, "name": "Student Union", "correct": "B"},
+                {"number": 23, "name": "Cafeteria", "correct": "A"},
+                {"number": 24, "name": "Art Gallery", "correct": "H"}
+            ],
+            "map_labels": ["A", "B", "C", "D", "E", "F", "G", "H"]
+        },
+        {
+            "part_number": 5,
+            "title": "Part 5: Multiple Choice",
+            "instruction": "You will hear an interview with a marine biologist. For questions 25-30, choose the best answer (A, B or C).",
             "type": "interview",
             "audio_description": "An interview with Dr. Sarah Chen, a marine biologist.",
-            "transcript": "Interviewer: Today we're joined by Dr. Sarah Chen, a marine biologist who has spent the last fifteen years studying ocean ecosystems.\n\nDr. Chen: Thank you for having me.\n\nInterviewer: How would you describe the current state of our oceans?\n\nDr. Chen: Our oceans are in crisis. We're seeing coral bleaching events more frequent than ever. Fish populations are declining due to overfishing. And perhaps most concerning is the plastic pollution problem - there's now plastic in every part of the ocean.\n\nInterviewer: What do you think is the biggest threat?\n\nDr. Chen: If I had to choose one, I'd say climate change. Rising ocean temperatures affect everything - they cause coral bleaching, change fish migration patterns, affect the entire food chain. And as the oceans warm, they absorb more carbon dioxide, which makes them more acidic.\n\nInterviewer: What can ordinary people do?\n\nDr. Chen: Reducing plastic use is important. Being careful about what seafood you buy matters too. But perhaps the most impactful thing is using your voice - support policies that protect marine areas, vote for leaders who take climate change seriously.\n\nInterviewer: Are there success stories?\n\nDr. Chen: Absolutely. When we protect areas properly, nature can recover remarkably quickly. I've seen damaged coral reefs begin to recover within a few years.\n\nInterviewer: What's next for your research?\n\nDr. Chen: I'm currently leading a project to map microplastic distribution in the Pacific Ocean.",
+            "transcript": "Interviewer: Today we're joined by Dr. Sarah Chen, a marine biologist who has spent the last fifteen years studying ocean ecosystems.\n\nDr. Chen: Thank you for having me.\n\nInterviewer: How would you describe the current state of our oceans?\n\nDr. Chen: Our oceans are in crisis. We're seeing coral bleaching events more frequent than ever. Fish populations are declining due to overfishing. And perhaps most concerning is the plastic pollution problem.\n\nInterviewer: What do you think is the biggest threat?\n\nDr. Chen: Climate change. Rising ocean temperatures cause coral bleaching, change fish migration patterns, and as oceans warm they absorb more carbon dioxide, making them more acidic.\n\nInterviewer: What can ordinary people do?\n\nDr. Chen: Support policies that protect marine areas. That's the most impactful thing.\n\nInterviewer: Are there success stories?\n\nDr. Chen: When we protect areas properly, nature can recover remarkably quickly.\n\nInterviewer: What's next for your research?\n\nDr. Chen: Mapping microplastic distribution in the Pacific Ocean.",
             "questions": [
-                {"number": 24, "question": "How long has Dr. Chen been studying ocean ecosystems?", "options": {"A": "Five years", "B": "Ten years", "C": "Fifteen years"}, "correct": "C"},
-                {"number": 25, "question": "According to Dr. Chen, what is now found everywhere in the ocean?", "options": {"A": "Fish", "B": "Plastic", "C": "Coral"}, "correct": "B"},
-                {"number": 26, "question": "What does Dr. Chen consider the biggest threat to ocean health?", "options": {"A": "Overfishing", "B": "Plastic pollution", "C": "Climate change"}, "correct": "C"},
-                {"number": 27, "question": "What happens when oceans absorb more carbon dioxide?", "options": {"A": "They become warmer.", "B": "They become more acidic.", "C": "They become cleaner."}, "correct": "B"},
-                {"number": 28, "question": "What is the most impactful action for ordinary people?", "options": {"A": "Reducing plastic use", "B": "Buying sustainable seafood", "C": "Supporting protective policies"}, "correct": "C"},
-                {"number": 29, "question": "What does Dr. Chen say about coral reefs?", "options": {"A": "They cannot recover once damaged.", "B": "They can recover quickly when protected.", "C": "They are not affected by climate change."}, "correct": "B"},
+                {"number": 25, "question": "How long has Dr. Chen been studying ocean ecosystems?", "options": {"A": "Five years", "B": "Ten years", "C": "Fifteen years"}, "correct": "C"},
+                {"number": 26, "question": "What does Dr. Chen consider the biggest threat?", "options": {"A": "Overfishing", "B": "Plastic pollution", "C": "Climate change"}, "correct": "C"},
+                {"number": 27, "question": "What happens when oceans absorb more CO2?", "options": {"A": "They become warmer.", "B": "They become more acidic.", "C": "They become cleaner."}, "correct": "B"},
+                {"number": 28, "question": "What is the most impactful action for people?", "options": {"A": "Reducing plastic use", "B": "Buying sustainable seafood", "C": "Supporting protective policies"}, "correct": "C"},
+                {"number": 29, "question": "What does Dr. Chen say about protected areas?", "options": {"A": "They cannot recover.", "B": "They can recover quickly.", "C": "They are not affected."}, "correct": "B"},
                 {"number": 30, "question": "What is Dr. Chen's current research about?", "options": {"A": "Coral reef restoration", "B": "Fish population recovery", "C": "Microplastic distribution"}, "correct": "C"}
+            ]
+        },
+        {
+            "part_number": 6,
+            "title": "Part 6: Note Completion",
+            "instruction": "You will hear a talk about healthy eating habits. For questions 31-36, complete the notes with ONE word.",
+            "type": "note_completion",
+            "audio_description": "A nutritionist giving a talk about healthy eating habits.",
+            "transcript": "Today I want to share some simple tips for healthier eating. First, always eat a good breakfast - studies show it improves your concentration throughout the morning. Second, try to include protein in every meal, such as chicken, fish, or beans.\n\nDrinking enough water is essential - aim for at least eight glasses per day. Many people confuse thirst with hunger.\n\nWhen it comes to snacking, choose fruit or nuts instead of processed foods. Also, try to cook at home more often rather than ordering takeaway. Home-cooked meals typically contain less salt and sugar.\n\nFinally, don't skip meals. Regular eating maintains your energy levels and prevents overeating later in the day.",
+            "questions": [
+                {"number": 31, "question": "A good breakfast improves your _____ throughout the morning.", "correct": "concentration"},
+                {"number": 32, "question": "You should include _____ in every meal.", "correct": "protein"},
+                {"number": 33, "question": "You should drink at least eight _____ of water per day.", "correct": "glasses"},
+                {"number": 34, "question": "For snacks, choose fruit or _____ instead of processed foods.", "correct": "nuts"},
+                {"number": 35, "question": "Home-cooked meals typically contain less salt and _____.", "correct": "sugar"},
+                {"number": 36, "question": "Regular eating prevents _____ later in the day.", "correct": "overeating"}
             ]
         }
     ]
@@ -532,9 +562,9 @@ DEFAULT_WRITING = {
                     "title": "Task 1: Email/Letter",
                     "type": "email",
                     "instruction": "Read the situation below and write an appropriate email.",
-                    "situation": "You recently bought a laptop online, but when it arrived, you discovered several problems with it. The screen has a small crack, the keyboard is missing a key, and the battery drains very quickly.\n\nWrite an email to the company's customer service department. In your email:\n- Explain what problems you found with the laptop\n- Say how you feel about this situation\n- Tell them what you would like them to do about it\n\nWrite between 120-150 words.",
-                    "min_words": 120,
-                    "max_words": 150
+                    "situation": "You recently bought a laptop online, but when it arrived, you discovered several problems with it. The screen has a small crack, the keyboard is missing a key, and the battery drains very quickly.\n\nWrite an email to the company's customer service department. In your email:\n- Explain what problems you found with the laptop\n- Say how you feel about this situation\n- Tell them what you would like them to do about it\n\nRecommended: at least 50 words. Fewer is accepted but may receive a lower score; you may write more if you wish.",
+                    "min_words": 50,
+                    "max_words": 500
                 },
                 {
                     "task_number": 2,
@@ -552,9 +582,9 @@ DEFAULT_WRITING = {
             "title": "Part 2: Essay",
             "instruction": "Write an essay on the topic below.",
             "type": "essay",
-            "prompt": "Some people believe that technology has made our lives easier and more convenient. Others argue that technology has created new problems and made life more stressful.\n\nDiscuss both views and give your own opinion.\n\nWrite between 250-300 words.\n\nYour essay will be evaluated on:\n- Task Achievement\n- Coherence & Cohesion\n- Lexical Resource\n- Grammatical Range & Accuracy",
-            "min_words": 250,
-            "max_words": 300
+            "prompt": "Some people believe that technology has made our lives easier and more convenient. Others argue that technology has created new problems and made life more stressful.\n\nDiscuss both views and give your own opinion.\n\nWrite between 180-200 words.\n\nYour essay will be evaluated on:\n- Task Achievement\n- Coherence & Cohesion\n- Lexical Resource\n- Grammatical Range & Accuracy",
+            "min_words": 180,
+            "max_words": 200
         }
     ]
 }
@@ -630,7 +660,7 @@ def calculate_listening_score(answers: Dict[str, str], test_data: dict) -> Dict:
                 ic = ua == ca
                 if ic: correct += 1
                 details.append({"q": qn, "ua": ua, "ca": ca, "ok": ic, "part": part["part_number"]})
-        elif ptype == "sentence_completion":
+        elif ptype in ["sentence_completion", "note_completion"]:
             for q in part["questions"]:
                 total += 1
                 qn = str(q["number"])
@@ -639,12 +669,21 @@ def calculate_listening_score(answers: Dict[str, str], test_data: dict) -> Dict:
                 ic = ua == ca or ca in ua
                 if ic: correct += 1
                 details.append({"q": qn, "ua": ua, "ca": ca, "ok": ic, "part": part["part_number"]})
-        elif ptype == "multiple_matching":
+        elif ptype in ["multiple_matching", "speaker_matching"]:
             for a in part["answers"]:
                 total += 1
                 qn = str(a["number"])
                 ua = answers.get(qn, "").strip().upper()
                 ca = a["correct"].upper()
+                ic = ua == ca
+                if ic: correct += 1
+                details.append({"q": qn, "ua": ua, "ca": ca, "ok": ic, "part": part["part_number"]})
+        elif ptype == "map_labeling":
+            for p in part["places"]:
+                total += 1
+                qn = str(p["number"])
+                ua = answers.get(qn, "").strip().upper()
+                ca = p["correct"].upper()
                 ic = ua == ca
                 if ic: correct += 1
                 details.append({"q": qn, "ua": ua, "ca": ca, "ok": ic, "part": part["part_number"]})
@@ -783,11 +822,11 @@ def algorithmic_score(text: str, min_w: int, max_w: int, task_type: str) -> dict
     score = 2  # Start VERY LOW (Limited User) - must earn points
     fb = []
 
-    # Word count - STRICT requirements
+    # Word count - STRICT requirements (0 ball ham mumkin)
     if wc < min_w * 0.3:
-        score = 1
-        fb.append(f"SEVERELY under word count ({wc}/{min_w}) - Band 1.")
-        return {"score": 1, "feedback": " ".join(fb), "wc": wc}
+        score = 0
+        fb.append(f"SEVERELY under word count ({wc}/{min_w}) - Band 0.")
+        return {"score": 0, "feedback": " ".join(fb), "wc": wc}
     elif wc < min_w * 0.5:
         fb.append(f"Very under word count ({wc}/{min_w}) - max Band 2.")
     elif wc < min_w * 0.7:
@@ -854,7 +893,7 @@ def algorithmic_score(text: str, min_w: int, max_w: int, task_type: str) -> dict
         unique_s = set(sent_lower)
         ratio = len(unique_s) / len(sent_lower)
         if ratio < 0.7:
-            score = max(1, score - 2)
+            score = max(0, score - 2)
             fb.append(f"Sentence repetition detected ({int((1-ratio)*100)}% repeated).")
         elif ratio < 0.85:
             score -= 1
@@ -866,100 +905,99 @@ def algorithmic_score(text: str, min_w: int, max_w: int, task_type: str) -> dict
         fb.append("Too many short/filler words.")
         score -= 1
 
-    score = max(1, min(9, score))
+    score = max(0, min(9, score))
     return {"score": score, "feedback": " ".join(fb), "wc": wc}
 
 
 async def evaluate_writing_with_ai(task1: str, task2: str, essay: str, writing_test: dict) -> Dict:
-    """100% AI evaluation - spam detection first, then ONLY AI evaluation"""
+    """100% AI evaluation - NO spam detection, direct AI evaluation only"""
 
-    # Check each part for spam FIRST
-    parts_spam = {}
-    for name, txt in [("task1", task1), ("task2", task2), ("essay", essay)]:
-        parts_spam[name] = detect_spam_advanced(txt)
+    print(f"[Writing AI] === BAHOLASH BOSHLANDI ===")
+    print(f"[Writing AI] task1: {len(task1.split())} so'z, task2: {len(task2.split())} so'z, essay: {len(essay.split())} so'z")
+    print(f"[Writing AI] OPENAI_API_KEY mavjud: {bool(OPENAI_API_KEY)}, uzunlik: {len(OPENAI_API_KEY)}")
 
-    # Make spam result with score 0 or 1
-    def make_spam_result(name, txt, spam_info):
-        score = spam_info["score"]  # Can be 0 or 1
-        band_text = "Band 0 - Invalid" if score == 0 else "Band 1 - Non User"
-        return {
-            "score": score, "band": score, "word_count": len(txt.split()), "is_valid": False,
-            "feedback": {
-                "overall": band_text,
-                "content": spam_info["reason"],
-                "organization": "No valid structure detected.",
-                "language": "No meaningful language use.",
-                "accuracy": "Cannot evaluate - insufficient content."
-            }
-        }
-
+    # Bo'sh yoki juda qisqa matn tekshirish (faqat 5 so'zdan kam)
     results = {}
     for name, txt in [("task1", task1), ("task2", task2), ("essay", essay)]:
-        if parts_spam[name]["is_spam"]:
-            score = parts_spam[name]["score"]
-            band_text = "Band 0 - Invalid" if score == 0 else "Band 1 - Non User"
+        wc = len(txt.split())
+        if wc < 5:
+            print(f"[Writing AI] {name}: faqat {wc} so'z - juda kam, score=0")
             if name == "essay":
                 results[name] = {
-                    "score": score, "band": score, "word_count": len(txt.split()), "is_valid": False,
+                    "score": 0, "band": 0, "word_count": wc, "is_valid": False,
                     "feedback": {
-                        "overall": band_text,
-                        "task_achievement": parts_spam[name]["reason"],
-                        "coherence_cohesion": "No coherent structure.",
-                        "lexical_resource": "No meaningful vocabulary.",
-                        "grammatical_range": "Cannot evaluate - insufficient content."
+                        "overall": "Band 0 - Bo'sh",
+                        "task_achievement": f"Faqat {wc} so'z yozilgan. Minimum 20 so'z kerak.",
+                        "coherence_cohesion": "", "lexical_resource": "", "grammatical_range": ""
                     }
                 }
             else:
-                results[name] = make_spam_result(name, txt, parts_spam[name])
+                results[name] = {
+                    "score": 0, "band": 0, "word_count": wc, "is_valid": False,
+                    "feedback": {
+                        "overall": "Band 0 - Bo'sh",
+                        "content": f"Faqat {wc} so'z yozilgan. Minimum 20 so'z kerak.",
+                        "organization": "", "language": "", "accuracy": ""
+                    }
+                }
 
-    # For non-spam parts, use AI evaluation ONLY
-    non_spam_parts = [n for n in ["task1", "task2", "essay"] if n not in results]
+    # AI bilan baholash - barcha qolgan qismlar
+    parts_to_eval = [n for n in ["task1", "task2", "essay"] if n not in results]
+    print(f"[Writing AI] AI baholash uchun: {parts_to_eval}")
 
-    if non_spam_parts:
-        ai_result = await try_ai_evaluation(task1, task2, essay, writing_test, non_spam_parts)
+    if parts_to_eval:
+        ai_result = await try_ai_evaluation(task1, task2, essay, writing_test, parts_to_eval)
         if ai_result:
-            for name in non_spam_parts:
+            print(f"[Writing AI] AI muvaffaqiyatli baholadi! Natijalar: {list(ai_result.keys())}")
+            for name in parts_to_eval:
                 if name in ai_result:
                     results[name] = ai_result[name]
+                    print(f"[Writing AI] {name}: score={ai_result[name].get('score', '?')}")
         else:
-            # No AI available - still evaluate strictly via AI prompt simulation
-            # Give strict scores based on content analysis
-            for name in non_spam_parts:
+            print("[Writing AI] AI baholash muvaffaqiyatsiz bo'ldi!")
+            for name in parts_to_eval:
                 txt = task1 if name == "task1" else (task2 if name == "task2" else essay)
-                strict_score = await get_strict_ai_score(txt, name)
+                wc = len(txt.split())
                 if name == "essay":
                     results[name] = {
-                        "score": strict_score, "band": strict_score, "word_count": len(txt.split()), "is_valid": strict_score >= 3,
+                        "score": 0, "band": 0, "word_count": wc, "is_valid": False,
                         "feedback": {
-                            "overall": f"Band {strict_score}",
-                            "task_achievement": "AI evaluation required for detailed feedback.",
-                            "coherence_cohesion": "AI evaluation required.",
-                            "lexical_resource": "AI evaluation required.",
-                            "grammatical_range": "AI evaluation required."
-                        }
+                            "overall": "AI baholash ishlamadi",
+                            "task_achievement": "AI xizmati hozirda ishlamayapti. Qayta urinib ko'ring.",
+                            "coherence_cohesion": "OPENAI_API_KEY tekshiring.",
+                            "lexical_resource": "", "grammatical_range": ""
+                        },
+                        "ai_unavailable": True
                     }
                 else:
                     results[name] = {
-                        "score": strict_score, "band": strict_score, "word_count": len(txt.split()), "is_valid": strict_score >= 3,
+                        "score": 0, "band": 0, "word_count": wc, "is_valid": False,
                         "feedback": {
-                            "overall": f"Band {strict_score}",
-                            "content": "AI evaluation required for detailed feedback.",
-                            "organization": "AI evaluation required.",
-                            "language": "AI evaluation required.",
-                            "accuracy": "AI evaluation required."
-                        }
+                            "overall": "AI baholash ishlamadi",
+                            "content": "AI xizmati hozirda ishlamayapti. Qayta urinib ko'ring.",
+                            "organization": "OPENAI_API_KEY tekshiring.",
+                            "language": "", "accuracy": ""
+                        },
+                        "ai_unavailable": True
                     }
 
-    # Calculate overall (allow 0)
+    # Ensure all parts have results
+    for name in ["task1", "task2", "essay"]:
+        if name not in results:
+            results[name] = {"score": 0, "band": 0, "word_count": 0, "is_valid": False,
+                             "feedback": {"overall": "Baholanmadi", "content": "", "organization": "", "language": "", "accuracy": ""}}
+
+    # Calculate overall
     t1s = results["task1"]["score"]
     t2s = results["task2"]["score"]
     es = results["essay"]["score"]
     overall = t1s * 0.25 + t2s * 0.25 + es * 0.5
     pct = (overall / 9) * 100
 
-    # If all parts are 0, percentage is 0
     if t1s == 0 and t2s == 0 and es == 0:
         pct = 0
+
+    print(f"[Writing AI] === NATIJA: task1={t1s}, task2={t2s}, essay={es}, overall={overall:.2f}, pct={pct:.1f}% ===")
 
     cefr = "A1"
     for lv, d in CEFR_LEVELS.items():
@@ -1055,8 +1093,8 @@ async def get_strict_ai_score(text: str, task_type: str) -> int:
     if avg_sent_len < 5:
         return 1  # Fragmented text
 
-    # Target word counts: Task1/Task2: 120-150, Essay: 250-300
-    target_min = 120 if task_type != "essay" else 250
+    # Target word counts: Task1: 50+, Task2: 120-150, Essay: 180-200
+    target_min = 50 if task_type == "email" else (120 if task_type != "essay" else 180)
 
     # Score based on content quality
     base_score = 3  # Start at band 3
@@ -1081,7 +1119,7 @@ async def get_strict_ai_score(text: str, task_type: str) -> int:
     return min(base_score, 5)
 
 
-async def try_ai_evaluation(task1, task2, essay, writing_test, parts_to_eval) -> dict:
+async def try_ai_evaluation(task1: str, task2: str, essay: str, writing_test: dict, parts_to_eval: list) -> dict:
     """Try AI evaluation via Anthropic or OpenAI"""
     t1_instruction = ""
     t2_instruction = ""
@@ -1094,173 +1132,337 @@ async def try_ai_evaluation(task1, task2, essay, writing_test, parts_to_eval) ->
                     t2_instruction = (p["tasks"][1].get("situation") or "")[:300]
             if p.get("part_number") == 2:
                 essay_instruction = (p.get("prompt") or "")[:400]
-    prompt = f"""You are an EXTREMELY strict CEFR English examiner. Evaluate ONLY genuine English writing that ADDRESSES THE TASK. Be HARSH.
+    prompt = f"""You are a CEFR English writing examiner. Evaluate the candidate's writing strictly but fairly.
 
-CRITICAL RULES:
-- OFF-TOPIC / IRRELEVANT: If the text does NOT address the given task (random content, different topic, or clearly ignoring the prompt), you MUST give score 0 or 1 only. In feedback write: "Off-topic - does not address the task." Never give more than 1 for off-topic content.
-- Repeated sentences/phrases = score 1-2 (SPAM)
-- Random/irrelevant text = score 1
-- Gibberish or non-English = score 1
-- Under word count = maximum score 4
-- Score 5 = barely adequate B1 attempt that clearly addresses the task
-- Score 7+ requires near-perfect English and full task achievement
+SCORING GUIDE (0-9 scale). IMPORTANT: Use 0 when the answer deserves no credit.
+- Score 0: Empty, nearly empty (e.g. under 10 words), gibberish, nonsense, completely off-topic, non-English, or no meaningful content. Give 0 whenever the writing does not deserve any credit.
+- Score 1: Only if there is at least minimal relevant content but very poor (e.g. a few relevant words or one short relevant sentence). Otherwise use 0.
+- Score 2: Very limited English, mostly incomprehensible
+- Score 3: Limited user - frequent errors, hard to follow
+- Score 4: Below average - many errors, partially addresses task
+- Score 5: Modest - adequate attempt, some errors, addresses task
+- Score 6: Competent - generally effective, minor errors
+- Score 7: Good - well-written, few errors, good task achievement
+- Score 8: Very good - fluent, rare errors, excellent structure
+- Score 9: Expert - near-perfect English
 
-TASK 1 was: {t1_instruction}
-TASK 2 was: {t2_instruction}
-ESSAY topic was: {essay_instruction}
+RULES:
+- Gibberish / nonsense / empty / irrelevant = score 0 (not 1)
+- Repeated sentences or spam = score 0 or 1
+- Off-topic = score 0 (write "Off-topic" or "Irrelevant" in feedback)
+- Under word count = max score 4
+- Each score must be a NUMBER from 0 to 9 (use 0 when appropriate)
 
-CANDIDATE TASK 1 (Email, 120-150 words): {task1}
-[{len(task1.split())} words]
+TASK 1 instruction: {t1_instruction}
+TASK 2 instruction: {t2_instruction}
+ESSAY topic: {essay_instruction}
 
-CANDIDATE TASK 2 (Review, 120-150 words): {task2}
-[{len(task2.split())} words]
+=== CANDIDATE TASK 1 ({len(task1.split())} words) ===
+{task1[:2000]}
 
-CANDIDATE ESSAY (250-300 words): {essay}
-[{len(essay.split())} words]
+=== CANDIDATE TASK 2 ({len(task2.split())} words) ===
+{task2[:2000]}
 
-Respond in EXACT JSON:
-{{"task1":{{"score":0,"content":"","organization":"","language":"","accuracy":""}},"task2":{{"score":0,"content":"","organization":"","language":"","accuracy":""}},"essay":{{"score":0,"task_achievement":"","coherence_cohesion":"","lexical_resource":"","grammatical_range":""}},"general_feedback":""}}"""
+=== CANDIDATE ESSAY ({len(essay.split())} words) ===
+{essay[:3000]}
+
+Return ONLY valid JSON (no markdown, no code blocks):
+{{"task1":{{"score":5,"content":"feedback","organization":"feedback","language":"feedback","accuracy":"feedback"}},"task2":{{"score":5,"content":"feedback","organization":"feedback","language":"feedback","accuracy":"feedback"}},"essay":{{"score":5,"task_achievement":"feedback","coherence_cohesion":"feedback","lexical_resource":"feedback","grammatical_range":"feedback"}},"general_feedback":"overall feedback"}}"""
 
     def extract_json(text: str):
+        """AI javobidan JSON ni ajratib olish - bir necha usul bilan sinab ko'radi"""
         if not text or not text.strip():
+            print("[Writing AI] extract_json: bo'sh matn")
             return None
         raw = text.strip()
-        # Strip markdown code block if present
-        if raw.startswith("```"):
-            raw = re.sub(r"^```(?:json)?\s*", "", raw)
-            raw = re.sub(r"\s*```$", "", raw)
-        # Try parse as-is
-        try:
-            return json.loads(raw)
-        except json.JSONDecodeError:
-            pass
-        # Try to find first {...} block
-        for pattern in [r"```(?:json)?\s*(\{[\s\S]*?\})\s*```", r"(\{[\s\S]*\})"]:
-            m = re.search(pattern, text)
-            if m:
-                try:
-                    return json.loads(m.group(1).strip())
-                except json.JSONDecodeError:
-                    continue
-        # Greedy: take the longest {...} that parses
-        for m in re.finditer(r"\{[\s\S]*\}", text):
+
+        def try_parse(s: str):
             try:
-                return json.loads(m.group(0))
+                return json.loads(s)
             except json.JSONDecodeError:
-                continue
+                return None
+
+        # 1) To'g'ridan-to'g'ri parse
+        out = try_parse(raw)
+        if out and isinstance(out, dict):
+            return out
+
+        # 2) ```json ... ``` blokini olib tashlash
+        if "```" in raw:
+            code_match = re.search(r"```(?:json)?\s*(\{[\s\S]*?\})\s*```", raw)
+            if code_match:
+                out = try_parse(code_match.group(1).strip())
+                if out and isinstance(out, dict):
+                    return out
+            # Greedy variant
+            code_match = re.search(r"```(?:json)?\s*(\{[\s\S]*\})\s*```", raw)
+            if code_match:
+                out = try_parse(code_match.group(1).strip())
+                if out and isinstance(out, dict):
+                    return out
+
+        # 3) Trailing vergul bo'lsa olib tashlash
+        cleaned = re.sub(r",\s*}", "}", raw)
+        cleaned = re.sub(r",\s*]", "]", cleaned)
+        out = try_parse(cleaned)
+        if out and isinstance(out, dict):
+            return out
+
+        # 4) { ... } blokini topish
+        # Eng katta blokdan boshlab sinash
+        brace_start = raw.find('{')
+        brace_end = raw.rfind('}')
+        if brace_start >= 0 and brace_end > brace_start:
+            candidate = raw[brace_start:brace_end+1]
+            out = try_parse(candidate)
+            if out and isinstance(out, dict):
+                return out
+            # Trailing vergul bilan
+            candidate_clean = re.sub(r",\s*}", "}", candidate)
+            candidate_clean = re.sub(r",\s*]", "]", candidate_clean)
+            out = try_parse(candidate_clean)
+            if out and isinstance(out, dict):
+                return out
+
+        print(f"[Writing AI] extract_json: parse qilib bo'lmadi. Matn uzunligi: {len(raw)}, boshi: {raw[:150]}")
         return None
 
-    def validate_ev(ev):
-        """Ensure AI response has task1, task2, essay with score."""
+    def normalize_ev(ev):
+        """API turli kalit nomlari (Task1, task 1, task_1) ni task1, task2, essay ga aylantiradi."""
         if not ev or not isinstance(ev, dict):
+            return ev
+        normalized = {}
+        for k, v in ev.items():
+            if not isinstance(k, str):
+                continue
+            key_clean = k.strip().lower().replace(" ", "").replace("_", "").replace("-", "")
+            if key_clean in ("task1",):
+                normalized["task1"] = v
+            elif key_clean in ("task2",):
+                normalized["task2"] = v
+            elif key_clean in ("essay",):
+                normalized["essay"] = v
+            elif key_clean in ("generalfeedback", "feedback", "overall"):
+                normalized["general_feedback"] = v
+        return normalized
+
+    def validate_ev(ev):
+        """AI javobida task1, task2, essay borligini tekshirish."""
+        if not ev or not isinstance(ev, dict):
+            print(f"[Writing AI] validate_ev: dict emas - {type(ev)}")
             return False
+        missing = []
         for key in ("task1", "task2", "essay"):
-            if key not in ev or not isinstance(ev.get(key), dict):
-                return False
+            if key not in ev:
+                missing.append(key)
+            elif not isinstance(ev.get(key), dict):
+                missing.append(f"{key}(not dict)")
+        if missing:
+            print(f"[Writing AI] validate_ev: yetishmayotgan kalitlar: {missing}, mavjud: {list(ev.keys())}")
+            return False
         return True
 
     try:
-        # 1) OpenAI birinchi (OPENAI_API_KEY bo'lsa)
-        if OPENAI_API_KEY.strip():
-            async with httpx.AsyncClient(timeout=90.0) as client:
-                r = await client.post(
-                    "https://api.openai.com/v1/chat/completions",
-                    headers={"Authorization": f"Bearer {OPENAI_API_KEY.strip()}", "Content-Type": "application/json"},
-                    json={
-                        "model": "gpt-4o-mini",
-                        "messages": [
-                            {"role": "system", "content": "You are a strict CEFR writing examiner. Reply ONLY with valid JSON. No markdown, no code block, no explanation. Output must be a single JSON object with keys task1, task2, essay, general_feedback."},
-                            {"role": "user", "content": prompt}
-                        ],
-                        "temperature": 0.2,
-                    },
-                )
-                if r.status_code == 200:
-                    data = r.json()
-                    choices = data.get("choices") or []
-                    if choices:
-                        msg = choices[0].get("message") or {}
-                        content = (msg.get("content") or "").strip()
-                        if content:
-                            ev = extract_json(content)
-                            if ev and validate_ev(ev):
-                                return format_ai_result(ev, task1, task2, essay)
-                else:
-                    print(f"OpenAI Writing AI: status={r.status_code}, body={r.text[:500]}")
-        # 2) Anthropic
+        # ========== 1) OpenAI ==========
+        if OPENAI_API_KEY:
+            print(f"[Writing AI] OpenAI ga so'rov yuborilmoqda... (kalit: {OPENAI_API_KEY[:8]}...)")
+            for model in ("gpt-4o-mini", "gpt-4o", "gpt-3.5-turbo"):
+                try:
+                    print(f"[Writing AI] Model: {model} sinab ko'rilmoqda...")
+                    async with httpx.AsyncClient(timeout=120.0) as client:
+                        r = await client.post(
+                            "https://api.openai.com/v1/chat/completions",
+                            headers={"Authorization": f"Bearer {OPENAI_API_KEY}", "Content-Type": "application/json"},
+                            json={
+                                "model": model,
+                                "messages": [
+                                    {"role": "system", "content": "You are a CEFR writing examiner. Reply ONLY with a valid JSON object. Do NOT use markdown code blocks. Do NOT add any text before or after the JSON. The JSON must have keys: task1, task2, essay, general_feedback. Each of task1, task2, essay must have a \"score\" field (integer 0-9) and feedback fields."},
+                                    {"role": "user", "content": prompt}
+                                ],
+                                "temperature": 0.3,
+                                "max_tokens": 2000,
+                            },
+                        )
+                        print(f"[Writing AI] OpenAI ({model}) status: {r.status_code}")
+
+                        if r.status_code == 200:
+                            data = r.json()
+                            choices = data.get("choices") or []
+                            if choices:
+                                msg = choices[0].get("message") or {}
+                                content = (msg.get("content") or "").strip()
+                                print(f"[Writing AI] OpenAI ({model}) javob uzunligi: {len(content)}")
+                                if content:
+                                    print(f"[Writing AI] Javob boshi: {content[:200]}")
+                                    ev = extract_json(content)
+                                    if ev:
+                                        print(f"[Writing AI] JSON parse muvaffaqiyatli. Kalitlar: {list(ev.keys())}")
+                                        ev = normalize_ev(ev)
+                                        print(f"[Writing AI] Normalize keyin: {list(ev.keys())}")
+                                    if ev and validate_ev(ev):
+                                        # Score larni tekshirish
+                                        for k in ("task1", "task2", "essay"):
+                                            s = ev.get(k, {}).get("score", "YO'Q")
+                                            print(f"[Writing AI] {k} score = {s}")
+                                        print(f"[Writing AI] OpenAI ({model}) MUVAFFAQIYATLI!")
+                                        return format_ai_result(ev, task1, task2, essay)
+                                    else:
+                                        print(f"[Writing AI] OpenAI ({model}) javob yaroqsiz.")
+                                        if ev:
+                                            # score kaliti bor/yo'qligini tekshirish
+                                            for k in ("task1", "task2", "essay"):
+                                                d = ev.get(k, "YO'Q")
+                                                if isinstance(d, dict):
+                                                    print(f"[Writing AI]   {k}: keys={list(d.keys())}, score={d.get('score', 'YOQ')}")
+                                                else:
+                                                    print(f"[Writing AI]   {k}: {type(d)} = {str(d)[:100]}")
+                            else:
+                                print(f"[Writing AI] OpenAI ({model}) - choices bo'sh!")
+                        elif r.status_code == 401:
+                            print(f"[Writing AI] OpenAI 401 - KALIT NOTO'G'RI! Body: {r.text[:300]}")
+                            break  # Kalit noto'g'ri - boshqa model sinash kerak emas
+                        elif r.status_code == 429:
+                            print(f"[Writing AI] OpenAI ({model}) 429 - Rate limit. Keyingi modelga o'tish...")
+                        elif r.status_code == 404:
+                            print(f"[Writing AI] OpenAI ({model}) 404 - Model topilmadi. Keyingi modelga...")
+                        else:
+                            print(f"[Writing AI] OpenAI ({model}) xato: status={r.status_code}, body={r.text[:300]}")
+                except httpx.TimeoutException:
+                    print(f"[Writing AI] OpenAI ({model}) TIMEOUT (120s)")
+                except Exception as e:
+                    print(f"[Writing AI] OpenAI ({model}) Exception: {type(e).__name__}: {e}")
+        else:
+            print("[Writing AI] OPENAI_API_KEY o'rnatilmagan!")
+
+        # ========== 2) Anthropic (fallback) ==========
         if ANTHROPIC_API_KEY and ANTHROPIC_API_KEY.strip():
-            async with httpx.AsyncClient(timeout=90.0) as client:
-                r = await client.post(
-                    "https://api.anthropic.com/v1/messages",
-                    headers={"x-api-key": ANTHROPIC_API_KEY.strip(), "anthropic-version": "2023-06-01", "content-type": "application/json"},
-                    json={"model": "claude-3-haiku-20240307", "max_tokens": 2000, "messages": [{"role": "user", "content": prompt}]},
-                )
-                if r.status_code == 200:
-                    data = r.json()
-                    content = ""
-                    for block in data.get("content", []):
-                        if block.get("type") == "text":
-                            content += block.get("text", "")
-                    if not content and data.get("content"):
-                        content = (data["content"][0].get("text") or "")
-                    content = (content or "").strip()
-                    if content:
-                        ev = extract_json(content)
-                        if ev and validate_ev(ev):
-                            return format_ai_result(ev, task1, task2, essay)
-                else:
-                    print(f"Anthropic Writing AI: status={r.status_code}, body={r.text[:500]}")
+            print("[Writing AI] Anthropic ga so'rov yuborilmoqda...")
+            try:
+                async with httpx.AsyncClient(timeout=120.0) as client:
+                    r = await client.post(
+                        "https://api.anthropic.com/v1/messages",
+                        headers={"x-api-key": ANTHROPIC_API_KEY.strip(), "anthropic-version": "2023-06-01", "content-type": "application/json"},
+                        json={"model": "claude-3-haiku-20240307", "max_tokens": 2000, "messages": [{"role": "user", "content": prompt}]},
+                    )
+                    print(f"[Writing AI] Anthropic status: {r.status_code}")
+                    if r.status_code == 200:
+                        data = r.json()
+                        content = ""
+                        for block in data.get("content", []):
+                            if block.get("type") == "text":
+                                content += block.get("text", "")
+                        if not content and data.get("content"):
+                            content = str(data["content"][0].get("text", ""))
+                        content = (content or "").strip()
+                        if content:
+                            print(f"[Writing AI] Anthropic javob uzunligi: {len(content)}")
+                            ev = extract_json(content)
+                            if ev:
+                                ev = normalize_ev(ev)
+                            if ev and validate_ev(ev):
+                                print("[Writing AI] Anthropic MUVAFFAQIYATLI!")
+                                return format_ai_result(ev, task1, task2, essay)
+                            else:
+                                print(f"[Writing AI] Anthropic javob yaroqsiz: {content[:200]}")
+                    else:
+                        print(f"[Writing AI] Anthropic xato: status={r.status_code}, body={r.text[:300]}")
+            except Exception as e:
+                print(f"[Writing AI] Anthropic Exception: {type(e).__name__}: {e}")
+        else:
+            print("[Writing AI] ANTHROPIC_API_KEY ham o'rnatilmagan!")
+
     except Exception as e:
-        print(f"Writing AI error: {e}")
+        print(f"[Writing AI] Umumiy xato: {type(e).__name__}: {e}")
         import traceback
         traceback.print_exc()
+
+    print("[Writing AI] Hech bir AI ishlamadi! None qaytarilmoqda.")
     return None
 
 
-def _score_int(val) -> int:
-    """Parse score from AI (may be string or float)."""
+def _score_float(val):
+    """Parse score from AI (string, float, or int). Returns float 0-9. O'nli ball bemani yozuvda 0.1, 1, 2, 3% kabi past foizlarni berish uchun."""
     if val is None:
-        return 3
-    if isinstance(val, int):
-        return max(1, min(9, val))
+        return 3.0
+    if isinstance(val, (int, float)):
+        return max(0.0, min(9.0, float(val)))
+    if isinstance(val, str):
+        # "7/9", "7.5" kabi formatlar
+        s = str(val).strip()
+        m = re.match(r'(\d+\.?\d*)', s.replace(',', '.'))
+        if m:
+            return max(0.0, min(9.0, float(m.group(1))))
     try:
-        return max(1, min(9, int(float(val))))
+        return max(0.0, min(9.0, float(val)))
     except (TypeError, ValueError):
-        return 3
+        return 3.0
 
 
 def format_ai_result(ev, task1, task2, essay):
-    def cap_off_topic(name):
-        d = ev.get(name, {})
-        s = _score_int(d.get("score"))
-        fb = (d.get("content") or d.get("task_achievement") or "").lower()
-        if fb and ("off-topic" in fb or "does not address" in fb or "irrelevant" in fb):
-            s = min(s, 1)
-        return max(1, min(9, s))
+    """AI javobidan natijalarni formatlash"""
+    def part_score(d):
+        if not d or not isinstance(d, dict):
+            return 3.0
+        v = d.get("score") or d.get("Score") or d.get("band") or d.get("Band")
+        s = _score_float(v)
+        print(f"[Writing AI] part_score: raw={v}, parsed={s}")
+        return s
+
+    def get_feedback(d, key, default="Evaluated."):
+        """Feedback matnini olish - turli kalit nomlarini sinash"""
+        if not d or not isinstance(d, dict):
+            return default
+        return str(d.get(key, "") or d.get(key.replace("_", " "), "") or default)
+
+    # Bemani / bo'sh / gibberish bo'lsa 0 ball (11.1% oldini olish)
+    def force_zero_if_worthless(fb_text: str, current_score: float) -> float:
+        if not fb_text:
+            return current_score
+        low = fb_text.lower()
+        if any(w in low for w in ("gibberish", "nonsense", "empty", "no content", "no relevant", "completely irrelevant", "non-english", "not english", "no meaningful", "does not address", "off-topic", "off topic", "irrelevant")):
+            return 0.0
+        return current_score
+
     r = {}
     for name, txt in [("task1", task1), ("task2", task2)]:
-        s = cap_off_topic(name) if name in ev else _score_int(ev.get(name, {}).get("score"))
+        d = ev.get(name, {})
+        s = part_score(d)
+        fb_content = get_feedback(d, "content")
+        s = force_zero_if_worthless(fb_content, s)
+        if fb_content and any(w in fb_content.lower() for w in ("off-topic", "does not address", "irrelevant", "off topic")) and s > 0:
+            s = 0.0
+        s = max(0.0, min(9.0, s))
         r[name] = {
-            "score": s, "band": s, "word_count": len(txt.split()), "is_valid": s >= 3,
+            "score": s, "band": round(s), "word_count": len(txt.split()), "is_valid": s >= 3,
             "feedback": {
                 "overall": f"Band {s}",
-                "content": ev.get(name, {}).get("content", "") or "Evaluated.",
-                "organization": ev.get(name, {}).get("organization", "") or "Evaluated.",
-                "language": ev.get(name, {}).get("language", "") or "Evaluated.",
-                "accuracy": ev.get(name, {}).get("accuracy", "") or "Evaluated."
+                "content": fb_content,
+                "organization": get_feedback(d, "organization"),
+                "language": get_feedback(d, "language"),
+                "accuracy": get_feedback(d, "accuracy")
             }
         }
-    s = cap_off_topic("essay") if "essay" in ev else _score_int(ev.get("essay", {}).get("score"))
+
+    # Essay
+    d_essay = ev.get("essay", {})
+    s = part_score(d_essay)
+    fb_ta = get_feedback(d_essay, "task_achievement")
+    s = force_zero_if_worthless(fb_ta or "", s)
+    if fb_ta and any(w in fb_ta.lower() for w in ("off-topic", "does not address", "irrelevant", "off topic")) and s > 0:
+        s = 0.0
+    s = max(0.0, min(9.0, s))
+
     r["essay"] = {
-        "score": s, "band": s, "word_count": len(essay.split()), "is_valid": s >= 3,
+        "score": s, "band": round(s), "word_count": len(essay.split()), "is_valid": s >= 3,
         "feedback": {
             "overall": f"Band {s}",
-            "task_achievement": ev.get("essay", {}).get("task_achievement", "") or "Evaluated.",
-            "coherence_cohesion": ev.get("essay", {}).get("coherence_cohesion", "") or "Evaluated.",
-            "lexical_resource": ev.get("essay", {}).get("lexical_resource", "") or "Evaluated.",
-            "grammatical_range": ev.get("essay", {}).get("grammatical_range", "") or "Evaluated."
+            "task_achievement": fb_ta,
+            "coherence_cohesion": get_feedback(d_essay, "coherence_cohesion"),
+            "lexical_resource": get_feedback(d_essay, "lexical_resource"),
+            "grammatical_range": get_feedback(d_essay, "grammatical_range")
         }
     }
+    print(f"[Writing AI] format_ai_result: task1={r['task1']['score']}, task2={r['task2']['score']}, essay={r['essay']['score']}")
     return r
 
 
@@ -1667,6 +1869,12 @@ async def reading_test(request: Request):
 
     tests = get_reading_tests()
     test = tests[0] if tests else DEFAULT_READING
+    # Part 1 har doim open_cloze (matn + bo'sh joylarni yozish) bo'lishi kerak
+    test = dict(test)
+    test["parts"] = sorted(test["parts"], key=lambda p: p["part_number"])
+    if test["parts"][0].get("type") != "open_cloze":
+        test = DEFAULT_READING
+        save_json("reading_tests.json", {"tests": [DEFAULT_READING]})
     t = get_translations(request)
     lang = get_lang(request)
     resp = templates.TemplateResponse("test_reading.html", {"request": request, "test_data": test, "session_id": sid, "t": t, "lang": lang, "user": user})
@@ -1681,6 +1889,10 @@ async def submit_reading(request: Request):
     answers = {k: v for k, v in fd.items() if k != "session_id"}
     tests = get_reading_tests()
     test = tests[0] if tests else DEFAULT_READING
+    test = dict(test)
+    test["parts"] = sorted(test["parts"], key=lambda p: p["part_number"])
+    if test["parts"][0].get("type") != "open_cloze":
+        test = DEFAULT_READING
     result = calculate_reading_score(answers, test)
     s = get_session(sid)
     s["reading"] = {"completed": True, "score": result["correct"], "total": result["total"], "percentage": result["percentage"], "details": result["details"]}
@@ -1695,6 +1907,63 @@ async def listening_test(request: Request):
     t = get_translations(request)
     lang = get_lang(request)
     return templates.TemplateResponse("test_listening.html", {"request": request, "test_data": test, "session_id": sid, "t": t, "lang": lang})
+
+# ============ TTS AUDIO GENERATION FOR LISTENING ============
+import hashlib
+import base64
+
+# Cache for generated audio (in-memory, for demo; use Redis/disk in production)
+audio_cache: Dict[str, bytes] = {}
+
+@app.post("/api/tts")
+async def generate_tts(request: Request):
+    """Generate audio from transcript text using OpenAI TTS API"""
+    if not OPENAI_API_KEY:
+        return JSONResponse({"error": "TTS not available - OPENAI_API_KEY not set"}, status_code=503)
+    
+    try:
+        body = await request.json()
+        text = body.get("text", "").strip()
+        voice = body.get("voice", "alloy")  # alloy, echo, fable, onyx, nova, shimmer
+        
+        if not text:
+            return JSONResponse({"error": "Text is required"}, status_code=400)
+        
+        if len(text) > 4000:
+            return JSONResponse({"error": "Text too long (max 4000 chars)"}, status_code=400)
+        
+        # Check cache
+        cache_key = hashlib.md5(f"{text}:{voice}".encode()).hexdigest()
+        if cache_key in audio_cache:
+            audio_b64 = base64.b64encode(audio_cache[cache_key]).decode()
+            return JSONResponse({"audio": audio_b64, "cached": True})
+        
+        # Call OpenAI TTS API
+        async with httpx.AsyncClient(timeout=60.0) as client:
+            r = await client.post(
+                "https://api.openai.com/v1/audio/speech",
+                headers={"Authorization": f"Bearer {OPENAI_API_KEY}", "Content-Type": "application/json"},
+                json={
+                    "model": "tts-1",
+                    "input": text,
+                    "voice": voice,
+                    "response_format": "mp3"
+                }
+            )
+            
+            if r.status_code == 200:
+                audio_data = r.content
+                # Cache the audio
+                audio_cache[cache_key] = audio_data
+                audio_b64 = base64.b64encode(audio_data).decode()
+                return JSONResponse({"audio": audio_b64, "cached": False})
+            else:
+                print(f"[TTS] OpenAI error: {r.status_code} - {r.text[:200]}")
+                return JSONResponse({"error": f"TTS API error: {r.status_code}"}, status_code=500)
+                
+    except Exception as e:
+        print(f"[TTS] Error: {e}")
+        return JSONResponse({"error": str(e)}, status_code=500)
 
 @app.post("/test/listening/submit")
 async def submit_listening(request: Request):

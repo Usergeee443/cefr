@@ -7,13 +7,54 @@
       "parts": [
         {
           "part_number": 1,
-          "title": "Part 1: Multiple Choice Cloze",
-          "instruction": "For questions 1-8, read the text below and decide which answer (A, B, C or D) best fits each gap.",
-          "type": "multiple_choice_cloze",
-          "text": "The Rise of Remote Work\n\nThe COVID-19 pandemic has (1)_____ transformed the way we work. Before 2020, working from home was (2)_____ a privilege enjoyed by a small percentage of the workforce. However, the global health crisis (3)_____ companies worldwide to rapidly adopt remote work policies.\n\nThis shift has had both positive and negative (4)_____. On the one hand, employees have gained more flexibility and eliminated lengthy commutes. Many workers report feeling more (5)_____ and having a better work-life balance. On the other hand, some people struggle with isolation and find it difficult to (6)_____ work from their personal life.\n\nCompanies are now (7)_____ hybrid models that combine remote and office work. This approach aims to offer the best of both worlds, allowing employees to enjoy flexibility while still maintaining face-to-face (8)_____ with colleagues.",
+          "title": "Part 1: Open Cloze",
+          "instruction": "For questions 1-8, read the text below and think of the word which best fits each gap. Use only ONE word in each gap.",
+          "type": "open_cloze",
+          "text": "Climate Change and Its Impact\n\nClimate change is one of (1)_____ most pressing issues facing our planet today. Scientists agree that human activities, particularly the burning of fossil fuels, (2)_____ responsible for the rising global temperatures we are experiencing.\n\nThe effects of climate change are already (3)_____ felt around the world. Extreme weather events such (4)_____ hurricanes, floods, and droughts are becoming more frequent and severe. Sea levels are rising, threatening coastal communities and island nations.\n\n(5)_____ order to address this crisis, governments and individuals must take action. Reducing carbon emissions, investing in renewable energy, and protecting forests are all essential steps. However, time is running (6)_____. If we do not act quickly, the consequences (7)_____ be catastrophic.\n\nEach of us has a role to play. Simple changes in (8)_____ daily lives, such as using public transportation, reducing waste, and conserving energy, can make a difference.",
           "questions": [
             {
               "number": 1,
+              "correct": "the"
+            },
+            {
+              "number": 2,
+              "correct": "are"
+            },
+            {
+              "number": 3,
+              "correct": "being"
+            },
+            {
+              "number": 4,
+              "correct": "as"
+            },
+            {
+              "number": 5,
+              "correct": "In"
+            },
+            {
+              "number": 6,
+              "correct": "out"
+            },
+            {
+              "number": 7,
+              "correct": "will"
+            },
+            {
+              "number": 8,
+              "correct": "our"
+            }
+          ]
+        },
+        {
+          "part_number": 2,
+          "title": "Part 2: Multiple Choice Cloze",
+          "instruction": "For questions 9-16, read the text below and decide which answer (A, B, C or D) best fits each gap.",
+          "type": "multiple_choice_cloze",
+          "text": "The Rise of Remote Work\n\nThe COVID-19 pandemic has (9)_____ transformed the way we work. Before 2020, working from home was (10)_____ a privilege enjoyed by a small percentage of the workforce. However, the global health crisis (11)_____ companies worldwide to rapidly adopt remote work policies.\n\nThis shift has had both positive and negative (12)_____. On the one hand, employees have gained more flexibility and eliminated lengthy commutes. Many workers report feeling more (13)_____ and having a better work-life balance. On the other hand, some people struggle with isolation and find it difficult to (14)_____ work from their personal life.\n\nCompanies are now (15)_____ hybrid models that combine remote and office work. This approach aims to offer the best of both worlds, allowing employees to enjoy flexibility while still maintaining face-to-face (16)_____ with colleagues.",
+          "questions": [
+            {
+              "number": 9,
               "options": {
                 "A": "deeply",
                 "B": "hardly",
@@ -23,7 +64,7 @@
               "correct": "A"
             },
             {
-              "number": 2,
+              "number": 10,
               "options": {
                 "A": "often",
                 "B": "commonly",
@@ -33,7 +74,7 @@
               "correct": "C"
             },
             {
-              "number": 3,
+              "number": 11,
               "options": {
                 "A": "made",
                 "B": "forced",
@@ -43,7 +84,7 @@
               "correct": "B"
             },
             {
-              "number": 4,
+              "number": 12,
               "options": {
                 "A": "consequences",
                 "B": "results",
@@ -53,7 +94,7 @@
               "correct": "A"
             },
             {
-              "number": 5,
+              "number": 13,
               "options": {
                 "A": "effective",
                 "B": "productive",
@@ -63,7 +104,7 @@
               "correct": "B"
             },
             {
-              "number": 6,
+              "number": 14,
               "options": {
                 "A": "divide",
                 "B": "split",
@@ -73,7 +114,7 @@
               "correct": "C"
             },
             {
-              "number": 7,
+              "number": 15,
               "options": {
                 "A": "accepting",
                 "B": "receiving",
@@ -83,7 +124,7 @@
               "correct": "C"
             },
             {
-              "number": 8,
+              "number": 16,
               "options": {
                 "A": "interaction",
                 "B": "communication",
@@ -91,47 +132,6 @@
                 "D": "contact"
               },
               "correct": "A"
-            }
-          ]
-        },
-        {
-          "part_number": 2,
-          "title": "Part 2: Open Cloze",
-          "instruction": "For questions 9-16, read the text below and think of the word which best fits each gap. Use only ONE word in each gap.",
-          "type": "open_cloze",
-          "text": "Climate Change and Its Impact\n\nClimate change is one of (9)_____ most pressing issues facing our planet today. Scientists agree that human activities, particularly the burning of fossil fuels, (10)_____ responsible for the rising global temperatures we are experiencing.\n\nThe effects of climate change are already (11)_____ felt around the world. Extreme weather events such (12)_____ hurricanes, floods, and droughts are becoming more frequent and severe. Sea levels are rising, threatening coastal communities and island nations.\n\n(13)_____ order to address this crisis, governments and individuals must take action. Reducing carbon emissions, investing in renewable energy, and protecting forests are all essential steps. However, time is running (14)_____. If we do not act quickly, the consequences (15)_____ be catastrophic.\n\nEach of us has a role to play. Simple changes in (16)_____ daily lives, such as using public transportation, reducing waste, and conserving energy, can make a difference.",
-          "questions": [
-            {
-              "number": 9,
-              "correct": "the"
-            },
-            {
-              "number": 10,
-              "correct": "are"
-            },
-            {
-              "number": 11,
-              "correct": "being"
-            },
-            {
-              "number": 12,
-              "correct": "as"
-            },
-            {
-              "number": 13,
-              "correct": "In"
-            },
-            {
-              "number": 14,
-              "correct": "out"
-            },
-            {
-              "number": 15,
-              "correct": "will"
-            },
-            {
-              "number": 16,
-              "correct": "our"
             }
           ]
         },

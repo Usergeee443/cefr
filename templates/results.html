@@ -5,210 +5,202 @@
     .score-ring { stroke-dasharray: 283; stroke-dashoffset: 283; animation: fillRing 1.5s ease-out forwards; }
     @keyframes fillRing { to { stroke-dashoffset: var(--offset); } }
 
-    .confetti {
-        position: fixed;
-        width: 10px;
-        height: 10px;
-        animation: confetti-fall 3s ease-out forwards;
-        z-index: 100;
-        pointer-events: none;
-    }
-    @keyframes confetti-fall {
-        0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
-        100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    .confetti { position: fixed; width: 10px; height: 10px; animation: confetti-fall 3s ease-out forwards; z-index: 100; pointer-events: none; }
+    @keyframes confetti-fall { 0% { transform: translateY(-100px) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+
+    .level-badge-glow { animation: glow-pulse 2s ease-in-out infinite; }
+    @keyframes glow-pulse {
+        0%, 100% { box-shadow: 0 0 20px rgba(88, 204, 2, 0.3); }
+        50% { box-shadow: 0 0 40px rgba(88, 204, 2, 0.5), 0 0 60px rgba(28, 176, 246, 0.3); }
     }
 
-    .level-badge-glow {
-        animation: glow-pulse 2s ease-in-out infinite;
+    .result-hero {
+        background: linear-gradient(135deg, var(--bg-card) 0%, #1E3A42 100%);
+        border: 2px solid var(--border-color);
+        border-radius: 28px;
+        position: relative;
+        overflow: hidden;
     }
-    @keyframes glow-pulse {
-        0%, 100% { box-shadow: 0 0 20px rgba(78, 205, 196, 0.3); }
-        50% { box-shadow: 0 0 40px rgba(78, 205, 196, 0.5), 0 0 60px rgba(69, 183, 209, 0.3); }
+    .result-hero::before {
+        content: '';
+        position: absolute;
+        top: -80px; right: -80px;
+        width: 250px; height: 250px;
+        background: radial-gradient(circle, rgba(88, 204, 2, 0.12) 0%, transparent 70%);
+        border-radius: 50%;
     }
+    .result-hero::after {
+        content: '';
+        position: absolute;
+        bottom: -50px; left: -50px;
+        width: 180px; height: 180px;
+        background: radial-gradient(circle, rgba(28, 176, 246, 0.08) 0%, transparent 70%);
+        border-radius: 50%;
+    }
+
+    .score-card-3d {
+        background: var(--bg-card);
+        border: 2px solid var(--border-color);
+        border-radius: 20px;
+        transition: all 0.15s ease;
+    }
+    .score-card-3d:hover {
+        transform: translateY(-4px);
+        border-color: var(--border-light);
+    }
+
+    .detail-row {
+        transition: all 0.15s ease;
+        border-radius: 12px;
+    }
+    .detail-row:hover {
+        background: rgba(43, 65, 72, 0.4);
+    }
+
+    .feedback-card {
+        background: var(--bg-main);
+        border: 2px solid var(--border-color);
+        border-radius: 16px;
+        padding: 16px;
+        transition: all 0.15s ease;
+    }
+    .feedback-card:hover {
+        border-color: var(--border-light);
+        transform: translateY(-2px);
+    }
+
+    @keyframes pop-in {
+        0% { transform: scale(0.8); opacity: 0; }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    .pop-in { animation: pop-in 0.5s ease-out forwards; }
+    .pop-in-d1 { animation-delay: 0.1s; opacity: 0; }
+    .pop-in-d2 { animation-delay: 0.2s; opacity: 0; }
+    .pop-in-d3 { animation-delay: 0.3s; opacity: 0; }
 </style>
 {% endblock %}
 {% block content %}
-<div class="max-w-5xl mx-auto py-8 md:py-12 px-4 pb-24">
-    <!-- Overall Result -->
-    <div class="app-card p-8 mb-8 relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-[#4ECDC4]/10 to-transparent rounded-full -mr-32 -mt-32"></div>
-        <div class="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-[#45B7D1]/10 to-transparent rounded-full -ml-24 -mb-24"></div>
-
+<div class="max-w-5xl mx-auto py-6 md:py-10 px-4 pb-24">
+    <!-- Overall Result Hero -->
+    <div class="result-hero p-6 md:p-10 mb-6 md:mb-8 pop-in">
         <div class="text-center relative z-10">
-            <div class="inline-flex items-center gap-2 bg-gradient-to-r from-[#4ECDC4]/20 to-[#45B7D1]/20 px-6 py-2 rounded-full mb-6 border border-[#4ECDC4]/30">
-                <svg class="w-5 h-5 text-[#4ECDC4]" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                </svg>
-                <span class="text-sm font-bold text-[#4ECDC4] uppercase tracking-wider">{% if lang == 'uz' %}Sizning CEFR darajangiz{% else %}Your CEFR Level{% endif %}</span>
-            </div>
-            <p class="text-gray-400 mb-8 text-lg font-medium">{% if lang == 'uz' %}Barcha bo'limlar bo'yicha natijangiz{% else %}Based on your performance across all sections{% endif %}</p>
+            <div class="text-5xl md:text-6xl mb-4">&#127942;</div>
+            <p class="text-[#AFAFAF] mb-4 md:mb-6 text-sm md:text-lg font-bold uppercase tracking-wider">{% if lang == 'uz' %}Sizning CEFR darajangiz{% else %}Your CEFR Level{% endif %}</p>
 
-            <div class="level-badge-glow inline-block bg-gradient-to-br from-[#1E293B] to-[#0F172A] border-2 border-[#4ECDC4]/40 p-10 rounded-3xl mb-8">
-                <div class="text-8xl font-black bg-gradient-to-br from-[#4ECDC4] via-[#45B7D1] to-[#A78BFA] bg-clip-text text-transparent mb-3">{{ session.cefr_level }}</div>
-                <div class="text-xl text-gray-300 font-bold">{{ session.level_description }}</div>
+            <div class="level-badge-glow inline-block bg-[#131F24] border-2 border-[#58CC02]/40 p-6 md:p-10 rounded-3xl mb-6">
+                <div class="text-6xl md:text-8xl font-black text-[#58CC02] mb-2" style="text-shadow: 0 4px 0 #46A302;">{{ session.cefr_level }}</div>
+                <div class="text-base md:text-xl text-[#AFAFAF] font-bold">{{ session.level_description }}</div>
             </div>
 
-            <div class="flex justify-center items-center gap-8 mt-8">
-                <div class="text-center bg-[#1E293B] px-8 py-6 rounded-2xl border-2 border-[#334155]">
-                    <div class="text-5xl font-black bg-gradient-to-r from-[#FFE66D] to-[#FF9F43] bg-clip-text text-transparent">{{ session.overall_score }}%</div>
-                    <div class="text-sm text-gray-400 uppercase tracking-widest font-bold mt-2">{% if lang == 'uz' %}Umumiy ball{% else %}Overall Score{% endif %}</div>
-                </div>
+            <div class="inline-flex items-center gap-2 bg-[#FF9600]/15 border-2 border-[#FF9600]/30 px-6 md:px-8 py-3 md:py-4 rounded-2xl">
+                <span class="text-3xl md:text-5xl font-black text-[#FF9600]">{{ session.overall_score }}%</span>
+                <span class="text-sm text-[#AFAFAF] font-bold uppercase tracking-wider ml-2">{% if lang == 'uz' %}Umumiy ball{% else %}Overall{% endif %}</span>
             </div>
         </div>
     </div>
 
     <!-- Section Scores -->
-    <div class="grid md:grid-cols-3 gap-6 mb-8">
-        <!-- Reading Score -->
-        <div class="app-card p-6">
-            <div class="flex items-center mb-4">
-                <div class="w-12 h-12 bg-gradient-to-br from-[#A78BFA] to-[#45B7D1] flex items-center justify-center rounded-xl shadow-lg">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+    <div class="grid grid-cols-3 gap-3 md:gap-6 mb-6 md:mb-8">
+        <!-- Reading -->
+        <div class="score-card-3d p-4 md:p-6 pop-in pop-in-d1">
+            <div class="text-center">
+                <div class="text-2xl md:text-3xl mb-2">&#128214;</div>
+                <h3 class="text-sm md:text-lg font-black text-white mb-2 md:mb-3">Reading</h3>
+                <div class="relative inline-block">
+                    <svg class="w-20 h-20 md:w-28 md:h-28" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="42" stroke="var(--border-color)" stroke-width="8" fill="none"/>
+                        <circle cx="50" cy="50" r="42" stroke="#1CB0F6" stroke-width="8" fill="none"
+                                class="score-ring" style="--offset: {{ 264 - (session.reading.percentage / 100 * 264) }}"
+                                transform="rotate(-90 50 50)" stroke-linecap="round"/>
                     </svg>
-                </div>
-                <h3 class="ml-4 text-xl font-black text-white">Reading</h3>
-            </div>
-
-            <div class="relative pt-4">
-                <svg class="w-32 h-32 mx-auto" viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="45" stroke="#334155" stroke-width="8" fill="none"/>
-                    <circle cx="50" cy="50" r="45" stroke="url(#gradientReading)" stroke-width="8" fill="none"
-                            class="score-ring" style="--offset: {{ 283 - (session.reading.percentage / 100 * 283) }}"
-                            transform="rotate(-90 50 50)"/>
-                    <defs>
-                        <linearGradient id="gradientReading" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#A78BFA"/>
-                            <stop offset="100%" stop-color="#45B7D1"/>
-                        </linearGradient>
-                    </defs>
-                </svg>
-                <div class="absolute inset-0 flex items-center justify-center">
-                    <div class="text-center">
-                        <div class="text-3xl font-black text-white">{{ session.reading.percentage }}%</div>
-                        <div class="text-sm text-gray-400 font-bold">{{ session.reading.score }}/{{ session.reading.total }}</div>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="text-lg md:text-2xl font-black text-white">{{ session.reading.percentage }}%</div>
                     </div>
                 </div>
+                <div class="text-xs md:text-sm text-[#777] font-bold mt-2">{{ session.reading.score }}/{{ session.reading.total }}</div>
             </div>
         </div>
 
-        <!-- Listening Score -->
-        <div class="app-card p-6">
-            <div class="flex items-center mb-4">
-                <div class="w-12 h-12 bg-gradient-to-br from-[#45B7D1] to-[#4ECDC4] flex items-center justify-center rounded-xl shadow-lg">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+        <!-- Listening -->
+        <div class="score-card-3d p-4 md:p-6 pop-in pop-in-d2">
+            <div class="text-center">
+                <div class="text-2xl md:text-3xl mb-2">&#127911;</div>
+                <h3 class="text-sm md:text-lg font-black text-white mb-2 md:mb-3">Listening</h3>
+                <div class="relative inline-block">
+                    <svg class="w-20 h-20 md:w-28 md:h-28" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="42" stroke="var(--border-color)" stroke-width="8" fill="none"/>
+                        <circle cx="50" cy="50" r="42" stroke="#CE82FF" stroke-width="8" fill="none"
+                                class="score-ring" style="--offset: {{ 264 - (session.listening.percentage / 100 * 264) }}"
+                                transform="rotate(-90 50 50)" stroke-linecap="round"/>
                     </svg>
-                </div>
-                <h3 class="ml-4 text-xl font-black text-white">Listening</h3>
-            </div>
-
-            <div class="relative pt-4">
-                <svg class="w-32 h-32 mx-auto" viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="45" stroke="#334155" stroke-width="8" fill="none"/>
-                    <circle cx="50" cy="50" r="45" stroke="url(#gradientListening)" stroke-width="8" fill="none"
-                            class="score-ring" style="--offset: {{ 283 - (session.listening.percentage / 100 * 283) }}"
-                            transform="rotate(-90 50 50)"/>
-                    <defs>
-                        <linearGradient id="gradientListening" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#45B7D1"/>
-                            <stop offset="100%" stop-color="#4ECDC4"/>
-                        </linearGradient>
-                    </defs>
-                </svg>
-                <div class="absolute inset-0 flex items-center justify-center">
-                    <div class="text-center">
-                        <div class="text-3xl font-black text-white">{{ session.listening.percentage }}%</div>
-                        <div class="text-sm text-gray-400 font-bold">{{ session.listening.score }}/{{ session.listening.total }}</div>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="text-lg md:text-2xl font-black text-white">{{ session.listening.percentage }}%</div>
                     </div>
                 </div>
+                <div class="text-xs md:text-sm text-[#777] font-bold mt-2">{{ session.listening.score }}/{{ session.listening.total }}</div>
             </div>
         </div>
 
-        <!-- Writing Score -->
-        <div class="app-card p-6">
-            <div class="flex items-center mb-4">
-                <div class="w-12 h-12 bg-gradient-to-br from-[#FF6B6B] to-[#FF9F43] flex items-center justify-center rounded-xl shadow-lg">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+        <!-- Writing -->
+        <div class="score-card-3d p-4 md:p-6 pop-in pop-in-d3">
+            <div class="text-center">
+                <div class="text-2xl md:text-3xl mb-2">&#9997;&#65039;</div>
+                <h3 class="text-sm md:text-lg font-black text-white mb-2 md:mb-3">Writing</h3>
+                <div class="relative inline-block">
+                    <svg class="w-20 h-20 md:w-28 md:h-28" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="42" stroke="var(--border-color)" stroke-width="8" fill="none"/>
+                        <circle cx="50" cy="50" r="42" stroke="#58CC02" stroke-width="8" fill="none"
+                                class="score-ring" style="--offset: {{ 264 - (session.writing.evaluation.overall_percentage / 100 * 264) }}"
+                                transform="rotate(-90 50 50)" stroke-linecap="round"/>
                     </svg>
-                </div>
-                <h3 class="ml-4 text-xl font-black text-white">Writing</h3>
-            </div>
-
-            <div class="relative pt-4">
-                <svg class="w-32 h-32 mx-auto" viewBox="0 0 100 100">
-                    <circle cx="50" cy="50" r="45" stroke="#334155" stroke-width="8" fill="none"/>
-                    <circle cx="50" cy="50" r="45" stroke="url(#gradientWriting)" stroke-width="8" fill="none"
-                            class="score-ring" style="--offset: {{ 283 - (session.writing.percentage / 100 * 283) }}"
-                            transform="rotate(-90 50 50)"/>
-                    <defs>
-                        <linearGradient id="gradientWriting" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stop-color="#FF6B6B"/>
-                            <stop offset="100%" stop-color="#FF9F43"/>
-                        </linearGradient>
-                    </defs>
-                </svg>
-                <div class="absolute inset-0 flex items-center justify-center">
-                    <div class="text-center">
-                        <div class="text-3xl font-black text-white">{{ session.writing.evaluation.overall_percentage }}%</div>
-                        <div class="text-sm text-gray-400 font-bold">Band {{ session.writing.evaluation.overall_band }}</div>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <div class="text-lg md:text-2xl font-black text-white">{{ session.writing.evaluation.overall_percentage }}%</div>
                     </div>
                 </div>
+                <div class="text-xs md:text-sm text-[#777] font-bold mt-2">Band {{ session.writing.evaluation.overall_band }}</div>
             </div>
         </div>
     </div>
 
-    <!-- Reading – xato qilingan joylar (highlight) -->
+    <!-- Reading Details -->
     {% if session.reading.details %}
-    <div class="app-card overflow-hidden mb-8">
-        <div class="bg-gradient-to-r from-[#1E293B] to-[#0F172A] border-b-2 border-[#334155] p-6">
-            <h2 class="text-xl font-black text-white flex items-center gap-3">
-                <div class="w-10 h-10 bg-[#A78BFA]/20 rounded-xl flex items-center justify-center">
-                    <svg class="w-5 h-5 text-[#A78BFA]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                    </svg>
-                </div>
-                Reading – {% if lang == 'uz' %}javoblar tafsiloti{% else %}Answer Details{% endif %}
+    <div class="duo-card overflow-hidden mb-6 md:mb-8">
+        <div class="p-4 md:p-6 border-b-2 border-[#2B4148]" style="background: linear-gradient(135deg, var(--bg-card) 0%, #1E3A42 100%);">
+            <h2 class="text-lg md:text-xl font-black text-white flex items-center gap-3">
+                &#128214; Reading – {% if lang == 'uz' %}javoblar{% else %}Answers{% endif %}
             </h2>
-            <p class="text-gray-400 text-sm mt-2 font-medium ml-[52px]">{% if lang == 'uz' %}Xato qilgan savollar qizil, to'g'ri javoblar yashil bilan ko'rsatilgan{% else %}Incorrect answers in red, correct answers in green{% endif %}</p>
         </div>
-        <div class="p-6">
+        <div class="p-3 md:p-6">
             <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm">
-                    <thead class="bg-[#1E293B] text-gray-400 border-b-2 border-[#334155]">
+                <table class="w-full text-left text-xs md:text-sm">
+                    <thead class="text-[#777] border-b-2 border-[#2B4148]">
                         <tr>
-                            <th class="px-4 py-3 font-bold">Part</th>
-                            <th class="px-4 py-3 font-bold">{% if lang == 'uz' %}Savol{% else %}Question{% endif %}</th>
-                            <th class="px-4 py-3 font-bold">{% if lang == 'uz' %}Sizning javobingiz{% else %}Your Answer{% endif %}</th>
-                            <th class="px-4 py-3 font-bold">{% if lang == 'uz' %}To'g'ri javob{% else %}Correct Answer{% endif %}</th>
-                            <th class="px-4 py-3 font-bold">{% if lang == 'uz' %}Holat{% else %}Status{% endif %}</th>
+                            <th class="px-2 md:px-4 py-2 md:py-3 font-bold">Part</th>
+                            <th class="px-2 md:px-4 py-2 md:py-3 font-bold">Q</th>
+                            <th class="px-2 md:px-4 py-2 md:py-3 font-bold">{% if lang == 'uz' %}Javob{% else %}Answer{% endif %}</th>
+                            <th class="px-2 md:px-4 py-2 md:py-3 font-bold">{% if lang == 'uz' %}To'g'ri{% else %}Correct{% endif %}</th>
+                            <th class="px-2 md:px-4 py-2 md:py-3 font-bold"></th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y-2 divide-[#334155]">
+                    <tbody>
                         {% for d in session.reading.details %}
-                        <tr class="{% if not d.ok %}bg-[#FF6B6B]/10 border-l-4 border-[#FF6B6B]{% else %}bg-[#0F172A]/50{% endif %}">
-                            <td class="px-4 py-3 text-gray-400 font-bold">Part {{ d.part }}</td>
-                            <td class="px-4 py-3 text-white font-bold">{{ d.q }}</td>
-                            <td class="px-4 py-3">
+                        <tr class="detail-row border-b border-[#2B4148]/50 {% if not d.ok %}bg-[#FF4B4B]/5{% endif %}">
+                            <td class="px-2 md:px-4 py-2 md:py-3 text-[#777] font-bold">{{ d.part }}</td>
+                            <td class="px-2 md:px-4 py-2 md:py-3 text-white font-bold">{{ d.q }}</td>
+                            <td class="px-2 md:px-4 py-2 md:py-3">
                                 {% if not d.ok %}
-                                <span class="bg-[#FF6B6B]/30 text-[#FF6B6B] px-3 py-1 rounded-lg font-bold">{{ d.ua or '—' }}</span>
+                                <span class="bg-[#FF4B4B]/20 text-[#FF4B4B] px-2 py-1 rounded-lg font-bold text-xs">{{ d.ua or '—' }}</span>
                                 {% else %}
-                                <span class="text-[#4ECDC4] font-bold">{{ d.ua or '—' }}</span>
+                                <span class="text-[#58CC02] font-bold">{{ d.ua or '—' }}</span>
                                 {% endif %}
                             </td>
-                            <td class="px-4 py-3 text-[#4ECDC4] font-bold">{{ d.ca }}</td>
-                            <td class="px-4 py-3">
+                            <td class="px-2 md:px-4 py-2 md:py-3 text-[#58CC02] font-bold">{{ d.ca }}</td>
+                            <td class="px-2 md:px-4 py-2 md:py-3">
                                 {% if d.ok %}
-                                <span class="text-[#4ECDC4] font-bold flex items-center gap-2">
-                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                                    {% if lang == 'uz' %}To'g'ri{% else %}Correct{% endif %}
-                                </span>
+                                <span class="text-[#58CC02]">&#10004;</span>
                                 {% else %}
-                                <span class="text-[#FF6B6B] font-bold flex items-center gap-2">
-                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
-                                    {% if lang == 'uz' %}Xato{% else %}Wrong{% endif %}
-                                </span>
+                                <span class="text-[#FF4B4B]">&#10008;</span>
                                 {% endif %}
                             </td>
                         </tr>
@@ -220,56 +212,44 @@
     </div>
     {% endif %}
 
-    <!-- Listening – xato qilingan joylar (highlight) -->
+    <!-- Listening Details -->
     {% if session.listening.details %}
-    <div class="app-card overflow-hidden mb-8">
-        <div class="bg-gradient-to-r from-[#1E293B] to-[#0F172A] border-b-2 border-[#334155] p-6">
-            <h2 class="text-xl font-black text-white flex items-center gap-3">
-                <div class="w-10 h-10 bg-[#45B7D1]/20 rounded-xl flex items-center justify-center">
-                    <svg class="w-5 h-5 text-[#45B7D1]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
-                    </svg>
-                </div>
-                Listening – {% if lang == 'uz' %}javoblar tafsiloti{% else %}Answer Details{% endif %}
+    <div class="duo-card overflow-hidden mb-6 md:mb-8">
+        <div class="p-4 md:p-6 border-b-2 border-[#2B4148]" style="background: linear-gradient(135deg, var(--bg-card) 0%, #1E3A42 100%);">
+            <h2 class="text-lg md:text-xl font-black text-white flex items-center gap-3">
+                &#127911; Listening – {% if lang == 'uz' %}javoblar{% else %}Answers{% endif %}
             </h2>
-            <p class="text-gray-400 text-sm mt-2 font-medium ml-[52px]">{% if lang == 'uz' %}Xato qilgan savollar qizil, to'g'ri javoblar yashil bilan ko'rsatilgan{% else %}Incorrect answers in red, correct answers in green{% endif %}</p>
         </div>
-        <div class="p-6">
+        <div class="p-3 md:p-6">
             <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm">
-                    <thead class="bg-[#1E293B] text-gray-400 border-b-2 border-[#334155]">
+                <table class="w-full text-left text-xs md:text-sm">
+                    <thead class="text-[#777] border-b-2 border-[#2B4148]">
                         <tr>
-                            <th class="px-4 py-3 font-bold">Part</th>
-                            <th class="px-4 py-3 font-bold">{% if lang == 'uz' %}Savol{% else %}Question{% endif %}</th>
-                            <th class="px-4 py-3 font-bold">{% if lang == 'uz' %}Sizning javobingiz{% else %}Your Answer{% endif %}</th>
-                            <th class="px-4 py-3 font-bold">{% if lang == 'uz' %}To'g'ri javob{% else %}Correct Answer{% endif %}</th>
-                            <th class="px-4 py-3 font-bold">{% if lang == 'uz' %}Holat{% else %}Status{% endif %}</th>
+                            <th class="px-2 md:px-4 py-2 md:py-3 font-bold">Part</th>
+                            <th class="px-2 md:px-4 py-2 md:py-3 font-bold">Q</th>
+                            <th class="px-2 md:px-4 py-2 md:py-3 font-bold">{% if lang == 'uz' %}Javob{% else %}Answer{% endif %}</th>
+                            <th class="px-2 md:px-4 py-2 md:py-3 font-bold">{% if lang == 'uz' %}To'g'ri{% else %}Correct{% endif %}</th>
+                            <th class="px-2 md:px-4 py-2 md:py-3 font-bold"></th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y-2 divide-[#334155]">
+                    <tbody>
                         {% for d in session.listening.details %}
-                        <tr class="{% if not d.ok %}bg-[#FF6B6B]/10 border-l-4 border-[#FF6B6B]{% else %}bg-[#0F172A]/50{% endif %}">
-                            <td class="px-4 py-3 text-gray-400 font-bold">Part {{ d.part }}</td>
-                            <td class="px-4 py-3 text-white font-bold">{{ d.q }}</td>
-                            <td class="px-4 py-3">
+                        <tr class="detail-row border-b border-[#2B4148]/50 {% if not d.ok %}bg-[#FF4B4B]/5{% endif %}">
+                            <td class="px-2 md:px-4 py-2 md:py-3 text-[#777] font-bold">{{ d.part }}</td>
+                            <td class="px-2 md:px-4 py-2 md:py-3 text-white font-bold">{{ d.q }}</td>
+                            <td class="px-2 md:px-4 py-2 md:py-3">
                                 {% if not d.ok %}
-                                <span class="bg-[#FF6B6B]/30 text-[#FF6B6B] px-3 py-1 rounded-lg font-bold">{{ d.ua or '—' }}</span>
+                                <span class="bg-[#FF4B4B]/20 text-[#FF4B4B] px-2 py-1 rounded-lg font-bold text-xs">{{ d.ua or '—' }}</span>
                                 {% else %}
-                                <span class="text-[#4ECDC4] font-bold">{{ d.ua or '—' }}</span>
+                                <span class="text-[#58CC02] font-bold">{{ d.ua or '—' }}</span>
                                 {% endif %}
                             </td>
-                            <td class="px-4 py-3 text-[#4ECDC4] font-bold">{{ d.ca }}</td>
-                            <td class="px-4 py-3">
+                            <td class="px-2 md:px-4 py-2 md:py-3 text-[#58CC02] font-bold">{{ d.ca }}</td>
+                            <td class="px-2 md:px-4 py-2 md:py-3">
                                 {% if d.ok %}
-                                <span class="text-[#4ECDC4] font-bold flex items-center gap-2">
-                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                                    {% if lang == 'uz' %}To'g'ri{% else %}Correct{% endif %}
-                                </span>
+                                <span class="text-[#58CC02]">&#10004;</span>
                                 {% else %}
-                                <span class="text-[#FF6B6B] font-bold flex items-center gap-2">
-                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/></svg>
-                                    {% if lang == 'uz' %}Xato{% else %}Wrong{% endif %}
-                                </span>
+                                <span class="text-[#FF4B4B]">&#10008;</span>
                                 {% endif %}
                             </td>
                         </tr>
@@ -281,320 +261,249 @@
     </div>
     {% endif %}
 
-    <!-- Detailed Writing Feedback -->
-    <div class="app-card overflow-hidden mb-8">
-        <div class="bg-gradient-to-r from-[#1E293B] to-[#0F172A] border-b-2 border-[#334155] p-6">
-            <h2 class="text-xl font-black text-white flex items-center gap-3">
-                <div class="w-10 h-10 bg-[#FF9F43]/20 rounded-xl flex items-center justify-center">
-                    <svg class="w-5 h-5 text-[#FF9F43]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                    </svg>
-                </div>
-                {% if lang == 'uz' %}Writing baholash tafsilotlari{% else %}Writing Evaluation Details{% endif %}
+    <!-- Writing Feedback -->
+    <div class="duo-card overflow-hidden mb-6 md:mb-8">
+        <div class="p-4 md:p-6 border-b-2 border-[#2B4148]" style="background: linear-gradient(135deg, var(--bg-card) 0%, #1E3A42 100%);">
+            <h2 class="text-lg md:text-xl font-black text-white flex items-center gap-3">
+                &#9997;&#65039; {% if lang == 'uz' %}Writing baholash{% else %}Writing Evaluation{% endif %}
             </h2>
-            <p class="text-gray-400 text-sm mt-2 font-medium ml-[52px]">{% if lang == 'uz' %}AI tomonidan baholangan yozma ishingiz{% else %}AI-powered assessment of your writing tasks{% endif %}</p>
+            <p class="text-[#777] text-xs md:text-sm mt-1 font-medium">{% if lang == 'uz' %}AI tomonidan baholangan{% else %}AI-powered assessment{% endif %}</p>
         </div>
 
-        <div class="p-6">
+        <div class="p-4 md:p-6">
             <!-- Task 1 -->
-            <div class="mb-8 pb-8 border-b-2 border-[#334155]">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-black text-white flex items-center gap-3">
-                        <span class="w-8 h-8 bg-[#4ECDC4]/20 rounded-lg flex items-center justify-center text-[#4ECDC4] text-sm font-black">1</span>
-                        Task 1: Email/Letter
+            <div class="mb-6 md:mb-8 pb-6 md:pb-8 border-b-2 border-[#2B4148]">
+                <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+                    <h3 class="text-base md:text-lg font-black text-white flex items-center gap-2">
+                        <span class="w-7 h-7 md:w-8 md:h-8 bg-[#1CB0F6] rounded-lg flex items-center justify-center text-white text-xs md:text-sm font-black" style="box-shadow: 0 3px 0 #1899D6;">1</span>
+                        Task 1
                     </h3>
-                    <div class="flex items-center gap-3">
-                        <span class="px-4 py-2 bg-gradient-to-r from-[#4ECDC4]/20 to-[#45B7D1]/20 text-[#4ECDC4] text-sm font-black rounded-xl border border-[#4ECDC4]/30">
+                    <div class="flex items-center gap-2">
+                        <span class="px-3 py-1 bg-[#1CB0F6]/15 text-[#1CB0F6] text-xs md:text-sm font-black rounded-xl border border-[#1CB0F6]/30">
                             Band {{ session.writing.evaluation.task1.band }}
                         </span>
-                        <span class="text-sm text-gray-400 font-bold">
-                            {{ session.writing.evaluation.task1.word_count }} words
-                        </span>
+                        <span class="text-xs text-[#777] font-bold">{{ session.writing.evaluation.task1.word_count }} w</span>
                     </div>
                 </div>
-                <div class="bg-[#0F172A] border-2 border-[#334155] p-5 mb-5 rounded-xl">
-                    <p class="font-bold text-gray-300">{{ session.writing.evaluation.task1.feedback.overall }}</p>
+                <div class="bg-[#131F24] border-2 border-[#2B4148] p-3 md:p-4 mb-4 rounded-xl">
+                    <p class="font-bold text-[#AFAFAF] text-sm">{{ session.writing.evaluation.task1.feedback.overall }}</p>
                 </div>
-                <div class="grid md:grid-cols-2 gap-4">
-                    <div class="p-4 bg-[#0F172A] border-2 border-[#334155] rounded-xl">
-                        <h4 class="font-black text-[#4ECDC4] mb-2 text-sm flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/></svg>
-                            Content
-                        </h4>
-                        <p class="text-sm text-gray-400 font-medium">{{ session.writing.evaluation.task1.feedback.content }}</p>
+                <div class="grid grid-cols-2 gap-2 md:gap-3">
+                    <div class="feedback-card">
+                        <h4 class="font-black text-[#1CB0F6] mb-1 text-xs">Content</h4>
+                        <p class="text-xs text-[#AFAFAF] font-medium">{{ session.writing.evaluation.task1.feedback.content }}</p>
                     </div>
-                    <div class="p-4 bg-[#0F172A] border-2 border-[#334155] rounded-xl">
-                        <h4 class="font-black text-[#45B7D1] mb-2 text-sm flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/></svg>
-                            Organization
-                        </h4>
-                        <p class="text-sm text-gray-400 font-medium">{{ session.writing.evaluation.task1.feedback.organization }}</p>
+                    <div class="feedback-card">
+                        <h4 class="font-black text-[#CE82FF] mb-1 text-xs">Organization</h4>
+                        <p class="text-xs text-[#AFAFAF] font-medium">{{ session.writing.evaluation.task1.feedback.organization }}</p>
                     </div>
-                    <div class="p-4 bg-[#0F172A] border-2 border-[#334155] rounded-xl">
-                        <h4 class="font-black text-[#A78BFA] mb-2 text-sm flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7 2a1 1 0 011 1v1h3a1 1 0 110 2H9.578a18.87 18.87 0 01-1.724 4.78c.29.354.596.696.914 1.026a1 1 0 11-1.44 1.389c-.188-.196-.373-.396-.554-.6a19.098 19.098 0 01-3.107 3.567 1 1 0 01-1.334-1.49 17.087 17.087 0 003.13-3.733 18.992 18.992 0 01-1.487-2.494 1 1 0 111.79-.89c.234.47.489.928.764 1.372.417-.934.752-1.913.997-2.927H3a1 1 0 110-2h3V3a1 1 0 011-1zm6 6a1 1 0 01.894.553l2.991 5.982a.869.869 0 01.02.037l.99 1.98a1 1 0 11-1.79.895L15.383 16h-4.764l-.724 1.447a1 1 0 11-1.788-.894l.99-1.98.019-.038 2.99-5.982A1 1 0 0113 8zm-1.382 6h2.764L13 11.236 11.618 14z" clip-rule="evenodd"/></svg>
-                            Language
-                        </h4>
-                        <p class="text-sm text-gray-400 font-medium">{{ session.writing.evaluation.task1.feedback.language }}</p>
+                    <div class="feedback-card">
+                        <h4 class="font-black text-[#FF9600] mb-1 text-xs">Language</h4>
+                        <p class="text-xs text-[#AFAFAF] font-medium">{{ session.writing.evaluation.task1.feedback.language }}</p>
                     </div>
-                    <div class="p-4 bg-[#0F172A] border-2 border-[#334155] rounded-xl">
-                        <h4 class="font-black text-[#FFE66D] mb-2 text-sm flex items-center gap-2">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                            Accuracy
-                        </h4>
-                        <p class="text-sm text-gray-400 font-medium">{{ session.writing.evaluation.task1.feedback.accuracy }}</p>
+                    <div class="feedback-card">
+                        <h4 class="font-black text-[#FFC800] mb-1 text-xs">Accuracy</h4>
+                        <p class="text-xs text-[#AFAFAF] font-medium">{{ session.writing.evaluation.task1.feedback.accuracy }}</p>
                     </div>
                 </div>
             </div>
 
             <!-- Task 2 -->
-            <div class="mb-8 pb-8 border-b-2 border-[#334155]">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-black text-white flex items-center gap-3">
-                        <span class="w-8 h-8 bg-[#45B7D1]/20 rounded-lg flex items-center justify-center text-[#45B7D1] text-sm font-black">2</span>
-                        Task 2: Review
+            <div class="mb-6 md:mb-8 pb-6 md:pb-8 border-b-2 border-[#2B4148]">
+                <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+                    <h3 class="text-base md:text-lg font-black text-white flex items-center gap-2">
+                        <span class="w-7 h-7 md:w-8 md:h-8 bg-[#CE82FF] rounded-lg flex items-center justify-center text-white text-xs md:text-sm font-black" style="box-shadow: 0 3px 0 #A560E8;">2</span>
+                        Task 2
                     </h3>
-                    <div class="flex items-center gap-3">
-                        <span class="px-4 py-2 bg-gradient-to-r from-[#45B7D1]/20 to-[#4ECDC4]/20 text-[#45B7D1] text-sm font-black rounded-xl border border-[#45B7D1]/30">
+                    <div class="flex items-center gap-2">
+                        <span class="px-3 py-1 bg-[#CE82FF]/15 text-[#CE82FF] text-xs md:text-sm font-black rounded-xl border border-[#CE82FF]/30">
                             Band {{ session.writing.evaluation.task2.band }}
                         </span>
-                        <span class="text-sm text-gray-400 font-bold">
-                            {{ session.writing.evaluation.task2.word_count }} words
-                        </span>
+                        <span class="text-xs text-[#777] font-bold">{{ session.writing.evaluation.task2.word_count }} w</span>
                     </div>
                 </div>
-                <div class="bg-[#0F172A] border-2 border-[#334155] p-5 mb-5 rounded-xl">
-                    <p class="font-bold text-gray-300">{{ session.writing.evaluation.task2.feedback.overall }}</p>
+                <div class="bg-[#131F24] border-2 border-[#2B4148] p-3 md:p-4 mb-4 rounded-xl">
+                    <p class="font-bold text-[#AFAFAF] text-sm">{{ session.writing.evaluation.task2.feedback.overall }}</p>
                 </div>
-                <div class="grid md:grid-cols-2 gap-4">
-                    <div class="p-4 bg-[#0F172A] border-2 border-[#334155] rounded-xl">
-                        <h4 class="font-black text-[#4ECDC4] mb-2 text-sm">Content</h4>
-                        <p class="text-sm text-gray-400 font-medium">{{ session.writing.evaluation.task2.feedback.content }}</p>
+                <div class="grid grid-cols-2 gap-2 md:gap-3">
+                    <div class="feedback-card">
+                        <h4 class="font-black text-[#1CB0F6] mb-1 text-xs">Content</h4>
+                        <p class="text-xs text-[#AFAFAF] font-medium">{{ session.writing.evaluation.task2.feedback.content }}</p>
                     </div>
-                    <div class="p-4 bg-[#0F172A] border-2 border-[#334155] rounded-xl">
-                        <h4 class="font-black text-[#45B7D1] mb-2 text-sm">Organization</h4>
-                        <p class="text-sm text-gray-400 font-medium">{{ session.writing.evaluation.task2.feedback.organization }}</p>
+                    <div class="feedback-card">
+                        <h4 class="font-black text-[#CE82FF] mb-1 text-xs">Organization</h4>
+                        <p class="text-xs text-[#AFAFAF] font-medium">{{ session.writing.evaluation.task2.feedback.organization }}</p>
                     </div>
-                    <div class="p-4 bg-[#0F172A] border-2 border-[#334155] rounded-xl">
-                        <h4 class="font-black text-[#A78BFA] mb-2 text-sm">Language</h4>
-                        <p class="text-sm text-gray-400 font-medium">{{ session.writing.evaluation.task2.feedback.language }}</p>
+                    <div class="feedback-card">
+                        <h4 class="font-black text-[#FF9600] mb-1 text-xs">Language</h4>
+                        <p class="text-xs text-[#AFAFAF] font-medium">{{ session.writing.evaluation.task2.feedback.language }}</p>
                     </div>
-                    <div class="p-4 bg-[#0F172A] border-2 border-[#334155] rounded-xl">
-                        <h4 class="font-black text-[#FFE66D] mb-2 text-sm">Accuracy</h4>
-                        <p class="text-sm text-gray-400 font-medium">{{ session.writing.evaluation.task2.feedback.accuracy }}</p>
+                    <div class="feedback-card">
+                        <h4 class="font-black text-[#FFC800] mb-1 text-xs">Accuracy</h4>
+                        <p class="text-xs text-[#AFAFAF] font-medium">{{ session.writing.evaluation.task2.feedback.accuracy }}</p>
                     </div>
                 </div>
             </div>
 
             <!-- Essay -->
             <div>
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-black text-white flex items-center gap-3">
-                        <span class="w-8 h-8 bg-[#FF6B6B]/20 rounded-lg flex items-center justify-center text-[#FF6B6B] text-sm font-black">3</span>
+                <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+                    <h3 class="text-base md:text-lg font-black text-white flex items-center gap-2">
+                        <span class="w-7 h-7 md:w-8 md:h-8 bg-[#58CC02] rounded-lg flex items-center justify-center text-white text-xs md:text-sm font-black" style="box-shadow: 0 3px 0 #46A302;">3</span>
                         Essay
                     </h3>
-                    <div class="flex items-center gap-3">
-                        <span class="px-4 py-2 bg-gradient-to-r from-[#FF6B6B]/20 to-[#FF9F43]/20 text-[#FF6B6B] text-sm font-black rounded-xl border border-[#FF6B6B]/30">
+                    <div class="flex items-center gap-2">
+                        <span class="px-3 py-1 bg-[#58CC02]/15 text-[#58CC02] text-xs md:text-sm font-black rounded-xl border border-[#58CC02]/30">
                             Band {{ session.writing.evaluation.essay.band }}
                         </span>
-                        <span class="text-sm text-gray-400 font-bold">
-                            {{ session.writing.evaluation.essay.word_count }} words
-                        </span>
+                        <span class="text-xs text-[#777] font-bold">{{ session.writing.evaluation.essay.word_count }} w</span>
                     </div>
                 </div>
-                <div class="bg-[#0F172A] border-2 border-[#334155] p-5 mb-5 rounded-xl">
-                    <p class="font-bold text-gray-300">{{ session.writing.evaluation.essay.feedback.overall }}</p>
+                <div class="bg-[#131F24] border-2 border-[#2B4148] p-3 md:p-4 mb-4 rounded-xl">
+                    <p class="font-bold text-[#AFAFAF] text-sm">{{ session.writing.evaluation.essay.feedback.overall }}</p>
                 </div>
-                <div class="grid md:grid-cols-2 gap-4">
-                    <div class="p-4 bg-[#0F172A] border-2 border-[#334155] rounded-xl">
-                        <h4 class="font-black text-[#4ECDC4] mb-2 text-sm">Task Achievement</h4>
-                        <p class="text-sm text-gray-400 font-medium">{{ session.writing.evaluation.essay.feedback.task_achievement }}</p>
+                <div class="grid grid-cols-2 gap-2 md:gap-3">
+                    <div class="feedback-card">
+                        <h4 class="font-black text-[#1CB0F6] mb-1 text-xs">Task Achievement</h4>
+                        <p class="text-xs text-[#AFAFAF] font-medium">{{ session.writing.evaluation.essay.feedback.task_achievement }}</p>
                     </div>
-                    <div class="p-4 bg-[#0F172A] border-2 border-[#334155] rounded-xl">
-                        <h4 class="font-black text-[#45B7D1] mb-2 text-sm">Coherence & Cohesion</h4>
-                        <p class="text-sm text-gray-400 font-medium">{{ session.writing.evaluation.essay.feedback.coherence_cohesion }}</p>
+                    <div class="feedback-card">
+                        <h4 class="font-black text-[#CE82FF] mb-1 text-xs">Coherence</h4>
+                        <p class="text-xs text-[#AFAFAF] font-medium">{{ session.writing.evaluation.essay.feedback.coherence_cohesion }}</p>
                     </div>
-                    <div class="p-4 bg-[#0F172A] border-2 border-[#334155] rounded-xl">
-                        <h4 class="font-black text-[#A78BFA] mb-2 text-sm">Lexical Resource</h4>
-                        <p class="text-sm text-gray-400 font-medium">{{ session.writing.evaluation.essay.feedback.lexical_resource }}</p>
+                    <div class="feedback-card">
+                        <h4 class="font-black text-[#FF9600] mb-1 text-xs">Lexical Resource</h4>
+                        <p class="text-xs text-[#AFAFAF] font-medium">{{ session.writing.evaluation.essay.feedback.lexical_resource }}</p>
                     </div>
-                    <div class="p-4 bg-[#0F172A] border-2 border-[#334155] rounded-xl">
-                        <h4 class="font-black text-[#FFE66D] mb-2 text-sm">Grammatical Range</h4>
-                        <p class="text-sm text-gray-400 font-medium">{{ session.writing.evaluation.essay.feedback.grammatical_range }}</p>
+                    <div class="feedback-card">
+                        <h4 class="font-black text-[#FFC800] mb-1 text-xs">Grammar</h4>
+                        <p class="text-xs text-[#AFAFAF] font-medium">{{ session.writing.evaluation.essay.feedback.grammatical_range }}</p>
                     </div>
                 </div>
             </div>
 
             {% if session.writing.evaluation.general_feedback %}
-            <div class="mt-8 p-6 bg-gradient-to-r from-[#4ECDC4]/10 to-[#45B7D1]/10 border-2 border-[#4ECDC4]/30 rounded-2xl">
-                <h4 class="font-black text-[#4ECDC4] mb-3 flex items-center gap-2">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/></svg>
-                    {% if lang == 'uz' %}Umumiy tavsiyalar{% else %}Overall Feedback & Recommendations{% endif %}
+            <div class="mt-6 p-4 md:p-5 bg-[#58CC02]/10 border-2 border-[#58CC02]/30 rounded-2xl">
+                <h4 class="font-black text-[#58CC02] mb-2 flex items-center gap-2 text-sm">
+                    &#128161; {% if lang == 'uz' %}Umumiy tavsiyalar{% else %}Overall Recommendations{% endif %}
                 </h4>
-                <p class="text-gray-300 font-medium">{{ session.writing.evaluation.general_feedback }}</p>
+                <p class="text-[#AFAFAF] font-medium text-sm">{{ session.writing.evaluation.general_feedback }}</p>
             </div>
             {% endif %}
         </div>
     </div>
 
     <!-- CEFR Level Guide -->
-    <div class="app-card p-6 mb-8">
-        <h3 class="text-xl font-black text-white mb-6 flex items-center gap-3">
-            <div class="w-10 h-10 bg-[#FFE66D]/20 rounded-xl flex items-center justify-center">
-                <svg class="w-5 h-5 text-[#FFE66D]" fill="currentColor" viewBox="0 0 20 20"><path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/></svg>
-            </div>
-            CEFR Level Guide
+    <div class="duo-card p-4 md:p-6 mb-6 md:mb-8">
+        <h3 class="text-lg md:text-xl font-black text-white mb-4 md:mb-6">
+            &#128218; CEFR {% if lang == 'uz' %}Darajalar{% else %}Levels{% endif %}
         </h3>
-        <div class="grid md:grid-cols-3 gap-4">
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
             {% for level, data in cefr_levels.items() %}
-            <div class="p-5 rounded-2xl border-2 {% if session.cefr_level == level %}border-[#4ECDC4] bg-gradient-to-br from-[#4ECDC4]/10 to-[#45B7D1]/10{% else %}border-[#334155] bg-[#0F172A]{% endif %}">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-3xl font-black {% if session.cefr_level == level %}bg-gradient-to-r from-[#4ECDC4] to-[#45B7D1] bg-clip-text text-transparent{% else %}text-gray-500{% endif %}">{{ level }}</span>
+            <div class="p-3 md:p-4 rounded-2xl border-2 {% if session.cefr_level == level %}border-[#58CC02] bg-[#58CC02]/10{% else %}border-[#2B4148] bg-[#131F24]{% endif %}">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xl md:text-2xl font-black {% if session.cefr_level == level %}text-[#58CC02]{% else %}text-[#777]{% endif %}">{{ level }}</span>
                     {% if session.cefr_level == level %}
-                    <span class="px-3 py-1 bg-gradient-to-r from-[#4ECDC4] to-[#45B7D1] text-[#0F172A] text-xs font-black rounded-full">{% if lang == 'uz' %}Sizning darajangiz{% else %}Your Level{% endif %}</span>
+                    <span class="px-2 py-0.5 bg-[#58CC02] text-white text-[10px] font-black rounded-full" style="box-shadow: 0 2px 0 #46A302;">YOU</span>
                     {% endif %}
                 </div>
-                <p class="text-sm {% if session.cefr_level == level %}text-gray-300{% else %}text-gray-500{% endif %} font-medium">{{ data.description }}</p>
-                <p class="text-xs text-gray-600 mt-2 font-bold">Score: {{ data.min_score }}%+</p>
+                <p class="text-[10px] md:text-xs {% if session.cefr_level == level %}text-[#AFAFAF]{% else %}text-[#555]{% endif %} font-medium">{{ data.description }}</p>
             </div>
             {% endfor %}
         </div>
     </div>
 
-    <!-- BETA Feedback Form -->
-    <div id="feedback-section" class="app-card overflow-hidden mb-8 border-2 border-[#A78BFA]/30">
-        <div class="bg-gradient-to-r from-[#1E293B] to-[#0F172A] border-b-2 border-[#334155] p-6">
+    <!-- Feedback Form -->
+    <div id="feedback-section" class="duo-card overflow-hidden mb-6 md:mb-8 border-[#CE82FF]/30">
+        <div class="p-4 md:p-6 border-b-2 border-[#2B4148]" style="background: linear-gradient(135deg, var(--bg-card) 0%, #1E3A42 100%);">
             <div class="flex items-center gap-3">
-                <span class="px-3 py-1 bg-gradient-to-r from-[#FFE66D] to-[#FF9F43] text-[#0F172A] text-xs font-black rounded-full">BETA</span>
-                <h2 class="text-xl font-black text-white">{% if lang == 'uz' %}Bizga yordam bering!{% else %}Help Us Improve!{% endif %}</h2>
+                <span class="px-3 py-1 bg-[#FF9600] text-white text-xs font-black rounded-full" style="box-shadow: 0 2px 0 var(--duo-orange-dark);">BETA</span>
+                <h2 class="text-base md:text-xl font-black text-white">{% if lang == 'uz' %}Bizga yordam bering!{% else %}Help Us Improve!{% endif %}</h2>
             </div>
-            <p class="text-gray-400 text-sm mt-2 font-medium">{% if lang == 'uz' %}Bu Beta versiya. Fikr-mulohazalaringiz loyihamizni yaxshilashga yordam beradi.{% else %}This is a Beta version. Your feedback helps us improve.{% endif %}</p>
         </div>
 
-        <form id="feedback-form" class="p-6">
-            <div class="grid md:grid-cols-2 gap-6 mb-6">
-                <!-- Overall Rating -->
+        <form id="feedback-form" class="p-4 md:p-6">
+            <div class="grid grid-cols-2 gap-3 md:gap-6 mb-4 md:mb-6">
                 <div>
-                    <label class="block text-sm font-bold text-gray-300 mb-3">{% if lang == 'uz' %}Umumiy baho (1-5){% else %}Overall Rating (1-5){% endif %}</label>
-                    <div class="flex gap-2">
+                    <label class="block text-xs md:text-sm font-bold text-[#AFAFAF] mb-2">{% if lang == 'uz' %}Baho (1-5){% else %}Rating{% endif %}</label>
+                    <div class="flex gap-1 md:gap-2">
                         {% for i in range(1, 6) %}
-                        <button type="button" class="rating-btn w-12 h-12 border-2 border-[#334155] bg-[#0F172A] text-gray-400 hover:border-[#4ECDC4] hover:text-[#4ECDC4] transition rounded-xl font-black text-lg" data-value="{{ i }}">{{ i }}</button>
+                        <button type="button" class="rating-btn w-8 h-8 md:w-10 md:h-10 border-2 border-[#2B4148] bg-[#131F24] text-[#777] hover:border-[#58CC02] hover:text-[#58CC02] transition rounded-xl font-black text-sm" data-value="{{ i }}">{{ i }}</button>
                         {% endfor %}
                     </div>
                     <input type="hidden" name="rating" id="rating" value="">
                 </div>
-
-                <!-- Difficulty -->
                 <div>
-                    <label class="block text-sm font-bold text-gray-300 mb-3">{% if lang == 'uz' %}Test qiyinligi{% else %}Test Difficulty{% endif %}</label>
-                    <select name="difficulty" class="w-full bg-[#0F172A] border-2 border-[#334155] text-white px-4 py-3 rounded-xl focus:border-[#4ECDC4] outline-none font-medium">
-                        <option value="">{% if lang == 'uz' %}Tanlang...{% else %}Select...{% endif %}</option>
-                        <option value="very_easy">{% if lang == 'uz' %}Juda oson{% else %}Very Easy{% endif %}</option>
+                    <label class="block text-xs md:text-sm font-bold text-[#AFAFAF] mb-2">{% if lang == 'uz' %}Qiyinlik{% else %}Difficulty{% endif %}</label>
+                    <select name="difficulty" class="w-full bg-[#131F24] border-2 border-[#2B4148] text-white px-3 py-2 rounded-xl focus:border-[#58CC02] outline-none font-medium text-sm">
+                        <option value="">{% if lang == 'uz' %}Tanlang{% else %}Select{% endif %}</option>
                         <option value="easy">{% if lang == 'uz' %}Oson{% else %}Easy{% endif %}</option>
                         <option value="medium">{% if lang == 'uz' %}O'rtacha{% else %}Medium{% endif %}</option>
                         <option value="hard">{% if lang == 'uz' %}Qiyin{% else %}Hard{% endif %}</option>
-                        <option value="very_hard">{% if lang == 'uz' %}Juda qiyin{% else %}Very Hard{% endif %}</option>
                     </select>
                 </div>
-
-                <!-- Accuracy -->
                 <div>
-                    <label class="block text-sm font-bold text-gray-300 mb-3">{% if lang == 'uz' %}Natija aniqligiga ishonasizmi?{% else %}Do you trust the accuracy?{% endif %}</label>
-                    <select name="accuracy" class="w-full bg-[#0F172A] border-2 border-[#334155] text-white px-4 py-3 rounded-xl focus:border-[#4ECDC4] outline-none font-medium">
-                        <option value="">{% if lang == 'uz' %}Tanlang...{% else %}Select...{% endif %}</option>
-                        <option value="very_accurate">{% if lang == 'uz' %}Juda aniq{% else %}Very Accurate{% endif %}</option>
+                    <label class="block text-xs md:text-sm font-bold text-[#AFAFAF] mb-2">{% if lang == 'uz' %}Aniqlik{% else %}Accuracy{% endif %}</label>
+                    <select name="accuracy" class="w-full bg-[#131F24] border-2 border-[#2B4148] text-white px-3 py-2 rounded-xl focus:border-[#58CC02] outline-none font-medium text-sm">
+                        <option value="">{% if lang == 'uz' %}Tanlang{% else %}Select{% endif %}</option>
                         <option value="accurate">{% if lang == 'uz' %}Aniq{% else %}Accurate{% endif %}</option>
                         <option value="somewhat">{% if lang == 'uz' %}Biroz{% else %}Somewhat{% endif %}</option>
-                        <option value="not_accurate">{% if lang == 'uz' %}Aniq emas{% else %}Not Accurate{% endif %}</option>
+                        <option value="not_accurate">{% if lang == 'uz' %}Noaniq{% else %}Inaccurate{% endif %}</option>
                     </select>
                 </div>
-
-                <!-- Would Recommend -->
                 <div>
-                    <label class="block text-sm font-bold text-gray-300 mb-3">{% if lang == 'uz' %}Boshqalarga tavsiya qilasizmi?{% else %}Would you recommend?{% endif %}</label>
-                    <select name="recommend" class="w-full bg-[#0F172A] border-2 border-[#334155] text-white px-4 py-3 rounded-xl focus:border-[#4ECDC4] outline-none font-medium">
-                        <option value="">{% if lang == 'uz' %}Tanlang...{% else %}Select...{% endif %}</option>
-                        <option value="definitely">{% if lang == 'uz' %}Albatta{% else %}Definitely{% endif %}</option>
-                        <option value="probably">{% if lang == 'uz' %}Ehtimol{% else %}Probably{% endif %}</option>
+                    <label class="block text-xs md:text-sm font-bold text-[#AFAFAF] mb-2">{% if lang == 'uz' %}Tavsiya{% else %}Recommend?{% endif %}</label>
+                    <select name="recommend" class="w-full bg-[#131F24] border-2 border-[#2B4148] text-white px-3 py-2 rounded-xl focus:border-[#58CC02] outline-none font-medium text-sm">
+                        <option value="">{% if lang == 'uz' %}Tanlang{% else %}Select{% endif %}</option>
+                        <option value="yes">{% if lang == 'uz' %}Ha{% else %}Yes{% endif %}</option>
                         <option value="maybe">{% if lang == 'uz' %}Balki{% else %}Maybe{% endif %}</option>
                         <option value="no">{% if lang == 'uz' %}Yo'q{% else %}No{% endif %}</option>
                     </select>
                 </div>
             </div>
 
-            <!-- Best Part -->
-            <div class="mb-6">
-                <label class="block text-sm font-bold text-gray-300 mb-3">{% if lang == 'uz' %}Platformaning eng yaxshi tomoni{% else %}Best part of the platform{% endif %}</label>
-                <textarea name="best_part" rows="2" class="w-full bg-[#0F172A] border-2 border-[#334155] text-white px-4 py-3 rounded-xl focus:border-[#4ECDC4] outline-none font-medium" placeholder="{% if lang == 'uz' %}Sizga nima yoqdi?{% else %}What did you like?{% endif %}"></textarea>
+            <div class="mb-4">
+                <textarea name="suggestions" rows="3" class="w-full bg-[#131F24] border-2 border-[#2B4148] text-white px-3 py-2 rounded-xl focus:border-[#58CC02] outline-none font-medium text-sm" placeholder="{% if lang == 'uz' %}Fikr-mulohazangiz...{% else %}Your feedback...{% endif %}"></textarea>
             </div>
 
-            <!-- Worst Part -->
-            <div class="mb-6">
-                <label class="block text-sm font-bold text-gray-300 mb-3">{% if lang == 'uz' %}Yaxshilash kerak bo'lgan tomonlar{% else %}Areas for improvement{% endif %}</label>
-                <textarea name="worst_part" rows="2" class="w-full bg-[#0F172A] border-2 border-[#334155] text-white px-4 py-3 rounded-xl focus:border-[#4ECDC4] outline-none font-medium" placeholder="{% if lang == 'uz' %}Nimani yaxshilashimiz kerak?{% else %}What should we improve?{% endif %}"></textarea>
-            </div>
-
-            <!-- Suggestions -->
-            <div class="mb-6">
-                <label class="block text-sm font-bold text-gray-300 mb-3">{% if lang == 'uz' %}Qo'shimcha takliflar{% else %}Additional suggestions{% endif %}</label>
-                <textarea name="suggestions" rows="3" class="w-full bg-[#0F172A] border-2 border-[#334155] text-white px-4 py-3 rounded-xl focus:border-[#4ECDC4] outline-none font-medium" placeholder="{% if lang == 'uz' %}Boshqa fikrlaringiz...{% else %}Any other thoughts...{% endif %}"></textarea>
-            </div>
-
-            <!-- Contact Info (Optional) -->
-            <div class="grid md:grid-cols-2 gap-6 mb-6">
-                <div>
-                    <label class="block text-sm font-bold text-gray-300 mb-3">{% if lang == 'uz' %}Ismingiz (ixtiyoriy){% else %}Your name (optional){% endif %}</label>
-                    <input type="text" name="name" class="w-full bg-[#0F172A] border-2 border-[#334155] text-white px-4 py-3 rounded-xl focus:border-[#4ECDC4] outline-none font-medium" placeholder="{% if lang == 'uz' %}Ism{% else %}Name{% endif %}">
-                </div>
-                <div>
-                    <label class="block text-sm font-bold text-gray-300 mb-3">{% if lang == 'uz' %}Email (ixtiyoriy){% else %}Email (optional){% endif %}</label>
-                    <input type="email" name="email" class="w-full bg-[#0F172A] border-2 border-[#334155] text-white px-4 py-3 rounded-xl focus:border-[#4ECDC4] outline-none font-medium" placeholder="email@example.com">
-                </div>
-            </div>
-
-            <button type="submit" class="btn-3d w-full py-4 font-black text-lg">
-                {% if lang == 'uz' %}Fikr-mulohaza yuborish{% else %}Submit Feedback{% endif %}
+            <button type="submit" class="btn-duo btn-duo-green w-full py-3 text-sm">
+                {% if lang == 'uz' %}Yuborish{% else %}Submit{% endif %}
             </button>
         </form>
 
-        <!-- Success Message -->
-        <div id="feedback-success" class="hidden p-8 text-center">
-            <div class="w-20 h-20 bg-gradient-to-br from-[#4ECDC4] to-[#45B7D1] flex items-center justify-center mx-auto mb-4 rounded-2xl shadow-lg">
-                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
-                </svg>
-            </div>
-            <h3 class="text-2xl font-black text-white mb-3">{% if lang == 'uz' %}Rahmat!{% else %}Thank you!{% endif %}</h3>
-            <p class="text-gray-400 font-medium">{% if lang == 'uz' %}Fikr-mulohazangiz muvaffaqiyatli yuborildi. Loyihamizni yaxshilashga yordam berganingiz uchun tashakkur!{% else %}Your feedback has been submitted successfully. Thank you for helping us improve!{% endif %}</p>
+        <div id="feedback-success" class="hidden p-6 md:p-8 text-center">
+            <div class="text-5xl mb-3">&#127881;</div>
+            <h3 class="text-xl font-black text-white mb-2">{% if lang == 'uz' %}Rahmat!{% else %}Thank you!{% endif %}</h3>
+            <p class="text-[#AFAFAF] font-medium text-sm">{% if lang == 'uz' %}Fikringiz muvaffaqiyatli yuborildi{% else %}Feedback submitted successfully{% endif %}</p>
         </div>
     </div>
 
     <!-- Actions -->
-    <div class="text-center flex flex-col sm:flex-row gap-4 justify-center pt-6">
-        <a href="/dashboard" class="btn-3d px-10 py-4 text-lg">
-            {% if lang == 'uz' %}Dashboardga qaytish{% else %}Back to Dashboard{% endif %}
+    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="/dashboard" class="btn-duo btn-duo-green px-8 md:px-10 py-3 md:py-4 text-sm md:text-lg text-center">
+            {% if lang == 'uz' %}Dashboard{% else %}Dashboard{% endif %}
         </a>
-        <a href="/test/reading" class="btn-3d btn-3d-blue px-10 py-4 text-lg">
-            {% if lang == 'uz' %}Yangi test{% else %}Take Another Test{% endif %}
+        <a href="/test/reading" class="btn-duo btn-duo-blue px-8 md:px-10 py-3 md:py-4 text-sm md:text-lg text-center">
+            {% if lang == 'uz' %}Yangi test{% else %}New Test{% endif %}
         </a>
     </div>
 </div>
 {% endblock %}
 {% block scripts %}
 <script>
-// Confetti animation on page load
+// Confetti
 function createConfetti() {
-    const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFE66D', '#A78BFA', '#FF9F43'];
+    const colors = ['#58CC02', '#1CB0F6', '#CE82FF', '#FF9600', '#FFC800', '#FF4B4B'];
     for (let i = 0; i < 50; i++) {
         setTimeout(() => {
-            const confetti = document.createElement('div');
-            confetti.className = 'confetti';
-            confetti.style.left = Math.random() * 100 + 'vw';
-            confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
-            confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
-            confetti.style.animationDelay = Math.random() * 0.5 + 's';
-            document.body.appendChild(confetti);
-            setTimeout(() => confetti.remove(), 3500);
+            const c = document.createElement('div');
+            c.className = 'confetti';
+            c.style.left = Math.random() * 100 + 'vw';
+            c.style.background = colors[Math.floor(Math.random() * colors.length)];
+            c.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+            c.style.animationDelay = Math.random() * 0.5 + 's';
+            document.body.appendChild(c);
+            setTimeout(() => c.remove(), 3500);
         }, i * 30);
     }
 }
@@ -604,16 +513,18 @@ createConfetti();
 document.querySelectorAll('.rating-btn').forEach(btn => {
     btn.addEventListener('click', function() {
         document.querySelectorAll('.rating-btn').forEach(b => {
-            b.classList.remove('bg-gradient-to-r', 'from-[#4ECDC4]', 'to-[#45B7D1]', 'text-white', 'border-[#4ECDC4]');
-            b.classList.add('bg-[#0F172A]', 'text-gray-400', 'border-[#334155]');
+            b.classList.remove('bg-[#58CC02]', 'text-white', 'border-[#58CC02]');
+            b.classList.add('bg-[#131F24]', 'text-[#777]', 'border-[#2B4148]');
+            b.style.boxShadow = '';
         });
-        this.classList.remove('bg-[#0F172A]', 'text-gray-400', 'border-[#334155]');
-        this.classList.add('bg-gradient-to-r', 'from-[#4ECDC4]', 'to-[#45B7D1]', 'text-white', 'border-[#4ECDC4]');
+        this.classList.remove('bg-[#131F24]', 'text-[#777]', 'border-[#2B4148]');
+        this.classList.add('bg-[#58CC02]', 'text-white', 'border-[#58CC02]');
+        this.style.boxShadow = '0 3px 0 #46A302';
         document.getElementById('rating').value = this.dataset.value;
     });
 });
 
-// Feedback form submission
+// Feedback form
 document.getElementById('feedback-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     const formData = new FormData(this);
@@ -621,12 +532,11 @@ document.getElementById('feedback-form').addEventListener('submit', async functi
         const response = await fetch('/feedback/submit', { method: 'POST', body: formData });
         const result = await response.json();
         if (result.success) {
-            document.getElementById('feedback-form').classList.add('hidden');
+            this.classList.add('hidden');
             document.getElementById('feedback-success').classList.remove('hidden');
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('{% if lang == "uz" %}Xatolik yuz berdi. Qaytadan urinib ko\'ring.{% else %}An error occurred. Please try again.{% endif %}');
     }
 });
 </script>

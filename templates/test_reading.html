@@ -5,38 +5,127 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reading Test - CEFR Level</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * { font-family: 'Nunito', sans-serif; }
 
+        /* DUOLINGO COLOR PALETTE */
         :root {
-            --primary: #FF6B6B;
-            --primary-dark: #E85555;
-            --secondary: #4ECDC4;
-            --secondary-dark: #3DB8B0;
-            --accent: #FFE66D;
-            --info: #45B7D1;
-            --purple: #A78BFA;
-            --orange: #FF9F43;
-            --bg: #0F172A;
-            --card: #1E293B;
-            --border: #334155;
+            --duo-green: #58CC02;
+            --duo-green-dark: #46A302;
+            --duo-blue: #1CB0F6;
+            --duo-blue-dark: #1899D6;
+            --duo-purple: #CE82FF;
+            --duo-purple-dark: #A560E8;
+            --duo-red: #FF4B4B;
+            --duo-red-dark: #EA2B2B;
+            --duo-orange: #FF9600;
+            --duo-yellow: #FFC800;
+            --bg-main: #131F24;
+            --bg-card: #1A2C32;
+            --border-color: #2B4148;
+            --border-light: #3D5A63;
         }
 
-        body { background: linear-gradient(180deg, var(--bg) 0%, #0D1321 100%); }
+        body { background: var(--bg-main); }
 
         .passage-text {
-            line-height: 2.2;
+            line-height: 1.7;
             color: #e2e8f0;
-            font-size: 16px;
+            font-size: 14px;
         }
+        .test-header-compact .header-part-info {
+            font-size: 12px;
+            line-height: 1.35;
+        }
+        .test-main-fill {
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .part-section .test-card {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .part-section .test-card > div:last-child {
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .part-section .grid.lg\:grid-cols-2 {
+            flex: 1;
+            min-height: 0;
+            gap: 0.75rem;
+        }
+        .part-section .passage-card,
+        .part-section .space-y-4 {
+            min-height: 0;
+            overflow-y: auto;
+        }
+
+        /* Savolni tanlash (klaviatura A B C D uchun) */
+        .focusable-question {
+            cursor: pointer;
+            outline: none;
+            border-radius: 12px;
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+        .focusable-question:hover {
+            border-color: var(--border-light);
+        }
+        .focusable-question.focused-question {
+            border-color: var(--duo-blue);
+            box-shadow: 0 0 0 3px rgba(28, 176, 246, 0.35);
+        }
+
+        /* Highlight: sariq va ko'k */
+        .highlight-yellow {
+            background: rgba(255, 200, 0, 0.5);
+            border-radius: 2px;
+            padding: 0 1px;
+        }
+        .highlight-blue {
+            background: rgba(28, 176, 246, 0.4);
+            border-radius: 2px;
+            padding: 0 1px;
+        }
+        #highlight-toolbar {
+            position: fixed;
+            display: none;
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 6px 10px;
+            z-index: 300;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+            gap: 6px;
+        }
+        #highlight-toolbar button {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            border: none;
+        }
+        #highlight-toolbar .btn-yellow { background: #FFC800; color: #1a1a1a; }
+        #highlight-toolbar .btn-blue { background: #1CB0F6; color: white; }
+        #highlight-toolbar .btn-remove { background: #FF4B4B; color: white; }
 
         .gap-input {
             width: 130px;
             border: none;
-            border-bottom: 3px solid var(--info);
+            border-bottom: 3px solid var(--duo-blue);
             text-align: center;
-            background: rgba(69, 183, 209, 0.1);
+            background: rgba(28, 176, 246, 0.1);
             color: #fff;
             outline: none;
             font-family: 'Nunito', sans-serif;
@@ -47,40 +136,51 @@
             transition: all 0.2s ease;
         }
         .gap-input:focus {
-            border-color: var(--secondary);
-            background: rgba(78, 205, 196, 0.15);
-            box-shadow: 0 4px 12px rgba(69, 183, 209, 0.2);
+            border-color: var(--duo-green);
+            background: rgba(88, 204, 2, 0.15);
+            box-shadow: 0 4px 12px rgba(88, 204, 2, 0.2);
         }
-        .gap-input::placeholder { color: #64748b; }
+        .gap-input.filled {
+            border-color: var(--duo-green);
+            background: rgba(88, 204, 2, 0.1);
+        }
+        .gap-input::placeholder { color: #777; }
 
+        /* 3D OPTION BUTTONS */
         .option-btn {
-            transition: all 0.2s ease;
-            border: 2px solid var(--border);
-            background: var(--card);
+            transition: all 0.1s ease;
+            border: 2px solid var(--border-color);
+            background: var(--bg-card);
             border-radius: 16px;
+            position: relative;
         }
         .option-btn:hover {
-            border-color: var(--info);
-            background: rgba(69, 183, 209, 0.1);
+            border-color: var(--duo-blue);
+            background: rgba(28, 176, 246, 0.1);
             transform: translateY(-2px);
         }
         .option-btn.selected {
-            background: linear-gradient(135deg, var(--info) 0%, var(--secondary) 100%) !important;
+            background: var(--duo-green) !important;
             color: white !important;
-            border-color: var(--info) !important;
+            border-color: var(--duo-green) !important;
             font-weight: 800;
-            box-shadow: 0 4px 0 var(--secondary-dark), 0 6px 20px rgba(69, 183, 209, 0.3);
+            box-shadow: 0 4px 0 var(--duo-green-dark), 0 6px 15px rgba(88, 204, 2, 0.3);
+            transform: translateY(-2px);
+        }
+        .option-btn.selected:active {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 var(--duo-green-dark);
         }
 
-        .timer-normal {
-            background: var(--card);
-            border: 2px solid var(--border);
+        .timer-box {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
             border-radius: 16px;
         }
         .timer-warning {
-            background: rgba(255, 107, 107, 0.15);
-            border: 2px solid var(--primary);
-            color: var(--primary) !important;
+            background: rgba(255, 75, 75, 0.15);
+            border: 2px solid var(--duo-red);
+            color: var(--duo-red) !important;
             animation: pulse 1s infinite;
         }
         @keyframes pulse {
@@ -89,175 +189,354 @@
         }
 
         .test-card {
-            background: var(--card);
-            border: 2px solid var(--border);
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
             border-radius: 24px;
         }
 
         .test-header {
-            background: linear-gradient(180deg, var(--bg) 0%, rgba(15, 23, 42, 0.98) 100%);
-            border-bottom: 2px solid var(--border);
+            background: var(--bg-main);
+            border-bottom: 2px solid var(--border-color);
             backdrop-filter: blur(10px);
         }
 
         .passage-card {
-            background: rgba(15, 23, 42, 0.8);
-            border: 2px solid var(--border);
+            background: rgba(19, 31, 36, 0.8);
+            border: 2px solid var(--border-color);
             border-radius: 20px;
         }
 
         .question-card {
-            background: rgba(30, 41, 59, 0.8);
-            border: 2px solid var(--border);
+            background: rgba(26, 44, 50, 0.8);
+            border: 2px solid var(--border-color);
             border-radius: 20px;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
         .question-card:hover {
-            border-color: #475569;
-            transform: translateY(-2px);
+            border-color: var(--border-light);
+        }
+        .question-card.answered {
+            border-color: var(--duo-green);
+            background: rgba(88, 204, 2, 0.05);
+        }
+        .question-card.current {
+            border-color: var(--duo-blue);
+            box-shadow: 0 0 0 3px rgba(28, 176, 246, 0.2);
         }
 
-        .btn-3d {
-            background: linear-gradient(135deg, var(--info) 0%, var(--secondary) 100%);
-            color: white;
-            font-weight: 800;
+        /* DUOLINGO 3D BUTTONS */
+        .btn-duo {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 32px;
+            border: none;
             border-radius: 16px;
-            box-shadow: 0 6px 0 var(--secondary-dark), 0 8px 20px rgba(78, 205, 196, 0.3);
-            transition: all 0.15s ease;
+            font-weight: 800;
+            font-size: 16px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            text-decoration: none;
+            color: white;
         }
-        .btn-3d:hover {
+        
+        .btn-duo-green {
+            background: var(--duo-green);
+            box-shadow: 0 5px 0 var(--duo-green-dark), 0 7px 15px rgba(88, 204, 2, 0.35);
+        }
+        .btn-duo-green:hover {
+            filter: brightness(1.05);
             transform: translateY(-2px);
-            box-shadow: 0 8px 0 var(--secondary-dark), 0 12px 30px rgba(78, 205, 196, 0.4);
+            box-shadow: 0 7px 0 var(--duo-green-dark), 0 10px 20px rgba(88, 204, 2, 0.4);
         }
-        .btn-3d:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 var(--secondary-dark);
+        .btn-duo-green:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 var(--duo-green-dark);
         }
 
-        .btn-3d-coral {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--orange) 100%);
-            box-shadow: 0 6px 0 var(--primary-dark), 0 8px 20px rgba(255, 107, 107, 0.3);
+        .btn-duo-blue {
+            background: var(--duo-blue);
+            box-shadow: 0 5px 0 var(--duo-blue-dark), 0 7px 15px rgba(28, 176, 246, 0.35);
         }
-        .btn-3d-coral:hover {
-            box-shadow: 0 8px 0 var(--primary-dark), 0 12px 30px rgba(255, 107, 107, 0.4);
+        .btn-duo-blue:hover {
+            filter: brightness(1.05);
+            transform: translateY(-2px);
+            box-shadow: 0 7px 0 var(--duo-blue-dark), 0 10px 20px rgba(28, 176, 246, 0.4);
+        }
+        .btn-duo-blue:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 var(--duo-blue-dark);
+        }
+
+        .btn-duo-orange {
+            background: var(--duo-orange);
+            box-shadow: 0 5px 0 #E68600, 0 7px 15px rgba(255, 150, 0, 0.35);
+        }
+        .btn-duo-orange:hover {
+            filter: brightness(1.05);
+            transform: translateY(-2px);
+        }
+        .btn-duo-orange:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0 #E68600;
+        }
+
+        .btn-duo-outline {
+            background: transparent;
+            border: 2px solid var(--border-light);
+            color: #AFAFAF;
+            box-shadow: none;
+        }
+        .btn-duo-outline:hover {
+            background: var(--bg-card);
+            border-color: var(--duo-blue);
+            color: white;
+            transform: translateY(-2px);
         }
 
         .progress-bar {
-            background: linear-gradient(90deg, var(--info) 0%, var(--secondary) 100%);
+            background: linear-gradient(90deg, var(--duo-green) 0%, var(--duo-blue) 100%);
             border-radius: 4px;
             transition: width 0.5s ease;
         }
 
         .part-indicator {
-            background: var(--card);
-            border: 2px solid var(--border);
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
             border-radius: 12px;
             padding: 4px 16px;
         }
 
         /* Scrollbar */
         ::-webkit-scrollbar { width: 10px; height: 10px; }
-        ::-webkit-scrollbar-track { background: var(--bg); border-radius: 5px; }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 5px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        ::-webkit-scrollbar-track { background: var(--bg-main); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--border-light); }
 
-        .gradient-text {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--orange) 50%, var(--accent) 100%);
+        .gradient-text-green {
+            background: linear-gradient(135deg, var(--duo-green) 0%, #7ED321 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        .step-badge {
-            background: linear-gradient(135deg, var(--info) 0%, var(--secondary) 100%);
-            color: white;
+        /* Test layout: 1 oyna, faqat o'rta scroll */
+        .test-layout {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .test-main-scroll {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+        }
+        .test-footer-bar {
+            flex-shrink: 0;
+            background: var(--bg-main);
+            border-top: 2px solid var(--border-color);
+            padding: 12px 16px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        /* Question Navigator (inside footer) */
+        .question-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .q-nav-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: 800;
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-size: 13px;
+            border: 2px solid var(--border-color);
+            background: var(--bg-main);
+            color: #777;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .q-nav-btn:hover {
+            border-color: var(--duo-blue);
+            color: var(--duo-blue);
+            transform: translateY(-2px);
+        }
+        .q-nav-btn.answered {
+            background: var(--duo-green);
+            border-color: var(--duo-green);
+            color: white;
+            box-shadow: 0 3px 0 var(--duo-green-dark);
+        }
+        .q-nav-btn.current {
+            border-color: var(--duo-blue);
+            color: var(--duo-blue);
+            box-shadow: 0 0 0 3px rgba(28, 176, 246, 0.3);
+        }
+
+        /* Keyboard hint */
+        .kbd {
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #777;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--duo-green);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            box-shadow: 0 4px 0 var(--duo-green-dark), 0 10px 30px rgba(0,0,0,0.3);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 200;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .test-footer-bar {
+                padding: 8px 12px;
+                gap: 8px;
+            }
+            .question-nav {
+                max-width: 100%;
+                overflow-x: auto;
+                justify-content: flex-start;
+            }
+            .q-nav-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 11px;
+                flex-shrink: 0;
+            }
+            .test-header .flex {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
         }
     </style>
 </head>
-<body class="min-h-screen text-white">
+<body class="text-white test-layout">
 
-    <!-- Header Bar -->
-    <div class="test-header fixed top-0 left-0 right-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-gradient-to-br from-[#FF6B6B] via-[#FF9F43] to-[#FFE66D] flex items-center justify-center text-white font-black text-xl rounded-xl shadow-lg">
-                    C
-                </div>
+    <!-- Header (ixcham: part ma'lumoti + klaviatura) -->
+    <header class="test-header test-header-compact flex-shrink-0">
+        <div class="max-w-7xl mx-auto px-3 py-2 flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2 md:gap-3">
+                <div class="w-9 h-9 md:w-10 md:h-10 bg-[#58CC02] flex items-center justify-center text-white font-black text-base rounded-lg" style="box-shadow: 0 3px 0 #46A302;">C</div>
                 <div>
-                    <span class="text-lg font-black gradient-text uppercase tracking-wider">Reading Test</span>
-                    <div class="text-sm text-gray-400 font-bold">Section 1 of 3</div>
+                    <span class="text-sm md:text-base font-black gradient-text-green uppercase tracking-wider">Reading Test</span>
+                    <div class="text-xs text-[#777] font-bold">Section 1 of 3</div>
                 </div>
             </div>
-            <div class="flex items-center gap-6">
-                <div class="part-indicator flex items-center gap-3">
-                    <span class="text-sm text-gray-400 font-bold">Progress:</span>
-                    <span id="progress" class="text-xl font-black text-[#4ECDC4]">0</span>
-                    <span class="text-sm text-gray-400 font-bold">%</span>
+            <!-- Part ma'lumoti (JS yangilaydi) -->
+            <div id="header-part-info" class="header-part-info flex-1 min-w-0 mx-2 text-center md:text-left order-3 w-full md:order-2 md:w-auto">
+                <span id="header-part-title" class="font-black text-white text-xs md:text-sm">Part 1: Multiple Choice Cloze</span>
+                <span id="header-part-of" class="text-[#777] font-bold text-xs ml-1">Part 1 of 4</span>
+                <div id="header-part-instruction" class="text-[#AFAFAF] font-medium text-xs mt-0.5 truncate md:whitespace-normal">For questions 1-8, read the text below and decide which answer (A, B, C or D) best fits each gap.</div>
+            </div>
+            <div class="flex items-center gap-2 md:gap-3 order-2 md:order-3">
+                <div class="part-indicator flex items-center gap-1 text-xs">
+                    <span id="progress" class="font-black text-[#58CC02]">0</span><span class="text-[#777] font-bold">%</span>
                 </div>
-                <div id="timer" class="timer-normal text-2xl font-mono font-black px-6 py-3 text-white">60:00</div>
+                <div id="timer" class="timer-box text-base md:text-xl font-mono font-black px-3 py-1.5 text-white">60:00</div>
             </div>
         </div>
-        <div class="w-full h-2 bg-[#1E293B]">
+        <div class="max-w-7xl mx-auto px-3 py-1.5 flex flex-wrap items-center justify-between gap-1.5 border-t border-[#2B4148]/50">
+            <span class="text-[#AFAFAF] text-xs flex items-center gap-1.5 flex-wrap">
+                Savolni sichqoncha bilan tanlang, keyin <span class="kbd">A</span><span class="kbd">B</span><span class="kbd">C</span><span class="kbd">D</span> &nbsp;|&nbsp; <span class="kbd">←</span><span class="kbd">→</span> part
+            </span>
+            <span class="text-[10px] text-[#777] flex items-center gap-2">
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded bg-[#58CC02]"></span> Berilgan</span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded bg-[#1CB0F6]"></span> Hozirgi</span>
+            </span>
+        </div>
+        <div class="w-full h-1.5 bg-[#2B4148]">
             <div id="progress-bar" class="progress-bar h-full" style="width: 0%"></div>
         </div>
+    </header>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">Javob saqlandi!</div>
+
+    <!-- Highlight toolbar (tanlangan matnni belgilash / o'chirish) -->
+    <div id="highlight-toolbar" class="flex items-center">
+        <button type="button" class="btn-yellow" data-action="highlight-yellow">Sariq</button>
+        <button type="button" class="btn-blue" data-action="highlight-blue">Ko'k</button>
+        <button type="button" class="btn-remove" data-action="highlight-remove">O'chirish</button>
     </div>
 
-    <main class="pt-28 pb-36 px-4">
-        <div class="max-w-7xl mx-auto">
-            <form id="reading-form">
+    <!-- O'rta qism: 1 oyna, scroll yo'q (passage va savollar o'z ustida scroll) -->
+    <main class="test-main-fill px-3 py-2">
+        <div class="max-w-7xl mx-auto h-full min-h-0 flex flex-col">
+            <form id="reading-form" class="h-full min-h-0 flex flex-col">
                 {% for part in test_data.parts %}
-                <section class="part-section mb-0 hidden" data-part="{{ part.part_number }}">
-                    <div class="test-card overflow-hidden">
-                        <!-- Part Header -->
-                        <div class="p-8 border-b-2 border-[#334155] bg-gradient-to-r from-[#1E293B] to-[#0F172A]">
-                            <div class="flex items-center gap-5 mb-4">
-                                <div class="w-16 h-16 bg-gradient-to-br from-[#45B7D1] to-[#4ECDC4] rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-lg">
-                                    {{ part.part_number }}
+                <section class="part-section mb-0 hidden h-full min-h-0 flex-1 flex flex-col" data-part="{{ part.part_number }}" data-title="{{ part.title }}" data-instruction="{{ part.instruction }}">
+                    <div class="test-card overflow-hidden h-full">
+                        <div class="p-3 md:p-4 flex-1 min-h-0 flex flex-col">
+                            {% if part.type == "open_cloze" %}
+                            <!-- Part 1: Open Cloze — Instructions tepada, Passage to'liq joy -->
+                            <div class="flex flex-col flex-1 min-h-0">
+                                <div class="bg-[#CE82FF]/10 border-2 border-[#CE82FF]/30 rounded-xl p-2 md:p-3 flex-shrink-0 mb-2">
+                                    <p class="text-xs md:text-sm text-[#AFAFAF] font-medium">Fill in each gap with <strong class="text-[#CE82FF]">ONE word only</strong>. Use only ONE word. Contractions = two words.</p>
                                 </div>
-                                <div>
-                                    <h2 class="text-3xl font-black text-white">{{ part.title }}</h2>
-                                    <span class="text-base text-gray-400 font-bold">Part {{ part.part_number }} of {{ test_data.parts|length }}</span>
-                                </div>
-                            </div>
-                            <p class="text-gray-300 ml-[84px] text-lg font-medium">{{ part.instruction }}</p>
-                        </div>
-
-                        <div class="p-8">
-                            {% if part.type == "multiple_choice_cloze" %}
-                            <!-- Part 1: Multiple Choice Cloze -->
-                            <div class="grid lg:grid-cols-2 gap-8 min-h-[500px]">
-                                <div class="passage-card p-8 overflow-y-auto max-h-[70vh]">
-                                    <h4 class="text-[#45B7D1] font-black text-sm uppercase tracking-wider mb-6 flex items-center gap-3">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                                        Passage
-                                    </h4>
-                                    <div class="passage-text">
-                                        {{ part.text | replace("(1)_____", "<span class='inline-block bg-[#45B7D1]/20 text-[#45B7D1] px-3 py-1 font-black rounded-lg'>(1)</span>") | replace("(2)_____", "<span class='inline-block bg-[#45B7D1]/20 text-[#45B7D1] px-3 py-1 font-black rounded-lg'>(2)</span>") | replace("(3)_____", "<span class='inline-block bg-[#45B7D1]/20 text-[#45B7D1] px-3 py-1 font-black rounded-lg'>(3)</span>") | replace("(4)_____", "<span class='inline-block bg-[#45B7D1]/20 text-[#45B7D1] px-3 py-1 font-black rounded-lg'>(4)</span>") | replace("(5)_____", "<span class='inline-block bg-[#45B7D1]/20 text-[#45B7D1] px-3 py-1 font-black rounded-lg'>(5)</span>") | replace("(6)_____", "<span class='inline-block bg-[#45B7D1]/20 text-[#45B7D1] px-3 py-1 font-black rounded-lg'>(6)</span>") | replace("(7)_____", "<span class='inline-block bg-[#45B7D1]/20 text-[#45B7D1] px-3 py-1 font-black rounded-lg'>(7)</span>") | replace("(8)_____", "<span class='inline-block bg-[#45B7D1]/20 text-[#45B7D1] px-3 py-1 font-black rounded-lg'>(8)</span>") | safe }}
+                                <div class="passage-card p-4 md:p-5 overflow-y-auto min-h-0 flex-1 passage-highlight-container">
+                                    <h4 class="text-[#CE82FF] font-black text-xs uppercase tracking-wider mb-2">Passage</h4>
+                                    <div class="passage-text" data-part="{{ part.part_number }}" data-highlight-key="reading-open-{{ part.part_number }}">
+                                        {{ part.text | replace("(1)_____", "<input type='text' name='1' id='q-1' class='gap-input' placeholder='1' data-question='1'>") | replace("(2)_____", "<input type='text' name='2' id='q-2' class='gap-input' placeholder='2' data-question='2'>") | replace("(3)_____", "<input type='text' name='3' id='q-3' class='gap-input' placeholder='3' data-question='3'>") | replace("(4)_____", "<input type='text' name='4' id='q-4' class='gap-input' placeholder='4' data-question='4'>") | replace("(5)_____", "<input type='text' name='5' id='q-5' class='gap-input' placeholder='5' data-question='5'>") | replace("(6)_____", "<input type='text' name='6' id='q-6' class='gap-input' placeholder='6' data-question='6'>") | replace("(7)_____", "<input type='text' name='7' id='q-7' class='gap-input' placeholder='7' data-question='7'>") | replace("(8)_____", "<input type='text' name='8' id='q-8' class='gap-input' placeholder='8' data-question='8'>") | safe }}
                                     </div>
                                 </div>
-                                <div class="space-y-5 overflow-y-auto max-h-[70vh] pr-3">
-                                    <h4 class="text-[#A78BFA] font-black text-sm uppercase tracking-wider mb-6 flex items-center gap-3">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-                                        Questions
-                                    </h4>
+                            </div>
+
+                            {% elif part.type == "multiple_choice_cloze" %}
+                            <!-- Part 2: Chapda savol, o'ngda variantlar -->
+                            <div class="grid lg:grid-cols-2 gap-3 md:gap-4 flex-1 min-h-0">
+                                <div class="passage-card p-4 md:p-5 overflow-y-auto min-h-0 passage-highlight-container">
+                                    <h4 class="text-[#1CB0F6] font-black text-xs uppercase tracking-wider mb-2">Passage</h4>
+                                    <div class="passage-text" data-part="{{ part.part_number }}" data-highlight-key="reading-mc-{{ part.part_number }}">
+                                        {{ part.text | replace("(9)_____", "<span class='inline-block bg-[#1CB0F6]/20 text-[#1CB0F6] px-3 py-1 font-black rounded-lg'>(9)</span>") | replace("(10)_____", "<span class='inline-block bg-[#1CB0F6]/20 text-[#1CB0F6] px-3 py-1 font-black rounded-lg'>(10)</span>") | replace("(11)_____", "<span class='inline-block bg-[#1CB0F6]/20 text-[#1CB0F6] px-3 py-1 font-black rounded-lg'>(11)</span>") | replace("(12)_____", "<span class='inline-block bg-[#1CB0F6]/20 text-[#1CB0F6] px-3 py-1 font-black rounded-lg'>(12)</span>") | replace("(13)_____", "<span class='inline-block bg-[#1CB0F6]/20 text-[#1CB0F6] px-3 py-1 font-black rounded-lg'>(13)</span>") | replace("(14)_____", "<span class='inline-block bg-[#1CB0F6]/20 text-[#1CB0F6] px-3 py-1 font-black rounded-lg'>(14)</span>") | replace("(15)_____", "<span class='inline-block bg-[#1CB0F6]/20 text-[#1CB0F6] px-3 py-1 font-black rounded-lg'>(15)</span>") | replace("(16)_____", "<span class='inline-block bg-[#1CB0F6]/20 text-[#1CB0F6] px-3 py-1 font-black rounded-lg'>(16)</span>") | safe }}
+                                    </div>
+                                </div>
+                                <div class="space-y-2 md:space-y-3 overflow-y-auto min-h-0 pr-1">
+                                    <h4 class="text-[#CE82FF] font-black text-xs uppercase tracking-wider mb-2">Savollar — o'ngda variantlarni tanlang</h4>
                                     {% for q in part.questions %}
-                                    <div class="question-card p-5" data-question="{{ q.number }}">
-                                        <div class="font-bold text-gray-400 mb-4 text-sm uppercase tracking-wider">Question {{ q.number }}</div>
-                                        <div class="grid grid-cols-2 gap-3">
+                                    <div class="question-card p-2 md:p-3 focusable-question flex flex-col md:flex-row md:items-center gap-2 md:gap-4" data-question="{{ q.number }}" id="q-{{ q.number }}" tabindex="0">
+                                        <div class="font-bold text-white md:min-w-[120px] flex items-center gap-2 flex-shrink-0">
+                                            <span class="w-6 h-6 bg-[#1CB0F6] rounded-lg flex items-center justify-center text-white text-xs font-black">{{ q.number }}</span>
+                                            <span class="text-xs md:text-sm">Savol {{ q.number }}</span>
+                                        </div>
+                                        <div class="grid grid-cols-2 md:grid-cols-2 gap-1.5 md:gap-2 flex-1">
                                             {% for letter, option in q.options.items() %}
                                             <button type="button"
-                                                    class="option-btn p-4 text-left text-sm text-gray-200 font-medium"
+                                                    class="option-btn p-2 md:p-3 text-left text-xs text-[#AFAFAF] font-medium"
                                                     data-question="{{ q.number }}"
                                                     data-value="{{ letter }}">
-                                                <span class="font-black text-[#45B7D1] mr-2">{{ letter }}.</span>{{ option }}
+                                                <span class="font-black text-[#1CB0F6] mr-1">{{ letter }}.</span>{{ option }}
                                             </button>
                                             {% endfor %}
                                         </div>
@@ -267,63 +546,28 @@
                                 </div>
                             </div>
 
-                            {% elif part.type == "open_cloze" %}
-                            <!-- Part 2: Open Cloze -->
-                            <div class="grid lg:grid-cols-2 gap-8 min-h-[500px]">
-                                <div class="space-y-5">
-                                    <div class="bg-[#A78BFA]/10 border-2 border-[#A78BFA]/30 rounded-2xl p-5">
-                                        <p class="text-base text-gray-200 font-medium">Fill in each gap with <strong class="text-[#A78BFA]">ONE word only</strong>.</p>
-                                    </div>
-                                    <div class="passage-card p-8 overflow-y-auto max-h-[60vh]">
-                                        <h4 class="text-[#A78BFA] font-black text-sm uppercase tracking-wider mb-6 flex items-center gap-3">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                                            Passage
-                                        </h4>
-                                        <div class="passage-text">
-                                            {{ part.text | replace("(9)_____", "<input type='text' name='9' class='gap-input' placeholder='9'>") | replace("(10)_____", "<input type='text' name='10' class='gap-input' placeholder='10'>") | replace("(11)_____", "<input type='text' name='11' class='gap-input' placeholder='11'>") | replace("(12)_____", "<input type='text' name='12' class='gap-input' placeholder='12'>") | replace("(13)_____", "<input type='text' name='13' class='gap-input' placeholder='13'>") | replace("(14)_____", "<input type='text' name='14' class='gap-input' placeholder='14'>") | replace("(15)_____", "<input type='text' name='15' class='gap-input' placeholder='15'>") | replace("(16)_____", "<input type='text' name='16' class='gap-input' placeholder='16'>") | safe }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="passage-card p-8">
-                                    <h4 class="text-[#FFE66D] font-black text-sm uppercase tracking-wider mb-6 flex items-center gap-3">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                        Instructions
-                                    </h4>
-                                    <div class="space-y-5 text-gray-300 text-lg font-medium">
-                                        <p>Type one word in each gap in the passage on the left.</p>
-                                        <p>Use only <strong class="text-white">ONE</strong> word for each gap.</p>
-                                        <p>Contractions count as two words (e.g., "don't" = "do not").</p>
-                                    </div>
-                                </div>
-                            </div>
-
                             {% elif part.type == "multiple_choice_comprehension" %}
                             <!-- Part 3: Multiple Choice Comprehension -->
-                            <div class="grid lg:grid-cols-2 gap-8 min-h-[500px]">
-                                <div class="passage-card p-8 overflow-y-auto max-h-[70vh]">
-                                    <h4 class="text-[#FF6B6B] font-black text-sm uppercase tracking-wider mb-6 flex items-center gap-3">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                                        Passage
-                                    </h4>
-                                    <div class="passage-text">{{ part.text | safe }}</div>
+                            <div class="grid lg:grid-cols-2 gap-3 md:gap-4 flex-1 min-h-0">
+                                <div class="passage-card p-4 md:p-5 overflow-y-auto min-h-0 passage-highlight-container">
+                                    <h4 class="text-[#FF4B4B] font-black text-xs uppercase tracking-wider mb-2">Passage</h4>
+                                    <div class="passage-text" data-part="{{ part.part_number }}" data-highlight-key="reading-comp-{{ part.part_number }}">{{ part.text | safe }}</div>
                                 </div>
-                                <div class="space-y-5 overflow-y-auto max-h-[70vh] pr-3">
-                                    <h4 class="text-[#FF9F43] font-black text-sm uppercase tracking-wider mb-6 flex items-center gap-3">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                        Questions
-                                    </h4>
+                                <div class="space-y-2 md:space-y-3 overflow-y-auto min-h-0 pr-1">
+                                    <h4 class="text-[#FF9600] font-black text-xs uppercase tracking-wider mb-2">Questions</h4>
                                     {% for q in part.questions %}
-                                    <div class="question-card p-5" data-question="{{ q.number }}">
-                                        <div class="font-bold text-white mb-4 text-base">
-                                            <span class="text-[#FF6B6B] font-black mr-2">{{ q.number }}.</span>{{ q.question }}
+                                    <div class="question-card p-2 md:p-3 focusable-question" data-question="{{ q.number }}" id="q-{{ q.number }}" tabindex="0">
+                                        <div class="font-bold text-white mb-2 text-xs md:text-sm flex items-start gap-2">
+                                            <span class="w-6 h-6 bg-[#FF4B4B] rounded-lg flex items-center justify-center text-white text-xs font-black flex-shrink-0">{{ q.number }}</span>
+                                            <span>{{ q.question }}</span>
                                         </div>
-                                        <div class="space-y-3">
+                                        <div class="space-y-1.5 md:space-y-2">
                                             {% for letter, option in q.options.items() %}
                                             <button type="button"
-                                                    class="option-btn w-full p-4 text-left text-base text-gray-200 flex items-start gap-4 font-medium"
+                                                    class="option-btn w-full p-2 md:p-3 text-left text-xs md:text-sm text-[#AFAFAF] flex items-start gap-2 font-medium"
                                                     data-question="{{ q.number }}"
                                                     data-value="{{ letter }}">
-                                                <span class="font-black text-[#FF6B6B]">{{ letter }}.</span>
+                                                <span class="font-black text-[#FF4B4B]">{{ letter }}.</span>
                                                 <span>{{ option }}</span>
                                             </button>
                                             {% endfor %}
@@ -336,41 +580,32 @@
 
                             {% elif part.type == "gapped_text" %}
                             <!-- Part 4: Gapped Text -->
-                            <div class="grid lg:grid-cols-2 gap-8 min-h-[500px]">
-                                <div class="passage-card p-8 overflow-y-auto max-h-[70vh]">
-                                    <h4 class="text-[#4ECDC4] font-black text-sm uppercase tracking-wider mb-6 flex items-center gap-3">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
-                                        Text with Gaps
-                                    </h4>
-                                    <div class="passage-text">
-                                        {{ part.text | replace("(23)_____", "<span class='inline-block bg-gradient-to-r from-[#4ECDC4] to-[#45B7D1] text-white px-4 py-1 font-black text-sm rounded-lg shadow-lg'>23</span>") | replace("(24)_____", "<span class='inline-block bg-gradient-to-r from-[#4ECDC4] to-[#45B7D1] text-white px-4 py-1 font-black text-sm rounded-lg shadow-lg'>24</span>") | replace("(25)_____", "<span class='inline-block bg-gradient-to-r from-[#4ECDC4] to-[#45B7D1] text-white px-4 py-1 font-black text-sm rounded-lg shadow-lg'>25</span>") | replace("(26)_____", "<span class='inline-block bg-gradient-to-r from-[#4ECDC4] to-[#45B7D1] text-white px-4 py-1 font-black text-sm rounded-lg shadow-lg'>26</span>") | replace("(27)_____", "<span class='inline-block bg-gradient-to-r from-[#4ECDC4] to-[#45B7D1] text-white px-4 py-1 font-black text-sm rounded-lg shadow-lg'>27</span>") | replace("(28)_____", "<span class='inline-block bg-gradient-to-r from-[#4ECDC4] to-[#45B7D1] text-white px-4 py-1 font-black text-sm rounded-lg shadow-lg'>28</span>") | safe }}
+                            <div class="grid lg:grid-cols-2 gap-3 md:gap-4 flex-1 min-h-0">
+                                <div class="passage-card p-4 md:p-5 overflow-y-auto min-h-0 passage-highlight-container">
+                                    <h4 class="text-[#58CC02] font-black text-xs uppercase tracking-wider mb-2">Text with Gaps</h4>
+                                    <div class="passage-text" data-part="{{ part.part_number }}" data-highlight-key="reading-gapped-{{ part.part_number }}">
+                                        {{ part.text | replace("(23)_____", "<span class='inline-block bg-[#58CC02] text-white px-3 py-0.5 font-black text-xs rounded-lg' style='box-shadow: 0 2px 0 #46A302;'>23</span>") | replace("(24)_____", "<span class='inline-block bg-[#58CC02] text-white px-3 py-0.5 font-black text-xs rounded-lg' style='box-shadow: 0 2px 0 #46A302;'>24</span>") | replace("(25)_____", "<span class='inline-block bg-[#58CC02] text-white px-3 py-0.5 font-black text-xs rounded-lg' style='box-shadow: 0 2px 0 #46A302;'>25</span>") | replace("(26)_____", "<span class='inline-block bg-[#58CC02] text-white px-3 py-0.5 font-black text-xs rounded-lg' style='box-shadow: 0 2px 0 #46A302;'>26</span>") | replace("(27)_____", "<span class='inline-block bg-[#58CC02] text-white px-3 py-0.5 font-black text-xs rounded-lg' style='box-shadow: 0 2px 0 #46A302;'>27</span>") | replace("(28)_____", "<span class='inline-block bg-[#58CC02] text-white px-3 py-0.5 font-black text-xs rounded-lg' style='box-shadow: 0 2px 0 #46A302;'>28</span>") | safe }}
                                     </div>
                                 </div>
-                                <div class="space-y-8 overflow-y-auto max-h-[70vh] pr-3">
+                                <div class="space-y-3 overflow-y-auto min-h-0 pr-1">
                                     <div>
-                                        <h4 class="text-[#FFE66D] font-black text-sm uppercase tracking-wider mb-5 flex items-center gap-3">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
-                                            Removed Sentences
-                                        </h4>
-                                        <div class="space-y-4">
+                                        <h4 class="text-[#FFC800] font-black text-xs uppercase tracking-wider mb-2">Removed Sentences</h4>
+                                        <div class="space-y-2">
                                             {% for letter, sentence in part.removed_sentences.items() %}
-                                            <div class="passage-card p-5 text-base text-gray-200 font-medium">
-                                                <span class="font-black text-[#FFE66D]">{{ letter }}.</span> {{ sentence }}
+                                            <div class="passage-card p-2 md:p-3 text-xs md:text-sm text-[#AFAFAF] font-medium">
+                                                <span class="font-black text-[#FFC800]">{{ letter }}.</span> {{ sentence }}
                                             </div>
                                             {% endfor %}
                                         </div>
                                     </div>
                                     <div>
-                                        <h4 class="text-[#4ECDC4] font-black text-sm uppercase tracking-wider mb-5 flex items-center gap-3">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                                            Your Answers
-                                        </h4>
-                                        <div class="space-y-4">
+                                        <h4 class="text-[#58CC02] font-black text-xs uppercase tracking-wider mb-2">Your Answers</h4>
+                                        <div class="space-y-2">
                                             {% for q in part.questions %}
-                                            <div class="flex items-center gap-5">
-                                                <span class="font-bold text-gray-300 text-base w-24">Gap {{ q.number }}:</span>
-                                                <select name="{{ q.number }}" class="flex-1 bg-[#0F172A] border-2 border-[#334155] text-white px-5 py-4 rounded-xl focus:border-[#4ECDC4] outline-none font-bold text-base">
-                                                    <option value="">Select answer...</option>
+                                            <div class="flex items-center gap-2" id="q-{{ q.number }}">
+                                                <span class="font-bold text-[#AFAFAF] text-xs w-16">Gap {{ q.number }}:</span>
+                                                <select name="{{ q.number }}" data-question="{{ q.number }}" class="flex-1 bg-[#131F24] border-2 border-[#2B4148] text-white px-2 py-2 rounded-lg focus:border-[#58CC02] outline-none font-bold text-xs">
+                                                    <option value="">...</option>
                                                     <option value="A">A</option>
                                                     <option value="B">B</option>
                                                     <option value="C">C</option>
@@ -390,41 +625,44 @@
                     </div>
                 </section>
                 {% endfor %}
-
-                <!-- Part Navigation -->
-                <div id="part-nav" class="flex justify-between items-center mt-10 p-8 test-card">
-                    <button type="button" id="btn-prev-part" class="px-8 py-4 border-2 border-[#475569] text-gray-300 font-bold rounded-xl hover:border-[#4ECDC4] hover:text-white transition hidden flex items-center gap-3 text-base">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                        Previous Part
-                    </button>
-                    <div class="flex items-center gap-3">
-                        {% for part in test_data.parts %}
-                        <div class="part-dot w-4 h-4 rounded-full bg-[#475569] transition-all duration-300" data-part="{{ part.part_number }}"></div>
-                        {% endfor %}
-                    </div>
-                    <button type="button" id="btn-next-part" class="btn-3d px-8 py-4 flex items-center gap-3 text-base">
-                        Next Part
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                    </button>
-                </div>
-
-                <div id="submit-wrap" class="text-center mt-10 hidden">
-                    <button type="submit" class="btn-3d-coral px-14 py-6 font-black text-xl flex items-center gap-4 mx-auto">
-                        <span>Submit & Continue to Listening</span>
-                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
-                    </button>
-                    <p class="text-gray-400 text-base mt-5 font-medium">Continue to Listening section after submission</p>
-                </div>
             </form>
         </div>
     </main>
 
+    <!-- Pastki qism (footer): qimirlamaydi, part raqamlari + savol raqamlari -->
+    <footer class="test-footer-bar" id="test-footer">
+        <div class="flex items-center gap-2 md:gap-3 flex-shrink-0">
+            <span class="text-xs text-[#777] font-bold hidden md:inline">Part:</span>
+            <button type="button" id="btn-prev-part" class="btn-duo btn-duo-outline px-3 md:px-4 py-2 hidden text-sm" title="Oldingi part">
+                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <div class="flex items-center gap-1 md:gap-2">
+                {% for part in test_data.parts %}
+                <button type="button" class="part-dot w-9 h-9 md:w-10 md:h-10 rounded-xl bg-[#2B4148] transition-all duration-300 font-bold text-sm text-[#777] flex items-center justify-center" data-part="{{ part.part_number }}">{{ part.part_number }}</button>
+                {% endfor %}
+            </div>
+            <button type="button" id="btn-next-part" class="btn-duo btn-duo-blue px-3 md:px-4 py-2 text-sm" title="Keyingi part">
+                <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </button>
+        </div>
+        <div class="question-nav bg-[#1A2C32] border-2 border-[#2B4148] rounded-xl px-3 py-2" id="question-nav">
+            <span class="text-xs text-[#777] font-bold mr-2 hidden md:inline">Savollar:</span>
+            <!-- Will be populated by JS -->
+        </div>
+        <div id="submit-wrap" class="hidden flex-shrink-0">
+            <button type="submit" form="reading-form" class="btn-duo btn-duo-orange px-6 md:px-8 py-3 md:py-4 font-black text-sm md:text-base flex items-center gap-2">
+                <span>Yuborish → Listening</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+            </button>
+        </div>
+    </footer>
+
     <!-- Loading Overlay -->
-    <div id="loading-overlay" class="fixed inset-0 bg-[#0F172A]/98 flex items-center justify-center z-50 hidden backdrop-blur-lg">
-        <div class="test-card p-12 text-center max-w-md">
-            <div class="w-20 h-20 border-4 border-[#4ECDC4]/20 border-t-[#4ECDC4] rounded-full animate-spin mx-auto mb-8"></div>
-            <h3 class="text-2xl font-black text-white mb-3">Submitting Your Answers</h3>
-            <p class="text-gray-400 text-lg font-medium">Please wait while we process your responses...</p>
+    <div id="loading-overlay" class="fixed inset-0 bg-[#131F24]/98 flex items-center justify-center z-50 hidden backdrop-blur-lg">
+        <div class="test-card p-8 md:p-12 text-center max-w-md mx-4">
+            <div class="w-16 md:w-20 h-16 md:h-20 border-4 border-[#58CC02]/20 border-t-[#58CC02] rounded-full animate-spin mx-auto mb-6 md:mb-8"></div>
+            <h3 class="text-xl md:text-2xl font-black text-white mb-3">Submitting Your Answers</h3>
+            <p class="text-[#777] text-base md:text-lg font-medium">Please wait while we process your responses...</p>
         </div>
     </div>
 
@@ -438,7 +676,7 @@
             const seconds = timeLeft % 60;
             timerEl.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             if (timeLeft <= 300) {
-                timerEl.classList.remove('timer-normal');
+                timerEl.classList.remove('timer-box');
                 timerEl.classList.add('timer-warning');
             }
             if (timeLeft > 0) {
@@ -449,6 +687,66 @@
             }
         }
         updateTimer();
+
+        // Question ranges per part
+        const partQuestions = {
+            1: [1, 2, 3, 4, 5, 6, 7, 8],
+            2: [9, 10, 11, 12, 13, 14, 15, 16],
+            3: [17, 18, 19, 20, 21, 22],
+            4: [23, 24, 25, 26, 27, 28]
+        };
+        
+        // Build question navigator
+        function buildQuestionNav() {
+            const nav = document.getElementById('question-nav');
+            const currentPart = currentPartIndex + 1;
+            const questions = partQuestions[currentPart] || [];
+            
+            nav.innerHTML = '<span class="text-xs text-[#777] font-bold mr-2 hidden md:inline">Savollar:</span>';
+            
+            questions.forEach(qNum => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'q-nav-btn';
+                btn.textContent = qNum;
+                btn.dataset.question = qNum;
+                
+                // Check if answered
+                const input = document.querySelector(`input[name="${qNum}"]`) || document.querySelector(`select[name="${qNum}"]`);
+                if (input && input.value) {
+                    btn.classList.add('answered');
+                }
+                
+                btn.addEventListener('click', () => scrollToQuestion(qNum));
+                nav.appendChild(btn);
+            });
+            
+            updateQuestionNavHighlight();
+        }
+        
+        // Update nav highlight
+        function updateQuestionNavHighlight() {
+            document.querySelectorAll('.q-nav-btn').forEach(btn => {
+                const qNum = btn.dataset.question;
+                const input = document.querySelector(`input[name="${qNum}"]`) || document.querySelector(`select[name="${qNum}"]`);
+                
+                btn.classList.remove('answered', 'current');
+                if (input && input.value) {
+                    btn.classList.add('answered');
+                }
+            });
+        }
+        
+        // Scroll to question (o'rta blok ichida scroll)
+        function scrollToQuestion(qNum) {
+            const el = document.getElementById(`q-${qNum}`) || document.querySelector(`[data-question="${qNum}"]`);
+            const mainScroll = document.querySelector('.test-main-scroll');
+            if (el && mainScroll) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                el.classList.add('current');
+                setTimeout(() => el.classList.remove('current'), 2000);
+            }
+        }
 
         // Part-by-part navigation
         const parts = document.querySelectorAll('.part-section');
@@ -463,14 +761,18 @@
                 p.classList.toggle('hidden', i !== index);
             });
             partDots.forEach((dot, i) => {
-                if (i <= index) {
-                    dot.classList.remove('bg-[#475569]');
-                    dot.classList.add('bg-[#4ECDC4]');
-                    dot.style.transform = i === index ? 'scale(1.3)' : 'scale(1)';
+                if (i === index) {
+                    dot.classList.remove('bg-[#2B4148]', 'text-[#777]');
+                    dot.classList.add('bg-[#58CC02]', 'text-white');
+                    dot.style.boxShadow = '0 4px 0 #46A302';
+                } else if (i < index) {
+                    dot.classList.remove('bg-[#2B4148]', 'text-[#777]', 'bg-[#58CC02]');
+                    dot.classList.add('bg-[#1CB0F6]', 'text-white');
+                    dot.style.boxShadow = '0 3px 0 #1899D6';
                 } else {
-                    dot.classList.add('bg-[#475569]');
-                    dot.classList.remove('bg-[#4ECDC4]');
-                    dot.style.transform = 'scale(1)';
+                    dot.classList.add('bg-[#2B4148]', 'text-[#777]');
+                    dot.classList.remove('bg-[#58CC02]', 'bg-[#1CB0F6]', 'text-white');
+                    dot.style.boxShadow = 'none';
                 }
             });
             document.getElementById('btn-prev-part').classList.toggle('hidden', index === 0);
@@ -481,7 +783,15 @@
                 document.getElementById('btn-next-part').classList.remove('hidden');
                 document.getElementById('submit-wrap').classList.add('hidden');
             }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            const currentSection = parts[index];
+            if (currentSection) {
+                document.getElementById('header-part-title').textContent = 'Part ' + (index + 1) + ': ' + (currentSection.dataset.title || '');
+                document.getElementById('header-part-of').textContent = 'Part ' + (index + 1) + ' of ' + totalParts;
+                document.getElementById('header-part-instruction').textContent = currentSection.dataset.instruction || '';
+            }
+            const mainScroll = document.querySelector('.test-main-fill');
+            if (mainScroll) mainScroll.scrollTop = 0;
+            buildQuestionNav();
         }
 
         document.getElementById('btn-prev-part').addEventListener('click', function() {
@@ -490,7 +800,35 @@
         document.getElementById('btn-next-part').addEventListener('click', function() {
             showPart(currentPartIndex + 1);
         });
+        
+        // Part dots click
+        partDots.forEach((dot, i) => {
+            dot.addEventListener('click', () => showPart(i));
+        });
+        
         showPart(0);
+
+        // Show toast
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        // Savolni tanlash (klaviatura A B C D uchun): biror savolni sichqoncha bilan bosing
+        let focusedQuestionNum = null;
+        document.body.addEventListener('click', function(e) {
+            const card = e.target.closest('.focusable-question');
+            if (card) {
+                document.querySelectorAll('.focusable-question').forEach(c => c.classList.remove('focused-question'));
+                card.classList.add('focused-question');
+                focusedQuestionNum = parseInt(card.dataset.question);
+            } else if (!e.target.closest('.option-btn') && !e.target.closest('#highlight-toolbar')) {
+                document.querySelectorAll('.focusable-question').forEach(c => c.classList.remove('focused-question'));
+                focusedQuestionNum = null;
+            }
+        });
 
         // Option buttons
         document.querySelectorAll('.option-btn').forEach(btn => {
@@ -500,16 +838,43 @@
                 this.classList.add('selected');
                 const inp = document.querySelector(`input[name="${qNum}"]`);
                 if (inp) inp.value = this.dataset.value;
+                
+                const card = document.querySelector(`.question-card[data-question="${qNum}"]`);
+                if (card) card.classList.add('answered');
+                
                 updateProgress();
+                updateQuestionNavHighlight();
+                showToast('Javob saqlandi!');
             });
         });
 
         // Track inputs
         document.querySelectorAll('.gap-input').forEach(input => {
-            input.addEventListener('input', updateProgress);
+            input.addEventListener('input', function() {
+                updateProgress();
+                updateQuestionNavHighlight();
+                
+                // Add filled class
+                if (this.value.trim()) {
+                    this.classList.add('filled');
+                } else {
+                    this.classList.remove('filled');
+                }
+            });
+            
+            input.addEventListener('blur', function() {
+                if (this.value.trim()) {
+                    showToast('Javob saqlandi!');
+                }
+            });
         });
+        
         document.querySelectorAll('select').forEach(select => {
-            select.addEventListener('change', updateProgress);
+            select.addEventListener('change', function() {
+                updateProgress();
+                updateQuestionNavHighlight();
+                showToast('Javob saqlandi!');
+            });
         });
 
         function updateProgress() {
@@ -522,6 +887,129 @@
             document.getElementById('progress').textContent = pct;
             document.getElementById('progress-bar').style.width = `${pct}%`;
         }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Skip if typing in input
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
+                return;
+            }
+            
+            // Arrow keys for part navigation
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                showPart(currentPartIndex - 1);
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                showPart(currentPartIndex + 1);
+            }
+            
+            // A, B, C, D — faqat oldin tanlangan (belgilangan) savol uchun
+            const key = e.key.toUpperCase();
+            if (['A', 'B', 'C', 'D'].includes(key) && focusedQuestionNum !== null) {
+                const card = document.querySelector(`.focusable-question[data-question="${focusedQuestionNum}"]`);
+                if (card) {
+                    const btn = card.querySelector(`.option-btn[data-value="${key}"]`);
+                    if (btn) { e.preventDefault(); btn.click(); }
+                }
+            }
+        });
+
+        // Highlight: matnni tanlab sariq/ko'k belgilash va saqlash
+        const HIGHLIGHT_STORAGE = 'cefr_reading_highlights';
+        let currentHighlightContainer = null;
+        let currentSelection = null;
+
+        // Test boshlanganda eski highlightlarni tozalash
+        try { localStorage.removeItem(HIGHLIGHT_STORAGE); } catch(e) {}
+
+        function saveHighlights(key, html) {
+            try {
+                const data = JSON.parse(localStorage.getItem(HIGHLIGHT_STORAGE) || '{}');
+                data[key] = html;
+                localStorage.setItem(HIGHLIGHT_STORAGE, JSON.stringify(data));
+            } catch (err) {}
+        }
+        function loadHighlights(key) {
+            try {
+                const data = JSON.parse(localStorage.getItem(HIGHLIGHT_STORAGE) || '{}');
+                return data[key] || null;
+            } catch (err) { return null; }
+        }
+
+        document.querySelectorAll('.passage-highlight-container').forEach(container => {
+            const passageEl = container.querySelector('.passage-text[data-highlight-key]');
+            if (!passageEl) return;
+            const key = passageEl.dataset.highlightKey;
+
+            // Input maydonlar bor passageda highlight restore qilmaslik
+            const hasInputs = passageEl.querySelectorAll('input').length > 0;
+            if (!hasInputs) {
+                const saved = loadHighlights(key);
+                if (saved) passageEl.innerHTML = saved;
+            }
+
+            container.addEventListener('mouseup', function(e) {
+                const sel = window.getSelection();
+                if (!sel || sel.isCollapsed) return;
+                const range = sel.getRangeAt(0);
+                if (!container.contains(range.commonAncestorContainer)) return;
+                currentHighlightContainer = passageEl;
+                currentSelection = range;
+                const toolbar = document.getElementById('highlight-toolbar');
+                const rect = range.getBoundingClientRect();
+                toolbar.style.display = 'flex';
+                const toolbarW = 200;
+                toolbar.style.left = Math.max(8, rect.left + rect.width / 2 - toolbarW / 2) + 'px';
+                toolbar.style.top = Math.max(8, rect.top - 44) + 'px';
+            });
+        });
+
+        document.getElementById('highlight-toolbar').querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (!currentHighlightContainer || !currentSelection) return;
+                const action = btn.dataset.action;
+                
+                if (action === 'highlight-remove') {
+                    // O'chirish: tanlangan joyda highlight span larni oddiy textga qaytarish
+                    const frag = currentSelection.cloneContents();
+                    const highlights = frag.querySelectorAll('.highlight-yellow, .highlight-blue');
+                    if (highlights.length > 0) {
+                        // Tanlangan joyda highlightlarni olib tashlash
+                        currentSelection.deleteContents();
+                        const tempDiv = document.createElement('div');
+                        tempDiv.appendChild(frag);
+                        tempDiv.querySelectorAll('.highlight-yellow, .highlight-blue').forEach(h => {
+                            h.replaceWith(...h.childNodes);
+                        });
+                        currentSelection.insertNode(tempDiv.firstChild || document.createTextNode(tempDiv.textContent));
+                    }
+                } else {
+                    const cls = action === 'highlight-yellow' ? 'highlight-yellow' : 'highlight-blue';
+                    const span = document.createElement('span');
+                    span.className = cls;
+                    try {
+                        currentSelection.surroundContents(span);
+                    } catch (err) {
+                        const frag = currentSelection.extractContents();
+                        span.appendChild(frag);
+                        currentSelection.insertNode(span);
+                    }
+                }
+                const key = currentHighlightContainer.dataset.highlightKey;
+                saveHighlights(key, currentHighlightContainer.innerHTML);
+                document.getElementById('highlight-toolbar').style.display = 'none';
+                currentHighlightContainer = null;
+                currentSelection = null;
+                window.getSelection().removeAllRanges();
+            });
+        });
+        document.addEventListener('mousedown', function(e) {
+            if (!e.target.closest('#highlight-toolbar')) {
+                document.getElementById('highlight-toolbar').style.display = 'none';
+                currentSelection = null;
+            }
+        });
 
         // Submit
         document.getElementById('reading-form').addEventListener('submit', async function(e) {

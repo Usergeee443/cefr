@@ -4,216 +4,132 @@
 {% block head %}
 <style>
     .pricing-card {
-        background: linear-gradient(180deg, #111827 0%, #0d1117 100%);
-        border: 1px solid #1f2937;
+        background: var(--bg-card);
+        border: 2px solid var(--border-color);
+        border-radius: 24px;
+        transition: all 0.15s ease;
+    }
+    .pricing-card:hover {
+        transform: translateY(-4px);
+        border-color: var(--border-light);
     }
     .pricing-card.featured {
-        border: 2px solid #00D4AA;
-        position: relative;
+        border: 3px solid var(--duo-green);
+        box-shadow: 0 0 60px rgba(88, 204, 2, 0.15);
     }
-    .badge-beta {
-        background: linear-gradient(135deg, #00D4AA 0%, #00B894 100%);
-        color: #0d0d0d;
-        font-size: 11px;
-        font-weight: 700;
-        padding: 4px 12px;
-        border-radius: 100px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+    .faq-card {
+        background: var(--bg-card);
+        border: 2px solid var(--border-color);
+        border-radius: 16px;
+        transition: all 0.15s ease;
     }
-    .stat-number {
-        background: linear-gradient(135deg, #00D4AA 0%, #00E5B8 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-    .cta-button {
-        background: linear-gradient(135deg, #00D4AA 0%, #00B894 100%);
-        transition: all 0.3s ease;
-    }
-    .cta-button:hover {
-        transform: scale(1.02);
-        box-shadow: 0 8px 30px rgba(0, 212, 170, 0.4);
-    }
-    .card-hover {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .card-hover:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 40px rgba(0, 212, 170, 0.15);
+    .faq-card:hover {
+        border-color: var(--border-light);
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="max-w-5xl mx-auto px-4 md:px-6 py-16 md:py-24">
+<div class="max-w-5xl mx-auto px-4 md:px-6 py-12 md:py-20">
     <!-- Header -->
-    <div class="text-center mb-16">
-        <div class="inline-flex items-center gap-2 bg-[#00D4AA]/10 border border-[#00D4AA]/20 rounded-full px-4 py-2 mb-6">
-            <span class="badge-beta">Beta</span>
-            <span class="text-sm text-gray-300">
-                {% if lang == 'uz' %}Yangi foydalanuvchilarga 10 ta bepul test!{% else %}10 free tests for new users!{% endif %}
-            </span>
-        </div>
-        <h1 class="text-4xl md:text-5xl font-black mb-4">
-            {% if lang == 'uz' %}Oddiy <span class="stat-number">narxlar</span>{% else %}Simple <span class="stat-number">Pricing</span>{% endif %}
+    <div class="text-center mb-12 md:mb-16">
+        <span class="inline-block px-4 py-1 bg-[#58CC02] text-white text-xs font-black rounded-full mb-5" style="box-shadow: 0 2px 0 #46A302;">BETA</span>
+        <h1 class="text-3xl md:text-5xl font-black text-white mb-4">
+            {% if lang == 'uz' %}Oddiy narxlar{% else %}Simple Pricing{% endif %}
         </h1>
-        <p class="text-gray-400 max-w-xl mx-auto text-lg">
-            {% if lang == 'uz' %}Obuna yo'q. Faqat kerak bo'lganda test sotib oling.{% else %}No subscriptions. Just buy tests when you need them.{% endif %}
+        <p class="text-[#AFAFAF] max-w-xl mx-auto text-base md:text-lg font-medium">
+            {% if lang == 'uz' %}Obuna yo'q. Faqat kerak bo'lganda{% else %}No subscriptions. Pay as you go{% endif %}
         </p>
     </div>
 
     <!-- Pricing Cards -->
-    <div class="grid md:grid-cols-2 gap-8 max-w-3xl mx-auto mb-20">
+    <div class="grid md:grid-cols-2 gap-5 md:gap-8 max-w-3xl mx-auto mb-12 md:mb-20">
         <!-- Single Test -->
-        <div class="pricing-card card-hover rounded-2xl p-8">
-            <div class="text-gray-400 text-sm font-medium mb-2">{% if lang == 'uz' %}Bitta test{% else %}Single Test{% endif %}</div>
-            <div class="flex items-baseline gap-1 mb-2">
-                <span class="text-5xl md:text-6xl font-black text-white">2,990</span>
-                <span class="text-gray-500 text-xl">{% if lang == 'uz' %}so'm{% else %}UZS{% endif %}</span>
+        <div class="pricing-card p-6 md:p-8">
+            <div class="text-[#777] text-sm font-bold mb-3 uppercase tracking-wider">{% if lang == 'uz' %}Bitta test{% else %}Single Test{% endif %}</div>
+            <div class="flex items-baseline gap-2 mb-2">
+                <span class="text-4xl md:text-5xl font-black text-white">2,990</span>
+                <span class="text-[#777] text-lg font-bold">{% if lang == 'uz' %}so'm{% else %}UZS{% endif %}</span>
             </div>
-            <p class="text-gray-500 text-sm mb-8">{% if lang == 'uz' %}Bitta to'liq test uchun{% else %}For one complete test{% endif %}</p>
+            <p class="text-[#777] text-sm mb-6 font-medium">{% if lang == 'uz' %}Bitta to'liq test uchun{% else %}One complete test{% endif %}</p>
 
-            <ul class="space-y-4 mb-8">
-                <li class="flex items-start gap-3 text-gray-300">
-                    <svg class="w-5 h-5 text-[#00D4AA] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                    </svg>
-                    <span>{% if lang == 'uz' %}To'liq test: Reading + Listening + Writing{% else %}Complete test: Reading + Listening + Writing{% endif %}</span>
-                </li>
-                <li class="flex items-start gap-3 text-gray-300">
-                    <svg class="w-5 h-5 text-[#00D4AA] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                    </svg>
-                    <span>{% if lang == 'uz' %}AI yordamida yozuv baholash{% else %}AI-powered writing evaluation{% endif %}</span>
-                </li>
-                <li class="flex items-start gap-3 text-gray-300">
-                    <svg class="w-5 h-5 text-[#00D4AA] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                    </svg>
-                    <span>{% if lang == 'uz' %}Batafsil natijalar va tahlil{% else %}Detailed results and analysis{% endif %}</span>
-                </li>
-                <li class="flex items-start gap-3 text-gray-300">
-                    <svg class="w-5 h-5 text-[#00D4AA] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                    </svg>
-                    <span>{% if lang == 'uz' %}CEFR darajangiz (A1-C2){% else %}Your CEFR level (A1-C2){% endif %}</span>
-                </li>
+            <ul class="space-y-3 mb-8">
+                <li class="flex items-center gap-3 text-[#AFAFAF] text-sm font-medium"><span class="text-[#58CC02]">&#10004;</span> Reading + Listening + Writing</li>
+                <li class="flex items-center gap-3 text-[#AFAFAF] text-sm font-medium"><span class="text-[#58CC02]">&#10004;</span> {% if lang == 'uz' %}AI baholash{% else %}AI evaluation{% endif %}</li>
+                <li class="flex items-center gap-3 text-[#AFAFAF] text-sm font-medium"><span class="text-[#58CC02]">&#10004;</span> {% if lang == 'uz' %}Batafsil natija{% else %}Detailed results{% endif %}</li>
+                <li class="flex items-center gap-3 text-[#AFAFAF] text-sm font-medium"><span class="text-[#58CC02]">&#10004;</span> CEFR A1-C2</li>
             </ul>
 
-            <a href="/auth/google?next_url=/start" class="block w-full bg-[#1f2937] hover:bg-[#374151] text-white py-4 rounded-xl font-semibold text-center transition">
-                {% if lang == 'uz' %}Sotib olish{% else %}Buy Test{% endif %}
+            <a href="/auth/google?next_url=/dashboard" class="btn-duo btn-duo-outline block w-full py-4 text-center">
+                {% if lang == 'uz' %}Sotib olish{% else %}Buy{% endif %}
             </a>
         </div>
 
         <!-- Beta Free -->
-        <div class="pricing-card featured card-hover rounded-2xl p-8 relative">
+        <div class="pricing-card featured p-6 md:p-8 relative">
             <div class="absolute -top-3 left-1/2 -translate-x-1/2">
-                <span class="badge-beta">{% if lang == 'uz' %}Cheklangan taklif{% else %}Limited Offer{% endif %}</span>
+                <span class="px-4 py-1 bg-[#58CC02] text-white text-xs font-black rounded-full" style="box-shadow: 0 2px 0 #46A302;">{% if lang == 'uz' %}Cheklangan{% else %}Limited{% endif %}</span>
             </div>
-            <div class="text-[#00D4AA] text-sm font-medium mb-2">{% if lang == 'uz' %}Beta maxsus{% else %}Beta Special{% endif %}</div>
-            <div class="flex items-baseline gap-1 mb-2">
-                <span class="text-5xl md:text-6xl font-black stat-number">10</span>
-                <span class="text-gray-400 text-xl">{% if lang == 'uz' %}bepul test{% else %}free tests{% endif %}</span>
+            <div class="text-[#58CC02] text-sm font-bold mb-3 uppercase tracking-wider">{% if lang == 'uz' %}Beta maxsus{% else %}Beta Special{% endif %}</div>
+            <div class="flex items-baseline gap-2 mb-2">
+                <span class="text-4xl md:text-5xl font-black text-[#58CC02]">10</span>
+                <span class="text-[#AFAFAF] text-lg font-bold">{% if lang == 'uz' %}bepul test{% else %}free tests{% endif %}</span>
             </div>
-            <p class="text-gray-500 text-sm mb-8">{% if lang == 'uz' %}Yangi foydalanuvchilar uchun{% else %}For new users{% endif %}</p>
+            <p class="text-[#777] text-sm mb-6 font-medium">{% if lang == 'uz' %}Yangi foydalanuvchilar uchun{% else %}For new users{% endif %}</p>
 
-            <ul class="space-y-4 mb-8">
-                <li class="flex items-start gap-3 text-gray-300">
-                    <svg class="w-5 h-5 text-[#00D4AA] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                    </svg>
-                    <span>{% if lang == 'uz' %}10 ta to'liq test{% else %}10 complete tests{% endif %}</span>
-                </li>
-                <li class="flex items-start gap-3 text-gray-300">
-                    <svg class="w-5 h-5 text-[#00D4AA] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                    </svg>
-                    <span>{% if lang == 'uz' %}Barcha funksiyalar kiradi{% else %}All features included{% endif %}</span>
-                </li>
-                <li class="flex items-start gap-3 text-gray-300">
-                    <svg class="w-5 h-5 text-[#00D4AA] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                    </svg>
-                    <span>{% if lang == 'uz' %}Karta talab qilinmaydi{% else %}No credit card required{% endif %}</span>
-                </li>
-                <li class="flex items-start gap-3 text-gray-300">
-                    <svg class="w-5 h-5 text-[#00D4AA] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                    </svg>
-                    <span>{% if lang == 'uz' %}Bir zumda ro'yxatdan o'ting{% else %}Sign up instantly{% endif %}</span>
-                </li>
+            <ul class="space-y-3 mb-8">
+                <li class="flex items-center gap-3 text-[#AFAFAF] text-sm font-medium"><span class="text-[#58CC02]">&#10004;</span> {% if lang == 'uz' %}10 ta to'liq test{% else %}10 complete tests{% endif %}</li>
+                <li class="flex items-center gap-3 text-[#AFAFAF] text-sm font-medium"><span class="text-[#58CC02]">&#10004;</span> {% if lang == 'uz' %}Barcha funksiyalar{% else %}All features{% endif %}</li>
+                <li class="flex items-center gap-3 text-[#AFAFAF] text-sm font-medium"><span class="text-[#58CC02]">&#10004;</span> {% if lang == 'uz' %}Karta kerak emas{% else %}No card needed{% endif %}</li>
+                <li class="flex items-center gap-3 text-[#AFAFAF] text-sm font-medium"><span class="text-[#58CC02]">&#10004;</span> {% if lang == 'uz' %}Bir zumda kirish{% else %}Instant access{% endif %}</li>
             </ul>
 
-            <a href="/auth/google?next_url=/start" class="cta-button block w-full text-[#0d0d0d] py-4 rounded-xl font-semibold text-center">
-                {% if lang == 'uz' %}Bepul boshlash{% else %}Start Free{% endif %}
+            <a href="/auth/google?next_url=/dashboard" class="btn-duo btn-duo-green block w-full py-4 text-center">
+                {% if lang == 'uz' %}Bepul boshlash{% else %}Start Free{% endif %} &#127919;
             </a>
         </div>
     </div>
 
-    <!-- FAQ Section -->
+    <!-- FAQ -->
     <div class="max-w-2xl mx-auto">
-        <h2 class="text-2xl font-bold text-white text-center mb-10">
-            {% if lang == 'uz' %}Tez-tez so'raladigan savollar{% else %}Frequently Asked Questions{% endif %}
+        <h2 class="text-xl md:text-2xl font-black text-white text-center mb-8">
+            &#10067; {% if lang == 'uz' %}Tez-tez so'raladigan savollar{% else %}FAQ{% endif %}
         </h2>
-
-        <div class="space-y-6">
-            <div class="bg-[#111827] border border-[#1f2937] rounded-xl p-6">
-                <h3 class="font-semibold text-white mb-2">
-                    {% if lang == 'uz' %}Test qancha vaqt davom etadi?{% else %}How long does the test take?{% endif %}
-                </h3>
-                <p class="text-gray-400 text-sm">
-                    {% if lang == 'uz' %}To'liq test taxminan 3 soat davom etadi: Reading (60 daqiqa), Listening (40 daqiqa), Writing (80 daqiqa).{% else %}The complete test takes approximately 3 hours: Reading (60 min), Listening (40 min), Writing (80 min).{% endif %}
-                </p>
+        <div class="space-y-3 md:space-y-4">
+            <div class="faq-card p-4 md:p-5">
+                <h3 class="font-black text-white text-sm md:text-base mb-2">{% if lang == 'uz' %}Test qancha vaqt?{% else %}How long is the test?{% endif %}</h3>
+                <p class="text-[#AFAFAF] text-sm font-medium">{% if lang == 'uz' %}~3 soat: Reading (60 daq), Listening (40 daq), Writing (80 daq){% else %}~3 hours: Reading (60 min), Listening (40 min), Writing (80 min){% endif %}</p>
             </div>
-
-            <div class="bg-[#111827] border border-[#1f2937] rounded-xl p-6">
-                <h3 class="font-semibold text-white mb-2">
-                    {% if lang == 'uz' %}Natijalar qachon chiqadi?{% else %}When will I get my results?{% endif %}
-                </h3>
-                <p class="text-gray-400 text-sm">
-                    {% if lang == 'uz' %}Natijalar testni tugatganingizdan so'ng darhol chiqadi. AI baholash bir necha soniya ichida amalga oshiriladi.{% else %}Results are available immediately after completing the test. AI evaluation happens within seconds.{% endif %}
-                </p>
+            <div class="faq-card p-4 md:p-5">
+                <h3 class="font-black text-white text-sm md:text-base mb-2">{% if lang == 'uz' %}Natija qachon chiqadi?{% else %}When do I get results?{% endif %}</h3>
+                <p class="text-[#AFAFAF] text-sm font-medium">{% if lang == 'uz' %}Darhol! AI baholash bir necha soniyada{% else %}Instantly! AI evaluation takes seconds{% endif %}</p>
             </div>
-
-            <div class="bg-[#111827] border border-[#1f2937] rounded-xl p-6">
-                <h3 class="font-semibold text-white mb-2">
-                    {% if lang == 'uz' %}Bepul testlar qachongacha amal qiladi?{% else %}How long are the free tests valid?{% endif %}
-                </h3>
-                <p class="text-gray-400 text-sm">
-                    {% if lang == 'uz' %}Beta davri tugaguncha bepul testlar amal qiladi. Ularni istalgan vaqtda ishlatishingiz mumkin.{% else %}Free tests are valid until the end of the beta period. You can use them anytime.{% endif %}
-                </p>
+            <div class="faq-card p-4 md:p-5">
+                <h3 class="font-black text-white text-sm md:text-base mb-2">{% if lang == 'uz' %}Bepul testlar qachongacha?{% else %}How long are free tests valid?{% endif %}</h3>
+                <p class="text-[#AFAFAF] text-sm font-medium">{% if lang == 'uz' %}Beta davri tugaguncha{% else %}Until end of beta period{% endif %}</p>
             </div>
-
-            <div class="bg-[#111827] border border-[#1f2937] rounded-xl p-6">
-                <h3 class="font-semibold text-white mb-2">
-                    {% if lang == 'uz' %}To'lov qanday amalga oshiriladi?{% else %}How do payments work?{% endif %}
-                </h3>
-                <p class="text-gray-400 text-sm">
-                    {% if lang == 'uz' %}Hozircha beta davrida barcha testlar bepul. Kelajakda Click, Payme va boshqa to'lov usullari qo'shiladi.{% else %}During the beta period, all tests are free. In the future, we'll support Click, Payme, and other payment methods.{% endif %}
-                </p>
+            <div class="faq-card p-4 md:p-5">
+                <h3 class="font-black text-white text-sm md:text-base mb-2">{% if lang == 'uz' %}To'lov qanday?{% else %}Payment methods?{% endif %}</h3>
+                <p class="text-[#AFAFAF] text-sm font-medium">{% if lang == 'uz' %}Hozir bepul. Kelajakda Click, Payme qo'shiladi{% else %}Currently free. Click, Payme coming soon{% endif %}</p>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Footer -->
-<footer class="border-t border-[#1f2937] py-12 px-4 mt-12">
+<footer class="border-t-2 border-[#2B4148] py-12 px-4 bg-[#0D1A1F]">
     <div class="max-w-6xl mx-auto">
         <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-            <div class="flex items-center gap-2">
-                <span class="w-8 h-8 bg-[#00D4AA] flex items-center justify-center text-[#0d0d0d] font-black text-xs rounded-lg">C</span>
-                <span class="font-bold text-white">CEFR</span>
-                <span class="font-bold text-[#00D4AA]">Level</span>
+            <div class="flex items-center gap-3">
+                <span class="w-10 h-10 bg-[#58CC02] flex items-center justify-center text-white font-black text-sm rounded-xl" style="box-shadow: 0 3px 0 #46A302;">C</span>
+                <span class="font-black text-white text-lg">CEFR</span>
+                <span class="font-black text-lg gradient-text-green">Level</span>
             </div>
-            <div class="flex items-center gap-6 text-sm text-gray-500">
+            <div class="flex items-center gap-8 text-sm text-[#777] font-bold">
                 <a href="/about" class="hover:text-white transition">{% if lang == 'uz' %}Biz haqimizda{% else %}About{% endif %}</a>
                 <a href="/" class="hover:text-white transition">{% if lang == 'uz' %}Bosh sahifa{% else %}Home{% endif %}</a>
-                <a href="mailto:info@cefrlevel.uz" class="hover:text-white transition">{% if lang == 'uz' %}Aloqa{% else %}Contact{% endif %}</a>
             </div>
-            <div class="text-sm text-gray-600">
-                © 2025 CEFR Level. {% if lang == 'uz' %}Barcha huquqlar himoyalangan.{% else %}All rights reserved.{% endif %}
-            </div>
+            <div class="text-sm text-[#555] font-medium">2025 CEFR Level</div>
         </div>
     </div>
 </footer>
