@@ -16,7 +16,6 @@
               "audio_description": "A woman is talking to her colleague about a meeting.",
               "audio_url": "https://www2.cs.uic.edu/~i101/SoundFiles/BaachToccadaandFug662.wav",
               "transcript": "Woman: Did you hear? The marketing meeting has been moved from 2pm to 4pm. The director had a last-minute conflict with the original time.\nMan: Oh, that's actually better for me. I have a client call at 2:30 that I was worried about.\nWoman: Great. See you at four then.",
-              "question": "Why was the meeting time changed?",
               "options": {
                 "A": "The director had another appointment.",
                 "B": "The man requested a later time.",
@@ -28,7 +27,6 @@
               "number": 2,
               "audio_description": "You hear a weather forecast on the radio.",
               "transcript": "Announcer: Good morning, listeners. Today we're looking at a mostly cloudy day with temperatures around 15 degrees. There's a 60% chance of rain in the afternoon, so don't forget your umbrella if you're heading out later. Tomorrow looks much better though, with sunshine expected throughout the day.",
-              "question": "What does the forecast say about tomorrow?",
               "options": {
                 "A": "It will be cloudy.",
                 "B": "It will rain.",
@@ -40,7 +38,6 @@
               "number": 3,
               "audio_description": "A customer is speaking to a shop assistant.",
               "transcript": "Customer: Excuse me, I bought this jacket last week, but when I got home I noticed this small tear near the pocket. I'd like to exchange it for the same one, please.\nAssistant: I'm sorry about that. Do you have your receipt?\nCustomer: Yes, here it is.",
-              "question": "What is the customer's problem?",
               "options": {
                 "A": "The jacket is the wrong size.",
                 "B": "The jacket is damaged.",
@@ -52,7 +49,6 @@
               "number": 4,
               "audio_description": "You hear a message on an answering machine.",
               "transcript": "Hello, this is Dr. Patterson's office calling to confirm your appointment for Thursday at 10am. If you need to reschedule, please call us back at 555-0123 before Wednesday afternoon.",
-              "question": "What is the purpose of this call?",
               "options": {
                 "A": "To cancel an appointment.",
                 "B": "To confirm an appointment.",
@@ -64,7 +60,6 @@
               "number": 5,
               "audio_description": "Two friends are discussing weekend plans.",
               "transcript": "Man: So, are you still coming to the barbecue on Saturday?\nWoman: I'd love to, but I have to finish a report for Monday. I've been putting it off all week.\nMan: That's too bad. Maybe we can meet up for coffee on Sunday instead?\nWoman: That would be great. Let's say 2 o'clock at the usual place?",
-              "question": "Why can't the woman go to the barbecue?",
               "options": {
                 "A": "She has to visit family.",
                 "B": "She has work to complete.",
@@ -76,7 +71,6 @@
               "number": 6,
               "audio_description": "A travel agent is giving information.",
               "transcript": "Agent: The flight departs at 7:15 in the morning and arrives in Paris at 9:30 local time. You'll have a two-hour layover in Amsterdam. The total cost including taxes is $450.",
-              "question": "Where will the plane stop before Paris?",
               "options": {
                 "A": "London",
                 "B": "Amsterdam",
@@ -88,7 +82,6 @@
               "number": 7,
               "audio_description": "A professor is making an announcement.",
               "transcript": "Professor: Before we end today's class, I want to remind everyone that the deadline for the research paper has been extended by one week. It's now due on the 25th instead of the 18th. However, I still encourage you to submit early if you can.",
-              "question": "What has the professor announced?",
               "options": {
                 "A": "The paper topic has changed.",
                 "B": "The deadline has been extended.",
@@ -100,7 +93,6 @@
               "number": 8,
               "audio_description": "A woman is talking about her new job.",
               "transcript": "Woman: I started my new job last Monday. The office is only a 10-minute walk from my apartment, which is so much better than my hour-long commute before. The work is challenging but interesting.",
-              "question": "What does the woman like about her new job?",
               "options": {
                 "A": "The high salary.",
                 "B": "The short distance from home.",
@@ -158,6 +150,7 @@
           "title": "Part 4: Map Labeling",
           "instruction": "You will hear a guide describing a university campus. For questions 19-24, match each place with the correct letter (A-H) on the map.",
           "type": "map_labeling",
+          "map_image_url": "",
           "audio_description": "A guide describing a university campus tour.",
           "transcript": "Welcome to our university campus tour. Let me show you around. If you look straight ahead, you'll see the Main Library - that's the large building right in the center. To the left of the library is the Science Building, and right behind it is the Sports Center. If you turn right from the entrance, the first building you see is the Student Union. The Cafeteria is just next to the Student Union. And finally, the Art Gallery is the small building at the far end of the campus, near the lake.",
           "places": [
@@ -189,17 +182,18 @@
         {
           "part_number": 6,
           "title": "Part 6: Note Completion",
-          "instruction": "You will hear a talk about healthy eating habits. For questions 31-36, complete the notes with ONE word.",
+          "instruction": "You will hear a talk about healthy eating habits. For questions 31-36, complete the notes with ONE word in each gap.",
           "type": "note_completion",
           "audio_description": "A nutritionist giving a talk about healthy eating habits.",
           "transcript": "Today I want to share some simple tips for healthier eating. First, always eat a good breakfast - studies show it improves your concentration throughout the morning. Second, try to include protein in every meal, such as chicken, fish, or beans.\n\nDrinking enough water is essential - aim for at least eight glasses per day. Many people confuse thirst with hunger.\n\nWhen it comes to snacking, choose fruit or nuts instead of processed foods. Also, try to cook at home more often rather than ordering takeaway. Home-cooked meals typically contain less salt and sugar.\n\nFinally, don't skip meals. Regular eating maintains your energy levels and prevents overeating later in the day.",
+          "text": "Today I want to share some simple tips for healthier eating. First, always eat a good (31)_____ - studies show it improves your concentration throughout the morning. Second, try to include (32)_____ in every meal, such as chicken, fish, or beans.\n\nDrinking enough water is essential - aim for at least eight (33)_____ per day. Many people confuse thirst with hunger.\n\nWhen it comes to snacking, choose fruit or (34)_____ instead of processed foods. Also, try to cook at home more often rather than ordering takeaway. Home-cooked meals typically contain less salt and (35)_____.\n\nFinally, don't skip meals. Regular eating maintains your energy levels and prevents (36)_____ later in the day.",
           "questions": [
-            {"number": 31, "question": "A good breakfast improves your _____ throughout the morning.", "correct": "concentration"},
-            {"number": 32, "question": "You should include _____ in every meal.", "correct": "protein"},
-            {"number": 33, "question": "You should drink at least eight _____ of water per day.", "correct": "glasses"},
-            {"number": 34, "question": "For snacks, choose fruit or _____ instead of processed foods.", "correct": "nuts"},
-            {"number": 35, "question": "Home-cooked meals typically contain less salt and _____.", "correct": "sugar"},
-            {"number": 36, "question": "Regular eating prevents _____ later in the day.", "correct": "overeating"}
+            {"number": 31, "correct": "breakfast"},
+            {"number": 32, "correct": "protein"},
+            {"number": 33, "correct": "glasses"},
+            {"number": 34, "correct": "nuts"},
+            {"number": 35, "correct": "sugar"},
+            {"number": 36, "correct": "overeating"}
           ]
         }
       ]

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, Form, HTTPException
+from fastapi import FastAPI, Request, Form, HTTPException, UploadFile, File
 from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -8,6 +8,7 @@ import uuid
 import json
 import os
 import re
+import random
 import httpx
 from datetime import datetime
 from pathlib import Path
@@ -251,6 +252,34 @@ def get_writing_tests() -> list:
     data = load_json("writing_tests.json")
     return data.get("tests", [])
 
+def _order_parts_for_user(parts: list, seen_ids: list, test_id: str) -> list:
+    """Partlarni avval ko'rilmaganlar (random), keyin ko'rilganlar (random) qilib qaytaradi."""
+    if not parts:
+        return parts
+    unseen = []
+    seen = []
+    for p in parts:
+        pid = test_id + "_" + str(p.get("part_number", 0))
+        if pid in seen_ids:
+            seen.append(p)
+        else:
+            unseen.append(p)
+    random.shuffle(unseen)
+    random.shuffle(seen)
+    return unseen + seen
+
+def _mark_parts_seen(user_id: str, section: str, test_id: str, parts: list) -> None:
+    key = "seen_reading_parts" if section == "reading" else "seen_listening_parts"
+    user = get_user_by_id(user_id)
+    if not user:
+        return
+    current = list(user.get(key, []) or [])
+    for p in parts:
+        pid = test_id + "_" + str(p.get("part_number", 0))
+        if pid not in current:
+            current.append(pid)
+    update_user(user_id, **{key: current})
+
 def get_feedbacks() -> list:
     data = load_json("feedbacks.json")
     return data.get("feedbacks", [])
@@ -422,41 +451,26 @@ DEFAULT_READING = {
         {
             "part_number": 2,
             "title": "Part 2: Multiple Choice Cloze",
-            "instruction": "For questions 9-16, read the text below and decide which answer (A, B, C or D) best fits each gap.",
+            "instruction": "For questions 9-16, read the text and choose which answer (A–J) best fits each gap. Questions are listed in order on the left; choose one of the 10 variants for each.",
             "type": "multiple_choice_cloze",
             "text": "The Rise of Remote Work\n\nThe COVID-19 pandemic has (9)_____ transformed the way we work. Before 2020, working from home was (10)_____ a privilege enjoyed by a small percentage of the workforce. However, the global health crisis (11)_____ companies worldwide to rapidly adopt remote work policies.\n\nThis shift has had both positive and negative (12)_____. On the one hand, employees have gained more flexibility and eliminated lengthy commutes. Many workers report feeling more (13)_____ and having a better work-life balance. On the other hand, some people struggle with isolation and find it difficult to (14)_____ work from their personal life.\n\nCompanies are now (15)_____ hybrid models that combine remote and office work. This approach aims to offer the best of both worlds, allowing employees to enjoy flexibility while still maintaining face-to-face (16)_____ with colleagues.",
             "questions": [
-                {"number": 9, "options": {"A": "deeply", "B": "hardly", "C": "rarely", "D": "slightly"}, "correct": "A"},
-                {"number": 10, "options": {"A": "often", "B": "commonly", "C": "mainly", "D": "usually"}, "correct": "C"},
-                {"number": 11, "options": {"A": "made", "B": "forced", "C": "let", "D": "allowed"}, "correct": "B"},
-                {"number": 12, "options": {"A": "consequences", "B": "results", "C": "outcomes", "D": "effects"}, "correct": "A"},
-                {"number": 13, "options": {"A": "effective", "B": "productive", "C": "efficient", "D": "successful"}, "correct": "B"},
-                {"number": 14, "options": {"A": "divide", "B": "split", "C": "separate", "D": "part"}, "correct": "C"},
-                {"number": 15, "options": {"A": "accepting", "B": "receiving", "C": "embracing", "D": "welcoming"}, "correct": "C"},
-                {"number": 16, "options": {"A": "interaction", "B": "communication", "C": "connection", "D": "contact"}, "correct": "A"}
+                {"number": 9, "question": "The COVID-19 pandemic has _____ transformed the way we work.", "options": {"A": "deeply", "B": "hardly", "C": "rarely", "D": "slightly", "E": "fully", "F": "barely", "G": "fairly", "H": "widely", "I": "nearly", "J": "truly"}, "correct": "A"},
+                {"number": 10, "question": "Before 2020, working from home was _____ a privilege enjoyed by a small percentage of the workforce.", "options": {"A": "often", "B": "commonly", "C": "mainly", "D": "usually", "E": "mostly", "F": "typically", "G": "largely", "H": "always", "I": "sometimes", "J": "rarely"}, "correct": "C"},
+                {"number": 11, "question": "The global health crisis _____ companies worldwide to rapidly adopt remote work policies.", "options": {"A": "made", "B": "forced", "C": "let", "D": "allowed", "E": "led", "F": "enabled", "G": "required", "H": "caused", "I": "persuaded", "J": "encouraged"}, "correct": "B"},
+                {"number": 12, "question": "This shift has had both positive and negative _____.", "options": {"A": "consequences", "B": "results", "C": "outcomes", "D": "effects", "E": "impacts", "F": "reactions", "G": "responses", "H": "changes", "I": "developments", "J": "trends"}, "correct": "A"},
+                {"number": 13, "question": "Many workers report feeling more _____ and having a better work-life balance.", "options": {"A": "effective", "B": "productive", "C": "efficient", "D": "successful", "E": "focused", "F": "motivated", "G": "satisfied", "H": "relaxed", "I": "creative", "J": "confident"}, "correct": "B"},
+                {"number": 14, "question": "Some people find it difficult to _____ work from their personal life.", "options": {"A": "divide", "B": "split", "C": "separate", "D": "part", "E": "distinguish", "F": "remove", "G": "keep", "H": "balance", "I": "manage", "J": "organize"}, "correct": "C"},
+                {"number": 15, "question": "Companies are now _____ hybrid models that combine remote and office work.", "options": {"A": "accepting", "B": "receiving", "C": "embracing", "D": "welcoming", "E": "adopting", "F": "introducing", "G": "testing", "H": "exploring", "I": "considering", "J": "supporting"}, "correct": "C"},
+                {"number": 16, "question": "Employees enjoy flexibility while still maintaining face-to-face _____ with colleagues.", "options": {"A": "interaction", "B": "communication", "C": "connection", "D": "contact", "E": "collaboration", "F": "cooperation", "G": "discussion", "H": "relationship", "I": "network", "J": "exchange"}, "correct": "A"}
             ]
         },
         {
             "part_number": 3,
-            "title": "Part 3: Reading Comprehension",
-            "instruction": "Read the article and choose the best answer (A, B, C or D) for questions 17-22.",
-            "type": "multiple_choice_comprehension",
-            "text": "Artificial Intelligence: Friend or Foe?\n\nArtificial Intelligence (AI) has rapidly evolved from a concept in science fiction to a technology that permeates nearly every aspect of our daily lives. From the virtual assistants on our smartphones to the algorithms that recommend what we should watch next, AI has become an invisible but powerful force shaping our decisions and experiences.\n\nProponents of AI point to its tremendous potential for improving human life. In healthcare, AI systems can analyze medical images with greater accuracy than human doctors, potentially catching diseases at earlier, more treatable stages. In environmental science, AI helps researchers model climate patterns and develop strategies for conservation. The technology has also revolutionized industries from manufacturing to finance, increasing efficiency and reducing costs.\n\nHowever, critics raise valid concerns about the darker implications of AI advancement. One of the most pressing issues is the potential for widespread job displacement. As AI systems become capable of performing tasks previously done by humans, millions of workers may find themselves unemployed. This technological unemployment could exacerbate social inequality if the benefits of AI are not distributed fairly.\n\nAnother concern is the question of bias in AI systems. Because these systems learn from data created by humans, they can inherit and even amplify existing prejudices. There have been documented cases of AI systems discriminating against certain groups in areas such as hiring, lending, and criminal justice.\n\nPrivacy is yet another area of concern. AI systems often rely on vast amounts of personal data to function effectively. This raises questions about who has access to our information and how it might be used. The potential for surveillance and manipulation is significant, particularly when AI is combined with facial recognition technology.\n\nDespite these challenges, many experts believe that the benefits of AI outweigh the risks, provided that appropriate safeguards are put in place. This includes developing ethical guidelines for AI development, creating regulations to prevent misuse, and investing in education to prepare workers for a changing job market.",
-            "questions": [
-                {"number": 17, "question": "According to the first paragraph, AI has become", "options": {"A": "a visible force that shapes our decisions.", "B": "a technology that influences us without us noticing.", "C": "something that only exists in science fiction.", "D": "a technology limited to smartphone assistants."}, "correct": "B"},
-                {"number": 18, "question": "What does the article say about AI in healthcare?", "options": {"A": "It has completely replaced human doctors.", "B": "It is less accurate than human analysis.", "C": "It may help detect diseases earlier.", "D": "It is only used for environmental research."}, "correct": "C"},
-                {"number": 19, "question": "The article suggests that technological unemployment", "options": {"A": "is not a serious concern.", "B": "will only affect a few workers.", "C": "could increase social inequality.", "D": "has already been solved."}, "correct": "C"},
-                {"number": 20, "question": "Why might AI systems show bias?", "options": {"A": "Because they are programmed to discriminate.", "B": "Because they learn from human-created data.", "C": "Because they only work in certain industries.", "D": "Because humans cannot control them."}, "correct": "B"},
-                {"number": 21, "question": "What does the article say about privacy and AI?", "options": {"A": "AI does not require any personal data.", "B": "Privacy concerns are exaggerated.", "C": "AI combined with facial recognition raises surveillance concerns.", "D": "Social media is safe from AI analysis."}, "correct": "C"},
-                {"number": 22, "question": "According to the experts mentioned in the article,", "options": {"A": "AI should be banned completely.", "B": "the risks of AI are greater than the benefits.", "C": "AI can be beneficial if proper safeguards are implemented.", "D": "humans have already lost control of AI."}, "correct": "C"}
-            ]
-        },
-        {
-            "part_number": 4,
-            "title": "Part 4: Gapped Text",
-            "instruction": "Six sentences have been removed from the article. Choose from the sentences A-G the one which fits each gap (23-28). There is one extra sentence.",
+            "title": "Part 3: Gapped Text (6 paragraphs, 8 options A–H)",
+            "instruction": "Six sentences have been removed from the article. Choose from the sentences A–H the one which fits each gap (17–22). There are two extra sentences.",
             "type": "gapped_text",
-            "text": "Living Sustainably in the Modern World\n\nSustainable living is no longer just a trend but a necessity in our rapidly changing world. With climate change accelerating and natural resources depleting, individuals are looking for ways to reduce their environmental impact. (23)_____\n\nOne of the most effective ways to live more sustainably is to reduce consumption. (24)_____ By being mindful of what we purchase and choosing quality over quantity, we can significantly decrease our environmental footprint.\n\nFood choices also play a crucial role in sustainable living. The production of meat, particularly beef, generates significant greenhouse gas emissions. (25)_____ Even small changes, like participating in \"Meatless Mondays,\" can make a difference.\n\nTransportation is another area where individuals can make impactful changes. (26)_____ For those who need to drive, choosing fuel-efficient or electric vehicles is a step in the right direction.\n\nEnergy consumption at home offers numerous opportunities for sustainability. (27)_____ Additionally, unplugging devices when not in use and using natural light whenever possible can reduce energy bills and environmental impact.\n\nWater conservation is equally important. Simple practices such as fixing leaky faucets, taking shorter showers, and collecting rainwater for gardens can save thousands of liters annually. (28)_____ With these small but consistent efforts, each of us can contribute to a more sustainable future.",
+            "text": "Living Sustainably in the Modern World\n\nSustainable living is no longer just a trend but a necessity in our rapidly changing world. With climate change accelerating and natural resources depleting, individuals are looking for ways to reduce their environmental impact. (17)_____\n\nOne of the most effective ways to live more sustainably is to reduce consumption. (18)_____ By being mindful of what we purchase and choosing quality over quantity, we can significantly decrease our environmental footprint.\n\nFood choices also play a crucial role in sustainable living. The production of meat, particularly beef, generates significant greenhouse gas emissions. (19)_____ Even small changes, like participating in \"Meatless Mondays,\" can make a difference.\n\nTransportation is another area where individuals can make impactful changes. (20)_____ For those who need to drive, choosing fuel-efficient or electric vehicles is a step in the right direction.\n\nEnergy consumption at home offers numerous opportunities for sustainability. (21)_____ Additionally, unplugging devices when not in use and using natural light whenever possible can reduce energy bills and environmental impact.\n\nWater conservation is equally important. Simple practices such as fixing leaky faucets, taking shorter showers, and collecting rainwater for gardens can save thousands of liters annually. (22)_____ With these small but consistent efforts, each of us can contribute to a more sustainable future.",
             "removed_sentences": {
                 "A": "Walking, cycling, or using public transportation can dramatically reduce carbon emissions from daily commutes.",
                 "B": "This is especially important in regions experiencing water scarcity due to climate change.",
@@ -464,15 +478,54 @@ DEFAULT_READING = {
                 "D": "Installing solar panels, using LED bulbs, and choosing energy-efficient appliances can all reduce household energy consumption.",
                 "E": "Many companies are now adopting sustainable practices in their operations.",
                 "F": "We live in a consumer society where buying more is often seen as a sign of success.",
-                "G": "Reducing meat consumption or switching to a plant-based diet can lower an individual's carbon footprint significantly."
+                "G": "Reducing meat consumption or switching to a plant-based diet can lower an individual's carbon footprint significantly.",
+                "H": "Governments worldwide are introducing new laws to limit plastic use and promote recycling."
             },
             "questions": [
-                {"number": 23, "correct": "C"},
-                {"number": 24, "correct": "F"},
-                {"number": 25, "correct": "G"},
-                {"number": 26, "correct": "A"},
-                {"number": 27, "correct": "D"},
-                {"number": 28, "correct": "B"}
+                {"number": 17, "correct": "C"},
+                {"number": 18, "correct": "F"},
+                {"number": 19, "correct": "G"},
+                {"number": 20, "correct": "A"},
+                {"number": 21, "correct": "D"},
+                {"number": 22, "correct": "B"}
+            ]
+        },
+        {
+            "part_number": 4,
+            "title": "Part 4: Reading Comprehension (4 MC + 5 True/False/No information)",
+            "instruction": "Read the article. For questions 23–26, choose the best answer (A, B, C or D). For questions 27–31, choose A) True, B) False, or C) No information given in the text.",
+            "type": "multiple_choice_comprehension",
+            "text": "Artificial Intelligence: Friend or Foe?\n\nArtificial Intelligence (AI) has rapidly evolved from a concept in science fiction to a technology that permeates nearly every aspect of our daily lives. From the virtual assistants on our smartphones to the algorithms that recommend what we should watch next, AI has become an invisible but powerful force shaping our decisions and experiences.\n\nProponents of AI point to its tremendous potential for improving human life. In healthcare, AI systems can analyze medical images with greater accuracy than human doctors, potentially catching diseases at earlier, more treatable stages. In environmental science, AI helps researchers model climate patterns and develop strategies for conservation. The technology has also revolutionized industries from manufacturing to finance, increasing efficiency and reducing costs.\n\nHowever, critics raise valid concerns about the darker implications of AI advancement. One of the most pressing issues is the potential for widespread job displacement. As AI systems become capable of performing tasks previously done by humans, millions of workers may find themselves unemployed. This technological unemployment could exacerbate social inequality if the benefits of AI are not distributed fairly.\n\nAnother concern is the question of bias in AI systems. Because these systems learn from data created by humans, they can inherit and even amplify existing prejudices. There have been documented cases of AI systems discriminating against certain groups in areas such as hiring, lending, and criminal justice.\n\nPrivacy is yet another area of concern. AI systems often rely on vast amounts of personal data to function effectively. This raises questions about who has access to our information and how it might be used. The potential for surveillance and manipulation is significant, particularly when AI is combined with facial recognition technology.\n\nDespite these challenges, many experts believe that the benefits of AI outweigh the risks, provided that appropriate safeguards are put in place. This includes developing ethical guidelines for AI development, creating regulations to prevent misuse, and investing in education to prepare workers for a changing job market.",
+            "questions": [
+                {"number": 23, "question": "According to the first paragraph, AI has become", "options": {"A": "a visible force that shapes our decisions.", "B": "a technology that influences us without us noticing.", "C": "something that only exists in science fiction.", "D": "a technology limited to smartphone assistants."}, "correct": "B"},
+                {"number": 24, "question": "What does the article say about AI in healthcare?", "options": {"A": "It has completely replaced human doctors.", "B": "It is less accurate than human analysis.", "C": "It may help detect diseases earlier.", "D": "It is only used for environmental research."}, "correct": "C"},
+                {"number": 25, "question": "The article suggests that technological unemployment", "options": {"A": "is not a serious concern.", "B": "will only affect a few workers.", "C": "could increase social inequality.", "D": "has already been solved."}, "correct": "C"},
+                {"number": 26, "question": "Why might AI systems show bias?", "options": {"A": "Because they are programmed to discriminate.", "B": "Because they learn from human-created data.", "C": "Because they only work in certain industries.", "D": "Because humans cannot control them."}, "correct": "B"},
+                {"number": 27, "question": "AI is used in environmental science to model climate patterns.", "options": {"A": "True", "B": "False", "C": "No information"}, "correct": "A"},
+                {"number": 28, "question": "All experts believe that AI should be banned.", "options": {"A": "True", "B": "False", "C": "No information"}, "correct": "B"},
+                {"number": 29, "question": "Facial recognition is mentioned as a privacy concern when combined with AI.", "options": {"A": "True", "B": "False", "C": "No information"}, "correct": "A"},
+                {"number": 30, "question": "AI has already replaced millions of workers worldwide.", "options": {"A": "True", "B": "False", "C": "No information"}, "correct": "C"},
+                {"number": 31, "question": "The article says that ethical guidelines for AI are being developed.", "options": {"A": "True", "B": "False", "C": "No information"}, "correct": "A"}
+            ]
+        },
+        {
+            "part_number": 5,
+            "title": "Part 5: Mixed (4 gap-fill + 2 multiple choice)",
+            "instruction": "Read the passage. Complete the short text (questions 32–35) with ONE word in each gap. Then answer questions 36–37 by choosing A, B, C or D.",
+            "type": "part5_mixed",
+            "text": "The Future of Cities\n\nBy 2050, two-thirds of the world's population is expected to live in urban areas. This rapid urbanization presents both challenges and opportunities. Cities consume the majority of the world's energy and produce most of its waste, yet they are also centers of innovation, culture, and economic growth.\n\nSmart city technologies are already being deployed in many places. Sensors can monitor traffic flow and adjust signals in real time. Public transport systems use data to optimize routes and reduce waiting times. In some cities, streetlights dim when no one is nearby, saving energy. Waste collection is becoming more efficient with bins that signal when they are full.\n\nHowever, technology alone cannot solve urban problems. Affordable housing remains a critical issue in many cities, and inequality often increases as cities grow. Planners must balance economic development with social inclusion and environmental sustainability. The cities that thrive in the coming decades will be those that invest not only in digital infrastructure but also in green spaces, public transport, and affordable homes.",
+            "gap_fill": {
+                "text": "Smart cities use (32)_____ to monitor traffic and adjust signals. Some streetlights (33)_____ when no one is nearby. Bins can (34)_____ when they are full. Technology helps, but (35)_____ housing is still a key concern.",
+                "questions": [
+                    {"number": 32, "correct": "sensors"},
+                    {"number": 33, "correct": "dim"},
+                    {"number": 34, "correct": "signal"},
+                    {"number": 35, "correct": "affordable"}
+                ]
+            },
+            "questions": [
+                {"number": 36, "question": "According to the passage, what will characterize cities that thrive in the future?", "options": {"A": "Only digital infrastructure.", "B": "Investment in green spaces, public transport, and affordable housing as well as technology.", "C": "Fewer people living in them.", "D": "No focus on sustainability."}, "correct": "B"},
+                {"number": 37, "question": "What does the passage say about inequality and cities?", "options": {"A": "It usually decreases as cities grow.", "B": "Technology has solved it.", "C": "It often increases as cities grow.", "D": "It is not mentioned."}, "correct": "C"}
             ]
         }
     ]
@@ -489,14 +542,14 @@ DEFAULT_LISTENING = {
             "instruction": "You will hear people talking in eight different situations. For questions 1-8, choose the best answer (A, B or C).",
             "type": "short_conversations",
             "questions": [
-                {"number": 1, "audio_description": "A woman is talking to her colleague about a meeting.", "transcript": "Woman: Did you hear? The marketing meeting has been moved from 2pm to 4pm. The director had a last-minute conflict with the original time.\nMan: Oh, that's actually better for me. I have a client call at 2:30 that I was worried about.\nWoman: Great. See you at four then.", "question": "Why was the meeting time changed?", "options": {"A": "The director had another appointment.", "B": "The man requested a later time.", "C": "The meeting room was not available."}, "correct": "A"},
-                {"number": 2, "audio_description": "You hear a weather forecast on the radio.", "transcript": "Announcer: Good morning, listeners. Today we're looking at a mostly cloudy day with temperatures around 15 degrees. There's a 60% chance of rain in the afternoon, so don't forget your umbrella if you're heading out later. Tomorrow looks much better though, with sunshine expected throughout the day.", "question": "What does the forecast say about tomorrow?", "options": {"A": "It will be cloudy.", "B": "It will rain.", "C": "It will be sunny."}, "correct": "C"},
-                {"number": 3, "audio_description": "A customer is speaking to a shop assistant.", "transcript": "Customer: Excuse me, I bought this jacket last week, but when I got home I noticed this small tear near the pocket. I'd like to exchange it for the same one, please.\nAssistant: I'm sorry about that. Do you have your receipt?\nCustomer: Yes, here it is.", "question": "What is the customer's problem?", "options": {"A": "The jacket is the wrong size.", "B": "The jacket is damaged.", "C": "The jacket is the wrong color."}, "correct": "B"},
-                {"number": 4, "audio_description": "You hear a message on an answering machine.", "transcript": "Hello, this is Dr. Patterson's office calling to confirm your appointment for Thursday at 10am. If you need to reschedule, please call us back at 555-0123 before Wednesday afternoon.", "question": "What is the purpose of this call?", "options": {"A": "To cancel an appointment.", "B": "To confirm an appointment.", "C": "To make a new appointment."}, "correct": "B"},
-                {"number": 5, "audio_description": "Two friends are discussing weekend plans.", "transcript": "Man: So, are you still coming to the barbecue on Saturday?\nWoman: I'd love to, but I have to finish a report for Monday. I've been putting it off all week.\nMan: That's too bad. Maybe we can meet up for coffee on Sunday instead?\nWoman: That would be great. Let's say 2 o'clock at the usual place?", "question": "Why can't the woman go to the barbecue?", "options": {"A": "She has to visit family.", "B": "She has work to complete.", "C": "She is going to a coffee shop."}, "correct": "B"},
-                {"number": 6, "audio_description": "A travel agent is giving information.", "transcript": "Agent: The flight departs at 7:15 in the morning and arrives in Paris at 9:30 local time. You'll have a two-hour layover in Amsterdam. The total cost including taxes is $450.", "question": "Where will the plane stop before Paris?", "options": {"A": "London", "B": "Amsterdam", "C": "Brussels"}, "correct": "B"},
-                {"number": 7, "audio_description": "A professor is making an announcement.", "transcript": "Professor: Before we end today's class, I want to remind everyone that the deadline for the research paper has been extended by one week. It's now due on the 25th instead of the 18th. However, I still encourage you to submit early if you can.", "question": "What has the professor announced?", "options": {"A": "The paper topic has changed.", "B": "The deadline has been extended.", "C": "The class will end early."}, "correct": "B"},
-                {"number": 8, "audio_description": "A woman is talking about her new job.", "transcript": "Woman: I started my new job last Monday. The office is only a 10-minute walk from my apartment, which is so much better than my hour-long commute before. The work is challenging but interesting.", "question": "What does the woman like about her new job?", "options": {"A": "The high salary.", "B": "The short distance from home.", "C": "The easy work."}, "correct": "B"}
+                {"number": 1, "audio_description": "A woman is talking to her colleague about a meeting.", "transcript": "Woman: Did you hear? The marketing meeting has been moved from 2pm to 4pm. The director had a last-minute conflict with the original time.\nMan: Oh, that's actually better for me. I have a client call at 2:30 that I was worried about.\nWoman: Great. See you at four then.", "options": {"A": "The director had another appointment.", "B": "The man requested a later time.", "C": "The meeting room was not available."}, "correct": "A"},
+                {"number": 2, "audio_description": "You hear a weather forecast on the radio.", "transcript": "Announcer: Good morning, listeners. Today we're looking at a mostly cloudy day with temperatures around 15 degrees. There's a 60% chance of rain in the afternoon, so don't forget your umbrella if you're heading out later. Tomorrow looks much better though, with sunshine expected throughout the day.", "options": {"A": "It will be cloudy.", "B": "It will rain.", "C": "It will be sunny."}, "correct": "C"},
+                {"number": 3, "audio_description": "A customer is speaking to a shop assistant.", "transcript": "Customer: Excuse me, I bought this jacket last week, but when I got home I noticed this small tear near the pocket. I'd like to exchange it for the same one, please.\nAssistant: I'm sorry about that. Do you have your receipt?\nCustomer: Yes, here it is.", "options": {"A": "The jacket is the wrong size.", "B": "The jacket is damaged.", "C": "The jacket is the wrong color."}, "correct": "B"},
+                {"number": 4, "audio_description": "You hear a message on an answering machine.", "transcript": "Hello, this is Dr. Patterson's office calling to confirm your appointment for Thursday at 10am. If you need to reschedule, please call us back at 555-0123 before Wednesday afternoon.", "options": {"A": "To cancel an appointment.", "B": "To confirm an appointment.", "C": "To make a new appointment."}, "correct": "B"},
+                {"number": 5, "audio_description": "Two friends are discussing weekend plans.", "transcript": "Man: So, are you still coming to the barbecue on Saturday?\nWoman: I'd love to, but I have to finish a report for Monday. I've been putting it off all week.\nMan: That's too bad. Maybe we can meet up for coffee on Sunday instead?\nWoman: That would be great. Let's say 2 o'clock at the usual place?", "options": {"A": "She has to visit family.", "B": "She has work to complete.", "C": "She is going to a coffee shop."}, "correct": "B"},
+                {"number": 6, "audio_description": "A travel agent is giving information.", "transcript": "Agent: The flight departs at 7:15 in the morning and arrives in Paris at 9:30 local time. You'll have a two-hour layover in Amsterdam. The total cost including taxes is $450.", "options": {"A": "London", "B": "Amsterdam", "C": "Brussels"}, "correct": "B"},
+                {"number": 7, "audio_description": "A professor is making an announcement.", "transcript": "Professor: Before we end today's class, I want to remind everyone that the deadline for the research paper has been extended by one week. It's now due on the 25th instead of the 18th. However, I still encourage you to submit early if you can.", "options": {"A": "The paper topic has changed.", "B": "The deadline has been extended.", "C": "The class will end early."}, "correct": "B"},
+                {"number": 8, "audio_description": "A woman is talking about her new job.", "transcript": "Woman: I started my new job last Monday. The office is only a 10-minute walk from my apartment, which is so much better than my hour-long commute before. The work is challenging but interesting.", "options": {"A": "The high salary.", "B": "The short distance from home.", "C": "The easy work."}, "correct": "B"}
             ]
         },
         {
@@ -547,6 +600,7 @@ DEFAULT_LISTENING = {
             "title": "Part 4: Map Labeling",
             "instruction": "You will hear a guide describing a university campus. For questions 19-24, match each place with the correct letter (A-H) on the map.",
             "type": "map_labeling",
+            "map_image_url": "",
             "audio_description": "A guide describing a university campus tour.",
             "transcript": "Welcome to our university campus tour. Let me show you around. If you look straight ahead, you'll see the Main Library - that's the large building right in the center. To the left of the library is the Science Building, and right behind it is the Sports Center. If you turn right from the entrance, the first building you see is the Student Union. The Cafeteria is just next to the Student Union. And finally, the Art Gallery is the small building at the far end of the campus, near the lake.",
             "places": [
@@ -578,17 +632,18 @@ DEFAULT_LISTENING = {
         {
             "part_number": 6,
             "title": "Part 6: Note Completion",
-            "instruction": "You will hear a talk about healthy eating habits. For questions 31-36, complete the notes with ONE word.",
+            "instruction": "You will hear a talk about healthy eating habits. For questions 31-36, complete the notes with ONE word in each gap.",
             "type": "note_completion",
             "audio_description": "A nutritionist giving a talk about healthy eating habits.",
             "transcript": "Today I want to share some simple tips for healthier eating. First, always eat a good breakfast - studies show it improves your concentration throughout the morning. Second, try to include protein in every meal, such as chicken, fish, or beans.\n\nDrinking enough water is essential - aim for at least eight glasses per day. Many people confuse thirst with hunger.\n\nWhen it comes to snacking, choose fruit or nuts instead of processed foods. Also, try to cook at home more often rather than ordering takeaway. Home-cooked meals typically contain less salt and sugar.\n\nFinally, don't skip meals. Regular eating maintains your energy levels and prevents overeating later in the day.",
+            "text": "Today I want to share some simple tips for healthier eating. First, always eat a good (31)_____ - studies show it improves your concentration throughout the morning. Second, try to include (32)_____ in every meal, such as chicken, fish, or beans.\n\nDrinking enough water is essential - aim for at least eight (33)_____ per day. Many people confuse thirst with hunger.\n\nWhen it comes to snacking, choose fruit or (34)_____ instead of processed foods. Also, try to cook at home more often rather than ordering takeaway. Home-cooked meals typically contain less salt and (35)_____.\n\nFinally, don't skip meals. Regular eating maintains your energy levels and prevents (36)_____ later in the day.",
             "questions": [
-                {"number": 31, "question": "A good breakfast improves your _____ throughout the morning.", "correct": "concentration"},
-                {"number": 32, "question": "You should include _____ in every meal.", "correct": "protein"},
-                {"number": 33, "question": "You should drink at least eight _____ of water per day.", "correct": "glasses"},
-                {"number": 34, "question": "For snacks, choose fruit or _____ instead of processed foods.", "correct": "nuts"},
-                {"number": 35, "question": "Home-cooked meals typically contain less salt and _____.", "correct": "sugar"},
-                {"number": 36, "question": "Regular eating prevents _____ later in the day.", "correct": "overeating"}
+                {"number": 31, "correct": "breakfast"},
+                {"number": 32, "correct": "protein"},
+                {"number": 33, "correct": "glasses"},
+                {"number": 34, "correct": "nuts"},
+                {"number": 35, "correct": "sugar"},
+                {"number": 36, "correct": "overeating"}
             ]
         }
     ]
@@ -680,6 +735,23 @@ def calculate_reading_score(answers: Dict[str, str], test_data: dict) -> Dict:
                 if ic: correct += 1
                 details.append({"q": qn, "ua": ua, "ca": ca, "ok": ic, "part": part["part_number"]})
         elif ptype == "gapped_text":
+            for q in part["questions"]:
+                total += 1
+                qn = str(q["number"])
+                ua = answers.get(qn, "").strip().upper()
+                ca = q["correct"].upper()
+                ic = ua == ca
+                if ic: correct += 1
+                details.append({"q": qn, "ua": ua, "ca": ca, "ok": ic, "part": part["part_number"]})
+        elif ptype == "part5_mixed":
+            for q in part.get("gap_fill", {}).get("questions", []):
+                total += 1
+                qn = str(q["number"])
+                ua = answers.get(qn, "").strip().lower()
+                ca = q["correct"].lower()
+                ic = ua == ca
+                if ic: correct += 1
+                details.append({"q": qn, "ua": ua, "ca": ca, "ok": ic, "part": part["part_number"]})
             for q in part["questions"]:
                 total += 1
                 qn = str(q["number"])
@@ -1944,13 +2016,17 @@ async def reading_test(request: Request):
         s["user_id"] = user["id"]
 
     tests = get_reading_tests()
-    test = tests[0] if tests else DEFAULT_READING
-    # Part 1 har doim open_cloze (matn + bo'sh joylarni yozish) bo'lishi kerak
+    test = random.choice(tests) if tests else DEFAULT_READING
     test = dict(test)
-    test["parts"] = sorted(test["parts"], key=lambda p: p["part_number"])
-    if test["parts"][0].get("type") != "open_cloze":
-        test = DEFAULT_READING
-        save_json("reading_tests.json", {"tests": [DEFAULT_READING]})
+    test.setdefault("parts", [])
+    test["parts"] = sorted(test["parts"], key=lambda p: p.get("part_number", 0))
+    if not test["parts"] or test["parts"][0].get("type") != "open_cloze":
+        test = dict(DEFAULT_READING)
+        test["parts"] = sorted(test["parts"], key=lambda p: p.get("part_number", 0))
+    seen_ids = list(user.get("seen_reading_parts") or [])
+    test["parts"] = _order_parts_for_user(test["parts"], seen_ids, test.get("id", "reading_1"))
+    s = get_session(sid)
+    s["reading_test_id"] = test.get("id", "reading_1")
     t = get_translations(request)
     lang = get_lang(request)
     resp = templates.TemplateResponse("test_reading.html", {"request": request, "test_data": test, "session_id": sid, "t": t, "lang": lang, "user": user})
@@ -1961,25 +2037,43 @@ async def reading_test(request: Request):
 async def submit_reading(request: Request):
     sid = request.cookies.get("session_id")
     if not sid: return JSONResponse({"error": "No session"}, status_code=400)
+    s = get_session(sid)
     fd = await request.form()
     answers = {k: v for k, v in fd.items() if k != "session_id"}
     tests = get_reading_tests()
-    test = tests[0] if tests else DEFAULT_READING
+    test_id = s.get("reading_test_id", "reading_1")
+    test = next((t for t in tests if t.get("id") == test_id), tests[0] if tests else DEFAULT_READING)
     test = dict(test)
-    test["parts"] = sorted(test["parts"], key=lambda p: p["part_number"])
-    if test["parts"][0].get("type") != "open_cloze":
-        test = DEFAULT_READING
+    test.setdefault("parts", [])
+    test["parts"] = sorted(test["parts"], key=lambda p: p.get("part_number", 0))
+    if not test["parts"] or test["parts"][0].get("type") != "open_cloze":
+        test = dict(DEFAULT_READING)
+        test["parts"] = sorted(test["parts"], key=lambda p: p.get("part_number", 0))
     result = calculate_reading_score(answers, test)
-    s = get_session(sid)
     s["reading"] = {"completed": True, "score": result["correct"], "total": result["total"], "percentage": result["percentage"], "details": result["details"]}
+    user_id = s.get("user_id")
+    if user_id:
+        _mark_parts_seen(user_id, "reading", test.get("id", "reading_1"), test["parts"])
     return JSONResponse({"success": True, "score": result["correct"], "total": result["total"], "percentage": result["percentage"], "redirect": "/test/listening"})
 
 @app.get("/test/listening", response_class=HTMLResponse)
 async def listening_test(request: Request):
     sid = request.cookies.get("session_id")
     if not sid: return RedirectResponse(url="/dashboard", status_code=302)
+    s = get_session(sid)
+    user_id = s.get("user_id")
+    user = get_user_by_id(user_id) if user_id else None
+    seen_ids = list((user or {}).get("seen_listening_parts") or [])
     tests = get_listening_tests()
-    test = tests[0] if tests else DEFAULT_LISTENING
+    test = random.choice(tests) if tests else DEFAULT_LISTENING
+    test = dict(test)
+    test.setdefault("parts", [])
+    test["parts"] = sorted(test["parts"], key=lambda p: p.get("part_number", 0))
+    if not test["parts"]:
+        test = dict(DEFAULT_LISTENING)
+        test["parts"] = sorted(test["parts"], key=lambda p: p.get("part_number", 0))
+    test["parts"] = _order_parts_for_user(test["parts"], seen_ids, test.get("id", "listening_1"))
+    s["listening_test_id"] = test.get("id", "listening_1")
     t = get_translations(request)
     lang = get_lang(request)
     return templates.TemplateResponse("test_listening.html", {"request": request, "test_data": test, "session_id": sid, "t": t, "lang": lang})
@@ -2045,13 +2139,23 @@ async def generate_tts(request: Request):
 async def submit_listening(request: Request):
     sid = request.cookies.get("session_id")
     if not sid: return JSONResponse({"error": "No session"}, status_code=400)
+    s = get_session(sid)
     fd = await request.form()
     answers = {k: v for k, v in fd.items() if k != "session_id"}
     tests = get_listening_tests()
-    test = tests[0] if tests else DEFAULT_LISTENING
+    test_id = s.get("listening_test_id", "listening_1")
+    test = next((t for t in tests if t.get("id") == test_id), tests[0] if tests else DEFAULT_LISTENING)
+    test = dict(test)
+    test.setdefault("parts", [])
+    test["parts"] = sorted(test["parts"], key=lambda p: p.get("part_number", 0))
+    if not test["parts"]:
+        test = dict(DEFAULT_LISTENING)
+        test["parts"] = sorted(test["parts"], key=lambda p: p.get("part_number", 0))
     result = calculate_listening_score(answers, test)
-    s = get_session(sid)
     s["listening"] = {"completed": True, "score": result["correct"], "total": result["total"], "percentage": result["percentage"], "details": result["details"]}
+    user_id = s.get("user_id")
+    if user_id:
+        _mark_parts_seen(user_id, "listening", test.get("id", "listening_1"), test["parts"])
     return JSONResponse({"success": True, "score": result["correct"], "total": result["total"], "percentage": result["percentage"], "redirect": "/test/writing"})
 
 @app.get("/test/writing", response_class=HTMLResponse)
@@ -2193,6 +2297,32 @@ async def admin_save_data(request: Request, section: str):
     else:
         return JSONResponse({"error": "Unknown section"}, status_code=400)
     return JSONResponse({"success": True})
+
+
+# Admin: Listening Part 4 xarita rasm yuklash
+UPLOAD_MAPS_DIR = Path(__file__).resolve().parent / "static" / "uploads" / "listening_maps"
+ALLOWED_MAP_EXTENSIONS = {".png", ".jpg", ".jpeg", ".gif", ".webp"}
+
+
+@app.post("/admin/upload-listening-map", response_class=JSONResponse)
+async def admin_upload_listening_map(request: Request, file: UploadFile = File(...)):
+    if not check_admin(request):
+        return JSONResponse({"error": "Unauthorized"}, status_code=401)
+    if not file.filename:
+        return JSONResponse({"error": "Fayl tanlanmagan"}, status_code=400)
+    ext = Path(file.filename).suffix.lower()
+    if ext not in ALLOWED_MAP_EXTENSIONS:
+        return JSONResponse({"error": "Faqat rasm fayllari (png, jpg, gif, webp)"}, status_code=400)
+    UPLOAD_MAPS_DIR.mkdir(parents=True, exist_ok=True)
+    name = f"{uuid.uuid4().hex}{ext}"
+    path = UPLOAD_MAPS_DIR / name
+    try:
+        content = await file.read()
+        path.write_bytes(content)
+    except Exception as e:
+        return JSONResponse({"error": str(e)}, status_code=500)
+    url = f"/static/uploads/listening_maps/{name}"
+    return JSONResponse({"url": url})
 
 @app.post("/admin/user/{user_id}")
 async def admin_update_user(request: Request, user_id: str):

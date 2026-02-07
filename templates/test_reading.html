@@ -514,33 +514,49 @@
                             </div>
 
                             {% elif part.type == "multiple_choice_cloze" %}
-                            <!-- Part 2: Chapda savol, o'ngda variantlar -->
+                            <!-- Part 2: Chapda savollar tartib bilan (har biri 1 qator), o'ngda passage + variantlar -->
                             <div class="grid lg:grid-cols-2 gap-3 md:gap-4 flex-1 min-h-0">
-                                <div class="passage-card p-4 md:p-5 overflow-y-auto min-h-0 passage-highlight-container">
-                                    <h4 class="text-[#1CB0F6] font-black text-xs uppercase tracking-wider mb-2">Passage</h4>
-                                    <div class="passage-text" data-part="{{ part.part_number }}" data-highlight-key="reading-mc-{{ part.part_number }}">
-                                        {{ part.text | replace("(9)_____", "<span class='inline-block bg-[#1CB0F6]/20 text-[#1CB0F6] px-3 py-1 font-black rounded-lg'>(9)</span>") | replace("(10)_____", "<span class='inline-block bg-[#1CB0F6]/20 text-[#1CB0F6] px-3 py-1 font-black rounded-lg'>(10)</span>") | replace("(11)_____", "<span class='inline-block bg-[#1CB0F6]/20 text-[#1CB0F6] px-3 py-1 font-black rounded-lg'>(11)</span>") | replace("(12)_____", "<span class='inline-block bg-[#1CB0F6]/20 text-[#1CB0F6] px-3 py-1 font-black rounded-lg'>(12)</span>") | replace("(13)_____", "<span class='inline-block bg-[#1CB0F6]/20 text-[#1CB0F6] px-3 py-1 font-black rounded-lg'>(13)</span>") | replace("(14)_____", "<span class='inline-block bg-[#1CB0F6]/20 text-[#1CB0F6] px-3 py-1 font-black rounded-lg'>(14)</span>") | replace("(15)_____", "<span class='inline-block bg-[#1CB0F6]/20 text-[#1CB0F6] px-3 py-1 font-black rounded-lg'>(15)</span>") | replace("(16)_____", "<span class='inline-block bg-[#1CB0F6]/20 text-[#1CB0F6] px-3 py-1 font-black rounded-lg'>(16)</span>") | safe }}
+                                <div class="passage-card p-4 md:p-5 overflow-y-auto min-h-0 flex flex-col">
+                                    <h4 class="text-[#CE82FF] font-black text-xs uppercase tracking-wider mb-3">Savollar (tartib bilan)</h4>
+                                    <div class="space-y-0">
+                                        {% for q in part.questions %}
+                                        <div class="question-card focusable-question py-3 px-3 border-b border-[#2B4148] last:border-b-0" data-question="{{ q.number }}" id="q-{{ q.number }}" tabindex="0">
+                                            <div class="flex items-start gap-2">
+                                                <span class="w-7 h-7 bg-[#1CB0F6] rounded-lg flex items-center justify-center text-white text-xs font-black flex-shrink-0">{{ q.number }}</span>
+                                                <div class="flex-1 min-w-0">
+                                                    <span class="text-xs text-[#777] font-bold block mb-0.5">Savol {{ q.number }}</span>
+                                                    <span class="text-sm font-medium text-[#AFAFAF]">{{ q.question | default('Gap ' ~ q.number, true) }}</span>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" name="{{ q.number }}" value="">
+                                        </div>
+                                        {% endfor %}
                                     </div>
                                 </div>
-                                <div class="space-y-2 md:space-y-3 overflow-y-auto min-h-0 pr-1">
-                                    <h4 class="text-[#CE82FF] font-black text-xs uppercase tracking-wider mb-2">Savollar — o'ngda variantlarni tanlang</h4>
-                                    {% for q in part.questions %}
-                                    <div class="question-card p-2 md:p-3 focusable-question flex flex-col md:flex-row md:items-center gap-2 md:gap-4" data-question="{{ q.number }}" id="q-{{ q.number }}" tabindex="0">
-                                        <div class="font-bold text-white md:min-w-[120px] flex items-center gap-2 flex-shrink-0">
-                                            <span class="w-6 h-6 bg-[#1CB0F6] rounded-lg flex items-center justify-center text-white text-xs font-black">{{ q.number }}</span>
-                                            <span class="text-xs md:text-sm">Savol {{ q.number }}</span>
+                                <div class="overflow-y-auto min-h-0 pr-1 flex flex-col gap-4">
+                                    <div class="passage-card p-4 md:p-5 passage-highlight-container">
+                                        <h4 class="text-[#1CB0F6] font-black text-xs uppercase tracking-wider mb-2">Passage</h4>
+                                        <div class="passage-text" data-part="{{ part.part_number }}" data-highlight-key="reading-mc-{{ part.part_number }}">
+                                            {{ part.text | replace("(9)_____", "<span class='inline-block bg-[#1CB0F6]/20 text-[#1CB0F6] px-3 py-1 font-black rounded-lg'>(9)</span>") | replace("(10)_____", "<span class='inline-block bg-[#1CB0F6]/20 text-[#1CB0F6] px-3 py-1 font-black rounded-lg'>(10)</span>") | replace("(11)_____", "<span class='inline-block bg-[#1CB0F6]/20 text-[#1CB0F6] px-3 py-1 font-black rounded-lg'>(11)</span>") | replace("(12)_____", "<span class='inline-block bg-[#1CB0F6]/20 text-[#1CB0F6] px-3 py-1 font-black rounded-lg'>(12)</span>") | replace("(13)_____", "<span class='inline-block bg-[#1CB0F6]/20 text-[#1CB0F6] px-3 py-1 font-black rounded-lg'>(13)</span>") | replace("(14)_____", "<span class='inline-block bg-[#1CB0F6]/20 text-[#1CB0F6] px-3 py-1 font-black rounded-lg'>(14)</span>") | replace("(15)_____", "<span class='inline-block bg-[#1CB0F6]/20 text-[#1CB0F6] px-3 py-1 font-black rounded-lg'>(15)</span>") | replace("(16)_____", "<span class='inline-block bg-[#1CB0F6]/20 text-[#1CB0F6] px-3 py-1 font-black rounded-lg'>(16)</span>") | safe }}
                                         </div>
-                                        <div class="grid grid-cols-2 md:grid-cols-2 gap-1.5 md:gap-2 flex-1">
+                                    </div>
+                                    <h4 class="text-[#CE82FF] font-black text-xs uppercase tracking-wider">Variantlar (A–J) — har bir savol uchun bittasini tanlang</h4>
+                                    {% for q in part.questions %}
+                                    <div class="question-card p-3 focusable-question" data-question="{{ q.number }}">
+                                        <div class="font-bold text-white text-xs mb-2 flex items-center gap-2">
+                                            <span class="w-6 h-6 bg-[#1CB0F6] rounded-lg flex items-center justify-center text-white font-black">{{ q.number }}</span>
+                                            Savol {{ q.number }}:
+                                        </div>
+                                        <div class="grid grid-cols-2 md:grid-cols-5 gap-1.5 md:gap-2">
                                             {% for letter, option in q.options.items() %}
                                             <button type="button"
-                                                    class="option-btn p-2 md:p-3 text-left text-xs text-[#AFAFAF] font-medium"
+                                                    class="option-btn p-2 md:p-2.5 text-left text-xs text-[#AFAFAF] font-medium"
                                                     data-question="{{ q.number }}"
                                                     data-value="{{ letter }}">
                                                 <span class="font-black text-[#1CB0F6] mr-1">{{ letter }}.</span>{{ option }}
                                             </button>
                                             {% endfor %}
                                         </div>
-                                        <input type="hidden" name="{{ q.number }}" value="">
                                     </div>
                                     {% endfor %}
                                 </div>
@@ -584,7 +600,7 @@
                                 <div class="passage-card p-4 md:p-5 overflow-y-auto min-h-0 passage-highlight-container">
                                     <h4 class="text-[#58CC02] font-black text-xs uppercase tracking-wider mb-2">Text with Gaps</h4>
                                     <div class="passage-text" data-part="{{ part.part_number }}" data-highlight-key="reading-gapped-{{ part.part_number }}">
-                                        {{ part.text | replace("(23)_____", "<span class='inline-block bg-[#58CC02] text-white px-3 py-0.5 font-black text-xs rounded-lg' style='box-shadow: 0 2px 0 #46A302;'>23</span>") | replace("(24)_____", "<span class='inline-block bg-[#58CC02] text-white px-3 py-0.5 font-black text-xs rounded-lg' style='box-shadow: 0 2px 0 #46A302;'>24</span>") | replace("(25)_____", "<span class='inline-block bg-[#58CC02] text-white px-3 py-0.5 font-black text-xs rounded-lg' style='box-shadow: 0 2px 0 #46A302;'>25</span>") | replace("(26)_____", "<span class='inline-block bg-[#58CC02] text-white px-3 py-0.5 font-black text-xs rounded-lg' style='box-shadow: 0 2px 0 #46A302;'>26</span>") | replace("(27)_____", "<span class='inline-block bg-[#58CC02] text-white px-3 py-0.5 font-black text-xs rounded-lg' style='box-shadow: 0 2px 0 #46A302;'>27</span>") | replace("(28)_____", "<span class='inline-block bg-[#58CC02] text-white px-3 py-0.5 font-black text-xs rounded-lg' style='box-shadow: 0 2px 0 #46A302;'>28</span>") | safe }}
+                                        {{ part.text | replace("(17)_____", "<span class='inline-block bg-[#58CC02] text-white px-3 py-0.5 font-black text-xs rounded-lg' style='box-shadow: 0 2px 0 #46A302;'>17</span>") | replace("(18)_____", "<span class='inline-block bg-[#58CC02] text-white px-3 py-0.5 font-black text-xs rounded-lg' style='box-shadow: 0 2px 0 #46A302;'>18</span>") | replace("(19)_____", "<span class='inline-block bg-[#58CC02] text-white px-3 py-0.5 font-black text-xs rounded-lg' style='box-shadow: 0 2px 0 #46A302;'>19</span>") | replace("(20)_____", "<span class='inline-block bg-[#58CC02] text-white px-3 py-0.5 font-black text-xs rounded-lg' style='box-shadow: 0 2px 0 #46A302;'>20</span>") | replace("(21)_____", "<span class='inline-block bg-[#58CC02] text-white px-3 py-0.5 font-black text-xs rounded-lg' style='box-shadow: 0 2px 0 #46A302;'>21</span>") | replace("(22)_____", "<span class='inline-block bg-[#58CC02] text-white px-3 py-0.5 font-black text-xs rounded-lg' style='box-shadow: 0 2px 0 #46A302;'>22</span>") | safe }}
                                     </div>
                                 </div>
                                 <div class="space-y-3 overflow-y-auto min-h-0 pr-1">
@@ -613,10 +629,51 @@
                                                     <option value="E">E</option>
                                                     <option value="F">F</option>
                                                     <option value="G">G</option>
+                                                    <option value="H">H</option>
                                                 </select>
                                             </div>
                                             {% endfor %}
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% elif part.type == "part5_mixed" %}
+                            <!-- Part 5: Chapda katta matn, o'ngda 4 ta bo'sh joy + 2 ta MC -->
+                            <div class="grid lg:grid-cols-2 gap-3 md:gap-4 flex-1 min-h-0">
+                                <div class="passage-card p-4 md:p-5 overflow-y-auto min-h-0 passage-highlight-container">
+                                    <h4 class="text-[#1CB0F6] font-black text-xs uppercase tracking-wider mb-2">Passage</h4>
+                                    <div class="passage-text" data-part="{{ part.part_number }}" data-highlight-key="reading-p5-{{ part.part_number }}">{{ part.text | safe }}</div>
+                                </div>
+                                <div class="space-y-3 overflow-y-auto min-h-0 pr-1">
+                                    <h4 class="text-[#CE82FF] font-black text-xs uppercase tracking-wider mb-2">Bo'sh joylar (32–35) va savollar (36–37)</h4>
+                                    <div class="passage-card p-4 md:p-5">
+                                        <p class="text-xs md:text-sm text-[#AFAFAF] mb-3">Quyidagi matnda 4 ta bo'sh joyni bitta so'z bilan to'ldiring:</p>
+                                        <div class="passage-text text-sm text-[#AFAFAF] whitespace-pre-wrap" id="part5-gap-text">
+                                            {{ part.gap_fill.text | replace("(32)_____", "<input type='text' name='32' class='gap-input inline-block w-24 md:w-28 bg-[#131F24] border-2 border-[#2B4148] text-white px-2 py-1 rounded font-bold text-xs' placeholder='32' maxlength='30' autocomplete='off'>") | replace("(33)_____", "<input type='text' name='33' class='gap-input inline-block w-24 md:w-28 bg-[#131F24] border-2 border-[#2B4148] text-white px-2 py-1 rounded font-bold text-xs' placeholder='33' maxlength='30' autocomplete='off'>") | replace("(34)_____", "<input type='text' name='34' class='gap-input inline-block w-24 md:w-28 bg-[#131F24] border-2 border-[#2B4148] text-white px-2 py-1 rounded font-bold text-xs' placeholder='34' maxlength='30' autocomplete='off'>") | replace("(35)_____", "<input type='text' name='35' class='gap-input inline-block w-24 md:w-28 bg-[#131F24] border-2 border-[#2B4148] text-white px-2 py-1 rounded font-bold text-xs' placeholder='35' maxlength='30' autocomplete='off'>") | safe }}
+                                        </div>
+                                    </div>
+                                    <div class="space-y-2 md:space-y-3">
+                                        {% for q in part.questions %}
+                                        <div class="question-card p-2 md:p-3 focusable-question" data-question="{{ q.number }}" id="q-{{ q.number }}" tabindex="0">
+                                            <div class="font-bold text-white mb-2 text-xs md:text-sm flex items-start gap-2">
+                                                <span class="w-6 h-6 bg-[#FF9600] rounded-lg flex items-center justify-center text-white text-xs font-black flex-shrink-0">{{ q.number }}</span>
+                                                <span>{{ q.question }}</span>
+                                            </div>
+                                            <div class="space-y-1.5 md:space-y-2">
+                                                {% for letter, option in q.options.items() %}
+                                                <button type="button"
+                                                        class="option-btn w-full p-2 md:p-3 text-left text-xs md:text-sm text-[#AFAFAF] flex items-start gap-2 font-medium"
+                                                        data-question="{{ q.number }}"
+                                                        data-value="{{ letter }}">
+                                                    <span class="font-black text-[#FF9600]">{{ letter }}.</span>
+                                                    <span>{{ option }}</span>
+                                                </button>
+                                                {% endfor %}
+                                            </div>
+                                            <input type="hidden" name="{{ q.number }}" value="">
+                                        </div>
+                                        {% endfor %}
                                     </div>
                                 </div>
                             </div>
@@ -693,7 +750,8 @@
             1: [1, 2, 3, 4, 5, 6, 7, 8],
             2: [9, 10, 11, 12, 13, 14, 15, 16],
             3: [17, 18, 19, 20, 21, 22],
-            4: [23, 24, 25, 26, 27, 28]
+            4: [23, 24, 25, 26, 27, 28, 29, 30, 31],
+            5: [32, 33, 34, 35, 36, 37]
         };
         
         // Build question navigator

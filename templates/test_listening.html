@@ -478,7 +478,6 @@
                                         Question {{ q.number }}
                                     </div>
                                     <div class="text-sm md:text-base text-[#777] mb-3 italic font-medium">{{ q.audio_description }}</div>
-                                    <div class="font-bold text-white mb-4 md:mb-5 text-base md:text-lg">{{ q.question }}</div>
                                     <div class="space-y-2 md:space-y-3">
                                         {% for letter, option in q.options.items() %}
                                         <button type="button"
@@ -602,10 +601,23 @@
                                 <audio class="audio-player w-full mb-4 hidden" controls data-part="{{ part.part_number }}"></audio>
                             </div>
 
-                            <!-- Map Labels legend -->
-                            <div class="mb-6 md:mb-8">
-                                <h4 class="font-black text-[#FF9600] mb-3 text-sm uppercase tracking-wider">Xaritadagi harflar:</h4>
-                                <div class="flex flex-wrap gap-2">
+                            <!-- Joy nomlari ustida + xarita rasm + pastda belgilash -->
+                            <div class="mb-4">
+                                <h4 class="font-black text-[#FF9600] mb-3 text-sm uppercase tracking-wider">Joy nomlari (xaritada belgilang):</h4>
+                                <div class="flex flex-wrap gap-2 mb-4">
+                                    {% for place in part.places %}
+                                    <span class="px-3 py-1.5 rounded-lg bg-[#FF9600]/20 border border-[#FF9600]/40 text-[#FF9600] font-bold text-sm">{{ place.number }}. {{ place.name }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% if part.get('map_image_url') %}
+                                <div class="mb-4 rounded-xl overflow-hidden border-2 border-[#2B4148] bg-[#1A2C32]">
+                                    <img src="{{ part.map_image_url }}" alt="Map" class="w-full h-auto max-h-[400px] object-contain">
+                                </div>
+                                {% else %}
+                                <div class="mb-4 rounded-xl border-2 border-dashed border-[#2B4148] bg-[#1A2C32]/50 p-8 text-center text-[#777] font-medium text-sm">Xarita rasm admin panel orqali yuklanadi.</div>
+                                {% endif %}
+                                <h4 class="font-black text-[#FF9600] mt-4 mb-3 text-sm uppercase tracking-wider">Xaritadagi harflar (A–H):</h4>
+                                <div class="flex flex-wrap gap-2 mb-4">
                                     {% for label in part.map_labels %}
                                     <span class="w-10 h-10 rounded-xl bg-[#FF9600]/20 border-2 border-[#FF9600]/40 flex items-center justify-center text-[#FF9600] font-black text-lg">{{ label }}</span>
                                     {% endfor %}
@@ -675,7 +687,7 @@
                             </div>
 
                             {% elif part.type == "note_completion" %}
-                            <!-- Part 6: Note Completion -->
+                            <!-- Part 6: Bitta to'liq matn (Reading Part 1 kabi) -->
                             <div class="mb-6 md:mb-8">
                                 <div class="flex flex-wrap items-center gap-3 md:gap-4 mb-4">
                                     <button type="button" class="audio-play-btn px-5 md:px-6 py-3 md:py-4 text-sm md:text-base flex items-center gap-2 md:gap-3 bg-[#58CC02]" style="box-shadow: 0 4px 0 #46A302;"
@@ -695,17 +707,20 @@
                                 <audio class="audio-player w-full mb-4 hidden" controls data-part="{{ part.part_number }}"></audio>
                             </div>
 
-                            <div class="space-y-3 md:space-y-4">
-                                {% for q in part.questions %}
-                                <div class="question-card p-4 md:p-5 flex flex-col md:flex-row md:items-center gap-3 md:gap-5" data-question="{{ q.number }}" id="q-{{ q.number }}">
-                                    <span class="font-black text-[#58CC02] text-lg md:text-xl flex items-center gap-2">
-                                        <span class="w-8 h-8 bg-[#58CC02] rounded-lg flex items-center justify-center text-white text-sm">{{ q.number }}</span>
-                                    </span>
-                                    <div class="flex-1 text-[#AFAFAF] text-base md:text-lg font-medium">
-                                        {{ q.question | replace("_____", "<input type='text' name='" ~ q.number ~ "' class='text-input px-3 py-2 w-28 md:w-36 text-center' placeholder='answer' data-question='" ~ q.number ~ "'>") | safe }}
+                            <div class="passage-card p-5 md:p-6">
+                                <p class="text-[#AFAFAF] text-sm mb-4">Matnda bo'sh joylarni (31–36) tinglab, bitta so'z bilan to'ldiring:</p>
+                                <div class="text-[#AFAFAF] text-base md:text-lg font-medium leading-relaxed whitespace-pre-wrap">
+                                    {% if part.text %}
+                                    {{ part.text | replace("(31)_____", "<input type='text' name='31' class='gap-input text-input inline-block w-24 md:w-32 px-2 py-1.5 text-center mx-0.5' placeholder='31' maxlength='30' data-question='31'>") | replace("(32)_____", "<input type='text' name='32' class='gap-input text-input inline-block w-24 md:w-32 px-2 py-1.5 text-center mx-0.5' placeholder='32' maxlength='30' data-question='32'>") | replace("(33)_____", "<input type='text' name='33' class='gap-input text-input inline-block w-24 md:w-32 px-2 py-1.5 text-center mx-0.5' placeholder='33' maxlength='30' data-question='33'>") | replace("(34)_____", "<input type='text' name='34' class='gap-input text-input inline-block w-24 md:w-32 px-2 py-1.5 text-center mx-0.5' placeholder='34' maxlength='30' data-question='34'>") | replace("(35)_____", "<input type='text' name='35' class='gap-input text-input inline-block w-24 md:w-32 px-2 py-1.5 text-center mx-0.5' placeholder='35' maxlength='30' data-question='35'>") | replace("(36)_____", "<input type='text' name='36' class='gap-input text-input inline-block w-24 md:w-32 px-2 py-1.5 text-center mx-0.5' placeholder='36' maxlength='30' data-question='36'>") | safe }}
+                                    {% else %}
+                                    {% for q in part.questions %}
+                                    <div class="flex items-center gap-2 mb-3">
+                                        <span class="w-8 h-8 bg-[#58CC02] rounded-lg flex items-center justify-center text-white text-sm font-black">{{ q.number }}</span>
+                                        <input type="text" name="{{ q.number }}" class="text-input px-3 py-2 flex-1 max-w-xs" placeholder="javob" data-question="{{ q.number }}">
                                     </div>
+                                    {% endfor %}
+                                    {% endif %}
                                 </div>
-                                {% endfor %}
                             </div>
                             {% endif %}
                         </div>

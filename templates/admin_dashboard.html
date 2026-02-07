@@ -287,43 +287,35 @@
         <!-- Reading Tab -->
         <div id="reading-tab" class="tab-content active">
             <div class="admin-card p-6">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-xl font-black text-white flex items-center gap-3">
-                        <div class="w-10 h-10 bg-[#A78BFA]/20 rounded-xl flex items-center justify-center">
-                            <svg class="w-5 h-5 text-[#A78BFA]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                        </div>
-                        Reading Testlar
-                    </h2>
-                    <button onclick="showAddModal('reading')" class="btn-primary text-sm">
-                        + Yangi Test
-                    </button>
+                <h2 class="text-xl font-black text-white flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-[#A78BFA]/20 rounded-xl flex items-center justify-center">
+                        <svg class="w-5 h-5 text-[#A78BFA]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                    </div>
+                    Reading
+                </h2>
+                <div class="flex flex-wrap items-center gap-4 mb-4 p-4 bg-[#0F172A] rounded-xl border border-[#334155]">
+                    <div><label class="text-xs text-gray-500 block mb-1">Test nomi</label><input type="text" id="reading-test-title" class="form-input w-48" placeholder="Reading Test 1"></div>
+                    <div><label class="text-xs text-gray-500 block mb-1">Vaqt (daqiqa)</label><input type="number" id="reading-test-time" class="form-input w-24" value="60"></div>
+                    <button type="button" onclick="saveSectionTestInfo('reading')" class="px-4 py-2 bg-[#A78BFA] hover:bg-[#9368E6] text-white font-bold rounded-xl text-sm mt-6">Testni saqlash</button>
                 </div>
-                <div class="space-y-3">
-                    {% for test in reading_tests %}
-                    <div class="bg-[#0F172A] border-2 border-[#334155] rounded-xl p-4 flex items-center justify-between hover:border-[#4ECDC4]/50 transition">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 bg-[#A78BFA]/20 rounded-xl flex items-center justify-center text-[#A78BFA] font-black">
-                                {{ loop.index }}
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-white">{{ test.title }}</h3>
-                                <p class="text-sm text-gray-500 font-medium">{{ test.parts | length }} qism | {{ test.time_limit }} daqiqa</p>
-                            </div>
-                        </div>
-                        <div class="flex gap-2">
-                            <button onclick="editTest('reading', '{{ test.id }}')" class="px-4 py-2 border-2 border-[#334155] text-gray-400 hover:text-[#4ECDC4] hover:border-[#4ECDC4] rounded-lg text-sm font-bold transition">Tahrirlash</button>
-                            <button onclick="deleteTest('reading', '{{ test.id }}')" class="px-4 py-2 border-2 border-[#FF6B6B]/30 text-[#FF6B6B] hover:bg-[#FF6B6B]/20 rounded-lg text-sm font-bold transition">O'chirish</button>
-                        </div>
-                    </div>
-                    {% else %}
-                    <div class="text-center py-12">
-                        <div class="w-16 h-16 bg-[#334155] rounded-2xl flex items-center justify-center mx-auto mb-4">
-                            <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                        </div>
-                        <p class="text-gray-500 font-bold">Hozircha testlar yo'q</p>
-                        <button onclick="showAddModal('reading')" class="btn-primary mt-4 text-sm">Birinchi testni qo'shing</button>
-                    </div>
-                    {% endfor %}
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-gray-300 mb-1">Mavjud partlar</label>
+                    <div id="reading-parts-list" class="text-sm text-gray-400 min-h-[1.5rem]">—</div>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-bold text-gray-300 mb-2">Partni tanlang</label>
+                    <select id="reading-part-select" class="form-input w-full max-w-md" onchange="onSectionPartSelect('reading')">
+                        <option value="">— Partni tanlang —</option>
+                        <option value="0">Part 1: Open Cloze</option>
+                        <option value="1">Part 2: Multiple Choice Cloze</option>
+                        <option value="2">Part 3: Gapped Text</option>
+                        <option value="3">Part 4: Reading Comprehension</option>
+                        <option value="4">Part 5: Mixed</option>
+                    </select>
+                </div>
+                <div id="reading-part-form-container" class="hidden"></div>
+                <div id="reading-part-save-wrap" class="hidden mt-4">
+                    <button type="button" onclick="saveSectionPart('reading')" class="btn-primary">Partni saqlash</button>
                 </div>
             </div>
         </div>
@@ -331,43 +323,44 @@
         <!-- Listening Tab -->
         <div id="listening-tab" class="tab-content">
             <div class="admin-card p-6">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-xl font-black text-white flex items-center gap-3">
-                        <div class="w-10 h-10 bg-[#45B7D1]/20 rounded-xl flex items-center justify-center">
-                            <svg class="w-5 h-5 text-[#45B7D1]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
-                        </div>
-                        Listening Testlar
-                    </h2>
-                    <button onclick="showAddModal('listening')" class="btn-primary text-sm">
-                        + Yangi Test
-                    </button>
+                <h2 class="text-xl font-black text-white flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-[#45B7D1]/20 rounded-xl flex items-center justify-center">
+                        <svg class="w-5 h-5 text-[#45B7D1]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
+                    </div>
+                    Listening
+                </h2>
+                <div class="flex flex-wrap items-center gap-4 mb-4 p-4 bg-[#0F172A] rounded-xl border border-[#334155]">
+                    <div><label class="text-xs text-gray-500 block mb-1">Test nomi</label><input type="text" id="listening-test-title" class="form-input w-48" placeholder="Listening Test 1"></div>
+                    <div><label class="text-xs text-gray-500 block mb-1">Vaqt (daqiqa)</label><input type="number" id="listening-test-time" class="form-input w-24" value="40"></div>
+                    <button type="button" onclick="saveSectionTestInfo('listening')" class="px-4 py-2 bg-[#45B7D1] hover:bg-[#3AA3BB] text-white font-bold rounded-xl text-sm mt-6">Testni saqlash</button>
                 </div>
-                <div class="space-y-3">
-                    {% for test in listening_tests %}
-                    <div class="bg-[#0F172A] border-2 border-[#334155] rounded-xl p-4 flex items-center justify-between hover:border-[#4ECDC4]/50 transition">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 bg-[#45B7D1]/20 rounded-xl flex items-center justify-center text-[#45B7D1] font-black">
-                                {{ loop.index }}
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-white">{{ test.title }}</h3>
-                                <p class="text-sm text-gray-500 font-medium">{{ test.parts | length }} qism | {{ test.time_limit }} daqiqa</p>
-                            </div>
-                        </div>
-                        <div class="flex gap-2">
-                            <button onclick="editTest('listening', '{{ test.id }}')" class="px-4 py-2 border-2 border-[#334155] text-gray-400 hover:text-[#4ECDC4] hover:border-[#4ECDC4] rounded-lg text-sm font-bold transition">Tahrirlash</button>
-                            <button onclick="deleteTest('listening', '{{ test.id }}')" class="px-4 py-2 border-2 border-[#FF6B6B]/30 text-[#FF6B6B] hover:bg-[#FF6B6B]/20 rounded-lg text-sm font-bold transition">O'chirish</button>
-                        </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-gray-300 mb-1">Mavjud partlar</label>
+                    <div id="listening-parts-list" class="text-sm text-gray-400 min-h-[1.5rem]">—</div>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-bold text-gray-300 mb-2">Partni tanlang</label>
+                    <select id="listening-part-select" class="form-input w-full max-w-md" onchange="onSectionPartSelect('listening')">
+                        <option value="">— Partni tanlang —</option>
+                        <option value="0">Part 1: Short Conversations</option>
+                        <option value="1">Part 2: Sentence Completion</option>
+                        <option value="2">Part 3: Speaker Matching</option>
+                        <option value="3">Part 4: Map Labeling</option>
+                        <option value="4">Part 5: Interview</option>
+                        <option value="5">Part 6: Note Completion</option>
+                    </select>
+                </div>
+                <div id="listening-part-form-container" class="hidden"></div>
+                <div id="listening-part-save-wrap" class="hidden mt-4">
+                    <button type="button" onclick="saveSectionPart('listening')" class="btn-primary">Partni saqlash</button>
+                </div>
+                <div class="mt-8 pt-6 border-t-2 border-[#334155]">
+                    <h3 class="text-lg font-bold text-white mb-2">Part 4: Xarita rasm yuklash</h3>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <input type="file" id="listening-map-file" accept=".png,.jpg,.jpeg,.gif,.webp" class="text-sm text-gray-400 file:mr-3 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#45B7D1]/20 file:text-[#45B7D1] file:font-bold">
+                        <button type="button" onclick="uploadListeningMap()" class="px-4 py-2 bg-[#45B7D1] hover:bg-[#3AA3BB] text-white font-bold rounded-lg text-sm transition">Yuklash</button>
+                        <span id="listening-map-url" class="text-sm text-[#58CC02] break-all hidden"></span>
                     </div>
-                    {% else %}
-                    <div class="text-center py-12">
-                        <div class="w-16 h-16 bg-[#334155] rounded-2xl flex items-center justify-center mx-auto mb-4">
-                            <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
-                        </div>
-                        <p class="text-gray-500 font-bold">Hozircha testlar yo'q</p>
-                        <button onclick="showAddModal('listening')" class="btn-primary mt-4 text-sm">Birinchi testni qo'shing</button>
-                    </div>
-                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -375,43 +368,32 @@
         <!-- Writing Tab -->
         <div id="writing-tab" class="tab-content">
             <div class="admin-card p-6">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-xl font-black text-white flex items-center gap-3">
-                        <div class="w-10 h-10 bg-[#FF9F43]/20 rounded-xl flex items-center justify-center">
-                            <svg class="w-5 h-5 text-[#FF9F43]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                        </div>
-                        Writing Testlar
-                    </h2>
-                    <button onclick="showAddModal('writing')" class="btn-primary text-sm">
-                        + Yangi Test
-                    </button>
+                <h2 class="text-xl font-black text-white flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-[#FF9F43]/20 rounded-xl flex items-center justify-center">
+                        <svg class="w-5 h-5 text-[#FF9F43]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    </div>
+                    Writing
+                </h2>
+                <div class="flex flex-wrap items-center gap-4 mb-4 p-4 bg-[#0F172A] rounded-xl border border-[#334155]">
+                    <div><label class="text-xs text-gray-500 block mb-1">Test nomi</label><input type="text" id="writing-test-title" class="form-input w-48" placeholder="Writing Test 1"></div>
+                    <div><label class="text-xs text-gray-500 block mb-1">Vaqt (daqiqa)</label><input type="number" id="writing-test-time" class="form-input w-24" value="80"></div>
+                    <button type="button" onclick="saveSectionTestInfo('writing')" class="px-4 py-2 bg-[#FF9F43] hover:bg-[#E68A33] text-white font-bold rounded-xl text-sm mt-6">Testni saqlash</button>
                 </div>
-                <div class="space-y-3">
-                    {% for test in writing_tests %}
-                    <div class="bg-[#0F172A] border-2 border-[#334155] rounded-xl p-4 flex items-center justify-between hover:border-[#4ECDC4]/50 transition">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 bg-[#FF9F43]/20 rounded-xl flex items-center justify-center text-[#FF9F43] font-black">
-                                {{ loop.index }}
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-white">{{ test.title }}</h3>
-                                <p class="text-sm text-gray-500 font-medium">{{ test.parts | length }} qism | {{ test.time_limit }} daqiqa</p>
-                            </div>
-                        </div>
-                        <div class="flex gap-2">
-                            <button onclick="editTest('writing', '{{ test.id }}')" class="px-4 py-2 border-2 border-[#334155] text-gray-400 hover:text-[#4ECDC4] hover:border-[#4ECDC4] rounded-lg text-sm font-bold transition">Tahrirlash</button>
-                            <button onclick="deleteTest('writing', '{{ test.id }}')" class="px-4 py-2 border-2 border-[#FF6B6B]/30 text-[#FF6B6B] hover:bg-[#FF6B6B]/20 rounded-lg text-sm font-bold transition">O'chirish</button>
-                        </div>
-                    </div>
-                    {% else %}
-                    <div class="text-center py-12">
-                        <div class="w-16 h-16 bg-[#334155] rounded-2xl flex items-center justify-center mx-auto mb-4">
-                            <svg class="w-8 h-8 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                        </div>
-                        <p class="text-gray-500 font-bold">Hozircha testlar yo'q</p>
-                        <button onclick="showAddModal('writing')" class="btn-primary mt-4 text-sm">Birinchi testni qo'shing</button>
-                    </div>
-                    {% endfor %}
+                <div class="mb-4">
+                    <label class="block text-sm font-bold text-gray-300 mb-1">Mavjud partlar</label>
+                    <div id="writing-parts-list" class="text-sm text-gray-400 min-h-[1.5rem]">—</div>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-bold text-gray-300 mb-2">Partni tanlang</label>
+                    <select id="writing-part-select" class="form-input w-full max-w-md" onchange="onSectionPartSelect('writing')">
+                        <option value="">— Partni tanlang —</option>
+                        <option value="0">Part 1: Tasks (Email, Review)</option>
+                        <option value="1">Part 2: Essay</option>
+                    </select>
+                </div>
+                <div id="writing-part-form-container" class="hidden"></div>
+                <div id="writing-part-save-wrap" class="hidden mt-4">
+                    <button type="button" onclick="saveSectionPart('writing')" class="btn-primary">Partni saqlash</button>
                 </div>
             </div>
         </div>
@@ -600,61 +582,20 @@
         </div>
     </main>
 
-    <!-- Add/Edit Test Modal -->
-    <div id="test-modal" class="fixed inset-0 modal-overlay flex items-center justify-center z-50 hidden">
-        <div class="bg-[#1E293B] border-2 border-[#334155] rounded-2xl p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <div class="flex items-center justify-between mb-6">
-                <h3 id="modal-title" class="text-xl font-black text-white">Yangi Test Qo'shish</h3>
-                <button onclick="closeTestModal()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+    <!-- Part forma (sahifada ko'rsatiladi, modal emas) -->
+
+    <!-- Part qo'shish modal (eski - kerak bo'lsa ishlatiladi) -->
+    <div id="add-part-modal" class="fixed inset-0 modal-overlay flex items-center justify-center z-[60] hidden">
+        <div class="bg-[#1E293B] border-2 border-[#334155] rounded-2xl p-6 max-w-3xl w-full mx-4 max-h-[90vh] overflow-hidden flex flex-col">
+            <div class="flex items-center justify-between mb-4 flex-shrink-0">
+                <h3 id="add-part-modal-title" class="text-lg font-black text-white">Part qo'shish</h3>
+                <button type="button" onclick="closeAddPartModal()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
             </div>
-
-            <!-- Simple Form for Basic Info -->
-            <form id="test-form">
-                <input type="hidden" id="test-section" value="">
-                <input type="hidden" id="test-id" value="">
-
-                <div class="grid md:grid-cols-2 gap-4 mb-6">
-                    <div>
-                        <label class="block text-sm font-bold text-gray-300 mb-2">Test nomi</label>
-                        <input type="text" id="test-title" class="form-input" placeholder="Masalan: Reading Test 1" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-gray-300 mb-2">Vaqt chegarasi (daqiqa)</label>
-                        <input type="number" id="test-time" class="form-input" placeholder="60" value="60" required>
-                    </div>
-                </div>
-
-                <div class="mb-6">
-                    <label class="block text-sm font-bold text-gray-300 mb-2">Test ma'lumotlari (JSON)</label>
-                    <p class="text-xs text-gray-500 mb-2">Quyida test "parts" massivini JSON formatida kiriting:</p>
-                    <textarea id="test-parts-json" class="form-input font-mono text-sm h-64" placeholder='[
-  {
-    "part_number": 1,
-    "title": "Part 1: Multiple Choice",
-    "instruction": "Savollarni o'\''qing va to'\''g'\''ri javobni tanlang.",
-    "type": "multiple_choice",
-    "questions": [...]
-  }
-]'></textarea>
-                </div>
-
-                <div class="bg-[#0F172A] border-2 border-[#334155] rounded-xl p-4 mb-6">
-                    <h4 class="font-bold text-[#4ECDC4] mb-3 text-sm">Yordam: Part strukturasi</h4>
-                    <div class="text-xs text-gray-400 font-mono space-y-1">
-                        <p><span class="text-[#A78BFA]">part_number</span>: Qism raqami (1, 2, 3...)</p>
-                        <p><span class="text-[#A78BFA]">title</span>: Qism nomi</p>
-                        <p><span class="text-[#A78BFA]">instruction</span>: Ko'rsatma matni</p>
-                        <p><span class="text-[#A78BFA]">type</span>: multiple_choice, multiple_choice_cloze, open_cloze, key_word, gapped_text, matching</p>
-                        <p><span class="text-[#A78BFA]">text</span>: Asosiy matn (agar kerak bo'lsa)</p>
-                        <p><span class="text-[#A78BFA]">questions</span>: Savollar massivi</p>
-                    </div>
-                </div>
-
-                <div class="flex gap-4">
-                    <button type="submit" class="btn-primary">Saqlash</button>
-                    <button type="button" onclick="closeTestModal()" class="px-6 py-2 border-2 border-[#334155] text-gray-400 hover:border-[#4ECDC4] hover:text-[#4ECDC4] rounded-xl font-bold transition">Bekor qilish</button>
-                </div>
-            </form>
+            <div id="add-part-form-body" class="overflow-y-auto flex-1 min-h-0 space-y-4 pr-2"></div>
+            <div class="flex gap-3 mt-4 pt-4 border-t border-[#334155] flex-shrink-0">
+                <button type="button" onclick="submitPartForm()" class="btn-primary">Partni saqlash</button>
+                <button type="button" onclick="closeAddPartModal()" class="px-4 py-2 border-2 border-[#334155] text-gray-400 hover:border-[#4ECDC4] hover:text-[#4ECDC4] rounded-xl font-bold text-sm">Bekor qilish</button>
+            </div>
         </div>
     </div>
 
@@ -698,9 +639,305 @@
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
                 document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
                 this.classList.add('active');
-                document.getElementById(this.dataset.tab + '-tab').classList.add('active');
+                const tab = this.dataset.tab;
+                document.getElementById(tab + '-tab').classList.add('active');
+                if (['reading','listening','writing'].includes(tab)) loadSectionData(tab);
             });
         });
+        loadSectionData('reading');
+
+        let editingPartIndex = -1;
+
+        async function loadSectionData(section) {
+            const tests = await loadTests(section);
+            const test = tests[0];
+            const titleEl = document.getElementById(section + '-test-title');
+            const timeEl = document.getElementById(section + '-test-time');
+            if (titleEl) titleEl.value = test ? test.title : '';
+            if (timeEl) timeEl.value = test ? (test.time_limit != null ? test.time_limit : (section === 'reading' ? 60 : section === 'listening' ? 40 : 80)) : (section === 'reading' ? 60 : section === 'listening' ? 40 : 80);
+            const partsListEl = document.getElementById(section + '-parts-list');
+            if (partsListEl) {
+                if (!test || !test.parts || test.parts.length === 0) partsListEl.textContent = 'Hozircha part yo\'q. Partni tanlang, formani to\'ldiring va «Partni saqlash» bosing.';
+                else partsListEl.innerHTML = test.parts.map(function(p, i) { return '<span class="inline-block bg-[#334155] text-gray-300 px-2 py-0.5 rounded mr-1 mb-1">' + (p.title || 'Part ' + (i+1)) + '</span>'; }).join('');
+            }
+        }
+
+        async function onSectionPartSelect(section) {
+            const sel = document.getElementById(section + '-part-select');
+            const typeIndex = sel ? parseInt(sel.value, 10) : -1;
+            if (typeIndex < 0 || !PART_TEMPLATES[section] || !PART_TEMPLATES[section][typeIndex]) {
+                document.getElementById(section + '-part-form-container').classList.add('hidden');
+                document.getElementById(section + '-part-form-container').innerHTML = '';
+                document.getElementById(section + '-part-save-wrap').classList.add('hidden');
+                return;
+            }
+            currentSection = section;
+            currentPartTypeIndex = typeIndex;
+            const tests = await loadTests(section);
+            const test = tests[0];
+            const parts = test && test.parts ? test.parts : [];
+            const pType = PART_TEMPLATES[section][typeIndex].type;
+            let partData = null;
+            editingPartIndex = -1;
+            for (let i = 0; i < parts.length; i++) {
+                if (parts[i].type === pType || (parts[i].part_number === typeIndex + 1 && !parts[i].type)) {
+                    partData = parts[i];
+                    editingPartIndex = i;
+                    break;
+                }
+            }
+            const container = document.getElementById(section + '-part-form-container');
+            container.innerHTML = renderPartForm(section, typeIndex);
+            container.classList.remove('hidden');
+            document.getElementById(section + '-part-save-wrap').classList.remove('hidden');
+            if (partData) setFormDataFromPart(section, typeIndex, partData);
+        }
+
+        function setFormDataFromPart(section, typeIndex, p) {
+            const type = PART_TEMPLATES[section][typeIndex].type;
+            function set(id, v) { const el = document.getElementById(id); if (el) el.value = v != null ? v : ''; }
+            if (section === 'reading') {
+                set('pf_title', p.title);
+                set('pf_instruction', p.instruction);
+                set('pf_text', p.text);
+                if (type === 'open_cloze' && p.questions) p.questions.forEach((q, i) => set('pf_correct_' + (i+1), q.correct));
+                if (type === 'multiple_choice_cloze' && p.questions) p.questions.forEach(q => {
+                    set('pf_q' + q.number + '_question', q.question);
+                    if (q.options) Object.keys(q.options).forEach(l => set('pf_q' + q.number + '_' + l, q.options[l]));
+                    set('pf_q' + q.number + '_correct', q.correct);
+                });
+                if (type === 'gapped_text') {
+                    if (p.removed_sentences) Object.keys(p.removed_sentences).forEach(l => set('pf_sent_' + l, p.removed_sentences[l]));
+                    if (p.questions) p.questions.forEach(q => set('pf_gap_' + q.number, q.correct));
+                }
+                if (type === 'multiple_choice_comprehension' && p.questions) p.questions.forEach(q => {
+                    set('pf_cq' + q.number + '_q', q.question);
+                    if (q.options && q.options.A !== 'True') Object.keys(q.options).forEach(l => set('pf_cq' + q.number + '_' + l, q.options[l]));
+                    set('pf_cq' + q.number + '_correct', q.correct);
+                });
+                if (type === 'part5_mixed') {
+                    if (p.gap_fill) {
+                        set('pf_gap_text', p.gap_fill.text);
+                        if (p.gap_fill.questions) p.gap_fill.questions.forEach(q => set('pf_gap_correct_' + q.number, q.correct));
+                    }
+                    if (p.questions) p.questions.forEach(q => {
+                        set('pf_mcq' + q.number + '_q', q.question);
+                        if (q.options) Object.keys(q.options).forEach(l => set('pf_mcq' + q.number + '_' + l, q.options[l]));
+                        set('pf_mcq' + q.number + '_correct', q.correct);
+                    });
+                }
+            }
+            if (section === 'listening') {
+                set('pf_title', p.title);
+                set('pf_instruction', p.instruction);
+                set('pf_audio_desc', p.audio_description);
+                set('pf_transcript', p.transcript);
+                set('pf_map_url', p.map_image_url);
+                set('pf_text', p.text);
+                if (type === 'short_conversations' && p.questions) p.questions.forEach(q => {
+                    set('pf_sc' + q.number + '_desc', q.audio_description);
+                    set('pf_sc' + q.number + '_transcript', q.transcript);
+                    if (q.options) Object.keys(q.options).forEach(l => set('pf_sc' + q.number + '_' + l, q.options[l]));
+                    set('pf_sc' + q.number + '_correct', q.correct);
+                });
+                if (type === 'sentence_completion' && p.questions) p.questions.forEach(q => { set('pf_sent_q' + q.number, q.question); set('pf_sent_correct_' + q.number, q.correct); });
+                if (type === 'speaker_matching') {
+                    if (p.speakers) p.speakers.forEach(s => { set('pf_spk_name_' + s.number, s.name); set('pf_spk_trans_' + s.number, s.transcript); });
+                    if (p.options) Object.keys(p.options).forEach(l => set('pf_opt_' + l, p.options[l]));
+                    if (p.answers) p.answers.forEach(a => set('pf_spk_correct_' + a.number, a.correct));
+                }
+                if (type === 'map_labeling' && p.places) p.places.forEach(pl => { set('pf_place_name_' + pl.number, pl.name); set('pf_place_correct_' + pl.number, pl.correct); });
+                if (type === 'interview' && p.questions) p.questions.forEach(q => {
+                    set('pf_intq' + q.number + '_q', q.question);
+                    if (q.options) Object.keys(q.options).forEach(l => set('pf_intq' + q.number + '_' + l, q.options[l]));
+                    set('pf_intq' + q.number + '_correct', q.correct);
+                });
+                if (type === 'note_completion' && p.questions) p.questions.forEach(q => set('pf_nc_correct_' + q.number, q.correct));
+            }
+            if (section === 'writing') {
+                set('pf_title', p.title);
+                set('pf_instruction', p.instruction);
+                set('pf_prompt', p.prompt);
+                set('pf_min_words', p.min_words);
+                set('pf_max_words', p.max_words);
+                if (p.tasks) p.tasks.forEach((t, i) => {
+                    const n = i + 1;
+                    set('pf_task' + n + '_title', t.title);
+                    set('pf_task' + n + '_type', t.type);
+                    set('pf_task' + n + '_instruction', t.instruction);
+                    set('pf_task' + n + '_situation', t.situation);
+                    set('pf_task' + n + '_min', t.min_words);
+                    set('pf_task' + n + '_max', t.max_words);
+                });
+            }
+        }
+
+        async function saveSectionTestInfo(section) {
+            const titleEl = document.getElementById(section + '-test-title');
+            const timeEl = document.getElementById(section + '-test-time');
+            const title = titleEl ? titleEl.value.trim() : '';
+            const time = timeEl ? parseInt(timeEl.value, 10) : 60;
+            const tests = await loadTests(section);
+            let test = tests[0];
+            if (!test) {
+                test = { id: section + '_1', title: title || (section.charAt(0).toUpperCase() + section.slice(1) + ' Test 1'), time_limit: time, parts: [] };
+                tests.unshift(test);
+            } else {
+                test.title = title || test.title;
+                test.time_limit = time;
+            }
+            const res = await fetch('/admin/data/' + section, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tests }) });
+            if (res.ok) { alert('Test saqlandi'); loadSectionData(section); } else { alert('Xatolik'); }
+        }
+
+        async function saveSectionPart(section) {
+            if (currentSection !== section || currentPartTypeIndex == null) return;
+            const part = buildPartFromForm(section, currentPartTypeIndex);
+            if (!part) return;
+            const tests = await loadTests(section);
+            let test = tests[0];
+            if (!test) {
+                const titleEl = document.getElementById(section + '-test-title');
+                test = { id: section + '_1', title: titleEl ? titleEl.value.trim() || (section.charAt(0).toUpperCase() + section.slice(1) + ' Test 1') : 'Test 1', time_limit: parseInt(document.getElementById(section + '-test-time').value, 10) || 60, parts: [] };
+                tests.unshift(test);
+            }
+            if (!test.parts) test.parts = [];
+            part.part_number = editingPartIndex >= 0 ? test.parts[editingPartIndex].part_number : test.parts.length + 1;
+            if (editingPartIndex >= 0) test.parts[editingPartIndex] = part;
+            else test.parts.push(part);
+            const res = await fetch('/admin/data/' + section, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tests }) });
+            if (res.ok) { alert('Part saqlandi'); loadSectionData(section); } else { alert('Xatolik: ' + (await res.text())); }
+        }
+
+        function buildPartFromForm(section, typeIndex) {
+            const item = PART_TEMPLATES[section][typeIndex];
+            const type = item.type;
+            let part = { part_number: 1, title: getVal('pf_title') || item.label, instruction: getVal('pf_instruction') || '' };
+            if (currentSection === 'reading') {
+                if (type === 'open_cloze') {
+                    part.type = 'open_cloze';
+                    part.text = getVal('pf_text');
+                    part.questions = [];
+                    for (let i = 1; i <= 8; i++) part.questions.push({ number: i, correct: getVal('pf_correct_' + i) });
+                } else if (type === 'multiple_choice_cloze') {
+                    part.type = 'multiple_choice_cloze';
+                    part.text = getVal('pf_text');
+                    part.questions = [];
+                    for (let q = 0; q < 8; q++) {
+                        const n = 9 + q;
+                        const options = {};
+                        ['A','B','C','D','E','F','G','H','I','J'].forEach(l => { options[l] = getVal('pf_q' + n + '_' + l); });
+                        part.questions.push({ number: n, question: getVal('pf_q' + n + '_question'), options, correct: getVal('pf_q' + n + '_correct') });
+                    }
+                } else if (type === 'gapped_text') {
+                    part.type = 'gapped_text';
+                    part.text = getVal('pf_text');
+                    part.removed_sentences = {};
+                    ['A','B','C','D','E','F','G','H'].forEach(l => { part.removed_sentences[l] = getVal('pf_sent_' + l); });
+                    part.questions = [];
+                    for (let g = 0; g < 6; g++) part.questions.push({ number: 17 + g, correct: getVal('pf_gap_' + (17 + g)) });
+                } else if (type === 'multiple_choice_comprehension') {
+                    part.type = 'multiple_choice_comprehension';
+                    part.text = getVal('pf_text');
+                    part.questions = [];
+                    for (let i = 0; i < 9; i++) {
+                        const n = 23 + i;
+                        const isTF = i >= 4;
+                        if (isTF) part.questions.push({ number: n, question: getVal('pf_cq' + n + '_q'), options: { A: 'True', B: 'False', C: 'No information' }, correct: getVal('pf_cq' + n + '_correct') || 'A' });
+                        else {
+                            const options = {};
+                            ['A','B','C','D'].forEach(l => { options[l] = getVal('pf_cq' + n + '_' + l); });
+                            part.questions.push({ number: n, question: getVal('pf_cq' + n + '_q'), options, correct: getVal('pf_cq' + n + '_correct') });
+                        }
+                    }
+                } else if (type === 'part5_mixed') {
+                    part.type = 'part5_mixed';
+                    part.text = getVal('pf_text');
+                    part.gap_fill = { text: getVal('pf_gap_text'), questions: [] };
+                    for (let i = 0; i < 4; i++) part.gap_fill.questions.push({ number: 32 + i, correct: getVal('pf_gap_correct_' + (32 + i)) });
+                    part.questions = [];
+                    for (let i = 0; i < 2; i++) {
+                        const n = 36 + i;
+                        const options = {};
+                        ['A','B','C','D'].forEach(l => { options[l] = getVal('pf_mcq' + n + '_' + l); });
+                        part.questions.push({ number: n, question: getVal('pf_mcq' + n + '_q'), options, correct: getVal('pf_mcq' + n + '_correct') });
+                    }
+                }
+            }
+            if (currentSection === 'listening') {
+                if (type === 'short_conversations') {
+                    part.type = 'short_conversations';
+                    part.questions = [];
+                    for (let i = 1; i <= 8; i++) {
+                        const options = {};
+                        ['A','B','C'].forEach(l => { options[l] = getVal('pf_sc' + i + '_' + l); });
+                        part.questions.push({ number: i, audio_description: getVal('pf_sc' + i + '_desc'), transcript: getVal('pf_sc' + i + '_transcript'), options, correct: getVal('pf_sc' + i + '_correct') });
+                    }
+                } else if (type === 'sentence_completion') {
+                    part.type = 'sentence_completion';
+                    part.audio_description = getVal('pf_audio_desc');
+                    part.transcript = getVal('pf_transcript');
+                    part.questions = [];
+                    for (let i = 0; i < 6; i++) part.questions.push({ number: 9 + i, question: getVal('pf_sent_q' + (9 + i)), correct: getVal('pf_sent_correct_' + (9 + i)) });
+                } else if (type === 'speaker_matching') {
+                    part.type = 'speaker_matching';
+                    part.audio_description = getVal('pf_audio_desc');
+                    part.speakers = [];
+                    for (let i = 0; i < 4; i++) part.speakers.push({ number: 15 + i, name: getVal('pf_spk_name_' + (15 + i)), transcript: getVal('pf_spk_trans_' + (15 + i)) });
+                    part.options = {};
+                    ['A','B','C','D','E','F'].forEach(l => { part.options[l] = getVal('pf_opt_' + l); });
+                    part.answers = [];
+                    for (let i = 0; i < 4; i++) part.answers.push({ number: 15 + i, correct: getVal('pf_spk_correct_' + (15 + i)) });
+                } else if (type === 'map_labeling') {
+                    part.type = 'map_labeling';
+                    part.map_image_url = getVal('pf_map_url');
+                    part.audio_description = getVal('pf_audio_desc');
+                    part.transcript = getVal('pf_transcript');
+                    part.places = [];
+                    for (let i = 0; i < 6; i++) part.places.push({ number: 19 + i, name: getVal('pf_place_name_' + (19 + i)), correct: getVal('pf_place_correct_' + (19 + i)) });
+                    part.map_labels = ['A','B','C','D','E','F','G','H'];
+                } else if (type === 'interview') {
+                    part.type = 'interview';
+                    part.audio_description = getVal('pf_audio_desc');
+                    part.transcript = getVal('pf_transcript');
+                    part.questions = [];
+                    for (let i = 0; i < 6; i++) {
+                        const n = 25 + i;
+                        const options = {};
+                        ['A','B','C'].forEach(l => { options[l] = getVal('pf_intq' + n + '_' + l); });
+                        part.questions.push({ number: n, question: getVal('pf_intq' + n + '_q'), options, correct: getVal('pf_intq' + n + '_correct') });
+                    }
+                } else if (type === 'note_completion') {
+                    part.type = 'note_completion';
+                    part.audio_description = getVal('pf_audio_desc');
+                    part.transcript = getVal('pf_transcript');
+                    part.text = getVal('pf_text');
+                    part.questions = [];
+                    for (let i = 0; i < 6; i++) part.questions.push({ number: 31 + i, correct: getVal('pf_nc_correct_' + (31 + i)) });
+                }
+            }
+            if (currentSection === 'writing') {
+                if (type === 'tasks') {
+                    part.type = 'tasks';
+                    part.tasks = [];
+                    for (let t = 1; t <= 2; t++) part.tasks.push({
+                        task_number: t,
+                        title: getVal('pf_task' + t + '_title'),
+                        type: getVal('pf_task' + t + '_type') || (t === 1 ? 'email' : 'review'),
+                        instruction: getVal('pf_task' + t + '_instruction'),
+                        situation: getVal('pf_task' + t + '_situation'),
+                        min_words: parseInt(getVal('pf_task' + t + '_min') || 50, 10),
+                        max_words: parseInt(getVal('pf_task' + t + '_max') || 500, 10)
+                    });
+                } else if (type === 'essay') {
+                    part.type = 'essay';
+                    part.prompt = getVal('pf_prompt');
+                    part.min_words = parseInt(getVal('pf_min_words') || 180, 10);
+                    part.max_words = parseInt(getVal('pf_max_words') || 200, 10);
+                }
+            }
+            return part;
+        }
 
         async function loadTests(section) {
             try {
@@ -713,6 +950,453 @@
             }
         }
 
+        // Part templates for Reading, Listening, Writing
+        const PART_TEMPLATES = {
+            reading: [
+                { label: 'Part 1: Open Cloze', type: 'open_cloze', template: { part_number: 1, title: 'Part 1: Open Cloze', instruction: 'For questions 1-8, read the text and write ONE word in each gap.', type: 'open_cloze', text: 'Matnni shu yerda yozing. Bo\'sh joylar: (1)_____, (2)_____, ...', questions: [ { number: 1, correct: '' }, { number: 2, correct: '' } ] }},
+                { label: 'Part 2: Multiple Choice Cloze (10 variant)', type: 'multiple_choice_cloze', template: { part_number: 1, title: 'Part 2: Multiple Choice Cloze', instruction: 'For questions 9-16, choose A–J for each gap.', type: 'multiple_choice_cloze', text: 'Matn (9)_____ ... (16)_____', questions: [ { number: 9, question: '', options: { A: '', B: '', C: '', D: '', E: '', F: '', G: '', H: '', I: '', J: '' }, correct: '' } ] }},
+                { label: 'Part 3: Gapped Text (6 bo\'sh joy, A–H)', type: 'gapped_text', template: { part_number: 1, title: 'Part 3: Gapped Text', instruction: 'Choose A–H for each gap (17–22).', type: 'gapped_text', text: 'Matn (17)_____ ... (22)_____', removed_sentences: { A: '', B: '', C: '', D: '', E: '', F: '', G: '', H: '' }, questions: [ { number: 17, correct: '' }, { number: 18, correct: '' }, { number: 19, correct: '' }, { number: 20, correct: '' }, { number: 21, correct: '' }, { number: 22, correct: '' } ] }},
+                { label: 'Part 4: Reading Comprehension (MC + True/False)', type: 'multiple_choice_comprehension', template: { part_number: 1, title: 'Part 4: Reading Comprehension', instruction: 'Choose A–D for questions 23–26; True/False/No information for 27–31.', type: 'multiple_choice_comprehension', text: 'Maqola matni...', questions: [ { number: 23, question: '', options: { A: '', B: '', C: '', D: '' }, correct: '' } ] }},
+                { label: 'Part 5: Mixed (4 bo\'sh joy + 2 savol)', type: 'part5_mixed', template: { part_number: 1, title: 'Part 5: Mixed', instruction: 'Complete gaps 32–35 with ONE word; answer 36–37 (A–D).', type: 'part5_mixed', text: 'Uzun matn...', gap_fill: { text: '(32)_____ (33)_____ (34)_____ (35)_____', questions: [ { number: 32, correct: '' }, { number: 33, correct: '' }, { number: 34, correct: '' }, { number: 35, correct: '' } ] }, questions: [ { number: 36, question: '', options: { A: '', B: '', C: '', D: '' }, correct: '' }, { number: 37, question: '', options: { A: '', B: '', C: '', D: '' }, correct: '' } ] }}
+            ],
+            listening: [
+                { label: 'Part 1: Short Conversations (8 savol)', type: 'short_conversations', template: { part_number: 1, title: 'Part 1: Short Conversations', instruction: 'For questions 1-8, choose A, B or C.', type: 'short_conversations', questions: [ { number: 1, audio_description: '', transcript: '', options: { A: '', B: '', C: '' }, correct: '' } ] }},
+                { label: 'Part 2: Sentence Completion (gap fill)', type: 'sentence_completion', template: { part_number: 1, title: 'Part 2: Sentence Completion', instruction: 'Complete sentences with ONE word.', type: 'sentence_completion', audio_description: '', transcript: '', questions: [ { number: 9, question: '_____', correct: '' } ] }},
+                { label: 'Part 3: Speaker / Multiple Matching', type: 'speaker_matching', template: { part_number: 1, title: 'Part 3: Speaker Matching', instruction: 'Match each speaker with A–F.', type: 'speaker_matching', audio_description: '', speakers: [ { number: 15, name: 'Speaker 1', transcript: '' } ], options: { A: '', B: '', C: '', D: '', E: '', F: '' }, answers: [ { number: 15, correct: '' } ] }},
+                { label: 'Part 4: Map Labeling', type: 'map_labeling', template: { part_number: 1, title: 'Part 4: Map Labeling', instruction: 'Match places with letters on the map.', type: 'map_labeling', map_image_url: '', audio_description: '', transcript: '', places: [ { number: 19, name: '', correct: '' } ], map_labels: ['A','B','C','D','E','F','G','H'] }},
+                { label: 'Part 5: Interview (Multiple Choice)', type: 'interview', template: { part_number: 1, title: 'Part 5: Interview', instruction: 'For questions 25-30, choose A, B or C.', type: 'interview', audio_description: '', transcript: '', questions: [ { number: 25, question: '', options: { A: '', B: '', C: '' }, correct: '' } ] }},
+                { label: 'Part 6: Note Completion (bitta matn)', type: 'note_completion', template: { part_number: 1, title: 'Part 6: Note Completion', instruction: 'Complete notes with ONE word (31–36).', type: 'note_completion', audio_description: '', transcript: '', text: 'Matn (31)_____ (32)_____ ... (36)_____', questions: [ { number: 31, correct: '' }, { number: 32, correct: '' } ] }}
+            ],
+            writing: [
+                { label: 'Part 1: Tasks (Email, Review va b.)', type: 'tasks', template: { part_number: 1, title: 'Part 1', instruction: 'Complete BOTH tasks.', tasks: [ { task_number: 1, title: 'Task 1', type: 'email', instruction: '', situation: '', min_words: 50, max_words: 500 }, { task_number: 2, title: 'Task 2', type: 'review', instruction: '', situation: '', min_words: 120, max_words: 150 } ] }},
+                { label: 'Part 2: Essay', type: 'essay', template: { part_number: 1, title: 'Part 2: Essay', instruction: 'Write an essay.', type: 'essay', prompt: '', min_words: 180, max_words: 200 }}
+            ]
+        };
+
+        function fillPartTypeSelect() {
+            const sel = document.getElementById('part-type-select');
+            sel.innerHTML = '<option value="">— Part turini tanlang —</option>';
+            if (!currentSection || !PART_TEMPLATES[currentSection]) return;
+            PART_TEMPLATES[currentSection].forEach((p, i) => {
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.textContent = p.label;
+                sel.appendChild(opt);
+            });
+        }
+
+        function refreshPartsList() {
+            const list = document.getElementById('parts-list');
+            const raw = document.getElementById('test-parts-json').value.trim();
+            list.innerHTML = '';
+            try {
+                const parts = raw ? JSON.parse(raw) : [];
+                if (!Array.isArray(parts)) throw new Error('Massiv bo\'lishi kerak');
+                parts.forEach((p, i) => {
+                    const div = document.createElement('div');
+                    div.className = 'flex items-center justify-between py-2 px-3 bg-[#0F172A] border border-[#334155] rounded-lg';
+                    div.innerHTML = '<span class="text-white font-medium text-sm">Part ' + (p.part_number || (i+1)) + ': ' + (p.title || p.type || '—') + '</span>' +
+                        '<button type="button" onclick="deletePart(' + i + ')" class="text-[#FF6B6B] hover:bg-[#FF6B6B]/20 px-2 py-1 rounded text-xs font-bold">O\'chirish</button>';
+                    list.appendChild(div);
+                });
+                if (parts.length === 0) list.innerHTML = '<p class="text-gray-500 text-sm">Hozircha qism yo\'q. Part qo\'shing yoki JSON kiriting.</p>';
+            } catch (e) {
+                list.innerHTML = '<p class="text-[#FF6B6B] text-sm">JSON xato: ' + e.message + '</p>';
+            }
+        }
+
+        function deletePart(index) {
+            try {
+                const raw = document.getElementById('test-parts-json').value.trim();
+                const parts = raw ? JSON.parse(raw) : [];
+                if (!Array.isArray(parts) || index < 0 || index >= parts.length) return;
+                parts.splice(index, 1);
+                parts.forEach((p, i) => { p.part_number = i + 1; });
+                document.getElementById('test-parts-json').value = JSON.stringify(parts, null, 2);
+                refreshPartsList();
+            } catch (e) { alert('Xatolik: ' + e.message); }
+        }
+
+        let currentPartTypeIndex = null;
+
+        function openAddPartForm() {
+            const sel = document.getElementById('part-type-select');
+            const idx = sel.value;
+            if (idx === '' || !currentSection || !PART_TEMPLATES[currentSection][parseInt(idx, 10)]) {
+                alert('Avval Part turini tanlang');
+                return;
+            }
+            currentPartTypeIndex = parseInt(idx, 10);
+            const item = PART_TEMPLATES[currentSection][currentPartTypeIndex];
+            document.getElementById('add-part-modal-title').textContent = 'Part qo\'shish: ' + item.label;
+            document.getElementById('add-part-form-body').innerHTML = renderPartForm(currentSection, currentPartTypeIndex);
+            document.getElementById('add-part-modal').classList.remove('hidden');
+        }
+
+        function closeAddPartModal() {
+            document.getElementById('add-part-modal').classList.add('hidden');
+            currentPartTypeIndex = null;
+        }
+
+        function renderPartForm(section, typeIndex) {
+            const item = PART_TEMPLATES[section][typeIndex];
+            const type = item.type;
+            const nextPartNum = (() => { try { const el = document.getElementById('test-parts-json'); const raw = el ? (el.value || '').trim() : ''; const p = raw ? JSON.parse(raw) : []; return (Array.isArray(p) && p.length) ? p.length + 1 : 1; } catch(e) { return 1; } })();
+
+            if (section === 'reading') {
+                if (type === 'open_cloze') {
+                    let html = '<div class="space-y-4"><div><label class="block text-sm font-bold text-gray-300 mb-1">Part sarlavha</label><input type="text" id="pf_title" class="form-input" value="Part ' + nextPartNum + ': Open Cloze" placeholder="Part 1: Open Cloze"></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Ko\'rsatma</label><textarea id="pf_instruction" class="form-input h-16" placeholder="For questions 1-8...">For questions 1-8, read the text and write ONE word in each gap.</textarea></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Matn (bo\'sh joylar: (1)_____, (2)_____ ...)</label><textarea id="pf_text" class="form-input h-40 font-mono text-sm" placeholder="Climate change is (1)_____ most pressing..."></textarea></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-2">To\'g\'ri javoblar (1–8)</label><div class="grid grid-cols-4 gap-2">';
+                    for (let i = 1; i <= 8; i++) html += '<div><label class="text-xs text-gray-500">' + i + '</label><input type="text" id="pf_correct_' + i + '" class="form-input py-1" placeholder="so\'z"></div>';
+                    html += '</div></div></div>';
+                    return html;
+                }
+                if (type === 'multiple_choice_cloze') {
+                    const startNum = 9;
+                    let html = '<div class="space-y-4"><div><label class="block text-sm font-bold text-gray-300 mb-1">Part sarlavha</label><input type="text" id="pf_title" class="form-input" value="Part ' + nextPartNum + ': Multiple Choice Cloze"></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Ko\'rsatma</label><textarea id="pf_instruction" class="form-input h-14">For questions ' + startNum + '-' + (startNum+7) + ', choose A–J for each gap.</textarea></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Matn (bo\'sh joylar: (' + startNum + ')_____ ...)</label><textarea id="pf_text" class="form-input h-32 font-mono text-sm"></textarea></div>';
+                    for (let q = 0; q < 8; q++) {
+                        const n = startNum + q;
+                        html += '<div class="p-4 bg-[#0F172A] rounded-xl border border-[#334155]"><h4 class="font-bold text-[#4ECDC4] mb-2 text-sm">Savol ' + n + '</h4>';
+                        html += '<input type="text" id="pf_q' + n + '_question" class="form-input mb-2 w-full" placeholder="Savol matni (jumla)">';
+                        html += '<div class="grid grid-cols-5 gap-1 mb-2">';
+                        ['A','B','C','D','E','F','G','H','I','J'].forEach((l, i) => { html += '<input type="text" id="pf_q' + n + '_' + l + '" class="form-input py-1 text-xs" placeholder="' + l + '">'; });
+                        html += '</div><select id="pf_q' + n + '_correct" class="form-input py-1 w-20"><option value="">?</option>' + ['A','B','C','D','E','F','G','H','I','J'].map(l => '<option value="' + l + '">' + l + '</option>').join('') + '</select></div>';
+                    }
+                    return html + '</div>';
+                }
+                if (type === 'gapped_text') {
+                    const startNum = 17;
+                    let html = '<div class="space-y-4"><div><label class="block text-sm font-bold text-gray-300 mb-1">Part sarlavha</label><input type="text" id="pf_title" class="form-input" value="Part ' + nextPartNum + ': Gapped Text"></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Ko\'rsatma</label><textarea id="pf_instruction" class="form-input h-14">Choose A–H for each gap (' + startNum + '–' + (startNum+5) + '). Two extra sentences.</textarea></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Matn ((' + startNum + ')_____ ... (' + (startNum+5) + ')_____)</label><textarea id="pf_text" class="form-input h-40 font-mono text-sm"></textarea></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-2">Olib tashlangan jumlalar (A–H)</label>';
+                    ['A','B','C','D','E','F','G','H'].forEach(l => { html += '<div class="mb-2"><span class="text-[#4ECDC4] font-bold mr-2">' + l + '.</span><input type="text" id="pf_sent_' + l + '" class="form-input flex-1 inline-block w-full" placeholder="Jumla ' + l + '"></div>'; });
+                    html += '</div><div><label class="block text-sm font-bold text-gray-300 mb-2">To\'g\'ri javob (har bir bo\'sh joy uchun A–H)</label><div class="flex flex-wrap gap-2">';
+                    for (let g = 0; g < 6; g++) html += '<div><label class="text-xs text-gray-500">Gap ' + (startNum+g) + '</label><select id="pf_gap_' + (startNum+g) + '" class="form-input py-1">' + ['A','B','C','D','E','F','G','H'].map(l => '<option value="' + l + '">' + l + '</option>').join('') + '</select></div>';
+                    return html + '</div></div>';
+                }
+                if (type === 'multiple_choice_comprehension') {
+                    let html = '<div class="space-y-4"><div><label class="block text-sm font-bold text-gray-300 mb-1">Part sarlavha</label><input type="text" id="pf_title" class="form-input" value="Part ' + nextPartNum + ': Reading Comprehension"></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Ko\'rsatma</label><textarea id="pf_instruction" class="form-input h-14">Read the article. Choose A–D or True/False/No information.</textarea></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Maqola matni</label><textarea id="pf_text" class="form-input h-48 font-mono text-sm"></textarea></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-2">Savollar (9 ta: 23–26 A–D, 27–31 True/False/No information)</label>';
+                    const startQ = 23;
+                    for (let i = 0; i < 9; i++) {
+                        const n = startQ + i;
+                        const isTF = i >= 4;
+                        html += '<div class="p-3 bg-[#0F172A] rounded-lg mb-2"><label class="text-xs text-gray-500">Savol ' + n + '</label><input type="text" id="pf_cq' + n + '_q" class="form-input mb-2 w-full" placeholder="Savol matni">';
+                        if (isTF) html += '<select id="pf_cq' + n + '_correct" class="form-input py-1"><option value="A">True</option><option value="B">False</option><option value="C">No information</option></select>';
+                        else {
+                            html += '<div class="grid grid-cols-4 gap-1 mb-1">';
+                            ['A','B','C','D'].forEach(l => { html += '<input type="text" id="pf_cq' + n + '_' + l + '" class="form-input py-1 text-xs" placeholder="' + l + '">'; });
+                            html += '</div><select id="pf_cq' + n + '_correct" class="form-input py-1"><option value="">?</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select>';
+                        }
+                        html += '</div>';
+                    }
+                    return html + '</div>';
+                }
+                if (type === 'part5_mixed') {
+                    const base = 32;
+                    let html = '<div class="space-y-4"><div><label class="block text-sm font-bold text-gray-300 mb-1">Part sarlavha</label><input type="text" id="pf_title" class="form-input" value="Part ' + nextPartNum + ': Mixed"></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Ko\'rsatma</label><textarea id="pf_instruction" class="form-input h-14">Complete gaps ' + base + '–' + (base+3) + ' with ONE word; answer ' + (base+4) + '–' + (base+5) + ' (A–D).</textarea></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Uzun matn (passage)</label><textarea id="pf_text" class="form-input h-32"></textarea></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Qisqa matn bo\'sh joylar bilan ((' + base + ')_____ ...)</label><textarea id="pf_gap_text" class="form-input h-20 font-mono text-sm"></textarea></div>';
+                    html += '<div class="flex flex-wrap gap-2 mb-4">';
+                    for (let i = 0; i < 4; i++) { const n = base + i; html += '<div><label class="text-xs text-gray-500">' + n + '</label><input type="text" id="pf_gap_correct_' + n + '" class="form-input py-1 w-24"></div>'; }
+                    html += '</div><div><label class="block text-sm font-bold text-gray-300 mb-2">2 ta savol (A–D)</label>';
+                    for (let i = 0; i < 2; i++) {
+                        const n = base + 4 + i;
+                        html += '<div class="p-3 bg-[#0F172A] rounded-lg mb-2"><input type="text" id="pf_mcq' + n + '_q" class="form-input mb-2" placeholder="Savol ' + n + '">';
+                        html += '<div class="grid grid-cols-4 gap-1 mb-1">';
+                        ['A','B','C','D'].forEach(l => { html += '<input type="text" id="pf_mcq' + n + '_' + l + '" class="form-input py-1 text-xs" placeholder="' + l + '">'; });
+                        html += '</div><select id="pf_mcq' + n + '_correct" class="form-input py-1"><option value="">?</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select></div>';
+                    }
+                    return html + '</div>';
+                }
+            }
+
+            if (section === 'listening') {
+                if (type === 'short_conversations') {
+                    let html = '<div class="space-y-4"><div><label class="block text-sm font-bold text-gray-300 mb-1">Part sarlavha</label><input type="text" id="pf_title" class="form-input" value="Part ' + nextPartNum + ': Short Conversations"></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Ko\'rsatma</label><textarea id="pf_instruction" class="form-input h-14">For questions 1-8, choose A, B or C.</textarea></div>';
+                    for (let i = 1; i <= 8; i++) {
+                        html += '<div class="p-4 bg-[#0F172A] rounded-xl border border-[#334155] mb-3"><h4 class="font-bold text-[#4ECDC4] mb-2 text-sm">Savol ' + i + '</h4>';
+                        html += '<input type="text" id="pf_sc' + i + '_desc" class="form-input mb-2" placeholder="Audio tavsifi">';
+                        html += '<textarea id="pf_sc' + i + '_transcript" class="form-input h-20 mb-2" placeholder="Transcript"></textarea>';
+                        html += '<div class="grid grid-cols-3 gap-2 mb-2">';
+                        ['A','B','C'].forEach(l => { html += '<input type="text" id="pf_sc' + i + '_' + l + '" class="form-input py-1" placeholder="' + l + '">'; });
+                        html += '</div><select id="pf_sc' + i + '_correct" class="form-input py-1 w-20"><option value="">?</option><option value="A">A</option><option value="B">B</option><option value="C">C</option></select></div>';
+                    }
+                    return html + '</div>';
+                }
+                if (type === 'sentence_completion') {
+                    const startNum = 9;
+                    let html = '<div class="space-y-4"><div><label class="block text-sm font-bold text-gray-300 mb-1">Part sarlavha</label><input type="text" id="pf_title" class="form-input" value="Part ' + nextPartNum + ': Sentence Completion"></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Ko\'rsatma</label><textarea id="pf_instruction" class="form-input h-14">Complete sentences with ONE word (' + startNum + '–' + (startNum+5) + ').</textarea></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Audio tavsifi</label><input type="text" id="pf_audio_desc" class="form-input"></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Transcript</label><textarea id="pf_transcript" class="form-input h-24"></textarea></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-2">Savollar (jumla _____ bilan)</label>';
+                    for (let i = 0; i < 6; i++) { const n = startNum + i; html += '<div class="mb-2"><label class="text-xs text-gray-500">' + n + '</label><input type="text" id="pf_sent_q' + n + '" class="form-input mb-1" placeholder="Jumla _____"><input type="text" id="pf_sent_correct_' + n + '" class="form-input py-1 w-32 inline-block" placeholder="To\'g\'ri javob"></div>'; }
+                    return html + '</div></div>';
+                }
+                if (type === 'speaker_matching') {
+                    const startNum = 15;
+                    let html = '<div class="space-y-4"><div><label class="block text-sm font-bold text-gray-300 mb-1">Part sarlavha</label><input type="text" id="pf_title" class="form-input" value="Part ' + nextPartNum + ': Speaker Matching"></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Ko\'rsatma</label><textarea id="pf_instruction" class="form-input h-14">Match each speaker with A–F.</textarea></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Audio tavsifi</label><input type="text" id="pf_audio_desc" class="form-input"></div>';
+                    for (let i = 0; i < 4; i++) { const n = startNum + i; html += '<div class="mb-3"><label class="text-xs text-gray-500">Spiker ' + n + '</label><input type="text" id="pf_spk_name_' + n + '" class="form-input mb-1" placeholder="Ism"><textarea id="pf_spk_trans_' + n + '" class="form-input h-16" placeholder="Transcript"></textarea></div>'; }
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-2">Variantlar A–F</label><div class="grid grid-cols-2 gap-2 mb-2">';
+                    ['A','B','C','D','E','F'].forEach(l => { html += '<input type="text" id="pf_opt_' + l + '" class="form-input py-1" placeholder="' + l + '">'; });
+                    html += '</div><label class="text-sm font-bold text-gray-300 mb-2">To\'g\'ri javob (har bir spiker)</label><div class="flex gap-2">';
+                    for (let i = 0; i < 4; i++) { const n = startNum + i; html += '<div><label class="text-xs">' + n + '</label><select id="pf_spk_correct_' + n + '" class="form-input py-1">' + ['A','B','C','D','E','F'].map(l => '<option value="' + l + '">' + l + '</option>').join('') + '</select></div>'; }
+                    return html + '</div></div>';
+                }
+                if (type === 'map_labeling') {
+                    const startNum = 19;
+                    let html = '<div class="space-y-4"><div><label class="block text-sm font-bold text-gray-300 mb-1">Part sarlavha</label><input type="text" id="pf_title" class="form-input" value="Part ' + nextPartNum + ': Map Labeling"></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Ko\'rsatma</label><textarea id="pf_instruction" class="form-input h-14">Match places with letters (A–H) on the map.</textarea></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Xarita rasm URL</label><input type="text" id="pf_map_url" class="form-input" placeholder="/static/uploads/listening_maps/..."></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Audio tavsifi</label><input type="text" id="pf_audio_desc" class="form-input"></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Transcript</label><textarea id="pf_transcript" class="form-input h-24"></textarea></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-2">Joylar (6 ta: nom + harf A–H)</label>';
+                    for (let i = 0; i < 6; i++) { const n = startNum + i; html += '<div class="flex gap-2 mb-2"><span class="text-gray-500 w-8">' + n + '</span><input type="text" id="pf_place_name_' + n + '" class="form-input flex-1" placeholder="Joy nomi"><select id="pf_place_correct_' + n + '" class="form-input py-1 w-20">' + ['A','B','C','D','E','F','G','H'].map(l => '<option value="' + l + '">' + l + '</option>').join('') + '</select></div>'; }
+                    return html + '</div></div>';
+                }
+                if (type === 'interview') {
+                    const startNum = 25;
+                    let html = '<div class="space-y-4"><div><label class="block text-sm font-bold text-gray-300 mb-1">Part sarlavha</label><input type="text" id="pf_title" class="form-input" value="Part ' + nextPartNum + ': Interview"></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Ko\'rsatma</label><textarea id="pf_instruction" class="form-input h-14">For questions ' + startNum + '-' + (startNum+5) + ', choose A, B or C.</textarea></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Audio tavsifi</label><input type="text" id="pf_audio_desc" class="form-input"></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Transcript</label><textarea id="pf_transcript" class="form-input h-32"></textarea></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-2">Savollar (6 ta, A–B–C)</label>';
+                    for (let i = 0; i < 6; i++) {
+                        const n = startNum + i;
+                        html += '<div class="p-3 bg-[#0F172A] rounded-lg mb-2"><input type="text" id="pf_intq' + n + '_q" class="form-input mb-2" placeholder="Savol ' + n + '"><div class="grid grid-cols-3 gap-2 mb-1">';
+                        ['A','B','C'].forEach(l => { html += '<input type="text" id="pf_intq' + n + '_' + l + '" class="form-input py-1" placeholder="' + l + '">'; });
+                        html += '</div><select id="pf_intq' + n + '_correct" class="form-input py-1"><option value="">?</option><option value="A">A</option><option value="B">B</option><option value="C">C</option></select></div>';
+                    }
+                    return html + '</div>';
+                }
+                if (type === 'note_completion') {
+                    const startNum = 31;
+                    let html = '<div class="space-y-4"><div><label class="block text-sm font-bold text-gray-300 mb-1">Part sarlavha</label><input type="text" id="pf_title" class="form-input" value="Part ' + nextPartNum + ': Note Completion"></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Ko\'rsatma</label><textarea id="pf_instruction" class="form-input h-14">Complete notes with ONE word (' + startNum + '–' + (startNum+5) + ').</textarea></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Audio tavsifi</label><input type="text" id="pf_audio_desc" class="form-input"></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Transcript (to\'liq)</label><textarea id="pf_transcript" class="form-input h-24"></textarea></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Matn bo\'sh joylar bilan ((' + startNum + ')_____ ...)</label><textarea id="pf_text" class="form-input h-32 font-mono text-sm"></textarea></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-2">To\'g\'ri javoblar (' + startNum + '–' + (startNum+5) + ')</label><div class="flex flex-wrap gap-2">';
+                    for (let i = 0; i < 6; i++) { const n = startNum + i; html += '<div><label class="text-xs">' + n + '</label><input type="text" id="pf_nc_correct_' + n + '" class="form-input py-1 w-28"></div>'; }
+                    return html + '</div></div>';
+                }
+            }
+
+            if (section === 'writing') {
+                if (type === 'tasks') {
+                    let html = '<div class="space-y-4"><div><label class="block text-sm font-bold text-gray-300 mb-1">Part sarlavha</label><input type="text" id="pf_title" class="form-input" value="Part 1"></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Ko\'rsatma</label><textarea id="pf_instruction" class="form-input h-14">Complete BOTH tasks.</textarea></div>';
+                    for (let t = 1; t <= 2; t++) {
+                        html += '<div class="p-4 bg-[#0F172A] rounded-xl border border-[#334155]"><h4 class="font-bold text-[#4ECDC4] mb-2">Task ' + t + '</h4>';
+                        html += '<input type="text" id="pf_task' + t + '_title" class="form-input mb-2" placeholder="Task sarlavha (masalan: Email)">';
+                        html += '<input type="text" id="pf_task' + t + '_type" class="form-input mb-2" placeholder="type: email / review">';
+                        html += '<textarea id="pf_task' + t + '_instruction" class="form-input h-16 mb-2" placeholder="Ko\'rsatma"></textarea>';
+                        html += '<textarea id="pf_task' + t + '_situation" class="form-input h-24 mb-2" placeholder="Situation matni"></textarea>';
+                        html += '<div class="flex gap-2"><input type="number" id="pf_task' + t + '_min" class="form-input w-24" placeholder="min so\'z" value="' + (t===1?50:120) + '"><input type="number" id="pf_task' + t + '_max" class="form-input w-24" placeholder="max" value="' + (t===1?500:150) + '"></div></div>';
+                    }
+                    return html + '</div>';
+                }
+                if (type === 'essay') {
+                    let html = '<div class="space-y-4"><div><label class="block text-sm font-bold text-gray-300 mb-1">Part sarlavha</label><input type="text" id="pf_title" class="form-input" value="Part 2: Essay"></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Ko\'rsatma</label><textarea id="pf_instruction" class="form-input h-14">Write an essay.</textarea></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Prompt (mavzu / savol)</label><textarea id="pf_prompt" class="form-input h-32"></textarea></div>';
+                    html += '<div class="flex gap-4"><div><label class="text-sm font-bold text-gray-300 mb-1">Min so\'z</label><input type="number" id="pf_min_words" class="form-input w-24" value="180"></div><div><label class="text-sm font-bold text-gray-300 mb-1">Max so\'z</label><input type="number" id="pf_max_words" class="form-input w-24" value="200"></div></div>';
+                    return html + '</div>';
+                }
+            }
+
+            return '<p class="text-gray-500">Ushbu part turi uchun forma hozircha mavjud emas. Bo\'sh shablon tugmasidan foydalaning.</p>';
+        }
+
+        function getVal(id) { const el = document.getElementById(id); return el ? (el.value || '').trim() : ''; }
+
+        function submitPartForm() {
+            if (currentSection == null || currentPartTypeIndex == null) return;
+            const item = PART_TEMPLATES[currentSection][currentPartTypeIndex];
+            const type = item.type;
+            let part = { part_number: 1, title: getVal('pf_title') || item.label, instruction: getVal('pf_instruction') || '' };
+
+            try {
+                const parts = JSON.parse(document.getElementById('test-parts-json').value.trim() || '[]');
+                part.part_number = parts.length + 1;
+            } catch (e) {}
+
+            if (currentSection === 'reading') {
+                if (type === 'open_cloze') {
+                    part.type = 'open_cloze';
+                    part.text = getVal('pf_text');
+                    part.questions = [];
+                    for (let i = 1; i <= 8; i++) part.questions.push({ number: i, correct: getVal('pf_correct_' + i) });
+                } else if (type === 'multiple_choice_cloze') {
+                    part.type = 'multiple_choice_cloze';
+                    part.text = getVal('pf_text');
+                    const startNum = 9;
+                    part.questions = [];
+                    for (let q = 0; q < 8; q++) {
+                        const n = startNum + q;
+                        const options = {};
+                        ['A','B','C','D','E','F','G','H','I','J'].forEach(l => { options[l] = getVal('pf_q' + n + '_' + l); });
+                        part.questions.push({ number: n, question: getVal('pf_q' + n + '_question'), options, correct: getVal('pf_q' + n + '_correct') });
+                    }
+                } else if (type === 'gapped_text') {
+                    part.type = 'gapped_text';
+                    part.text = getVal('pf_text');
+                    part.removed_sentences = {};
+                    ['A','B','C','D','E','F','G','H'].forEach(l => { part.removed_sentences[l] = getVal('pf_sent_' + l); });
+                    const startNum = 17;
+                    part.questions = [];
+                    for (let g = 0; g < 6; g++) part.questions.push({ number: startNum + g, correct: getVal('pf_gap_' + (startNum + g)) });
+                } else if (type === 'multiple_choice_comprehension') {
+                    part.type = 'multiple_choice_comprehension';
+                    part.text = getVal('pf_text');
+                    const startQ = 23;
+                    part.questions = [];
+                    for (let i = 0; i < 9; i++) {
+                        const n = startQ + i;
+                        const isTF = i >= 4;
+                        if (isTF) part.questions.push({ number: n, question: getVal('pf_cq' + n + '_q'), options: { A: 'True', B: 'False', C: 'No information' }, correct: getVal('pf_cq' + n + '_correct') || 'A' });
+                        else {
+                            const options = {};
+                            ['A','B','C','D'].forEach(l => { options[l] = getVal('pf_cq' + n + '_' + l); });
+                            part.questions.push({ number: n, question: getVal('pf_cq' + n + '_q'), options, correct: getVal('pf_cq' + n + '_correct') });
+                        }
+                    }
+                } else if (type === 'part5_mixed') {
+                    part.type = 'part5_mixed';
+                    part.text = getVal('pf_text');
+                    const base = 32;
+                    part.gap_fill = { text: getVal('pf_gap_text'), questions: [] };
+                    for (let i = 0; i < 4; i++) part.gap_fill.questions.push({ number: base + i, correct: getVal('pf_gap_correct_' + (base + i)) });
+                    part.questions = [];
+                    for (let i = 0; i < 2; i++) {
+                        const n = base + 4 + i;
+                        const options = {};
+                        ['A','B','C','D'].forEach(l => { options[l] = getVal('pf_mcq' + n + '_' + l); });
+                        part.questions.push({ number: n, question: getVal('pf_mcq' + n + '_q'), options, correct: getVal('pf_mcq' + n + '_correct') });
+                    }
+                }
+            }
+
+            if (currentSection === 'listening') {
+                if (type === 'short_conversations') {
+                    part.type = 'short_conversations';
+                    part.questions = [];
+                    for (let i = 1; i <= 8; i++) {
+                        const options = {};
+                        ['A','B','C'].forEach(l => { options[l] = getVal('pf_sc' + i + '_' + l); });
+                        part.questions.push({ number: i, audio_description: getVal('pf_sc' + i + '_desc'), transcript: getVal('pf_sc' + i + '_transcript'), options, correct: getVal('pf_sc' + i + '_correct') });
+                    }
+                } else if (type === 'sentence_completion') {
+                    part.type = 'sentence_completion';
+                    part.audio_description = getVal('pf_audio_desc');
+                    part.transcript = getVal('pf_transcript');
+                    part.questions = [];
+                    for (let i = 0; i < 6; i++) part.questions.push({ number: 9 + i, question: getVal('pf_sent_q' + (9 + i)), correct: getVal('pf_sent_correct_' + (9 + i)) });
+                } else if (type === 'speaker_matching') {
+                    part.type = 'speaker_matching';
+                    part.audio_description = getVal('pf_audio_desc');
+                    part.speakers = [];
+                    for (let i = 0; i < 4; i++) part.speakers.push({ number: 15 + i, name: getVal('pf_spk_name_' + (15 + i)), transcript: getVal('pf_spk_trans_' + (15 + i)) });
+                    part.options = {};
+                    ['A','B','C','D','E','F'].forEach(l => { part.options[l] = getVal('pf_opt_' + l); });
+                    part.answers = [];
+                    for (let i = 0; i < 4; i++) part.answers.push({ number: 15 + i, correct: getVal('pf_spk_correct_' + (15 + i)) });
+                } else if (type === 'map_labeling') {
+                    part.type = 'map_labeling';
+                    part.map_image_url = getVal('pf_map_url');
+                    part.audio_description = getVal('pf_audio_desc');
+                    part.transcript = getVal('pf_transcript');
+                    part.places = [];
+                    for (let i = 0; i < 6; i++) part.places.push({ number: 19 + i, name: getVal('pf_place_name_' + (19 + i)), correct: getVal('pf_place_correct_' + (19 + i)) });
+                    part.map_labels = ['A','B','C','D','E','F','G','H'];
+                } else if (type === 'interview') {
+                    part.type = 'interview';
+                    part.audio_description = getVal('pf_audio_desc');
+                    part.transcript = getVal('pf_transcript');
+                    part.questions = [];
+                    for (let i = 0; i < 6; i++) {
+                        const n = 25 + i;
+                        const options = {};
+                        ['A','B','C'].forEach(l => { options[l] = getVal('pf_intq' + n + '_' + l); });
+                        part.questions.push({ number: n, question: getVal('pf_intq' + n + '_q'), options, correct: getVal('pf_intq' + n + '_correct') });
+                    }
+                } else if (type === 'note_completion') {
+                    part.type = 'note_completion';
+                    part.audio_description = getVal('pf_audio_desc');
+                    part.transcript = getVal('pf_transcript');
+                    part.text = getVal('pf_text');
+                    part.questions = [];
+                    for (let i = 0; i < 6; i++) part.questions.push({ number: 31 + i, correct: getVal('pf_nc_correct_' + (31 + i)) });
+                }
+            }
+
+            if (currentSection === 'writing') {
+                if (type === 'tasks') {
+                    part.tasks = [];
+                    for (let t = 1; t <= 2; t++) part.tasks.push({
+                        task_number: t,
+                        title: getVal('pf_task' + t + '_title'),
+                        type: getVal('pf_task' + t + '_type') || (t === 1 ? 'email' : 'review'),
+                        instruction: getVal('pf_task' + t + '_instruction'),
+                        situation: getVal('pf_task' + t + '_situation'),
+                        min_words: parseInt(getVal('pf_task' + t + '_min') || 50, 10),
+                        max_words: parseInt(getVal('pf_task' + t + '_max') || 500, 10)
+                    });
+                } else if (type === 'essay') {
+                    part.type = 'essay';
+                    part.prompt = getVal('pf_prompt');
+                    part.min_words = parseInt(getVal('pf_min_words') || 180, 10);
+                    part.max_words = parseInt(getVal('pf_max_words') || 200, 10);
+                }
+            }
+
+            try {
+                const raw = document.getElementById('test-parts-json').value.trim();
+                const parts = raw ? JSON.parse(raw) : [];
+                if (!Array.isArray(parts)) throw new Error('Massiv emas');
+                parts.push(part);
+                document.getElementById('test-parts-json').value = JSON.stringify(parts, null, 2);
+                refreshPartsList();
+                closeAddPartModal();
+                document.getElementById('part-type-select').value = '';
+            } catch (e) {
+                alert('Saqlash xatosi: ' + e.message);
+            }
+        }
+
+        function addPartFromTemplate() {
+            const sel = document.getElementById('part-type-select');
+            const idx = sel.value;
+            if (idx === '' || !currentSection || !PART_TEMPLATES[currentSection][parseInt(idx, 10)]) {
+                alert('Part turini tanlang');
+                return;
+            }
+            const item = PART_TEMPLATES[currentSection][parseInt(idx, 10)];
+            const template = JSON.parse(JSON.stringify(item.template));
+            try {
+                const raw = document.getElementById('test-parts-json').value.trim();
+                const parts = raw ? JSON.parse(raw) : [];
+                if (!Array.isArray(parts)) throw new Error('Parts massiv bo\'lishi kerak');
+                template.part_number = parts.length + 1;
+                parts.push(template);
+                document.getElementById('test-parts-json').value = JSON.stringify(parts, null, 2);
+                refreshPartsList();
+                sel.value = '';
+            } catch (e) { alert('JSON xato: ' + e.message); }
+        }
+
         // Show Add Modal
         function showAddModal(section) {
             currentSection = section;
@@ -721,7 +1405,9 @@
             document.getElementById('test-id').value = '';
             document.getElementById('test-title').value = '';
             document.getElementById('test-time').value = '60';
-            document.getElementById('test-parts-json').value = '';
+            document.getElementById('test-parts-json').value = '[]';
+            fillPartTypeSelect();
+            refreshPartsList();
             document.getElementById('test-modal').classList.remove('hidden');
         }
 
@@ -736,7 +1422,9 @@
                 document.getElementById('test-id').value = testId;
                 document.getElementById('test-title').value = test.title;
                 document.getElementById('test-time').value = test.time_limit;
-                document.getElementById('test-parts-json').value = JSON.stringify(test.parts, null, 2);
+                document.getElementById('test-parts-json').value = JSON.stringify(test.parts || [], null, 2);
+                fillPartTypeSelect();
+                refreshPartsList();
                 document.getElementById('test-modal').classList.remove('hidden');
             }
         }
@@ -744,6 +1432,8 @@
         function closeTestModal() {
             document.getElementById('test-modal').classList.add('hidden');
         }
+
+        document.getElementById('test-parts-json').addEventListener('blur', refreshPartsList);
 
         // Form submission
         document.getElementById('test-form').addEventListener('submit', async function(e) {
@@ -797,6 +1487,27 @@
                 alert('Xatolik yuz berdi');
             }
         });
+
+        async function uploadListeningMap() {
+            const input = document.getElementById('listening-map-file');
+            if (!input.files || !input.files[0]) {
+                alert('Avval rasm faylini tanlang');
+                return;
+            }
+            const form = new FormData();
+            form.append('file', input.files[0]);
+            const res = await fetch('/admin/upload-listening-map', { method: 'POST', body: form });
+            const data = await res.json().catch(() => ({}));
+            const urlEl = document.getElementById('listening-map-url');
+            if (res.ok && data.url) {
+                urlEl.textContent = 'URL: ' + data.url;
+                urlEl.classList.remove('hidden');
+                input.value = '';
+            } else {
+                urlEl.textContent = 'Xatolik: ' + (data.error || res.statusText);
+                urlEl.classList.remove('hidden');
+            }
+        }
 
         async function deleteTest(section, testId) {
             if (!confirm('Rostdan o\'chirmoqchimisiz?')) return;
