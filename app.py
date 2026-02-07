@@ -323,6 +323,53 @@ def get_test_result_by_session(session_id: str, user_id: str) -> dict | None:
             return r
     return None
 
+def get_total_tests_taken() -> int:
+    """Jami topshirilgan testlar soni (barcha foydalanuvchilar)."""
+    data = load_test_history_data()
+    return len(data.get("results", []))
+
+# ============ LIKE / DISLIKE (1 user = 1 ovoz) ============
+
+RATINGS_FILE = "ratings.json"
+
+def load_ratings() -> dict:
+    data = load_json(RATINGS_FILE)
+    if "votes" not in data:
+        data["votes"] = {}
+    return data
+
+def save_ratings(data: dict):
+    save_json(RATINGS_FILE, data)
+
+def get_user_rating(user_id: str) -> dict | None:
+    """Foydalanuvchi ovozini qaytaradi: {"vote": "like"|"dislike", "reason": "..."} yoki None."""
+    data = load_ratings()
+    return data.get("votes", {}).get(user_id)
+
+def set_rating(user_id: str, vote: str, reason: str = ""):
+    """Bir foydalanuvchi faqat bitta ovoz beradi. vote: "like" yoki "dislike"."""
+    data = load_ratings()
+    if "votes" not in data:
+        data["votes"] = {}
+    data["votes"][user_id] = {"vote": vote, "reason": (reason or "").strip()}
+    save_ratings(data)
+
+def get_rating_counts() -> tuple:
+    """(likes, dislikes) soni."""
+    data = load_ratings()
+    votes = data.get("votes", {})
+    likes = sum(1 for v in votes.values() if v.get("vote") == "like")
+    dislikes = sum(1 for v in votes.values() if v.get("vote") == "dislike")
+    return likes, dislikes
+
+def get_landing_stats() -> dict:
+    """Landing va admin uchun: users, tests_taken, likes, dislikes."""
+    users_data = load_users()
+    users_count = len(users_data.get("users", []))
+    tests_taken = get_total_tests_taken()
+    likes, dislikes = get_rating_counts()
+    return {"users": users_count, "tests_taken": tests_taken, "likes": likes, "dislikes": dislikes}
+
 # Aloqa ma'lumotlari (profil sahifasida)
 CONTACT_INFO = {
     "email": "info@cefrlevel.uz",
@@ -1514,6 +1561,34 @@ async def about_page(request: Request):
     lang = get_lang(request)
     return templates.TemplateResponse("about.html", {"request": request, "t": t, "lang": lang, "user": get_current_user(request)})
 
+@app.get("/faq", response_class=HTMLResponse)
+async def faq_page(request: Request):
+    t = get_translations(request)
+    lang = get_lang(request)
+    return templates.TemplateResponse("faq.html", {"request": request, "t": t, "lang": lang, "user": get_current_user(request)})
+
+@app.get("/api/landing-stats", response_class=JSONResponse)
+async def api_landing_stats(request: Request):
+    """Landing 'Bizni natijalar' uchun: users, tests_taken, likes, dislikes."""
+    return JSONResponse(get_landing_stats())
+
+@app.post("/api/rate", response_class=JSONResponse)
+async def api_rate(request: Request):
+    """Like yoki Dislike — 1 user 1 ovoz. Dislike bo'lsa reason so'raladi."""
+    user = get_current_user(request)
+    if not user:
+        return JSONResponse({"success": False, "error": "login_required"}, status_code=401)
+    try:
+        body = await request.json()
+        vote = (body.get("vote") or "").strip().lower()
+        if vote not in ("like", "dislike"):
+            return JSONResponse({"success": False, "error": "invalid_vote"}, status_code=400)
+        reason = (body.get("reason") or "").strip() or "—"
+        set_rating(user["id"], vote, reason)
+        return JSONResponse({"success": True})
+    except Exception as e:
+        return JSONResponse({"success": False, "error": str(e)}, status_code=500)
+
 # ============ AUTH ROUTES ============
 
 LOGIN_ERROR_MESSAGES = {
@@ -1815,9 +1890,10 @@ async def dashboard_page(request: Request):
     t = get_translations(request)
     lang = get_lang(request)
     test_history = get_test_history(user["id"])
+    user_rating = get_user_rating(user["id"])
     return templates.TemplateResponse("dashboard.html", {
         "request": request, "t": t, "lang": lang, "user": user,
-        "test_history": test_history
+        "test_history": test_history, "user_rating": user_rating
     })
 
 @app.get("/practice", response_class=HTMLResponse)
@@ -2076,14 +2152,18 @@ async def admin_dashboard(request: Request):
     writing = get_writing_tests()
     fbs = get_feedbacks()
     users_data = load_users()
-    users_list = list(users_data.values())
+    users_list = list(users_data.get("users", []))
+    stats = get_landing_stats()
     return templates.TemplateResponse("admin_dashboard.html", {
         "request": request,
         "reading_count": len(reading),
         "listening_count": len(listening),
         "writing_count": len(writing),
         "feedback_count": len(fbs),
-        "user_count": len(users_list),
+        "user_count": stats["users"],
+        "tests_taken": stats["tests_taken"],
+        "likes_count": stats["likes"],
+        "dislikes_count": stats["dislikes"],
         "feedbacks": fbs[-20:],
         "reading_tests": reading,
         "listening_tests": listening,

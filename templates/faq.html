@@ -1,0 +1,78 @@
+{% extends "base_landing.html" %}
+{% block title %}FAQ - Cefr Test{% endblock %}
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 md:px-6 py-12 md:py-16">
+    <div class="text-center mb-12">
+        <h1 class="text-3xl md:text-4xl font-black text-white mb-3">FAQ</h1>
+        <p class="text-[#AFAFAF] text-lg font-medium">{% if lang == 'uz' %}Tez-tez so'raladigan savollar{% else %}Frequently asked questions{% endif %}</p>
+    </div>
+    <div class="space-y-4">
+        <div class="bg-[#1A2C32] border-2 border-[#2B4148] rounded-2xl p-5 md:p-6 hover:border-[#3D5A63] transition">
+            <h3 class="font-black text-white text-lg mb-2">{% if lang == 'uz' %}Test qancha vaqt davom etadi?{% else %}How long is the test?{% endif %}</h3>
+            <p class="text-[#AFAFAF] font-medium text-sm md:text-base">{% if lang == 'uz' %}Taxminan 3 soat: Reading 60 daqiqa, Listening 40 daqiqa, Writing 80 daqiqa.{% else %}About 3 hours: Reading 60 min, Listening 40 min, Writing 80 min.{% endif %}</p>
+        </div>
+        <div class="bg-[#1A2C32] border-2 border-[#2B4148] rounded-2xl p-5 md:p-6 hover:border-[#3D5A63] transition">
+            <h3 class="font-black text-white text-lg mb-2">{% if lang == 'uz' %}Natija qachon chiqadi?{% else %}When do I get results?{% endif %}</h3>
+            <p class="text-[#AFAFAF] font-medium text-sm md:text-base">{% if lang == 'uz' %}Darhol. AI baholash bir necha soniyada amalga oshadi.{% else %}Instantly. AI evaluation takes seconds.{% endif %}</p>
+        </div>
+        <div class="bg-[#1A2C32] border-2 border-[#2B4148] rounded-2xl p-5 md:p-6 hover:border-[#3D5A63] transition">
+            <h3 class="font-black text-white text-lg mb-2">{% if lang == 'uz' %}Bepul testlar qachongacha?{% else %}How long are free tests valid?{% endif %}</h3>
+            <p class="text-[#AFAFAF] font-medium text-sm md:text-base">{% if lang == 'uz' %}Beta davri tugaguncha. Keyin oddiy tariflar qo'llanadi.{% else %}Until the end of the Beta period. Then standard plans apply.{% endif %}</p>
+        </div>
+        <div class="bg-[#1A2C32] border-2 border-[#2B4148] rounded-2xl p-5 md:p-6 hover:border-[#3D5A63] transition">
+            <h3 class="font-black text-white text-lg mb-2">{% if lang == 'uz' %}To'lov usullari?{% else %}Payment methods?{% endif %}</h3>
+            <p class="text-[#AFAFAF] font-medium text-sm md:text-base">{% if lang == 'uz' %}Hozircha bepul. Kelajakda Click, Payme orqali to'lov.{% else %}Currently free. Click, Payme coming later.{% endif %}</p>
+        </div>
+        <div class="bg-[#1A2C32] border-2 border-[#2B4148] rounded-2xl p-5 md:p-6 hover:border-[#3D5A63] transition">
+            <h3 class="font-black text-white text-lg mb-2">{% if lang == 'uz' %}Yordam kerakmi?{% else %}Need help?{% endif %}</h3>
+            <p class="text-[#AFAFAF] font-medium text-sm md:text-base">{% if lang == 'uz' %}Telegram orqali yozing:{% else %}Write to us on Telegram:{% endif %} <a href="https://t.me/osco_uz" target="_blank" rel="noopener" class="text-[#58CC02] font-bold hover:underline">@osco_uz</a></p>
+        </div>
+    </div>
+    <div class="mt-12 text-center">
+        <a href="/" class="text-[#58CC02] hover:text-[#7ED321] font-bold text-sm transition">← {% if lang == 'uz' %}Bosh sahifa{% else %}Home{% endif %}</a>
+    </div>
+</div>
+<!-- Footer -->
+<footer class="bg-[#0D1A1F] border-t-2 border-[#2B4148]">
+    <div class="max-w-6xl mx-auto px-4 md:px-6 py-12 md:py-14">
+        <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-10 md:gap-16">
+            <div class="md:max-w-[200px]">
+                <a href="/" class="inline-flex items-center gap-3 mb-3">
+                    <span class="w-11 h-11 bg-[#58CC02] flex items-center justify-center text-white font-black text-lg rounded-xl flex-shrink-0" style="box-shadow: 0 3px 0 #46A302;">C</span>
+                    <span class="font-black text-white text-lg">Cefr Test</span>
+                </a>
+                <p class="text-[#777] text-sm leading-relaxed">{% if lang == 'uz' %}CEFR bo'yicha ingliz tili testi.{% else %}English test by CEFR.{% endif %}</p>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-10 md:gap-14">
+                <div>
+                    <h4 class="text-[#58CC02] font-black text-xs uppercase tracking-widest mb-4">{% if lang == 'uz' %}Havolalar{% else %}Links{% endif %}</h4>
+                    <ul class="space-y-2.5">
+                        <li><a href="/" class="text-[#AFAFAF] hover:text-white text-sm font-semibold transition">{% if lang == 'uz' %}Bosh sahifa{% else %}Home{% endif %}</a></li>
+                        <li><a href="/pricing" class="text-[#AFAFAF] hover:text-white text-sm font-semibold transition">{% if lang == 'uz' %}Narxlar{% else %}Pricing{% endif %}</a></li>
+                        <li><a href="/about" class="text-[#AFAFAF] hover:text-white text-sm font-semibold transition">{% if lang == 'uz' %}Biz haqimizda{% else %}About{% endif %}</a></li>
+                        <li><a href="/faq" class="text-[#AFAFAF] hover:text-white text-sm font-semibold transition">FAQ</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-[#58CC02] font-black text-xs uppercase tracking-widest mb-4">{% if lang == 'uz' %}Yordam{% else %}Help{% endif %}</h4>
+                    <ul class="space-y-2.5">
+                        <li><a href="https://t.me/osco_uz" target="_blank" rel="noopener" class="text-[#AFAFAF] hover:text-white text-sm font-semibold transition">{% if lang == 'uz' %}Telegram orqali yozish{% else %}Write via Telegram{% endif %}</a></li>
+                        <li><a href="/faq" class="text-[#AFAFAF] hover:text-white text-sm font-semibold transition">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="col-span-2 md:col-span-1">
+                    <h4 class="text-[#58CC02] font-black text-xs uppercase tracking-widest mb-4">{% if lang == 'uz' %}Ijtimoiy tarmoqlar{% else %}Social{% endif %}</h4>
+                    <div class="flex flex-wrap gap-3">
+                        <a href="https://t.me/osco_uz" target="_blank" rel="noopener" class="inline-flex items-center gap-2 bg-[#1A2C32] hover:bg-[#2B4148] text-[#AFAFAF] hover:text-white border border-[#2B4148] rounded-xl px-4 py-2.5 text-sm font-bold transition">Telegram</a>
+                        <a href="https://instagram.com/osco.uz" target="_blank" rel="noopener" class="inline-flex items-center gap-2 bg-[#1A2C32] hover:bg-[#2B4148] text-[#AFAFAF] hover:text-pink-400 border border-[#2B4148] rounded-xl px-4 py-2.5 text-sm font-bold transition">Instagram</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-10 pt-6 border-t border-[#2B4148] flex flex-col sm:flex-row items-center justify-between gap-3 text-sm">
+            <span class="text-[#555] font-medium">© 2026 {% if lang == 'uz' %}Barcha huquqlar himoyalangan{% else %}All rights reserved{% endif %}</span>
+            <a href="https://osco.uz" target="_blank" rel="noopener" class="text-[#58CC02] font-medium hover:underline">Osco mahsuloti</a>
+        </div>
+    </div>
+</footer>
+{% endblock %}

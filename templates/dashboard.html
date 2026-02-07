@@ -276,6 +276,33 @@
         {% endif %}
     </div>
 
+    <!-- Like / Dislike (1 user = 1 ovoz, kichik) -->
+    <div class="mb-8 flex items-center justify-center gap-2">
+        <span class="text-[#777] text-xs font-bold mr-2">{% if lang == 'uz' %}Platformani baholash:{% else %}Rate platform:{% endif %}</span>
+        {% if user_rating %}
+        <span class="text-[#AFAFAF] text-xs font-medium">
+            {% if user_rating.vote == 'like' %}&#128077; {% if lang == 'uz' %}Siz Like qildingiz{% else %}You liked{% endif %}{% else %}&#128078; {% if lang == 'uz' %}Siz Dislike qildingiz{% else %}You disliked{% endif %}{% endif %}
+        </span>
+        {% else %}
+        <button type="button" id="btnLike" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold bg-[#1A2C32] border-2 border-[#2B4148] text-[#AFAFAF] hover:border-[#58CC02] hover:text-[#58CC02] transition" title="Like">
+            &#128077; Like
+        </button>
+        <button type="button" id="btnDislike" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold bg-[#1A2C32] border-2 border-[#2B4148] text-[#AFAFAF] hover:border-[#FF4B4B] hover:text-[#FF4B4B] transition" title="Dislike">
+            &#128078; Dislike
+        </button>
+        {% endif %}
+    </div>
+    <div id="dislikeReasonWrap" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+        <div class="bg-[#1A2C32] border-2 border-[#2B4148] rounded-2xl p-6 max-w-md w-full">
+            <h4 class="font-black text-white mb-2">{% if lang == 'uz' %}Sababni yozing (ixtiyoriy){% else %}Reason for dislike (optional){% endif %}</h4>
+            <textarea id="dislikeReason" rows="3" class="w-full bg-[#0D1A1F] border-2 border-[#2B4148] rounded-xl p-3 text-white text-sm font-medium placeholder-[#555]" placeholder="{% if lang == 'uz' %}Nima yaxshi emas?{% else %}What could be better?{% endif %}"></textarea>
+            <div class="flex gap-3 mt-4">
+                <button type="button" id="dislikeSubmit" class="flex-1 py-2.5 rounded-xl font-bold text-sm bg-[#FF4B4B] text-white hover:brightness-110">{% if lang == 'uz' %}Yuborish{% else %}Submit{% endif %}</button>
+                <button type="button" id="dislikeCancel" class="flex-1 py-2.5 rounded-xl font-bold text-sm border-2 border-[#2B4148] text-[#AFAFAF] hover:bg-[#2B4148]">{% if lang == 'uz' %}Bekor qilish{% else %}Cancel{% endif %}</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Tips Section -->
     <div class="mb-8">
         <h3 class="text-xl md:text-2xl font-black text-white mb-5 md:mb-6 flex items-center gap-3">
@@ -384,5 +411,34 @@
     });
     {% endif %}
 {% endif %}
+
+(function(){
+    var btnLike = document.getElementById('btnLike');
+    var btnDislike = document.getElementById('btnDislike');
+    var wrap = document.getElementById('dislikeReasonWrap');
+    var reasonEl = document.getElementById('dislikeReason');
+    var submitBtn = document.getElementById('dislikeSubmit');
+    var cancelBtn = document.getElementById('dislikeCancel');
+    if (!btnLike || !btnDislike) return;
+    function sendRate(vote, reason) {
+        var body = { vote: vote };
+        if (reason !== undefined) body.reason = reason;
+        fetch('/api/rate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+            body: JSON.stringify(body),
+            credentials: 'same-origin'
+        }).then(function(r){ return r.json(); }).then(function(d){
+            if (d.success) window.location.reload();
+        });
+    }
+    btnLike.addEventListener('click', function(){ sendRate('like'); });
+    btnDislike.addEventListener('click', function(){ if (wrap) wrap.classList.remove('hidden'); });
+    if (cancelBtn) cancelBtn.addEventListener('click', function(){ wrap.classList.add('hidden'); reasonEl.value = ''; });
+    if (submitBtn) submitBtn.addEventListener('click', function(){
+        var reason = reasonEl ? reasonEl.value.trim() : '';
+        sendRate('dislike', reason);
+    });
+})();
 </script>
 {% endblock %}

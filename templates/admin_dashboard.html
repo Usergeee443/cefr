@@ -200,41 +200,8 @@
     </header>
 
     <main class="max-w-7xl mx-auto px-6 py-8">
-        <!-- Stats Overview -->
-        <div class="grid md:grid-cols-5 gap-4 mb-8">
-            <div class="stat-card p-5">
-                <div class="flex items-center gap-3 mb-3">
-                    <div class="w-10 h-10 bg-[#A78BFA]/20 rounded-xl flex items-center justify-center">
-                        <svg class="w-5 h-5 text-[#A78BFA]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="text-3xl font-black text-[#A78BFA]">{{ reading_count }}</div>
-                <div class="text-sm text-gray-400 font-bold mt-1">Reading</div>
-            </div>
-            <div class="stat-card p-5">
-                <div class="flex items-center gap-3 mb-3">
-                    <div class="w-10 h-10 bg-[#45B7D1]/20 rounded-xl flex items-center justify-center">
-                        <svg class="w-5 h-5 text-[#45B7D1]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="text-3xl font-black text-[#45B7D1]">{{ listening_count }}</div>
-                <div class="text-sm text-gray-400 font-bold mt-1">Listening</div>
-            </div>
-            <div class="stat-card p-5">
-                <div class="flex items-center gap-3 mb-3">
-                    <div class="w-10 h-10 bg-[#FF9F43]/20 rounded-xl flex items-center justify-center">
-                        <svg class="w-5 h-5 text-[#FF9F43]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                        </svg>
-                    </div>
-                </div>
-                <div class="text-3xl font-black text-[#FF9F43]">{{ writing_count }}</div>
-                <div class="text-sm text-gray-400 font-bold mt-1">Writing</div>
-            </div>
+        <!-- Bizni natijalar: Foydalanuvchilar, Topshirilgan testlar, Like, Dislike -->
+        <div class="grid md:grid-cols-4 gap-4 mb-8">
             <div class="stat-card p-5">
                 <div class="flex items-center gap-3 mb-3">
                     <div class="w-10 h-10 bg-[#4ECDC4]/20 rounded-xl flex items-center justify-center">
@@ -248,14 +215,32 @@
             </div>
             <div class="stat-card p-5">
                 <div class="flex items-center gap-3 mb-3">
-                    <div class="w-10 h-10 bg-[#FFE66D]/20 rounded-xl flex items-center justify-center">
-                        <svg class="w-5 h-5 text-[#FFE66D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                    <div class="w-10 h-10 bg-[#45B7D1]/20 rounded-xl flex items-center justify-center">
+                        <svg class="w-5 h-5 text-[#45B7D1]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
                         </svg>
                     </div>
                 </div>
-                <div class="text-3xl font-black text-[#FFE66D]">{{ feedback_count }}</div>
-                <div class="text-sm text-gray-400 font-bold mt-1">Feedbacklar</div>
+                <div class="text-3xl font-black text-[#45B7D1]">{{ tests_taken }}</div>
+                <div class="text-sm text-gray-400 font-bold mt-1">Topshirilgan testlar</div>
+            </div>
+            <div class="stat-card p-5">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 bg-[#58CC02]/20 rounded-xl flex items-center justify-center">
+                        <svg class="w-5 h-5 text-[#58CC02]" fill="currentColor" viewBox="0 0 24 24"><path d="M1 21h4L9 5 21 3l-4 16H9l-8 2z"/></svg>
+                    </div>
+                </div>
+                <div class="text-3xl font-black text-[#58CC02]">{{ likes_count }}</div>
+                <div class="text-sm text-gray-400 font-bold mt-1">Like</div>
+            </div>
+            <div class="stat-card p-5">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 bg-[#FF6B6B]/20 rounded-xl flex items-center justify-center">
+                        <svg class="w-5 h-5 text-[#FF6B6B]" fill="currentColor" viewBox="0 0 24 24"><path d="M19 15h-4V9h4V6l4 4-4 4v-3zm-5 4H2V3h12v2H4v12h10v2z"/></svg>
+                    </div>
+                </div>
+                <div class="text-3xl font-black text-[#FF6B6B]">{{ dislikes_count }}</div>
+                <div class="text-sm text-gray-400 font-bold mt-1">Dislike</div>
             </div>
         </div>
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>{% block title %}CEFR Level{% endblock %}</title>
+    <title>{% block title %}Cefr Test{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -94,6 +94,29 @@
             box-shadow: 0 2px 0 var(--duo-green-dark);
         }
 
+        .btn-duo-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--border-light);
+            color: white;
+            font-weight: 800;
+            padding: 12px 24px;
+            border-radius: 16px;
+            transition: all 0.1s;
+            box-shadow: 0 4px 0 var(--border-color), 0 6px 12px rgba(0,0,0,0.2);
+            text-decoration: none;
+        }
+        .btn-duo-secondary:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 var(--border-color), 0 8px 16px rgba(0,0,0,0.25);
+        }
+        .btn-duo-secondary:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 var(--border-color);
+        }
+
         .btn-duo-blue {
             display: inline-flex;
             align-items: center;
@@ -175,14 +198,12 @@
             <!-- Logo -->
             <a href="/" class="flex items-center gap-3 group">
                 <span class="w-12 h-12 bg-[#58CC02] flex items-center justify-center text-white font-black text-xl rounded-2xl shadow-lg group-hover:scale-105 transition-transform" style="box-shadow: 0 4px 0 #46A302;">C</span>
-                <span class="text-xl font-black text-white">CEFR</span>
-                <span class="text-xl font-black gradient-text-green">Level</span>
+                <span class="text-xl font-black text-white">Cefr Test</span>
             </a>
 
             <!-- Desktop Navigation -->
             <nav class="hidden md:flex items-center gap-1">
-                <a href="/#how-it-works" class="header-link">{% if lang == 'uz' %}Qanday ishlaydi{% else %}How It Works{% endif %}</a>
-                <a href="/#pricing" class="header-link">{{ t.pricing }}</a>
+                <a href="/pricing" class="header-link">{% if lang == 'uz' %}Narxlar{% else %}Pricing{% endif %}</a>
                 <a href="/about" class="header-link">{{ t.about }}</a>
             </nav>
 
@@ -212,7 +233,7 @@
                 {% else %}
                 <!-- Logged out state -->
                 <div class="hidden md:flex items-center gap-3">
-                    <a href="/login" class="btn-ghost text-sm">{% if lang == 'uz' %}Kirish{% else %}Log in{% endif %}</a>
+                    <a href="/login" class="btn-duo-secondary text-sm">{% if lang == 'uz' %}Kirish{% else %}Log in{% endif %}</a>
                     <a href="/auth/google?next_url=/dashboard" class="btn-duo-green text-sm">{% if lang == 'uz' %}Boshlash{% else %}Start{% endif %}</a>
                 </div>
                 {% endif %}
@@ -229,11 +250,8 @@
 
     <!-- Mobile Menu -->
     <div id="mobileMenu" class="mobile-menu">
-        <a href="/#how-it-works" class="text-[#AFAFAF] hover:text-white py-4 border-b border-[#2B4148] font-bold" onclick="toggleMobileMenu()">
-            {% if lang == 'uz' %}Qanday ishlaydi{% else %}How It Works{% endif %}
-        </a>
-        <a href="/#pricing" class="text-[#AFAFAF] hover:text-white py-4 border-b border-[#2B4148] font-bold" onclick="toggleMobileMenu()">
-            {{ t.pricing }}
+        <a href="/pricing" class="text-[#AFAFAF] hover:text-white py-4 border-b border-[#2B4148] font-bold" onclick="toggleMobileMenu()">
+            {% if lang == 'uz' %}Narxlar{% else %}Pricing{% endif %}
         </a>
         <a href="/about" class="text-[#AFAFAF] hover:text-white py-4 border-b border-[#2B4148] font-bold" onclick="toggleMobileMenu()">
             {{ t.about }}

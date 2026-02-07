@@ -1,56 +1,135 @@
 {% extends "base_landing.html" %}
-{% block title %}{% if lang == 'uz' %}Biz haqimizda{% else %}About Us{% endif %} - CEFR{% endblock %}
+{% block title %}{% if lang == 'uz' %}Biz haqimizda{% else %}About Us{% endif %} - Cefr Test{% endblock %}
+{% block head %}
+<style>
+    .about-hero { background: linear-gradient(180deg, #131F24 0%, #0D1A1F 50%, #131F24 100%); position: relative; overflow: hidden; }
+    .about-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(88, 204, 2, 0.12) 0%, transparent 60%); pointer-events: none; }
+    .about-card { transition: transform 0.2s, box-shadow 0.2s; }
+    .about-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+</style>
+{% endblock %}
 {% block content %}
-<div class="max-w-4xl mx-auto px-4 md:px-6 py-8 md:py-12 pb-24">
-    <div class="text-center mb-8 md:mb-12">
-        <div class="text-4xl md:text-5xl mb-3">&#127891;</div>
-        <h1 class="text-3xl md:text-4xl font-black text-white mb-3">{% if lang == 'uz' %}Biz haqimizda{% else %}About Us{% endif %}</h1>
-    </div>
-    <div class="space-y-4 md:space-y-6">
-        <div class="bg-[#1A2C32] border-2 border-[#2B4148] rounded-2xl p-5 md:p-8">
-            <div class="flex items-center gap-3 mb-4">
-                <div class="w-12 h-12 bg-[#58CC02] rounded-2xl flex items-center justify-center text-white font-black text-xl" style="box-shadow: 0 3px 0 #46A302;">C</div>
-                <h2 class="text-xl md:text-2xl font-black text-[#58CC02]">CEFR Level</h2>
-            </div>
-            {% if lang == 'uz' %}
-            <p class="text-[#AFAFAF] leading-relaxed mb-3 font-medium">CEFR Level - ingliz tili darajangizni aniqlash uchun platforma. Reading, Listening va Writing baholanadi, CEFR (A1–C2) natija beriladi.</p>
-            <p class="text-[#AFAFAF] leading-relaxed font-medium">Writing qismini AI baholaydi.</p>
-            {% else %}
-            <p class="text-[#AFAFAF] leading-relaxed mb-3 font-medium">CEFR Level is a platform to determine your English level. Reading, Listening, and Writing are evaluated; you get a CEFR result (A1–C2).</p>
-            <p class="text-[#AFAFAF] leading-relaxed font-medium">Writing is evaluated by AI.</p>
-            {% endif %}
+<div class="about-hero">
+<div class="max-w-4xl mx-auto px-4 md:px-6 py-12 md:py-20 pb-24">
+    <!-- Hero -->
+    <div class="text-center mb-14 md:mb-20 relative">
+        <div class="inline-flex items-center gap-4 mb-8">
+            <span class="w-20 h-20 bg-[#58CC02] flex items-center justify-center text-white font-black text-3xl rounded-2xl" style="box-shadow: 0 5px 0 #46A302, 0 10px 30px rgba(88,204,2,0.3);">C</span>
+            <h1 class="text-4xl md:text-5xl font-black text-white tracking-tight">Cefr Test</h1>
         </div>
-        <div class="bg-[#1A2C32] border-2 border-[#2B4148] rounded-2xl p-5 md:p-8">
-            <div class="flex items-center gap-3 mb-4">
-                <div class="w-12 h-12 bg-[#1CB0F6] rounded-2xl flex items-center justify-center text-white font-black text-lg" style="box-shadow: 0 3px 0 #1899D6;">&#128187;</div>
-                <h2 class="text-xl md:text-2xl font-black text-[#1CB0F6]">OSCO</h2>
-            </div>
-            {% if lang == 'uz' %}
-            <p class="text-[#AFAFAF] leading-relaxed font-medium">OSCO - zamonaviy IT mahsulotlar ishlab chiqaruvchi kompaniya. CEFR Level - OSCO ning ta'lim sohasidagi loyihasi.</p>
-            {% else %}
-            <p class="text-[#AFAFAF] leading-relaxed font-medium">OSCO is a company that develops modern IT products. CEFR Level is OSCO's project in education.</p>
-            {% endif %}
-        </div>
-        <div class="bg-[#1A2C32] border-2 border-[#2B4148] rounded-2xl p-5 md:p-8">
-            <div class="flex items-center gap-3 mb-4">
-                <div class="w-12 h-12 bg-[#CE82FF] rounded-2xl flex items-center justify-center text-white font-black text-lg" style="box-shadow: 0 3px 0 #A560E8;">&#128218;</div>
-                <h2 class="text-xl md:text-2xl font-black text-[#CE82FF]">CEFR</h2>
-            </div>
-            <p class="text-[#AFAFAF] leading-relaxed mb-4 font-medium">{% if lang == 'uz' %}CEFR - til darajasini baholash uchun xalqaro standart. 6 daraja:{% else %}CEFR is an international standard for language proficiency. Six levels:{% endif %}</p>
-            <div class="grid grid-cols-3 md:grid-cols-6 gap-2">
-                <div class="bg-[#58CC02] rounded-xl p-2 text-center" style="box-shadow: 0 3px 0 #46A302;"><span class="text-lg font-black text-white">A1</span></div>
-                <div class="bg-[#1CB0F6] rounded-xl p-2 text-center" style="box-shadow: 0 3px 0 #1899D6;"><span class="text-lg font-black text-white">A2</span></div>
-                <div class="bg-[#CE82FF] rounded-xl p-2 text-center" style="box-shadow: 0 3px 0 #A560E8;"><span class="text-lg font-black text-white">B1</span></div>
-                <div class="bg-[#FF9600] rounded-xl p-2 text-center" style="box-shadow: 0 3px 0 #E68600;"><span class="text-lg font-black text-white">B2</span></div>
-                <div class="bg-[#FF4B4B] rounded-xl p-2 text-center" style="box-shadow: 0 3px 0 #EA2B2B;"><span class="text-lg font-black text-white">C1</span></div>
-                <div class="bg-[#FFC800] rounded-xl p-2 text-center" style="box-shadow: 0 3px 0 #E6B400;"><span class="text-lg font-black text-[#1A2C32]">C2</span></div>
-            </div>
-        </div>
-        <div class="text-center pt-4">
-            <a href="/dashboard" class="btn-duo-green inline-flex items-center justify-center gap-2 text-white px-10 py-4 font-black text-lg rounded-2xl" style="box-shadow: 0 5px 0 #46A302; background: #58CC02;">
-                {% if lang == 'uz' %}Testni boshlash{% else %}Start Test{% endif %} &#127919;
-            </a>
+        <p class="text-[#AFAFAF] max-w-2xl mx-auto text-lg md:text-xl font-medium leading-relaxed">
+            {% if lang == 'uz' %}Ingliz tilingizni CEFR standarti bo'yicha professional baholash platformasi. Reading, Listening, Writing va kelajakda Speaking.{% else %}Professional English assessment by CEFR. Reading, Listening, Writing, and soon Speaking.{% endif %}
+        </p>
+        <div class="mt-8 inline-flex flex-wrap items-center justify-center gap-4 text-sm font-bold">
+            <span class="px-4 py-2 rounded-full bg-[#1CB0F6]/15 text-[#1CB0F6] border border-[#1CB0F6]/30">&#128214; Reading</span>
+            <span class="px-4 py-2 rounded-full bg-[#CE82FF]/15 text-[#CE82FF] border border-[#CE82FF]/30">&#127911; Listening</span>
+            <span class="px-4 py-2 rounded-full bg-[#58CC02]/15 text-[#58CC02] border border-[#58CC02]/30">&#9997; Writing</span>
         </div>
     </div>
+
+    <!-- Kartochkalar -->
+    <div class="grid md:grid-cols-2 gap-6 mb-12">
+        <div class="about-card bg-[#1A2C32] border-2 border-[#2B4148] rounded-2xl p-6 md:p-8 hover:border-[#58CC02]/50">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-14 h-14 bg-[#58CC02]/20 rounded-xl flex items-center justify-center">
+                    <span class="text-2xl">&#127891;</span>
+                </div>
+                <h2 class="text-xl md:text-2xl font-black text-[#58CC02]">Cefr Test</h2>
+            </div>
+            {% if lang == 'uz' %}
+            <p class="text-[#AFAFAF] leading-relaxed font-medium">Platforma ingliz tili darajangizni aniqlash uchun. Reading, Listening va Writing bo'limlari, CEFR (A1–C2) natija. Writing qismi sun'iy intellekt orqali batafsil baholanadi.</p>
+            {% else %}
+            <p class="text-[#AFAFAF] leading-relaxed font-medium">The platform determines your English level. Sections: Reading, Listening, Writing. You get a CEFR result (A1–C2). Writing is evaluated in detail by AI.</p>
+            {% endif %}
+        </div>
+
+        <div class="about-card bg-[#1A2C32] border-2 border-[#2B4148] rounded-2xl p-6 md:p-8 hover:border-[#1CB0F6]/50">
+            <div class="flex items-center gap-4 mb-4">
+                <div class="w-14 h-14 bg-[#1CB0F6]/20 rounded-xl flex items-center justify-center">
+                    <span class="text-2xl">&#128187;</span>
+                </div>
+                <h2 class="text-xl md:text-2xl font-black text-[#1CB0F6]">Osco</h2>
+            </div>
+            {% if lang == 'uz' %}
+            <p class="text-[#AFAFAF] leading-relaxed font-medium">Cefr Test — <a href="https://osco.uz" target="_blank" rel="noopener" class="text-[#58CC02] hover:underline font-bold">Osco</a> mahsuloti. Osco O'zbekistonda raqamli mahsulotlar va xizmatlar yaratuvchi kompaniya. Ta'lim sohasidagi loyihalarimizdan biri.</p>
+            {% else %}
+            <p class="text-[#AFAFAF] leading-relaxed font-medium">Cefr Test is a product of <a href="https://osco.uz" target="_blank" rel="noopener" class="text-[#58CC02] hover:underline font-bold">Osco</a>. Osco builds digital products and services in Uzbekistan. This is one of our education projects.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- CEFR darajalari -->
+    <div class="about-card bg-[#1A2C32] border-2 border-[#2B4148] rounded-2xl p-6 md:p-8 mb-12">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="w-12 h-12 bg-[#CE82FF]/20 rounded-xl flex items-center justify-center">
+                <span class="text-xl">&#128218;</span>
+            </div>
+            <h2 class="text-xl md:text-2xl font-black text-[#CE82FF]">CEFR</h2>
+        </div>
+        <p class="text-[#AFAFAF] leading-relaxed font-medium mb-6">
+            {% if lang == 'uz' %}CEFR — til darajasini baholash uchun xalqaro standart (Yevropa Kengashi). 6 ta daraja:{% else %}CEFR is the international standard for language proficiency (Council of Europe). Six levels:{% endif %}
+        </p>
+        <div class="grid grid-cols-3 md:grid-cols-6 gap-3">
+            <div class="bg-[#58CC02] rounded-xl py-3 px-2 text-center" style="box-shadow: 0 3px 0 #46A302;"><span class="text-lg font-black text-white">A1</span><br><span class="text-[10px] text-white/90 font-bold">{% if lang == 'uz' %}Boshlang'ich{% else %}Beginner{% endif %}</span></div>
+            <div class="bg-[#1CB0F6] rounded-xl py-3 px-2 text-center" style="box-shadow: 0 3px 0 #1899D6;"><span class="text-lg font-black text-white">A2</span><br><span class="text-[10px] text-white/90 font-bold">{% if lang == 'uz' %}Elementar{% else %}Elementary{% endif %}</span></div>
+            <div class="bg-[#CE82FF] rounded-xl py-3 px-2 text-center" style="box-shadow: 0 3px 0 #A560E8;"><span class="text-lg font-black text-white">B1</span><br><span class="text-[10px] text-white/90 font-bold">{% if lang == 'uz' %}O'rta{% else %}Intermediate{% endif %}</span></div>
+            <div class="bg-[#FF9600] rounded-xl py-3 px-2 text-center" style="box-shadow: 0 3px 0 #E68600;"><span class="text-lg font-black text-white">B2</span><br><span class="text-[10px] text-white/90 font-bold">{% if lang == 'uz' %}Yuqori o'rta{% else %}Upper-Int{% endif %}</span></div>
+            <div class="bg-[#FF4B4B] rounded-xl py-3 px-2 text-center" style="box-shadow: 0 3px 0 #EA2B2B;"><span class="text-lg font-black text-white">C1</span><br><span class="text-[10px] text-white/90 font-bold">{% if lang == 'uz' %}Yuqori{% else %}Advanced{% endif %}</span></div>
+            <div class="bg-[#FFC800] rounded-xl py-3 px-2 text-center" style="box-shadow: 0 3px 0 #E6B400;"><span class="text-lg font-black text-[#1A2C32]">C2</span><br><span class="text-[10px] text-[#1A2C32]/90 font-bold">{% if lang == 'uz' %}Ustunlik{% else %}Mastery{% endif %}</span></div>
+        </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="text-center mb-16">
+        <a href="/auth/google?next_url=/dashboard" class="btn-duo-green inline-flex items-center justify-center gap-2 text-white px-12 py-5 font-black text-lg rounded-2xl" style="box-shadow: 0 5px 0 #46A302, 0 10px 30px rgba(88,204,2,0.25);">
+            {% if lang == 'uz' %}Testni boshlash{% else %}Start Test{% endif %} &#127919;
+        </a>
+        <p class="mt-4 text-[#777] text-sm font-medium">{% if lang == 'uz' %}Bepul — 10 ta test{% else %}Free — 10 tests{% endif %}</p>
+    </div>
+
+    <!-- Footer (ixcham, bir xil boshqa sahifalar bilan) -->
+    <footer class="bg-[#0D1A1F] border-t-2 border-[#2B4148] mt-8">
+        <div class="max-w-6xl mx-auto px-4 md:px-6 py-8 md:py-10">
+            <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-6 md:gap-10">
+                <div class="md:max-w-[200px]">
+                    <a href="/" class="inline-flex items-center gap-2 mb-2">
+                        <span class="w-10 h-10 bg-[#58CC02] flex items-center justify-center text-white font-black rounded-xl flex-shrink-0" style="box-shadow: 0 3px 0 #46A302;">C</span>
+                        <span class="font-black text-white">Cefr Test</span>
+                    </a>
+                    <p class="text-[#777] text-xs leading-relaxed">{% if lang == 'uz' %}CEFR bo'yicha ingliz tili testi.{% else %}English test by CEFR.{% endif %}</p>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
+                    <div>
+                        <h4 class="text-[#58CC02] font-black text-xs uppercase tracking-widest mb-3">{% if lang == 'uz' %}Havolalar{% else %}Links{% endif %}</h4>
+                        <ul class="space-y-1.5">
+                            <li><a href="/" class="text-[#AFAFAF] hover:text-white text-sm font-semibold transition">{% if lang == 'uz' %}Bosh sahifa{% else %}Home{% endif %}</a></li>
+                            <li><a href="/pricing" class="text-[#AFAFAF] hover:text-white text-sm font-semibold transition">{% if lang == 'uz' %}Narxlar{% else %}Pricing{% endif %}</a></li>
+                            <li><a href="/about" class="text-[#AFAFAF] hover:text-white text-sm font-semibold transition">{% if lang == 'uz' %}Biz haqimizda{% else %}About{% endif %}</a></li>
+                            <li><a href="/faq" class="text-[#AFAFAF] hover:text-white text-sm font-semibold transition">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-[#58CC02] font-black text-xs uppercase tracking-widest mb-3">{% if lang == 'uz' %}Yordam{% else %}Help{% endif %}</h4>
+                        <ul class="space-y-1.5">
+                            <li><a href="https://t.me/osco_uz" target="_blank" rel="noopener" class="text-[#AFAFAF] hover:text-white text-sm font-semibold transition">{% if lang == 'uz' %}Telegram orqali yozish{% else %}Write via Telegram{% endif %}</a></li>
+                            <li><a href="/faq" class="text-[#AFAFAF] hover:text-white text-sm font-semibold transition">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-span-2 md:col-span-1">
+                        <h4 class="text-[#58CC02] font-black text-xs uppercase tracking-widest mb-3">{% if lang == 'uz' %}Ijtimoiy tarmoqlar{% else %}Social{% endif %}</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <a href="https://t.me/osco_uz" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 bg-[#1A2C32] hover:bg-[#2B4148] text-[#AFAFAF] hover:text-white border border-[#2B4148] rounded-lg px-3 py-2 text-xs font-bold transition">Telegram</a>
+                            <a href="https://instagram.com/osco.uz" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 bg-[#1A2C32] hover:bg-[#2B4148] text-[#AFAFAF] hover:text-pink-400 border border-[#2B4148] rounded-lg px-3 py-2 text-xs font-bold transition">Instagram</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-6 pt-4 border-t border-[#2B4148] flex flex-col sm:flex-row items-center justify-between gap-2 text-sm">
+                <span class="text-[#555] font-medium text-xs">© 2026 {% if lang == 'uz' %}Barcha huquqlar himoyalangan{% else %}All rights reserved{% endif %}</span>
+                <a href="https://osco.uz" target="_blank" rel="noopener" class="text-[#58CC02] font-medium hover:underline text-xs">Osco mahsuloti</a>
+            </div>
+        </div>
+    </footer>
+</div>
 </div>
 {% endblock %}
