@@ -173,6 +173,8 @@
             .main-content { margin-left: 0; padding-bottom: 100px; }
         }
 
+        .main-content-full { margin-left: 0; padding-bottom: 120px; }
+
         /* NAV LINKS - Duolingo style */
         .nav-link {
             display: flex;
@@ -365,8 +367,9 @@
     </style>
     {% block head %}{% endblock %}
 </head>
-<body class="min-h-screen text-white">
-    <!-- Desktop Sidebar -->
+<body class="min-h-screen text-white {% if hide_nav %}results-page{% endif %}">
+    <!-- Desktop Sidebar (natija sahifasida ko'rinmaydi) -->
+    {% if not hide_nav %}
     <aside class="sidebar hidden lg:flex flex-col">
         <!-- Logo -->
         <div class="p-6 mb-2">
@@ -438,13 +441,15 @@
         </div>
         {% endif %}
     </aside>
+    {% endif %}
 
     <!-- Main Content -->
-    <main class="main-content">
+    <main class="main-content {% if hide_nav %}main-content-full{% endif %}">
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Mobile Bottom Navigation -->
+    <!-- Mobile Bottom Navigation (natija sahifasida ko'rinmaydi) -->
+    {% if not hide_nav %}
     <nav class="mobile-nav">
         <a href="/dashboard" class="mobile-link {% if request.url.path == '/dashboard' or request.url.path == '/start' %}active{% endif %}">
             <svg viewBox="0 0 24 24" fill="currentColor">
@@ -474,6 +479,7 @@
             <span>{% if lang == 'uz' %}Profil{% else %}Profile{% endif %}</span>
         </a>
     </nav>
+    {% endif %}
 
     {% block scripts %}{% endblock %}
 </body>

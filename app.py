@@ -252,8 +252,124 @@ def get_writing_tests() -> list:
     data = load_json("writing_tests.json")
     return data.get("tests", [])
 
+def _build_test_from_all_tests(section: str, user: dict) -> dict:
+    """Barcha testlardan har bir part turi uchun bitta part tanlab, yangi test yaratadi."""
+    tests = get_reading_tests() if section == "reading" else (get_listening_tests() if section == "listening" else get_writing_tests())
+    if not tests:
+        return dict(DEFAULT_READING if section == "reading" else (DEFAULT_LISTENING if section == "listening" else DEFAULT_WRITING))
+    
+    # Har bir part_number uchun (1-5 yoki 1-6) barcha testlardan shu part_number ga ega bo'lgan partlarni yig'ish
+    # Format: parts_by_number[pnum] = [(part, test_id), ...]
+    parts_by_number = {}
+    
+    for test in tests:
+        if not test.get("parts"):
+            continue
+        test_id = test.get("id", "")
+        for part in test["parts"]:
+            pnum = part.get("part_number", 0)
+            if pnum > 0:
+                if pnum not in parts_by_number:
+                    parts_by_number[pnum] = []
+                parts_by_number[pnum].append((dict(part), test_id))  # Copy part va test_id ni birga saqlash
+    
+    # Har bir part_number uchun random bitta part tanlash
+    selected_parts = []
+    max_parts = 5 if section == "reading" else (6 if section == "listening" else 2)
+    seen_ids = list(user.get("seen_reading_parts" if section == "reading" else "seen_listening_parts", []) or [])
+    
+    for pnum in range(1, max_parts + 1):
+        if pnum in parts_by_number and parts_by_number[pnum]:
+            candidates = parts_by_number[pnum]  # [(part_dict, test_id), ...]
+            
+            # Reading uchun Part 1 har doim open_cloze bo'lishi kerak
+            if section == "reading" and pnum == 1:
+                candidates = [(p, tid) for p, tid in candidates if p.get("type") == "open_cloze"]
+                if not candidates:
+                    # Agar open_cloze topilmasa, default dan foydalanish
+                    default_test = DEFAULT_READING
+            # Reading uchun Part 3 har doim matching_headings bo'lishi kerak
+            if section == "reading" and pnum == 3:
+                candidates = [(p, tid) for p, tid in candidates if p.get("type") == "matching_headings"]
+                if not candidates:
+                    # Agar matching_headings topilmasa, default dan foydalanish
+                    default_test = DEFAULT_READING
+                    if default_test.get("parts"):
+                        for dp in default_test["parts"]:
+                            if dp.get("part_number") == 1 and dp.get("type") == "open_cloze":
+                                candidates = [(dict(dp), default_test.get("id", "reading_default"))]
+                                break
+            
+            if not candidates:
+                continue
+            
+            # Avval ko'rilmaganlarni, keyin ko'rilganlarni tanlash
+            unseen = []
+            seen = []
+            for part_dict, test_id in candidates:
+                pid = test_id + "_" + str(pnum)
+                if pid in seen_ids:
+                    seen.append((part_dict, test_id))
+                else:
+                    unseen.append((part_dict, test_id))
+            
+            if unseen:
+                selected, test_id = random.choice(unseen)
+            elif seen:
+                selected, test_id = random.choice(seen)
+            else:
+                selected, test_id = random.choice(candidates)
+            
+            # Partni copy qilish va part_number ni to'g'ri qo'yish
+            part_copy = dict(selected)
+            part_copy["part_number"] = pnum
+            part_copy["_source_test_id"] = test_id  # Original test ID ni saqlash
+            selected_parts.append(part_copy)
+    
+    # Agar hech qanday part topilmasa yoki kam partlar bo'lsa, default testdan to'ldirish
+    default_test = DEFAULT_READING if section == "reading" else (DEFAULT_LISTENING if section == "listening" else DEFAULT_WRITING)
+    default_parts = default_test.get("parts", [])
+    
+    # Har bir part_number uchun agar part topilmasa, default dan olish
+    for pnum in range(1, max_parts + 1):
+        # Agar bu part_number uchun part topilgan bo'lsa, o'tkazib yuborish
+        if any(p.get("part_number") == pnum for p in selected_parts):
+            continue
+        
+        # Default testdan shu part_number ga ega bo'lgan partni topish
+        for dp in default_parts:
+            if dp.get("part_number") == pnum:
+                part_copy = dict(dp)
+                part_copy["_source_test_id"] = default_test.get("id", section + "_default")
+                selected_parts.append(part_copy)
+                break
+    
+    # Agar hali ham hech qanday part bo'lmasa, default testning barcha partlarini olish
+    if not selected_parts:
+        selected_parts = [dict(p) for p in default_parts]
+        for p in selected_parts:
+            if "_source_test_id" not in p:
+                p["_source_test_id"] = default_test.get("id", section + "_default")
+    
+    # Partlarni part_number bo'yicha tartiblash
+    selected_parts.sort(key=lambda p: p.get("part_number", 0))
+    
+    # Yangi test yaratish
+    first_test = tests[0] if tests else {}
+    new_test = {
+        "id": section + "_combined",
+        "title": first_test.get("title", section.capitalize() + " Test"),
+        "time_limit": first_test.get("time_limit", 60 if section == "reading" else (40 if section == "listening" else 80)),
+        "parts": selected_parts
+    }
+    
+    # Partlarni ko'rilmaganlar avval qilib tartiblash (lekin part_number tartibini saqlab qolish)
+    new_test["parts"] = _order_parts_for_user(new_test["parts"], seen_ids, new_test["id"])
+    
+    return new_test
+
 def _order_parts_for_user(parts: list, seen_ids: list, test_id: str) -> list:
-    """Partlarni avval ko'rilmaganlar (random), keyin ko'rilganlar (random) qilib qaytaradi."""
+    """Partlarni avval ko'rilmaganlar (part_number tartibida), keyin ko'rilganlar (part_number tartibida) qilib qaytaradi."""
     if not parts:
         return parts
     unseen = []
@@ -264,8 +380,9 @@ def _order_parts_for_user(parts: list, seen_ids: list, test_id: str) -> list:
             seen.append(p)
         else:
             unseen.append(p)
-    random.shuffle(unseen)
-    random.shuffle(seen)
+    # Part_number bo'yicha tartiblash (random emas, tartibda)
+    unseen.sort(key=lambda p: p.get("part_number", 0))
+    seen.sort(key=lambda p: p.get("part_number", 0))
     return unseen + seen
 
 def _mark_parts_seen(user_id: str, section: str, test_id: str, parts: list) -> None:
@@ -434,18 +551,16 @@ DEFAULT_READING = {
         {
             "part_number": 1,
             "title": "Part 1: Open Cloze",
-            "instruction": "For questions 1-8, read the text below and think of the word which best fits each gap. Use only ONE word in each gap.",
+            "instruction": "For questions 1-6, read the text below and think of the word which best fits each gap. Use only ONE word in each gap.",
             "type": "open_cloze",
-            "text": "Climate Change and Its Impact\n\nClimate change is one of (1)_____ most pressing issues facing our planet today. Scientists agree that human activities, particularly the burning of fossil fuels, (2)_____ responsible for the rising global temperatures we are experiencing.\n\nThe effects of climate change are already (3)_____ felt around the world. Extreme weather events such (4)_____ hurricanes, floods, and droughts are becoming more frequent and severe. Sea levels are rising, threatening coastal communities and island nations.\n\n(5)_____ order to address this crisis, governments and individuals must take action. Reducing carbon emissions, investing in renewable energy, and protecting forests are all essential steps. However, time is running (6)_____. If we do not act quickly, the consequences (7)_____ be catastrophic.\n\nEach of us has a role to play. Simple changes in (8)_____ daily lives, such as using public transportation, reducing waste, and conserving energy, can make a difference.",
+            "text": "Climate Change and Its Impact\n\nClimate change is one of (1)_____ most pressing issues facing our planet today. Scientists agree that human activities, particularly the burning of fossil fuels, (2)_____ responsible for the rising global temperatures we are experiencing.\n\nThe effects of climate change are already (3)_____ felt around the world. Extreme weather events such (4)_____ hurricanes, floods, and droughts are becoming more frequent and severe. Sea levels are rising, threatening coastal communities and island nations.\n\n(5)_____ order to address this crisis, governments and individuals must take action. Reducing carbon emissions, investing in renewable energy, and protecting forests are all essential steps. However, time is running (6)_____. If we do not act quickly, the consequences will be catastrophic.",
             "questions": [
                 {"number": 1, "correct": "the"},
                 {"number": 2, "correct": "are"},
                 {"number": 3, "correct": "being"},
                 {"number": 4, "correct": "as"},
                 {"number": 5, "correct": "In"},
-                {"number": 6, "correct": "out"},
-                {"number": 7, "correct": "will"},
-                {"number": 8, "correct": "our"}
+                {"number": 6, "correct": "out"}
             ]
         },
         {
@@ -467,27 +582,53 @@ DEFAULT_READING = {
         },
         {
             "part_number": 3,
-            "title": "Part 3: Gapped Text (6 paragraphs, 8 options A–H)",
-            "instruction": "Six sentences have been removed from the article. Choose from the sentences A–H the one which fits each gap (17–22). There are two extra sentences.",
-            "type": "gapped_text",
-            "text": "Living Sustainably in the Modern World\n\nSustainable living is no longer just a trend but a necessity in our rapidly changing world. With climate change accelerating and natural resources depleting, individuals are looking for ways to reduce their environmental impact. (17)_____\n\nOne of the most effective ways to live more sustainably is to reduce consumption. (18)_____ By being mindful of what we purchase and choosing quality over quantity, we can significantly decrease our environmental footprint.\n\nFood choices also play a crucial role in sustainable living. The production of meat, particularly beef, generates significant greenhouse gas emissions. (19)_____ Even small changes, like participating in \"Meatless Mondays,\" can make a difference.\n\nTransportation is another area where individuals can make impactful changes. (20)_____ For those who need to drive, choosing fuel-efficient or electric vehicles is a step in the right direction.\n\nEnergy consumption at home offers numerous opportunities for sustainability. (21)_____ Additionally, unplugging devices when not in use and using natural light whenever possible can reduce energy bills and environmental impact.\n\nWater conservation is equally important. Simple practices such as fixing leaky faucets, taking shorter showers, and collecting rainwater for gardens can save thousands of liters annually. (22)_____ With these small but consistent efforts, each of us can contribute to a more sustainable future.",
-            "removed_sentences": {
-                "A": "Walking, cycling, or using public transportation can dramatically reduce carbon emissions from daily commutes.",
-                "B": "This is especially important in regions experiencing water scarcity due to climate change.",
-                "C": "Fortunately, there are many practical steps that anyone can take to live more sustainably.",
-                "D": "Installing solar panels, using LED bulbs, and choosing energy-efficient appliances can all reduce household energy consumption.",
-                "E": "Many companies are now adopting sustainable practices in their operations.",
-                "F": "We live in a consumer society where buying more is often seen as a sign of success.",
-                "G": "Reducing meat consumption or switching to a plant-based diet can lower an individual's carbon footprint significantly.",
-                "H": "Governments worldwide are introducing new laws to limit plastic use and promote recycling."
+            "title": "Part 3: Matching Headings to Paragraphs",
+            "instruction": "Read the text and choose the correct heading for each paragraph from the list of headings below. There are more headings than paragraphs, so you will not use all of them. You cannot use any heading more than once.",
+            "type": "matching_headings",
+            "main_title": "HOW DOES THE BIOLOGICAL CLOCK TICK?",
+            "headings": {
+                "A": "The biological clock",
+                "B": "Why dying is beneficial",
+                "C": "The ageing process of men and women",
+                "D": "Prolonging your life",
+                "E": "Limitations of life span",
+                "F": "Modes of development of different species",
+                "G": "A stable life span despite improvements",
+                "H": "Energy consumption"
             },
+            "paragraphs": [
+                {
+                    "number": "I",
+                    "text": "Our life span is restricted. Everyone accepts this as 'biologically' obvious. 'Nothing lives for ever!' However, in this statement we think of artificially produced, technical objects, products which are subjected to natural wear and tear during use. This leads to the result that at some time or other the object stops working and is unusable ('death' in the biological sense). But are the wear and tear and loss of function of technical objects and the death of living organisms really similar or comparable?"
+                },
+                {
+                    "number": "II",
+                    "text": "Thus ageing and death should not be seen as inevitable, particularly as the organism possesses many mechanisms for repair. It is not, in principle, necessary for a biological system to age and die. Nevertheless, a restricted life span, ageing, and then death are basic characteristics of life. The reason for this is easy to recognise: in nature, the existent organisms either adapt or are regularly replaced by new types. Because of changes in the genetic material (mutations) these have new characteristics and in the course of their individual lives they are tested for optimal or better adaptation to the environmental conditions. Immortality would disrupt this system—it needs room for new and better life. This is the basic problem of evolution."
+                },
+                {
+                    "number": "III",
+                    "text": "Every organism has a life span which is highly characteristic. The number of years during which something lives is highly varied. There are striking differences in life span between different species of animals, but within one species the parameter is relatively constant. For example, the average duration of human life has hardly changed in thousands of years. Although more and more people attain an advanced age as a result of developments in medical care and better nutrition, the characteristic upper limit for most remains 80 years. A further argument against the simple 'wear and tear' theory can be seen in the fact that the time within which organisms age lies between a few hours (for a unicellular organism) and several thousand years (for mammoth trees)."
+                },
+                {
+                    "number": "IV",
+                    "text": "If a life span is a genetically determined biological characteristic, it is logically necessary to propose the existence of an internal clock, which in some way measures and controls the ageing process and which finally determines death as the last step in a fixed programme. Like the life span, the metabolic rate has for different organisms a fixed mathematical relationship to the body mass. In comparison to the life span this relationship is 'inverted': the larger the organism the lower its metabolic rate. Again this relationship is valid not only for birds, but also, similarly on average within the systematic unit, for all other organisms (plants, animals, unicellular organisms)."
+                },
+                {
+                    "number": "V",
+                    "text": "Animals which behave 'frugally' with energy become particularly old, for example, crocodiles and tortoises. Parrots and birds of prey are often held chained up. Thus they are not able to 'experience life' and so they attain a high life span in captivity. Animals which save energy by hibernation or lethargy (e.g. bats or hedgehogs) live much longer than those which are always active. The metabolic rate of mice can be reduced by a very low consumption of food (hunger diet). They then live twice as long as their well-fed comrades. Women live distinctly longer than men. If you examine the metabolic rates of the two sexes you establish that the higher male metabolic rate roughly accounts for the lower male life span. That means that they live life 'energetically'—more intensively, but not for as long."
+                },
+                {
+                    "number": "VI",
+                    "text": "It follows from the above that sparing use of energy reserves should tend to extend life. Extreme high performance sports may lead to optimal cardiovascular performance, but they quite certainly do not prolong life. Relaxation lowers metabolic rate, as does adequate sleep and in general an equable and balanced personality. Each of us can develop his or her own 'energy saving programme' with a little self-observation, critical self-control and, above all, logical consistency. Experience will show that to live in this way not only increases the life span but is also very healthy. This final aspect should not be forgotten."
+                }
+            ],
             "questions": [
-                {"number": 17, "correct": "C"},
-                {"number": 18, "correct": "F"},
-                {"number": 19, "correct": "G"},
-                {"number": 20, "correct": "A"},
-                {"number": 21, "correct": "D"},
-                {"number": 22, "correct": "B"}
+                {"number": 15, "paragraph": "I", "correct": "E"},
+                {"number": 16, "paragraph": "II", "correct": "B"},
+                {"number": 17, "paragraph": "III", "correct": "G"},
+                {"number": 18, "paragraph": "IV", "correct": "A"},
+                {"number": 19, "paragraph": "V", "correct": "H"},
+                {"number": 20, "paragraph": "VI", "correct": "D"}
             ]
         },
         {
@@ -598,18 +739,17 @@ DEFAULT_LISTENING = {
         {
             "part_number": 4,
             "title": "Part 4: Map Labeling",
-            "instruction": "You will hear a guide describing a university campus. For questions 19-24, match each place with the correct letter (A-H) on the map.",
+            "instruction": "You will hear someone giving a talk. Label the places (19-23) on the map (A-H). There are THREE extra options which you do not need to use. Mark your answers on the answer sheet.",
             "type": "map_labeling",
             "map_image_url": "",
-            "audio_description": "A guide describing a university campus tour.",
-            "transcript": "Welcome to our university campus tour. Let me show you around. If you look straight ahead, you'll see the Main Library - that's the large building right in the center. To the left of the library is the Science Building, and right behind it is the Sports Center. If you turn right from the entrance, the first building you see is the Student Union. The Cafeteria is just next to the Student Union. And finally, the Art Gallery is the small building at the far end of the campus, near the lake.",
+            "audio_description": "Someone giving a talk about places on a map.",
+            "transcript": "Welcome to our town center. Let me point out some important locations. As you enter from London Road, you'll see the town hall directly ahead - that's the large building in the center. To your left, on High Street, there's a supermarket. If you continue down High Street and turn right onto Sheep Street, you'll find the post office. Further along Sheep Street, near the park, is the primary school. And finally, if you walk down Church Lane from the town hall, you'll come to Wok'n'Roll restaurant.",
             "places": [
-                {"number": 19, "name": "Main Library", "correct": "D"},
-                {"number": 20, "name": "Science Building", "correct": "C"},
-                {"number": 21, "name": "Sports Center", "correct": "F"},
-                {"number": 22, "name": "Student Union", "correct": "B"},
-                {"number": 23, "name": "Cafeteria", "correct": "A"},
-                {"number": 24, "name": "Art Gallery", "correct": "H"}
+                {"number": 19, "name": "town hall", "correct": "D"},
+                {"number": 20, "name": "supermarket", "correct": "A"},
+                {"number": 21, "name": "post office", "correct": "B"},
+                {"number": 22, "name": "primary school", "correct": "E"},
+                {"number": 23, "name": "Wok'n'Roll", "correct": "G"}
             ],
             "map_labels": ["A", "B", "C", "D", "E", "F", "G", "H"]
         },
@@ -657,22 +797,22 @@ DEFAULT_WRITING = {
         {
             "part_number": 1,
             "title": "Part 1",
-            "instruction": "Complete BOTH Task 1 and Task 2.",
+            "instruction": "Read the instructions for each task carefully. Complete Task 1 and Task 2.",
             "tasks": [
                 {
                     "task_number": 1,
-                    "title": "Task 1: Email/Letter",
-                    "type": "email",
-                    "instruction": "Read the situation below and write an appropriate email.",
-                    "situation": "You recently bought a laptop online, but when it arrived, you discovered several problems with it. The screen has a small crack, the keyboard is missing a key, and the battery drains very quickly.\n\nWrite an email to the company's customer service department. In your email:\n- Explain what problems you found with the laptop\n- Say how you feel about this situation\n- Tell them what you would like them to do about it\n\nRecommended: at least 50 words. Fewer is accepted but may receive a lower score; you may write more if you wish.",
+                    "title": "Task 1",
+                    "type": "task1",
+                    "instruction": "Read the situation below and write your answer.",
+                    "situation": "You recently bought a laptop online, but when it arrived, you discovered several problems with it. The screen has a small crack, the keyboard is missing a key, and the battery drains very quickly.\n\nWrite to the company's customer service. In your text:\n- Explain what problems you found with the laptop\n- Say how you feel about this situation\n- Tell them what you would like them to do about it\n\nRecommended: at least 50 words. Fewer is accepted but may receive a lower score; you may write more if you wish.",
                     "min_words": 50,
                     "max_words": 500
                 },
                 {
                     "task_number": 2,
-                    "title": "Task 2: Review",
-                    "type": "review",
-                    "instruction": "Write a review.",
+                    "title": "Task 2",
+                    "type": "task2",
+                    "instruction": "Write your answer.",
                     "situation": "Your English teacher has asked you to write a review of a book, film, or TV series that you have enjoyed recently.\n\nWrite a review that:\n- Briefly describes what it is about\n- Explains what you liked about it\n- Recommends it and says who would enjoy it most\n\nWrite between 120-150 words.",
                     "min_words": 120,
                     "max_words": 150
@@ -731,6 +871,15 @@ def calculate_reading_score(answers: Dict[str, str], test_data: dict) -> Dict:
                 qn = str(q["number"])
                 ua = answers.get(qn, "").strip().lower()
                 ca = q["correct"].lower()
+                ic = ua == ca
+                if ic: correct += 1
+                details.append({"q": qn, "ua": ua, "ca": ca, "ok": ic, "part": part["part_number"]})
+        elif ptype == "matching_headings":
+            for q in part["questions"]:
+                total += 1
+                qn = str(q["number"])
+                ua = answers.get(qn, "").strip().upper()
+                ca = q["correct"].upper()
                 ic = ua == ca
                 if ic: correct += 1
                 details.append({"q": qn, "ua": ua, "ca": ca, "ok": ic, "part": part["part_number"]})
@@ -1128,7 +1277,7 @@ async def evaluate_writing_with_ai(task1: str, task2: str, essay: str, writing_t
         "task1": results["task1"], "task2": results["task2"], "essay": results["essay"],
         "overall_score": round(overall, 1), "overall_band": round(overall),
         "overall_percentage": round(pct, 1), "cefr_level": cefr,
-        "general_feedback": "AI Evaluation complete." if any(r.get("is_valid") for r in results.values()) else "Invalid submission - please write genuine English content."
+        "general_feedback": "AI baholash yakunlandi. Yozuvingiz barcha qismlar bo'yicha tahlil qilindi." if any(r.get("is_valid") for r in results.values()) else "Yuborilgan matn baholanmadi. Iltimos, ingliz tilida mazmunli javob yozing."
     }
 
 
@@ -1285,8 +1434,10 @@ ESSAY topic: {essay_instruction}
 === CANDIDATE ESSAY ({len(essay.split())} words) ===
 {essay[:3000]}
 
+IMPORTANT: general_feedback must be written in Uzbek (Latin script): 2-3 sentences overall summary and 1-2 short recommendations for the candidate. Other feedback fields can be in English.
+
 Return ONLY valid JSON (no markdown, no code blocks):
-{{"task1":{{"score":5,"content":"feedback","organization":"feedback","language":"feedback","accuracy":"feedback"}},"task2":{{"score":5,"content":"feedback","organization":"feedback","language":"feedback","accuracy":"feedback"}},"essay":{{"score":5,"task_achievement":"feedback","coherence_cohesion":"feedback","lexical_resource":"feedback","grammatical_range":"feedback"}},"general_feedback":"overall feedback"}}"""
+{{"task1":{{"score":5,"content":"feedback","organization":"feedback","language":"feedback","accuracy":"feedback"}},"task2":{{"score":5,"content":"feedback","organization":"feedback","language":"feedback","accuracy":"feedback"}},"essay":{{"score":5,"task_achievement":"feedback","coherence_cohesion":"feedback","lexical_resource":"feedback","grammatical_range":"feedback"}},"general_feedback":"umumiy xulosa va tavsiyalar o'zbekchada"}}"""
 
     def extract_json(text: str):
         """AI javobidan JSON ni ajratib olish - bir necha usul bilan sinab ko'radi"""
@@ -2015,18 +2166,9 @@ async def reading_test(request: Request):
         s = get_session(sid)
         s["user_id"] = user["id"]
 
-    tests = get_reading_tests()
-    test = random.choice(tests) if tests else DEFAULT_READING
-    test = dict(test)
-    test.setdefault("parts", [])
-    test["parts"] = sorted(test["parts"], key=lambda p: p.get("part_number", 0))
-    if not test["parts"] or test["parts"][0].get("type") != "open_cloze":
-        test = dict(DEFAULT_READING)
-        test["parts"] = sorted(test["parts"], key=lambda p: p.get("part_number", 0))
-    seen_ids = list(user.get("seen_reading_parts") or [])
-    test["parts"] = _order_parts_for_user(test["parts"], seen_ids, test.get("id", "reading_1"))
+    test = _build_test_from_all_tests("reading", user)
     s = get_session(sid)
-    s["reading_test_id"] = test.get("id", "reading_1")
+    s["reading_test_id"] = test.get("id", "reading_combined")
     t = get_translations(request)
     lang = get_lang(request)
     resp = templates.TemplateResponse("test_reading.html", {"request": request, "test_data": test, "session_id": sid, "t": t, "lang": lang, "user": user})
@@ -2038,22 +2180,30 @@ async def submit_reading(request: Request):
     sid = request.cookies.get("session_id")
     if not sid: return JSONResponse({"error": "No session"}, status_code=400)
     s = get_session(sid)
+    user_id = s.get("user_id")
+    user = get_user_by_id(user_id) if user_id else None
     fd = await request.form()
     answers = {k: v for k, v in fd.items() if k != "session_id"}
-    tests = get_reading_tests()
-    test_id = s.get("reading_test_id", "reading_1")
-    test = next((t for t in tests if t.get("id") == test_id), tests[0] if tests else DEFAULT_READING)
-    test = dict(test)
-    test.setdefault("parts", [])
-    test["parts"] = sorted(test["parts"], key=lambda p: p.get("part_number", 0))
-    if not test["parts"] or test["parts"][0].get("type") != "open_cloze":
-        test = dict(DEFAULT_READING)
-        test["parts"] = sorted(test["parts"], key=lambda p: p.get("part_number", 0))
+    # Rebuild test from all tests (same as when showing)
+    test = _build_test_from_all_tests("reading", user or {})
     result = calculate_reading_score(answers, test)
     s["reading"] = {"completed": True, "score": result["correct"], "total": result["total"], "percentage": result["percentage"], "details": result["details"]}
-    user_id = s.get("user_id")
     if user_id:
-        _mark_parts_seen(user_id, "reading", test.get("id", "reading_1"), test["parts"])
+        # Mark parts as seen - use _source_test_id if available
+        for part in test["parts"]:
+            pnum = part.get("part_number", 0)
+            source_test_id = part.get("_source_test_id")
+            if source_test_id:
+                _mark_parts_seen(user_id, "reading", source_test_id, [part])
+            else:
+                # Fallback: find original test
+                tests = get_reading_tests()
+                for t in tests:
+                    if t.get("parts"):
+                        for orig_part in t["parts"]:
+                            if orig_part.get("part_number") == pnum and orig_part.get("type") == part.get("type"):
+                                _mark_parts_seen(user_id, "reading", t.get("id", "reading_1"), [orig_part])
+                                break
     return JSONResponse({"success": True, "score": result["correct"], "total": result["total"], "percentage": result["percentage"], "redirect": "/test/listening"})
 
 @app.get("/test/listening", response_class=HTMLResponse)
@@ -2063,17 +2213,8 @@ async def listening_test(request: Request):
     s = get_session(sid)
     user_id = s.get("user_id")
     user = get_user_by_id(user_id) if user_id else None
-    seen_ids = list((user or {}).get("seen_listening_parts") or [])
-    tests = get_listening_tests()
-    test = random.choice(tests) if tests else DEFAULT_LISTENING
-    test = dict(test)
-    test.setdefault("parts", [])
-    test["parts"] = sorted(test["parts"], key=lambda p: p.get("part_number", 0))
-    if not test["parts"]:
-        test = dict(DEFAULT_LISTENING)
-        test["parts"] = sorted(test["parts"], key=lambda p: p.get("part_number", 0))
-    test["parts"] = _order_parts_for_user(test["parts"], seen_ids, test.get("id", "listening_1"))
-    s["listening_test_id"] = test.get("id", "listening_1")
+    test = _build_test_from_all_tests("listening", user or {})
+    s["listening_test_id"] = test.get("id", "listening_combined")
     t = get_translations(request)
     lang = get_lang(request)
     return templates.TemplateResponse("test_listening.html", {"request": request, "test_data": test, "session_id": sid, "t": t, "lang": lang})
@@ -2140,23 +2281,55 @@ async def submit_listening(request: Request):
     sid = request.cookies.get("session_id")
     if not sid: return JSONResponse({"error": "No session"}, status_code=400)
     s = get_session(sid)
+    user_id = s.get("user_id")
+    user = get_user_by_id(user_id) if user_id else None
     fd = await request.form()
     answers = {k: v for k, v in fd.items() if k != "session_id"}
-    tests = get_listening_tests()
-    test_id = s.get("listening_test_id", "listening_1")
-    test = next((t for t in tests if t.get("id") == test_id), tests[0] if tests else DEFAULT_LISTENING)
-    test = dict(test)
-    test.setdefault("parts", [])
-    test["parts"] = sorted(test["parts"], key=lambda p: p.get("part_number", 0))
-    if not test["parts"]:
-        test = dict(DEFAULT_LISTENING)
-        test["parts"] = sorted(test["parts"], key=lambda p: p.get("part_number", 0))
+    # Rebuild test from all tests (same as when showing)
+    test = _build_test_from_all_tests("listening", user or {})
     result = calculate_listening_score(answers, test)
     s["listening"] = {"completed": True, "score": result["correct"], "total": result["total"], "percentage": result["percentage"], "details": result["details"]}
-    user_id = s.get("user_id")
     if user_id:
-        _mark_parts_seen(user_id, "listening", test.get("id", "listening_1"), test["parts"])
+        # Mark parts as seen - use _source_test_id if available
+        for part in test["parts"]:
+            pnum = part.get("part_number", 0)
+            source_test_id = part.get("_source_test_id")
+            if source_test_id:
+                _mark_parts_seen(user_id, "listening", source_test_id, [part])
+            else:
+                # Fallback: find original test
+                tests = get_listening_tests()
+                for t in tests:
+                    if t.get("parts"):
+                        for orig_part in t["parts"]:
+                            if orig_part.get("part_number") == pnum and orig_part.get("type") == part.get("type"):
+                                _mark_parts_seen(user_id, "listening", t.get("id", "listening_1"), [orig_part])
+                                break
     return JSONResponse({"success": True, "score": result["correct"], "total": result["total"], "percentage": result["percentage"], "redirect": "/test/writing"})
+
+def _writing_test_for_display(test: dict) -> dict:
+    """Writing testdan partlarni Part 1 (tasks) va Part 2 (essay) tartibida qaytaradi — admin paneldan kelgan ma'lumot to'g'ri ko'rinsin."""
+    test = dict(test)
+    parts = list(test.get("parts") or [])
+    p1 = next((p for p in parts if p.get("type") == "tasks" or p.get("part_number") == 1), None)
+    p2 = next((p for p in parts if p.get("type") == "essay" or p.get("part_number") == 2), None)
+    if p1 is not None or p2 is not None:
+        test["parts"] = [p1 or _default_writing_part(1), p2 or _default_writing_part(2)]
+    elif parts:
+        parts.sort(key=lambda p: p.get("part_number", 99))
+        test["parts"] = parts
+    else:
+        test["parts"] = [DEFAULT_WRITING["parts"][0], DEFAULT_WRITING["parts"][1]]
+    return test
+
+
+def _default_writing_part(part_number: int) -> dict:
+    """DEFAULT_WRITING dan bitta part nusxasi."""
+    for p in DEFAULT_WRITING.get("parts", []):
+        if p.get("part_number") == part_number:
+            return dict(p)
+    return {}
+
 
 @app.get("/test/writing", response_class=HTMLResponse)
 async def writing_test(request: Request):
@@ -2164,6 +2337,7 @@ async def writing_test(request: Request):
     if not sid: return RedirectResponse(url="/dashboard", status_code=302)
     tests = get_writing_tests()
     test = tests[0] if tests else DEFAULT_WRITING
+    test = _writing_test_for_display(test)
     t = get_translations(request)
     lang = get_lang(request)
     return templates.TemplateResponse("test_writing.html", {"request": request, "test_data": test, "session_id": sid, "t": t, "lang": lang})
@@ -2178,6 +2352,7 @@ async def submit_writing(request: Request):
     essay = fd.get("essay", "")
     tests = get_writing_tests()
     test = tests[0] if tests else DEFAULT_WRITING
+    test = _writing_test_for_display(test)
     ev = await evaluate_writing_with_ai(t1, t2, essay, test)
     s = get_session(sid)
     s["writing"] = {"completed": True, "responses": {"task1": t1, "task2": t2, "essay": essay}, "evaluation": ev, "percentage": ev["overall_percentage"]}
@@ -2199,7 +2374,7 @@ async def results(request: Request):
     save_test_result(s)  # profil tarixiga saqlash
     t = get_translations(request)
     lang = get_lang(request)
-    return templates.TemplateResponse("results.html", {"request": request, "session": s, "cefr_levels": CEFR_LEVELS, "t": t, "lang": lang, "user": get_current_user(request)})
+    return templates.TemplateResponse("results.html", {"request": request, "session": s, "cefr_levels": CEFR_LEVELS, "t": t, "lang": lang, "user": get_current_user(request), "hide_nav": True})
 
 @app.post("/feedback/submit")
 async def submit_feedback(request: Request):

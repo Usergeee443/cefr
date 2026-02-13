@@ -473,11 +473,10 @@
                             <div class="space-y-5 md:space-y-6">
                                 {% for q in part.questions %}
                                 <div class="question-card p-5 md:p-6" data-question="{{ q.number }}" id="q-{{ q.number }}">
-                                    <div class="font-black text-white text-lg md:text-xl flex items-center gap-3 mb-2">
+                                    <div class="font-black text-white text-lg md:text-xl flex items-center gap-3 mb-3">
                                         <span class="w-8 h-8 bg-[#1CB0F6] rounded-lg flex items-center justify-center text-white text-sm font-black">{{ q.number }}</span>
                                         Question {{ q.number }}
                                     </div>
-                                    <div class="text-sm md:text-base text-[#777] mb-3 italic font-medium">{{ q.audio_description }}</div>
                                     <div class="space-y-2 md:space-y-3">
                                         {% for letter, option in q.options.items() %}
                                         <button type="button"

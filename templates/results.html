@@ -1,12 +1,15 @@
 {% extends "base_app.html" %}
-{% block title %}Test Results - CEFR{% endblock %}
+{% block title %}Natijalar - CEFR{% endblock %}
 {% block head %}
 <style>
     .score-ring { stroke-dasharray: 283; stroke-dashoffset: 283; animation: fillRing 1.5s ease-out forwards; }
     @keyframes fillRing { to { stroke-dashoffset: var(--offset); } }
 
-    .confetti { position: fixed; width: 10px; height: 10px; animation: confetti-fall 3s ease-out forwards; z-index: 100; pointer-events: none; }
-    @keyframes confetti-fall { 0% { transform: translateY(-100px) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+    .confetti { position: fixed; width: 12px; height: 12px; animation: confetti-fall 4s ease-out forwards; z-index: 100; pointer-events: none; }
+    @keyframes confetti-fall { 0% { transform: translateY(-20px) rotate(0deg) scale(1); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg) scale(0.3); opacity: 0; } }
+
+    .salute { position: fixed; font-size: 28px; animation: salute-up 2.5s ease-out forwards; z-index: 99; pointer-events: none; }
+    @keyframes salute-up { 0% { transform: translateY(0) scale(0.5); opacity: 1; } 100% { transform: translateY(-100vh) scale(1.2); opacity: 0; } }
 
     .level-badge-glow { animation: glow-pulse 2s ease-in-out infinite; }
     @keyframes glow-pulse {
@@ -78,24 +81,63 @@
     .pop-in-d1 { animation-delay: 0.1s; opacity: 0; }
     .pop-in-d2 { animation-delay: 0.2s; opacity: 0; }
     .pop-in-d3 { animation-delay: 0.3s; opacity: 0; }
+
+    .results-bottom-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 45;
+        background: var(--bg-card);
+        border-top: 2px solid var(--border-color);
+        padding: 16px 20px;
+        padding-bottom: calc(16px + env(safe-area-inset-bottom));
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+    .icon-results { width: 1.25em; height: 1.25em; display: inline-block; vertical-align: -0.2em; }
+    .icon-results-lg { width: 2rem; height: 2rem; }
+    .icon-results-xl { width: 3rem; height: 3rem; }
+    .icon-results-2xl { width: 4rem; height: 4rem; }
 </style>
+<svg xmlns="http://www.w3.org/2000/svg" class="hidden">
+    <symbol id="icon-trophy" viewBox="0 0 24 24" fill="currentColor"><path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 11.31 5 9.73 5 8zm14 0c0 1.73-.84 3.31-2 3.82V7h2v1z"/></symbol>
+    <symbol id="icon-medal" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7zm0 2c2.76 0 5 2.24 5 5 0 2.13-1.35 4-3.37 4.7L13 13.5V20h-2v-6.5l-.63-.8C8.35 13 7 11.13 7 9c0-2.76 2.24-5 5-5z"/></symbol>
+    <symbol id="icon-book" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></symbol>
+    <symbol id="icon-headphones" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h3c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9z"/></symbol>
+    <symbol id="icon-pencil" viewBox="0 0 24 24" fill="currentColor"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></symbol>
+    <symbol id="icon-sparkles" viewBox="0 0 24 24" fill="currentColor"><path d="M14.5 2L13 4l-1.5-2L10 4l1.5 2L10 8l1.5 2L13 8l-1.5-2L14.5 8l1.5-2L16 4l-1.5-2L14.5 2zm-9 8L3 15l2.5 5L9 15l-3.5-5L5.5 10zm15 0l-2.5 5 2.5 5 2.5-5-2.5-5zM12 14l-2 4 2 4 2-4-2-4z"/></symbol>
+    <symbol id="icon-lightbulb" viewBox="0 0 24 24" fill="currentColor"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zM12 2C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></symbol>
+    <symbol id="icon-check-circle" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></symbol>
+</svg>
 {% endblock %}
 {% block content %}
-<div class="max-w-5xl mx-auto py-6 md:py-10 px-4 pb-24">
-    <!-- Overall Result Hero -->
-    <div class="result-hero p-6 md:p-10 mb-6 md:mb-8 pop-in">
+<div class="max-w-5xl mx-auto py-6 md:py-10 px-4 pb-32">
+    <!-- Sarlavha (ikonlarsiz) -->
+    <div class="text-center mb-6">
+        <h1 class="text-xl md:text-2xl font-black text-[#58CC02] uppercase tracking-wide">Tabriklaymiz! Test yakunlandi</h1>
+        <p class="text-[#AFAFAF] text-sm md:text-base mt-1">Sizning barcha javoblaringiz hisobga olindi</p>
+    </div>
+
+    <!-- Sizning CEFR darajangiz – yangilangan dizayn -->
+    <div class="result-hero p-6 md:p-8 mb-6 md:mb-8 pop-in">
         <div class="text-center relative z-10">
-            <div class="text-5xl md:text-6xl mb-4">&#127942;</div>
-            <p class="text-[#AFAFAF] mb-4 md:mb-6 text-sm md:text-lg font-bold uppercase tracking-wider">{% if lang == 'uz' %}Sizning CEFR darajangiz{% else %}Your CEFR Level{% endif %}</p>
+            <p class="text-[#777] text-xs md:text-sm font-bold uppercase tracking-widest mb-6">Sizning CEFR darajangiz</p>
 
-            <div class="level-badge-glow inline-block bg-[#131F24] border-2 border-[#58CC02]/40 p-6 md:p-10 rounded-3xl mb-6">
-                <div class="text-6xl md:text-8xl font-black text-[#58CC02] mb-2" style="text-shadow: 0 4px 0 #46A302;">{{ session.cefr_level }}</div>
-                <div class="text-base md:text-xl text-[#AFAFAF] font-bold">{{ session.level_description }}</div>
-            </div>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-10 mb-0">
+                <!-- CEFR daraja kartasi -->
+                <div class="cefr-level-card flex flex-col items-center justify-center min-w-[200px] md:min-w-[260px] py-8 px-6 md:py-10 md:px-8 rounded-2xl bg-[#131F24] border-2 border-[#2B4148]">
+                    <span class="text-[#58CC02] text-7xl md:text-8xl font-black leading-none" style="text-shadow: 0 3px 0 #46A302;">{{ session.cefr_level }}</span>
+                    <span class="text-[#AFAFAF] text-sm md:text-base font-bold mt-3 text-center max-w-[180px]">{{ session.level_description }}</span>
+                </div>
 
-            <div class="inline-flex items-center gap-2 bg-[#FF9600]/15 border-2 border-[#FF9600]/30 px-6 md:px-8 py-3 md:py-4 rounded-2xl">
-                <span class="text-3xl md:text-5xl font-black text-[#FF9600]">{{ session.overall_score }}%</span>
-                <span class="text-sm text-[#AFAFAF] font-bold uppercase tracking-wider ml-2">{% if lang == 'uz' %}Umumiy ball{% else %}Overall{% endif %}</span>
+                <!-- Umumiy ball -->
+                <div class="cefr-score-card flex flex-col items-center justify-center min-w-[160px] md:min-w-[200px] py-6 px-6 md:py-8 md:px-8 rounded-2xl bg-[#1A2C32] border-2 border-[#FF9600]/40">
+                    <span class="text-[#FF9600] text-4xl md:text-5xl font-black">{{ session.overall_score }}%</span>
+                    <span class="text-[#AFAFAF] text-xs md:text-sm font-bold uppercase tracking-wider mt-2">Umumiy ball</span>
+                </div>
             </div>
         </div>
     </div>
@@ -105,8 +147,10 @@
         <!-- Reading -->
         <div class="score-card-3d p-4 md:p-6 pop-in pop-in-d1">
             <div class="text-center">
-                <div class="text-2xl md:text-3xl mb-2">&#128214;</div>
-                <h3 class="text-sm md:text-lg font-black text-white mb-2 md:mb-3">Reading</h3>
+                <div class="inline-flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-xl bg-[#1CB0F6]/20 text-[#1CB0F6] mb-2">
+                    <svg class="w-6 h-6 md:w-7 md:h-7"><use href="#icon-book"/></svg>
+                </div>
+                <h3 class="text-sm md:text-lg font-black text-white mb-2 md:mb-3">O'qish</h3>
                 <div class="relative inline-block">
                     <svg class="w-20 h-20 md:w-28 md:h-28" viewBox="0 0 100 100">
                         <circle cx="50" cy="50" r="42" stroke="var(--border-color)" stroke-width="8" fill="none"/>
@@ -125,8 +169,10 @@
         <!-- Listening -->
         <div class="score-card-3d p-4 md:p-6 pop-in pop-in-d2">
             <div class="text-center">
-                <div class="text-2xl md:text-3xl mb-2">&#127911;</div>
-                <h3 class="text-sm md:text-lg font-black text-white mb-2 md:mb-3">Listening</h3>
+                <div class="inline-flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-xl bg-[#CE82FF]/20 text-[#CE82FF] mb-2">
+                    <svg class="w-6 h-6 md:w-7 md:h-7"><use href="#icon-headphones"/></svg>
+                </div>
+                <h3 class="text-sm md:text-lg font-black text-white mb-2 md:mb-3">Tinglash</h3>
                 <div class="relative inline-block">
                     <svg class="w-20 h-20 md:w-28 md:h-28" viewBox="0 0 100 100">
                         <circle cx="50" cy="50" r="42" stroke="var(--border-color)" stroke-width="8" fill="none"/>
@@ -145,8 +191,10 @@
         <!-- Writing -->
         <div class="score-card-3d p-4 md:p-6 pop-in pop-in-d3">
             <div class="text-center">
-                <div class="text-2xl md:text-3xl mb-2">&#9997;&#65039;</div>
-                <h3 class="text-sm md:text-lg font-black text-white mb-2 md:mb-3">Writing</h3>
+                <div class="inline-flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-xl bg-[#58CC02]/20 text-[#58CC02] mb-2">
+                    <svg class="w-6 h-6 md:w-7 md:h-7"><use href="#icon-pencil"/></svg>
+                </div>
+                <h3 class="text-sm md:text-lg font-black text-white mb-2 md:mb-3">Yozuv</h3>
                 <div class="relative inline-block">
                     <svg class="w-20 h-20 md:w-28 md:h-28" viewBox="0 0 100 100">
                         <circle cx="50" cy="50" r="42" stroke="var(--border-color)" stroke-width="8" fill="none"/>
@@ -168,7 +216,8 @@
     <div class="duo-card overflow-hidden mb-6 md:mb-8">
         <div class="p-4 md:p-6 border-b-2 border-[#2B4148]" style="background: linear-gradient(135deg, var(--bg-card) 0%, #1E3A42 100%);">
             <h2 class="text-lg md:text-xl font-black text-white flex items-center gap-3">
-                &#128214; Reading – {% if lang == 'uz' %}javoblar{% else %}Answers{% endif %}
+                <svg class="w-6 h-6 text-[#1CB0F6]"><use href="#icon-book"/></svg>
+                O'qish – javoblar
             </h2>
         </div>
         <div class="p-3 md:p-6">
@@ -178,8 +227,8 @@
                         <tr>
                             <th class="px-2 md:px-4 py-2 md:py-3 font-bold">Part</th>
                             <th class="px-2 md:px-4 py-2 md:py-3 font-bold">Q</th>
-                            <th class="px-2 md:px-4 py-2 md:py-3 font-bold">{% if lang == 'uz' %}Javob{% else %}Answer{% endif %}</th>
-                            <th class="px-2 md:px-4 py-2 md:py-3 font-bold">{% if lang == 'uz' %}To'g'ri{% else %}Correct{% endif %}</th>
+                            <th class="px-2 md:px-4 py-2 md:py-3 font-bold">Javob</th>
+                            <th class="px-2 md:px-4 py-2 md:py-3 font-bold">To'g'ri</th>
                             <th class="px-2 md:px-4 py-2 md:py-3 font-bold"></th>
                         </tr>
                     </thead>
@@ -217,7 +266,8 @@
     <div class="duo-card overflow-hidden mb-6 md:mb-8">
         <div class="p-4 md:p-6 border-b-2 border-[#2B4148]" style="background: linear-gradient(135deg, var(--bg-card) 0%, #1E3A42 100%);">
             <h2 class="text-lg md:text-xl font-black text-white flex items-center gap-3">
-                &#127911; Listening – {% if lang == 'uz' %}javoblar{% else %}Answers{% endif %}
+                <svg class="w-6 h-6 text-[#CE82FF]"><use href="#icon-headphones"/></svg>
+                Tinglash – javoblar
             </h2>
         </div>
         <div class="p-3 md:p-6">
@@ -227,8 +277,8 @@
                         <tr>
                             <th class="px-2 md:px-4 py-2 md:py-3 font-bold">Part</th>
                             <th class="px-2 md:px-4 py-2 md:py-3 font-bold">Q</th>
-                            <th class="px-2 md:px-4 py-2 md:py-3 font-bold">{% if lang == 'uz' %}Javob{% else %}Answer{% endif %}</th>
-                            <th class="px-2 md:px-4 py-2 md:py-3 font-bold">{% if lang == 'uz' %}To'g'ri{% else %}Correct{% endif %}</th>
+                            <th class="px-2 md:px-4 py-2 md:py-3 font-bold">Javob</th>
+                            <th class="px-2 md:px-4 py-2 md:py-3 font-bold">To'g'ri</th>
                             <th class="px-2 md:px-4 py-2 md:py-3 font-bold"></th>
                         </tr>
                     </thead>
@@ -265,9 +315,10 @@
     <div class="duo-card overflow-hidden mb-6 md:mb-8">
         <div class="p-4 md:p-6 border-b-2 border-[#2B4148]" style="background: linear-gradient(135deg, var(--bg-card) 0%, #1E3A42 100%);">
             <h2 class="text-lg md:text-xl font-black text-white flex items-center gap-3">
-                &#9997;&#65039; {% if lang == 'uz' %}Writing baholash{% else %}Writing Evaluation{% endif %}
+                <svg class="w-6 h-6 text-[#58CC02]"><use href="#icon-pencil"/></svg>
+                Yozuv – AI baholash
             </h2>
-            <p class="text-[#777] text-xs md:text-sm mt-1 font-medium">{% if lang == 'uz' %}AI tomonidan baholangan{% else %}AI-powered assessment{% endif %}</p>
+            <p class="text-[#777] text-xs md:text-sm mt-1 font-medium">Sun'iy intellekt tomonidan batafsil tahlil qilindi</p>
         </div>
 
         <div class="p-4 md:p-6">
@@ -276,7 +327,7 @@
                 <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
                     <h3 class="text-base md:text-lg font-black text-white flex items-center gap-2">
                         <span class="w-7 h-7 md:w-8 md:h-8 bg-[#1CB0F6] rounded-lg flex items-center justify-center text-white text-xs md:text-sm font-black" style="box-shadow: 0 3px 0 #1899D6;">1</span>
-                        Task 1
+                        Vazifa 1
                     </h3>
                     <div class="flex items-center gap-2">
                         <span class="px-3 py-1 bg-[#1CB0F6]/15 text-[#1CB0F6] text-xs md:text-sm font-black rounded-xl border border-[#1CB0F6]/30">
@@ -290,19 +341,19 @@
                 </div>
                 <div class="grid grid-cols-2 gap-2 md:gap-3">
                     <div class="feedback-card">
-                        <h4 class="font-black text-[#1CB0F6] mb-1 text-xs">Content</h4>
+                        <h4 class="font-black text-[#1CB0F6] mb-1 text-xs">Mazmun</h4>
                         <p class="text-xs text-[#AFAFAF] font-medium">{{ session.writing.evaluation.task1.feedback.content }}</p>
                     </div>
                     <div class="feedback-card">
-                        <h4 class="font-black text-[#CE82FF] mb-1 text-xs">Organization</h4>
+                        <h4 class="font-black text-[#CE82FF] mb-1 text-xs">Tashkilot</h4>
                         <p class="text-xs text-[#AFAFAF] font-medium">{{ session.writing.evaluation.task1.feedback.organization }}</p>
                     </div>
                     <div class="feedback-card">
-                        <h4 class="font-black text-[#FF9600] mb-1 text-xs">Language</h4>
+                        <h4 class="font-black text-[#FF9600] mb-1 text-xs">Til</h4>
                         <p class="text-xs text-[#AFAFAF] font-medium">{{ session.writing.evaluation.task1.feedback.language }}</p>
                     </div>
                     <div class="feedback-card">
-                        <h4 class="font-black text-[#FFC800] mb-1 text-xs">Accuracy</h4>
+                        <h4 class="font-black text-[#FFC800] mb-1 text-xs">Aniqlik</h4>
                         <p class="text-xs text-[#AFAFAF] font-medium">{{ session.writing.evaluation.task1.feedback.accuracy }}</p>
                     </div>
                 </div>
@@ -313,7 +364,7 @@
                 <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
                     <h3 class="text-base md:text-lg font-black text-white flex items-center gap-2">
                         <span class="w-7 h-7 md:w-8 md:h-8 bg-[#CE82FF] rounded-lg flex items-center justify-center text-white text-xs md:text-sm font-black" style="box-shadow: 0 3px 0 #A560E8;">2</span>
-                        Task 2
+                        Vazifa 2
                     </h3>
                     <div class="flex items-center gap-2">
                         <span class="px-3 py-1 bg-[#CE82FF]/15 text-[#CE82FF] text-xs md:text-sm font-black rounded-xl border border-[#CE82FF]/30">
@@ -327,19 +378,19 @@
                 </div>
                 <div class="grid grid-cols-2 gap-2 md:gap-3">
                     <div class="feedback-card">
-                        <h4 class="font-black text-[#1CB0F6] mb-1 text-xs">Content</h4>
+                        <h4 class="font-black text-[#1CB0F6] mb-1 text-xs">Mazmun</h4>
                         <p class="text-xs text-[#AFAFAF] font-medium">{{ session.writing.evaluation.task2.feedback.content }}</p>
                     </div>
                     <div class="feedback-card">
-                        <h4 class="font-black text-[#CE82FF] mb-1 text-xs">Organization</h4>
+                        <h4 class="font-black text-[#CE82FF] mb-1 text-xs">Tashkilot</h4>
                         <p class="text-xs text-[#AFAFAF] font-medium">{{ session.writing.evaluation.task2.feedback.organization }}</p>
                     </div>
                     <div class="feedback-card">
-                        <h4 class="font-black text-[#FF9600] mb-1 text-xs">Language</h4>
+                        <h4 class="font-black text-[#FF9600] mb-1 text-xs">Til</h4>
                         <p class="text-xs text-[#AFAFAF] font-medium">{{ session.writing.evaluation.task2.feedback.language }}</p>
                     </div>
                     <div class="feedback-card">
-                        <h4 class="font-black text-[#FFC800] mb-1 text-xs">Accuracy</h4>
+                        <h4 class="font-black text-[#FFC800] mb-1 text-xs">Aniqlik</h4>
                         <p class="text-xs text-[#AFAFAF] font-medium">{{ session.writing.evaluation.task2.feedback.accuracy }}</p>
                     </div>
                 </div>
@@ -350,7 +401,7 @@
                 <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
                     <h3 class="text-base md:text-lg font-black text-white flex items-center gap-2">
                         <span class="w-7 h-7 md:w-8 md:h-8 bg-[#58CC02] rounded-lg flex items-center justify-center text-white text-xs md:text-sm font-black" style="box-shadow: 0 3px 0 #46A302;">3</span>
-                        Essay
+                        Insho (Part 2)
                     </h3>
                     <div class="flex items-center gap-2">
                         <span class="px-3 py-1 bg-[#58CC02]/15 text-[#58CC02] text-xs md:text-sm font-black rounded-xl border border-[#58CC02]/30">
@@ -364,30 +415,32 @@
                 </div>
                 <div class="grid grid-cols-2 gap-2 md:gap-3">
                     <div class="feedback-card">
-                        <h4 class="font-black text-[#1CB0F6] mb-1 text-xs">Task Achievement</h4>
+                        <h4 class="font-black text-[#1CB0F6] mb-1 text-xs">Vazifa bajarilishi</h4>
                         <p class="text-xs text-[#AFAFAF] font-medium">{{ session.writing.evaluation.essay.feedback.task_achievement }}</p>
                     </div>
                     <div class="feedback-card">
-                        <h4 class="font-black text-[#CE82FF] mb-1 text-xs">Coherence</h4>
+                        <h4 class="font-black text-[#CE82FF] mb-1 text-xs">Uyg'unlik va bog'lanish</h4>
                         <p class="text-xs text-[#AFAFAF] font-medium">{{ session.writing.evaluation.essay.feedback.coherence_cohesion }}</p>
                     </div>
                     <div class="feedback-card">
-                        <h4 class="font-black text-[#FF9600] mb-1 text-xs">Lexical Resource</h4>
+                        <h4 class="font-black text-[#FF9600] mb-1 text-xs">So'z boyligi</h4>
                         <p class="text-xs text-[#AFAFAF] font-medium">{{ session.writing.evaluation.essay.feedback.lexical_resource }}</p>
                     </div>
                     <div class="feedback-card">
-                        <h4 class="font-black text-[#FFC800] mb-1 text-xs">Grammar</h4>
+                        <h4 class="font-black text-[#FFC800] mb-1 text-xs">Grammatika</h4>
                         <p class="text-xs text-[#AFAFAF] font-medium">{{ session.writing.evaluation.essay.feedback.grammatical_range }}</p>
                     </div>
                 </div>
             </div>
 
+            <!-- AI umumiy tahlili -->
             {% if session.writing.evaluation.general_feedback %}
-            <div class="mt-6 p-4 md:p-5 bg-[#58CC02]/10 border-2 border-[#58CC02]/30 rounded-2xl">
-                <h4 class="font-black text-[#58CC02] mb-2 flex items-center gap-2 text-sm">
-                    &#128161; {% if lang == 'uz' %}Umumiy tavsiyalar{% else %}Overall Recommendations{% endif %}
+            <div class="mt-6 p-4 md:p-5 bg-[#CE82FF]/10 border-2 border-[#CE82FF]/30 rounded-2xl">
+                <h4 class="font-black text-[#CE82FF] mb-2 flex items-center gap-2 text-sm">
+                    <svg class="w-5 h-5"><use href="#icon-lightbulb"/></svg>
+                    AI umumiy tahlili va tavsiyalar
                 </h4>
-                <p class="text-[#AFAFAF] font-medium text-sm">{{ session.writing.evaluation.general_feedback }}</p>
+                <p class="text-[#AFAFAF] font-medium text-sm leading-relaxed">{{ session.writing.evaluation.general_feedback }}</p>
             </div>
             {% endif %}
         </div>
@@ -395,8 +448,9 @@
 
     <!-- CEFR Level Guide -->
     <div class="duo-card p-4 md:p-6 mb-6 md:mb-8">
-        <h3 class="text-lg md:text-xl font-black text-white mb-4 md:mb-6">
-            &#128218; CEFR {% if lang == 'uz' %}Darajalar{% else %}Levels{% endif %}
+        <h3 class="text-lg md:text-xl font-black text-white mb-4 md:mb-6 flex items-center gap-2">
+            <svg class="w-6 h-6 text-[#58CC02]"><use href="#icon-book"/></svg>
+            CEFR darajalar
         </h3>
         <div class="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3">
             {% for level, data in cefr_levels.items() %}
@@ -404,7 +458,7 @@
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-xl md:text-2xl font-black {% if session.cefr_level == level %}text-[#58CC02]{% else %}text-[#777]{% endif %}">{{ level }}</span>
                     {% if session.cefr_level == level %}
-                    <span class="px-2 py-0.5 bg-[#58CC02] text-white text-[10px] font-black rounded-full" style="box-shadow: 0 2px 0 #46A302;">YOU</span>
+                    <span class="px-2 py-0.5 bg-[#58CC02] text-white text-[10px] font-black rounded-full" style="box-shadow: 0 2px 0 #46A302;">SIZ</span>
                     {% endif %}
                 </div>
                 <p class="text-[10px] md:text-xs {% if session.cefr_level == level %}text-[#AFAFAF]{% else %}text-[#555]{% endif %} font-medium">{{ data.description }}</p>
@@ -418,14 +472,14 @@
         <div class="p-4 md:p-6 border-b-2 border-[#2B4148]" style="background: linear-gradient(135deg, var(--bg-card) 0%, #1E3A42 100%);">
             <div class="flex items-center gap-3">
                 <span class="px-3 py-1 bg-[#FF9600] text-white text-xs font-black rounded-full" style="box-shadow: 0 2px 0 var(--duo-orange-dark);">BETA</span>
-                <h2 class="text-base md:text-xl font-black text-white">{% if lang == 'uz' %}Bizga yordam bering!{% else %}Help Us Improve!{% endif %}</h2>
+                <h2 class="text-base md:text-xl font-black text-white">Bizga yordam bering!</h2>
             </div>
         </div>
 
         <form id="feedback-form" class="p-4 md:p-6">
             <div class="grid grid-cols-2 gap-3 md:gap-6 mb-4 md:mb-6">
                 <div>
-                    <label class="block text-xs md:text-sm font-bold text-[#AFAFAF] mb-2">{% if lang == 'uz' %}Baho (1-5){% else %}Rating{% endif %}</label>
+                    <label class="block text-xs md:text-sm font-bold text-[#AFAFAF] mb-2">Baho (1-5)</label>
                     <div class="flex gap-1 md:gap-2">
                         {% for i in range(1, 6) %}
                         <button type="button" class="rating-btn w-8 h-8 md:w-10 md:h-10 border-2 border-[#2B4148] bg-[#131F24] text-[#777] hover:border-[#58CC02] hover:text-[#58CC02] transition rounded-xl font-black text-sm" data-value="{{ i }}">{{ i }}</button>
@@ -434,79 +488,93 @@
                     <input type="hidden" name="rating" id="rating" value="">
                 </div>
                 <div>
-                    <label class="block text-xs md:text-sm font-bold text-[#AFAFAF] mb-2">{% if lang == 'uz' %}Qiyinlik{% else %}Difficulty{% endif %}</label>
+                    <label class="block text-xs md:text-sm font-bold text-[#AFAFAF] mb-2">Qiyinlik</label>
                     <select name="difficulty" class="w-full bg-[#131F24] border-2 border-[#2B4148] text-white px-3 py-2 rounded-xl focus:border-[#58CC02] outline-none font-medium text-sm">
-                        <option value="">{% if lang == 'uz' %}Tanlang{% else %}Select{% endif %}</option>
-                        <option value="easy">{% if lang == 'uz' %}Oson{% else %}Easy{% endif %}</option>
-                        <option value="medium">{% if lang == 'uz' %}O'rtacha{% else %}Medium{% endif %}</option>
-                        <option value="hard">{% if lang == 'uz' %}Qiyin{% else %}Hard{% endif %}</option>
+                        <option value="">Tanlang</option>
+                        <option value="easy">Oson</option>
+                        <option value="medium">O'rtacha</option>
+                        <option value="hard">Qiyin</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs md:text-sm font-bold text-[#AFAFAF] mb-2">{% if lang == 'uz' %}Aniqlik{% else %}Accuracy{% endif %}</label>
+                    <label class="block text-xs md:text-sm font-bold text-[#AFAFAF] mb-2">Aniqlik</label>
                     <select name="accuracy" class="w-full bg-[#131F24] border-2 border-[#2B4148] text-white px-3 py-2 rounded-xl focus:border-[#58CC02] outline-none font-medium text-sm">
-                        <option value="">{% if lang == 'uz' %}Tanlang{% else %}Select{% endif %}</option>
-                        <option value="accurate">{% if lang == 'uz' %}Aniq{% else %}Accurate{% endif %}</option>
-                        <option value="somewhat">{% if lang == 'uz' %}Biroz{% else %}Somewhat{% endif %}</option>
-                        <option value="not_accurate">{% if lang == 'uz' %}Noaniq{% else %}Inaccurate{% endif %}</option>
+                        <option value="">Tanlang</option>
+                        <option value="accurate">Aniq</option>
+                        <option value="somewhat">Biroz</option>
+                        <option value="not_accurate">Noaniq</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs md:text-sm font-bold text-[#AFAFAF] mb-2">{% if lang == 'uz' %}Tavsiya{% else %}Recommend?{% endif %}</label>
+                    <label class="block text-xs md:text-sm font-bold text-[#AFAFAF] mb-2">Tavsiya qilasizmi?</label>
                     <select name="recommend" class="w-full bg-[#131F24] border-2 border-[#2B4148] text-white px-3 py-2 rounded-xl focus:border-[#58CC02] outline-none font-medium text-sm">
-                        <option value="">{% if lang == 'uz' %}Tanlang{% else %}Select{% endif %}</option>
-                        <option value="yes">{% if lang == 'uz' %}Ha{% else %}Yes{% endif %}</option>
-                        <option value="maybe">{% if lang == 'uz' %}Balki{% else %}Maybe{% endif %}</option>
-                        <option value="no">{% if lang == 'uz' %}Yo'q{% else %}No{% endif %}</option>
+                        <option value="">Tanlang</option>
+                        <option value="yes">Ha</option>
+                        <option value="maybe">Balki</option>
+                        <option value="no">Yo'q</option>
                     </select>
                 </div>
             </div>
 
             <div class="mb-4">
-                <textarea name="suggestions" rows="3" class="w-full bg-[#131F24] border-2 border-[#2B4148] text-white px-3 py-2 rounded-xl focus:border-[#58CC02] outline-none font-medium text-sm" placeholder="{% if lang == 'uz' %}Fikr-mulohazangiz...{% else %}Your feedback...{% endif %}"></textarea>
+                <textarea name="suggestions" rows="3" class="w-full bg-[#131F24] border-2 border-[#2B4148] text-white px-3 py-2 rounded-xl focus:border-[#58CC02] outline-none font-medium text-sm" placeholder="Fikr-mulohazangiz..."></textarea>
             </div>
 
-            <button type="submit" class="btn-duo btn-duo-green w-full py-3 text-sm">
-                {% if lang == 'uz' %}Yuborish{% else %}Submit{% endif %}
-            </button>
+            <button type="submit" class="btn-duo btn-duo-green w-full py-3 text-sm">Yuborish</button>
         </form>
 
         <div id="feedback-success" class="hidden p-6 md:p-8 text-center">
-            <div class="text-5xl mb-3">&#127881;</div>
-            <h3 class="text-xl font-black text-white mb-2">{% if lang == 'uz' %}Rahmat!{% else %}Thank you!{% endif %}</h3>
-            <p class="text-[#AFAFAF] font-medium text-sm">{% if lang == 'uz' %}Fikringiz muvaffaqiyatli yuborildi{% else %}Feedback submitted successfully{% endif %}</p>
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#58CC02]/20 text-[#58CC02] mb-3">
+                <svg class="w-10 h-10"><use href="#icon-check-circle"/></svg>
+            </div>
+            <h3 class="text-xl font-black text-white mb-2">Rahmat!</h3>
+            <p class="text-[#AFAFAF] font-medium text-sm">Fikringiz muvaffaqiyatli yuborildi.</p>
         </div>
     </div>
-
-    <!-- Actions -->
-    <div class="flex flex-col sm:flex-row gap-3 justify-center">
-        <a href="/dashboard" class="btn-duo btn-duo-green px-8 md:px-10 py-3 md:py-4 text-sm md:text-lg text-center">
-            {% if lang == 'uz' %}Dashboard{% else %}Dashboard{% endif %}
-        </a>
-        <a href="/test/reading" class="btn-duo btn-duo-blue px-8 md:px-10 py-3 md:py-4 text-sm md:text-lg text-center">
-            {% if lang == 'uz' %}Yangi test{% else %}New Test{% endif %}
-        </a>
-    </div>
 </div>
+
+<!-- Pastki panel: faqat Yangi test va Dashboard -->
+<footer class="results-bottom-bar">
+    <a href="/test/reading" class="btn-duo btn-duo-blue px-8 md:px-10 py-3 md:py-4 text-sm md:text-base font-black">Yangi test</a>
+    <a href="/dashboard" class="btn-duo btn-duo-green px-8 md:px-10 py-3 md:py-4 text-sm md:text-base font-black">Dashboard</a>
+</footer>
 {% endblock %}
 {% block scripts %}
 <script>
-// Confetti
+// Salyut / bayram – SVG ikonlar
+function createSalute() {
+    const iconIds = ['icon-trophy', 'icon-medal', 'icon-sparkles', 'icon-check-circle'];
+    const colors = ['#58CC02', '#FFC800', '#FF9600', '#1CB0F6', '#CE82FF'];
+    for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+            const s = document.createElement('div');
+            s.className = 'salute';
+            s.style.left = Math.random() * 100 + 'vw';
+            s.style.bottom = '0';
+            s.style.color = colors[Math.floor(Math.random() * colors.length)];
+            s.innerHTML = '<svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor"><use href="#' + iconIds[Math.floor(Math.random() * iconIds.length)] + '"/></svg>';
+            document.body.appendChild(s);
+            setTimeout(() => s.remove(), 2600);
+        }, i * 80);
+    }
+}
+// Konfetti
 function createConfetti() {
     const colors = ['#58CC02', '#1CB0F6', '#CE82FF', '#FF9600', '#FFC800', '#FF4B4B'];
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 70; i++) {
         setTimeout(() => {
             const c = document.createElement('div');
             c.className = 'confetti';
             c.style.left = Math.random() * 100 + 'vw';
             c.style.background = colors[Math.floor(Math.random() * colors.length)];
             c.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
-            c.style.animationDelay = Math.random() * 0.5 + 's';
+            c.style.animationDelay = Math.random() * 0.6 + 's';
             document.body.appendChild(c);
-            setTimeout(() => c.remove(), 3500);
-        }, i * 30);
+            setTimeout(() => c.remove(), 4200);
+        }, i * 25);
     }
 }
+createSalute();
 createConfetti();
 
 // Rating buttons

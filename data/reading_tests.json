@@ -8,9 +8,9 @@
         {
           "part_number": 1,
           "title": "Part 1: Open Cloze",
-          "instruction": "For questions 1-8, read the text below and think of the word which best fits each gap. Use only ONE word in each gap.",
+          "instruction": "For questions 1-6, read the text below and think of the word which best fits each gap. Use only ONE word in each gap.",
           "type": "open_cloze",
-          "text": "Climate Change and Its Impact\n\nClimate change is one of (1)_____ most pressing issues facing our planet today. Scientists agree that human activities, particularly the burning of fossil fuels, (2)_____ responsible for the rising global temperatures we are experiencing.\n\nThe effects of climate change are already (3)_____ felt around the world. Extreme weather events such (4)_____ hurricanes, floods, and droughts are becoming more frequent and severe. Sea levels are rising, threatening coastal communities and island nations.\n\n(5)_____ order to address this crisis, governments and individuals must take action. Reducing carbon emissions, investing in renewable energy, and protecting forests are all essential steps. However, time is running (6)_____. If we do not act quickly, the consequences (7)_____ be catastrophic.\n\nEach of us has a role to play. Simple changes in (8)_____ daily lives, such as using public transportation, reducing waste, and conserving energy, can make a difference.",
+          "text": "Climate Change and Its Impact\n\nClimate change is one of (1)_____ most pressing issues facing our planet today. Scientists agree that human activities, particularly the burning of fossil fuels, (2)_____ responsible for the rising global temperatures we are experiencing.\n\nThe effects of climate change are already (3)_____ felt around the world. Extreme weather events such (4)_____ hurricanes, floods, and droughts are becoming more frequent and severe. Sea levels are rising, threatening coastal communities and island nations.\n\n(5)_____ order to address this crisis, governments and individuals must take action. Reducing carbon emissions, investing in renewable energy, and protecting forests are all essential steps. However, time is running (6)_____. If we do not act quickly, the consequences will be catastrophic.",
           "questions": [
             {
               "number": 1,
@@ -35,14 +35,6 @@
             {
               "number": 6,
               "correct": "out"
-            },
-            {
-              "number": 7,
-              "correct": "will"
-            },
-            {
-              "number": 8,
-              "correct": "our"
             }
           ]
         },
@@ -193,52 +185,84 @@
         },
         {
           "part_number": 3,
-          "title": "Part 3: Gapped Text (6 paragraphs, 8 options A–H)",
-          "instruction": "Six sentences have been removed from the article. Choose from the sentences A–H the one which fits each gap (17–22). There are two extra sentences.",
-          "type": "gapped_text",
-          "text": "Living Sustainably in the Modern World\n\nSustainable living is no longer just a trend but a necessity in our rapidly changing world. With climate change accelerating and natural resources depleting, individuals are looking for ways to reduce their environmental impact. (17)_____\n\nOne of the most effective ways to live more sustainably is to reduce consumption. (18)_____ By being mindful of what we purchase and choosing quality over quantity, we can significantly decrease our environmental footprint.\n\nFood choices also play a crucial role in sustainable living. The production of meat, particularly beef, generates significant greenhouse gas emissions. (19)_____ Even small changes, like participating in \"Meatless Mondays,\" can make a difference.\n\nTransportation is another area where individuals can make impactful changes. (20)_____ For those who need to drive, choosing fuel-efficient or electric vehicles is a step in the right direction.\n\nEnergy consumption at home offers numerous opportunities for sustainability. (21)_____ Additionally, unplugging devices when not in use and using natural light whenever possible can reduce energy bills and environmental impact.\n\nWater conservation is equally important. Simple practices such as fixing leaky faucets, taking shorter showers, and collecting rainwater for gardens can save thousands of liters annually. (22)_____ With these small but consistent efforts, each of us can contribute to a more sustainable future.",
-          "removed_sentences": {
-            "A": "Walking, cycling, or using public transportation can dramatically reduce carbon emissions from daily commutes.",
-            "B": "This is especially important in regions experiencing water scarcity due to climate change.",
-            "C": "Fortunately, there are many practical steps that anyone can take to live more sustainably.",
-            "D": "Installing solar panels, using LED bulbs, and choosing energy-efficient appliances can all reduce household energy consumption.",
-            "E": "Many companies are now adopting sustainable practices in their operations.",
-            "F": "We live in a consumer society where buying more is often seen as a sign of success.",
-            "G": "Reducing meat consumption or switching to a plant-based diet can lower an individual's carbon footprint significantly.",
-            "H": "Governments worldwide are introducing new laws to limit plastic use and promote recycling."
+          "title": "Part 3: Matching Headings to Paragraphs",
+          "instruction": "Read the text and choose the correct heading for each paragraph from the list of headings below. There are more headings than paragraphs, so you will not use all of them. You cannot use any heading more than once.",
+          "type": "matching_headings",
+          "main_title": "HOW DOES THE BIOLOGICAL CLOCK TICK?",
+          "headings": {
+            "A": "The biological clock",
+            "B": "Why dying is beneficial",
+            "C": "The ageing process of men and women",
+            "D": "Prolonging your life",
+            "E": "Limitations of life span",
+            "F": "Modes of development of different species",
+            "G": "A stable life span despite improvements",
+            "H": "Energy consumption"
           },
+          "paragraphs": [
+            {
+              "number": "I",
+              "text": "Our life span is restricted. Everyone accepts this as 'biologically' obvious. 'Nothing lives for ever!' However, in this statement we think of artificially produced, technical objects, products which are subjected to natural wear and tear during use. This leads to the result that at some time or other the object stops working and is unusable ('death' in the biological sense). But are the wear and tear and loss of function of technical objects and the death of living organisms really similar or comparable?"
+            },
+            {
+              "number": "II",
+              "text": "Thus ageing and death should not be seen as inevitable, particularly as the organism possesses many mechanisms for repair. It is not, in principle, necessary for a biological system to age and die. Nevertheless, a restricted life span, ageing, and then death are basic characteristics of life. The reason for this is easy to recognise: in nature, the existent organisms either adapt or are regularly replaced by new types. Because of changes in the genetic material (mutations) these have new characteristics and in the course of their individual lives they are tested for optimal or better adaptation to the environmental conditions. Immortality would disrupt this system—it needs room for new and better life. This is the basic problem of evolution."
+            },
+            {
+              "number": "III",
+              "text": "Every organism has a life span which is highly characteristic. The number of years during which something lives is highly varied. There are striking differences in life span between different species of animals, but within one species the parameter is relatively constant. For example, the average duration of human life has hardly changed in thousands of years. Although more and more people attain an advanced age as a result of developments in medical care and better nutrition, the characteristic upper limit for most remains 80 years. A further argument against the simple 'wear and tear' theory can be seen in the fact that the time within which organisms age lies between a few hours (for a unicellular organism) and several thousand years (for mammoth trees)."
+            },
+            {
+              "number": "IV",
+              "text": "If a life span is a genetically determined biological characteristic, it is logically necessary to propose the existence of an internal clock, which in some way measures and controls the ageing process and which finally determines death as the last step in a fixed programme. Like the life span, the metabolic rate has for different organisms a fixed mathematical relationship to the body mass. In comparison to the life span this relationship is 'inverted': the larger the organism the lower its metabolic rate. Again this relationship is valid not only for birds, but also, similarly on average within the systematic unit, for all other organisms (plants, animals, unicellular organisms)."
+            },
+            {
+              "number": "V",
+              "text": "Animals which behave 'frugally' with energy become particularly old, for example, crocodiles and tortoises. Parrots and birds of prey are often held chained up. Thus they are not able to 'experience life' and so they attain a high life span in captivity. Animals which save energy by hibernation or lethargy (e.g. bats or hedgehogs) live much longer than those which are always active. The metabolic rate of mice can be reduced by a very low consumption of food (hunger diet). They then live twice as long as their well-fed comrades. Women live distinctly longer than men. If you examine the metabolic rates of the two sexes you establish that the higher male metabolic rate roughly accounts for the lower male life span. That means that they live life 'energetically'—more intensively, but not for as long."
+            },
+            {
+              "number": "VI",
+              "text": "It follows from the above that sparing use of energy reserves should tend to extend life. Extreme high performance sports may lead to optimal cardiovascular performance, but they quite certainly do not prolong life. Relaxation lowers metabolic rate, as does adequate sleep and in general an equable and balanced personality. Each of us can develop his or her own 'energy saving programme' with a little self-observation, critical self-control and, above all, logical consistency. Experience will show that to live in this way not only increases the life span but is also very healthy. This final aspect should not be forgotten."
+            }
+          ],
           "questions": [
             {
+              "number": 15,
+              "paragraph": "I",
+              "correct": "E"
+            },
+            {
+              "number": 16,
+              "paragraph": "II",
+              "correct": "B"
+            },
+            {
               "number": 17,
-              "correct": "C"
-            },
-            {
-              "number": 18,
-              "correct": "F"
-            },
-            {
-              "number": 19,
+              "paragraph": "III",
               "correct": "G"
             },
             {
-              "number": 20,
+              "number": 18,
+              "paragraph": "IV",
               "correct": "A"
             },
             {
-              "number": 21,
-              "correct": "D"
+              "number": 19,
+              "paragraph": "V",
+              "correct": "H"
             },
             {
-              "number": 22,
-              "correct": "B"
+              "number": 20,
+              "paragraph": "VI",
+              "correct": "D"
             }
           ]
         },
         {
           "part_number": 4,
-          "title": "Part 4: Reading Comprehension (4 MC + 5 True/False/No information)",
+          "title": "Part 4: Gapped Text (4 MC + 5 True/False/No information)",
           "instruction": "Read the article. For questions 23–26, choose the best answer (A, B, C or D). For questions 27–31, choose A) True, B) False, or C) No information given in the text.",
-          "type": "multiple_choice_comprehension",
+          "type": "gapped_text",
           "text": "Artificial Intelligence: Friend or Foe?\n\nArtificial Intelligence (AI) has rapidly evolved from a concept in science fiction to a technology that permeates nearly every aspect of our daily lives. From the virtual assistants on our smartphones to the algorithms that recommend what we should watch next, AI has become an invisible but powerful force shaping our decisions and experiences.\n\nProponents of AI point to its tremendous potential for improving human life. In healthcare, AI systems can analyze medical images with greater accuracy than human doctors, potentially catching diseases at earlier, more treatable stages. In environmental science, AI helps researchers model climate patterns and develop strategies for conservation. The technology has also revolutionized industries from manufacturing to finance, increasing efficiency and reducing costs.\n\nHowever, critics raise valid concerns about the darker implications of AI advancement. One of the most pressing issues is the potential for widespread job displacement. As AI systems become capable of performing tasks previously done by humans, millions of workers may find themselves unemployed. This technological unemployment could exacerbate social inequality if the benefits of AI are not distributed fairly.\n\nAnother concern is the question of bias in AI systems. Because these systems learn from data created by humans, they can inherit and even amplify existing prejudices. There have been documented cases of AI systems discriminating against certain groups in areas such as hiring, lending, and criminal justice.\n\nPrivacy is yet another area of concern. AI systems often rely on vast amounts of personal data to function effectively. This raises questions about who has access to our information and how it might be used. The potential for surveillance and manipulation is significant, particularly when AI is combined with facial recognition technology.\n\nDespite these challenges, many experts believe that the benefits of AI outweigh the risks, provided that appropriate safeguards are put in place. This includes developing ethical guidelines for AI development, creating regulations to prevent misuse, and investing in education to prepare workers for a changing job market.",
           "questions": [
             {
@@ -386,6 +410,441 @@
                 "D": "It is not mentioned."
               },
               "correct": "C"
+            }
+          ]
+        },
+        {
+          "part_number": 6,
+          "title": "Part 1: Multiple Choice Cloze",
+          "instruction": "For questions 9-16, choose A–J for each gap.",
+          "type": "multiple_choice_cloze",
+          "text": "sjkfjkfkjljkljkljklffjkdlsjklfd ____ adfdasfasfkdsjklfjklfsjkdsfjk ____ sdfakjldfsjkldffdsjkldfsjklfdsjkldfkjlfdjkdsfd",
+          "questions": [
+            {
+              "number": 9,
+              "question": "adsffdsdfsfd",
+              "options": {
+                "A": "fdfdsafdasfd",
+                "B": "dsfadfs",
+                "C": "fsdfsfdsd",
+                "D": "fdfddf",
+                "E": "ddfdfsfdfsadfsa",
+                "F": "fdffd",
+                "G": "dsafdsaf",
+                "H": "fdsdfsdf",
+                "I": "dfdffd",
+                "J": "fdsfdsfds"
+              },
+              "correct": "A"
+            },
+            {
+              "number": 10,
+              "question": "asjdkfhli;adsjfls;akjfas",
+              "options": {
+                "A": "asdfaf",
+                "B": "asdfsadf",
+                "C": "asdfasd",
+                "D": "asdfadsf",
+                "E": "asdfasdf",
+                "F": "asdfasd",
+                "G": "asdfasff",
+                "H": "asdfads",
+                "I": "fadfadf",
+                "J": "asdfaf"
+              },
+              "correct": "C"
+            },
+            {
+              "number": 11,
+              "question": "fasdfdslakjfadsjf",
+              "options": {
+                "A": "asdfasdf",
+                "B": "adsfadf",
+                "C": "adf",
+                "D": "adf",
+                "E": "asdf",
+                "F": "asdfadsf",
+                "G": "asdf",
+                "H": "adsfasdf",
+                "I": "asdfasdf",
+                "J": "asdfasdf"
+              },
+              "correct": "F"
+            },
+            {
+              "number": 12,
+              "question": "djddjkdjdjdddd",
+              "options": {
+                "A": "ddda",
+                "B": "asdfasd",
+                "C": "dfasfdfs",
+                "D": "dffdsadfs",
+                "E": "dfdfsad",
+                "F": "dfasf",
+                "G": "dsafasdf",
+                "H": "afdsfdsa",
+                "I": "dfdfsdfdf",
+                "J": "dfsafdsafds"
+              },
+              "correct": "C"
+            },
+            {
+              "number": 13,
+              "question": "sdakljfkljdsalff",
+              "options": {
+                "A": "fdasf",
+                "B": "asfasd",
+                "C": "asdf",
+                "D": "asdfasdf",
+                "E": "asdfas",
+                "F": "asdf",
+                "G": "fasdfasdf",
+                "H": "adsfadsf",
+                "I": "asdfadsf",
+                "J": "dfasdfasdf"
+              },
+              "correct": "H"
+            },
+            {
+              "number": 14,
+              "question": "fasdfsaf",
+              "options": {
+                "A": "asdf",
+                "B": "fdsadfsadfs",
+                "C": "fdsfdfdsdfsad",
+                "D": "fddfsfd",
+                "E": "df",
+                "F": "asdfasdf",
+                "G": "fdsadfsa",
+                "H": "fdfsfsdfds",
+                "I": "fdsadfsadfs",
+                "J": "sdaf"
+              },
+              "correct": "D"
+            },
+            {
+              "number": 15,
+              "question": "fdsafds",
+              "options": {
+                "A": "fdsa",
+                "B": "fds",
+                "C": "fdsa",
+                "D": "fdsa",
+                "E": "fdsa",
+                "F": "dfsa",
+                "G": "fdsa",
+                "H": "dfs",
+                "I": "fdsa",
+                "J": "fds"
+              },
+              "correct": "C"
+            },
+            {
+              "number": 16,
+              "question": "fdsfdsaa",
+              "options": {
+                "A": "adfs",
+                "B": "dfsadsfa",
+                "C": "sdfsfdfd",
+                "D": "asdfasdfads",
+                "E": "asdfasdf",
+                "F": "fdsadfs",
+                "G": "dfsfadsfdasdf",
+                "H": "fdsadfsaafadsf",
+                "I": "fasdf",
+                "J": "dsafafsd"
+              },
+              "correct": "B"
+            }
+          ]
+        },
+        {
+          "part_number": 7,
+          "title": "Part 1: Multiple Choice Cloze",
+          "instruction": "For questions 9-16, choose A–J for each gap.",
+          "type": "multiple_choice_cloze",
+          "text": "sjkfjkfkjljkljkljklffjkdlsjklfd ____ adfdasfasfkdsjklfjklfsjkdsfjk ____ sdfakjldfsjkldffdsjkldfsjklfdsjkldfkjlfdjkdsfd",
+          "questions": [
+            {
+              "number": 9,
+              "question": "adsffdsdfsfd",
+              "options": {
+                "A": "fdfdsafdasfd",
+                "B": "dsfadfs",
+                "C": "fsdfsfdsd",
+                "D": "fdfddf",
+                "E": "ddfdfsfdfsadfsa",
+                "F": "fdffd",
+                "G": "dsafdsaf",
+                "H": "fdsdfsdf",
+                "I": "dfdffd",
+                "J": "fdsfdsfds"
+              },
+              "correct": "A"
+            },
+            {
+              "number": 10,
+              "question": "asjdkfhli;adsjfls;akjfas",
+              "options": {
+                "A": "asdfaf",
+                "B": "asdfsadf",
+                "C": "asdfasd",
+                "D": "asdfadsf",
+                "E": "asdfasdf",
+                "F": "asdfasd",
+                "G": "asdfasff",
+                "H": "asdfads",
+                "I": "fadfadf",
+                "J": "asdfaf"
+              },
+              "correct": "C"
+            },
+            {
+              "number": 11,
+              "question": "fasdfdslakjfadsjf",
+              "options": {
+                "A": "asdfasdf",
+                "B": "adsfadf",
+                "C": "adf",
+                "D": "adf",
+                "E": "asdf",
+                "F": "asdfadsf",
+                "G": "asdf",
+                "H": "adsfasdf",
+                "I": "asdfasdf",
+                "J": "asdfasdf"
+              },
+              "correct": "F"
+            },
+            {
+              "number": 12,
+              "question": "djddjkdjdjdddd",
+              "options": {
+                "A": "ddda",
+                "B": "asdfasd",
+                "C": "dfasfdfs",
+                "D": "dffdsadfs",
+                "E": "dfdfsad",
+                "F": "dfasf",
+                "G": "dsafasdf",
+                "H": "afdsfdsa",
+                "I": "dfdfsdfdf",
+                "J": "dfsafdsafds"
+              },
+              "correct": "C"
+            },
+            {
+              "number": 13,
+              "question": "sdakljfkljdsalff",
+              "options": {
+                "A": "fdasf",
+                "B": "asfasd",
+                "C": "asdf",
+                "D": "asdfasdf",
+                "E": "asdfas",
+                "F": "asdf",
+                "G": "fasdfasdf",
+                "H": "adsfadsf",
+                "I": "asdfadsf",
+                "J": "dfasdfasdf"
+              },
+              "correct": "H"
+            },
+            {
+              "number": 14,
+              "question": "fasdfsaf",
+              "options": {
+                "A": "asdf",
+                "B": "fdsadfsadfs",
+                "C": "fdsfdfdsdfsad",
+                "D": "fddfsfd",
+                "E": "df",
+                "F": "asdfasdf",
+                "G": "fdsadfsa",
+                "H": "fdfsfsdfds",
+                "I": "fdsadfsadfs",
+                "J": "sdaf"
+              },
+              "correct": "D"
+            },
+            {
+              "number": 15,
+              "question": "fdsafds",
+              "options": {
+                "A": "fdsa",
+                "B": "fds",
+                "C": "fdsa",
+                "D": "fdsa",
+                "E": "fdsa",
+                "F": "dfsa",
+                "G": "fdsa",
+                "H": "dfs",
+                "I": "fdsa",
+                "J": "fds"
+              },
+              "correct": "C"
+            },
+            {
+              "number": 16,
+              "question": "fdsfdsaa",
+              "options": {
+                "A": "adfs",
+                "B": "dfsadsfa",
+                "C": "sdfsfdfd",
+                "D": "asdfasdfads",
+                "E": "asdfasdf",
+                "F": "fdsadfs",
+                "G": "dfsfadsfdasdf",
+                "H": "fdsadfsaafadsf",
+                "I": "fasdf",
+                "J": "dsafafsd"
+              },
+              "correct": "B"
+            }
+          ]
+        },
+        {
+          "part_number": 8,
+          "title": "Part 1: Multiple Choice Clozesadfsdafdsaf",
+          "instruction": "For questions 9-16, choose A–J for each gap.",
+          "type": "multiple_choice_cloze",
+          "text": "sjkfjkfkjljkljkljklffjkdlsjklfd ____ adfdasfasfkdsjklfjklfsjkdsfjk ____ sdfakjldfsjkldffdsjkldfsjklfdsjkldfkjlfdjkdsfd",
+          "questions": [
+            {
+              "number": 9,
+              "question": "adsffdsdfsfd",
+              "options": {
+                "A": "fdfdsafdasfd",
+                "B": "dsfadfs",
+                "C": "fsdfsfdsd",
+                "D": "fdfddf",
+                "E": "ddfdfsfdfsadfsa",
+                "F": "fdffd",
+                "G": "dsafdsaf",
+                "H": "fdsdfsdf",
+                "I": "dfdffd",
+                "J": "fdsfdsfds"
+              },
+              "correct": "A"
+            },
+            {
+              "number": 10,
+              "question": "asjdkfhli;adsjfls;akjfas",
+              "options": {
+                "A": "asdfaf",
+                "B": "asdfsadf",
+                "C": "asdfasd",
+                "D": "asdfadsf",
+                "E": "asdfasdf",
+                "F": "asdfasd",
+                "G": "asdfasff",
+                "H": "asdfads",
+                "I": "fadfadf",
+                "J": "asdfaf"
+              },
+              "correct": "C"
+            },
+            {
+              "number": 11,
+              "question": "fasdfdslakjfadsjf",
+              "options": {
+                "A": "asdfasdf",
+                "B": "adsfadf",
+                "C": "adf",
+                "D": "adf",
+                "E": "asdf",
+                "F": "asdfadsf",
+                "G": "asdf",
+                "H": "adsfasdf",
+                "I": "asdfasdf",
+                "J": "asdfasdf"
+              },
+              "correct": "F"
+            },
+            {
+              "number": 12,
+              "question": "djddjkdjdjdddd",
+              "options": {
+                "A": "ddda",
+                "B": "asdfasd",
+                "C": "dfasfdfs",
+                "D": "dffdsadfs",
+                "E": "dfdfsad",
+                "F": "dfasf",
+                "G": "dsafasdf",
+                "H": "afdsfdsa",
+                "I": "dfdfsdfdf",
+                "J": "dfsafdsafds"
+              },
+              "correct": "C"
+            },
+            {
+              "number": 13,
+              "question": "sdakljfkljdsalff",
+              "options": {
+                "A": "fdasf",
+                "B": "asfasd",
+                "C": "asdf",
+                "D": "asdfasdf",
+                "E": "asdfas",
+                "F": "asdf",
+                "G": "fasdfasdf",
+                "H": "adsfadsf",
+                "I": "asdfadsf",
+                "J": "dfasdfasdf"
+              },
+              "correct": "H"
+            },
+            {
+              "number": 14,
+              "question": "fasdfsaf",
+              "options": {
+                "A": "asdf",
+                "B": "fdsadfsadfs",
+                "C": "fdsfdfdsdfsad",
+                "D": "fddfsfd",
+                "E": "df",
+                "F": "asdfasdf",
+                "G": "fdsadfsa",
+                "H": "fdfsfsdfds",
+                "I": "fdsadfsadfs",
+                "J": "sdaf"
+              },
+              "correct": "D"
+            },
+            {
+              "number": 15,
+              "question": "fdsafds",
+              "options": {
+                "A": "fdsa",
+                "B": "fds",
+                "C": "fdsa",
+                "D": "fdsa",
+                "E": "fdsa",
+                "F": "dfsa",
+                "G": "fdsa",
+                "H": "dfs",
+                "I": "fdsa",
+                "J": "fds"
+              },
+              "correct": "C"
+            },
+            {
+              "number": 16,
+              "question": "fdsfdsaa",
+              "options": {
+                "A": "adfs",
+                "B": "dfsadsfa",
+                "C": "sdfsfdfd",
+                "D": "asdfasdfads",
+                "E": "asdfasdf",
+                "F": "fdsadfs",
+                "G": "dfsfadsfdasdf",
+                "H": "fdsadfsaafadsf",
+                "I": "fasdf",
+                "J": "dsafafsd"
+              },
+              "correct": "B"
             }
           ]
         }

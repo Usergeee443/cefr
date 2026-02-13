@@ -508,7 +508,7 @@
                                 <div class="passage-card p-4 md:p-5 overflow-y-auto min-h-0 flex-1 passage-highlight-container">
                                     <h4 class="text-[#CE82FF] font-black text-xs uppercase tracking-wider mb-2">Passage</h4>
                                     <div class="passage-text" data-part="{{ part.part_number }}" data-highlight-key="reading-open-{{ part.part_number }}">
-                                        {{ part.text | replace("(1)_____", "<input type='text' name='1' id='q-1' class='gap-input' placeholder='1' data-question='1'>") | replace("(2)_____", "<input type='text' name='2' id='q-2' class='gap-input' placeholder='2' data-question='2'>") | replace("(3)_____", "<input type='text' name='3' id='q-3' class='gap-input' placeholder='3' data-question='3'>") | replace("(4)_____", "<input type='text' name='4' id='q-4' class='gap-input' placeholder='4' data-question='4'>") | replace("(5)_____", "<input type='text' name='5' id='q-5' class='gap-input' placeholder='5' data-question='5'>") | replace("(6)_____", "<input type='text' name='6' id='q-6' class='gap-input' placeholder='6' data-question='6'>") | replace("(7)_____", "<input type='text' name='7' id='q-7' class='gap-input' placeholder='7' data-question='7'>") | replace("(8)_____", "<input type='text' name='8' id='q-8' class='gap-input' placeholder='8' data-question='8'>") | safe }}
+                                        {{ part.text | replace("(1)_____", "<input type='text' name='1' id='q-1' class='gap-input' placeholder='1' data-question='1'>") | replace("(2)_____", "<input type='text' name='2' id='q-2' class='gap-input' placeholder='2' data-question='2'>") | replace("(3)_____", "<input type='text' name='3' id='q-3' class='gap-input' placeholder='3' data-question='3'>") | replace("(4)_____", "<input type='text' name='4' id='q-4' class='gap-input' placeholder='4' data-question='4'>") | replace("(5)_____", "<input type='text' name='5' id='q-5' class='gap-input' placeholder='5' data-question='5'>") | replace("(6)_____", "<input type='text' name='6' id='q-6' class='gap-input' placeholder='6' data-question='6'>") | safe }}
                                     </div>
                                 </div>
                             </div>
@@ -562,29 +562,78 @@
                                 </div>
                             </div>
 
+                            {% elif part.type == "matching_headings" %}
+                            <!-- Part 3: Matching Headings to Paragraphs -->
+                            <div class="flex flex-col flex-1 min-h-0 space-y-4">
+                                <!-- List of Headings -->
+                                <div class="passage-card p-4 md:p-5 border-2 border-[#FF9600]/30 bg-[#FF9600]/5">
+                                    <h4 class="text-[#FF9600] font-black text-sm uppercase tracking-wider mb-3">List of Headings:</h4>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                        {% for letter, heading in part.headings.items() %}
+                                        <div class="text-sm text-[#AFAFAF] font-medium">
+                                            <span class="font-black text-[#FF9600]">{{ letter }})</span> {{ heading }}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                
+                                <!-- Main Title and Paragraphs -->
+                                <div class="passage-card p-4 md:p-5 overflow-y-auto min-h-0 passage-highlight-container flex-1">
+                                    {% if part.main_title %}
+                                    <h3 class="text-xl md:text-2xl font-black text-white mb-4 uppercase">{{ part.main_title }}</h3>
+                                    {% endif %}
+                                    <div class="space-y-4">
+                                        {% for para in part.paragraphs %}
+                                        <div class="mb-6">
+                                            <div class="flex items-start gap-3 mb-2">
+                                                <span class="font-black text-[#FF9600] text-lg">{{ para.number }}.</span>
+                                                <div class="flex-1">
+                                                    <p class="passage-text text-[#AFAFAF] leading-relaxed">{{ para.text }}</p>
+                                                </div>
+                                            </div>
+                                            {% for q in part.questions %}
+                                            {% if q.paragraph == para.number %}
+                                            <div class="mt-3 ml-8">
+                                                <label class="text-sm text-gray-400 font-bold mb-2 block">Question {{ q.number }}:</label>
+                                                <select name="{{ q.number }}" data-question="{{ q.number }}" class="w-full md:w-48 bg-[#131F24] border-2 border-[#2B4148] text-white px-3 py-2 rounded-lg focus:border-[#FF9600] outline-none font-bold text-sm">
+                                                    <option value="">— Tanlang —</option>
+                                                    {% for letter in ['A','B','C','D','E','F','G','H'] %}
+                                                    <option value="{{ letter }}">{{ letter }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+
                             {% elif part.type == "multiple_choice_comprehension" %}
-                            <!-- Part 3: Multiple Choice Comprehension -->
+                            <!-- Part 4: Chap katta text, o'ng 6 paragraf, har biriga bosib A-H tanlash -->
                             <div class="grid lg:grid-cols-2 gap-3 md:gap-4 flex-1 min-h-0">
                                 <div class="passage-card p-4 md:p-5 overflow-y-auto min-h-0 passage-highlight-container">
                                     <h4 class="text-[#FF4B4B] font-black text-xs uppercase tracking-wider mb-2">Passage</h4>
                                     <div class="passage-text" data-part="{{ part.part_number }}" data-highlight-key="reading-comp-{{ part.part_number }}">{{ part.text | safe }}</div>
                                 </div>
-                                <div class="space-y-2 md:space-y-3 overflow-y-auto min-h-0 pr-1">
-                                    <h4 class="text-[#FF9600] font-black text-xs uppercase tracking-wider mb-2">Questions</h4>
+                                <div class="space-y-3 overflow-y-auto min-h-0 pr-1">
+                                    <h4 class="text-[#FF9600] font-black text-xs uppercase tracking-wider mb-2">Paragraflar (6 ta) — har birini bosib A–H dan tanlang</h4>
                                     {% for q in part.questions %}
-                                    <div class="question-card p-2 md:p-3 focusable-question" data-question="{{ q.number }}" id="q-{{ q.number }}" tabindex="0">
-                                        <div class="font-bold text-white mb-2 text-xs md:text-sm flex items-start gap-2">
-                                            <span class="w-6 h-6 bg-[#FF4B4B] rounded-lg flex items-center justify-center text-white text-xs font-black flex-shrink-0">{{ q.number }}</span>
-                                            <span>{{ q.question }}</span>
+                                    <div class="question-card p-3 md:p-4 focusable-question cursor-pointer border-2 border-[#2B4148] rounded-xl hover:border-[#FF9600]/50 transition" data-question="{{ q.number }}" id="q-{{ q.number }}" tabindex="0">
+                                        <div class="flex items-start gap-3 mb-2">
+                                            <span class="w-8 h-8 bg-[#FF4B4B] rounded-lg flex items-center justify-center text-white text-sm font-black flex-shrink-0">{{ q.number }}</span>
+                                            <div class="flex-1">
+                                                <p class="text-sm md:text-base text-[#AFAFAF] font-medium">{{ q.question }}</p>
+                                            </div>
                                         </div>
-                                        <div class="space-y-1.5 md:space-y-2">
-                                            {% for letter, option in q.options.items() %}
+                                        <div class="grid grid-cols-4 md:grid-cols-4 gap-1.5 mt-3">
+                                            {% for letter in ['A','B','C','D','E','F','G','H'] %}
                                             <button type="button"
-                                                    class="option-btn w-full p-2 md:p-3 text-left text-xs md:text-sm text-[#AFAFAF] flex items-start gap-2 font-medium"
+                                                    class="option-btn p-2 text-center text-xs text-[#AFAFAF] font-bold border-2 border-[#2B4148] rounded-lg hover:border-[#FF9600] hover:bg-[#FF9600]/10 transition"
                                                     data-question="{{ q.number }}"
                                                     data-value="{{ letter }}">
-                                                <span class="font-black text-[#FF4B4B]">{{ letter }}.</span>
-                                                <span>{{ option }}</span>
+                                                {{ letter }}
                                             </button>
                                             {% endfor %}
                                         </div>
@@ -595,46 +644,34 @@
                             </div>
 
                             {% elif part.type == "gapped_text" %}
-                            <!-- Part 4: Gapped Text -->
+                            <!-- Part 4: 4 ta MC + 5 ta True/False/No information -->
                             <div class="grid lg:grid-cols-2 gap-3 md:gap-4 flex-1 min-h-0">
                                 <div class="passage-card p-4 md:p-5 overflow-y-auto min-h-0 passage-highlight-container">
-                                    <h4 class="text-[#58CC02] font-black text-xs uppercase tracking-wider mb-2">Text with Gaps</h4>
-                                    <div class="passage-text" data-part="{{ part.part_number }}" data-highlight-key="reading-gapped-{{ part.part_number }}">
-                                        {{ part.text | replace("(17)_____", "<span class='inline-block bg-[#58CC02] text-white px-3 py-0.5 font-black text-xs rounded-lg' style='box-shadow: 0 2px 0 #46A302;'>17</span>") | replace("(18)_____", "<span class='inline-block bg-[#58CC02] text-white px-3 py-0.5 font-black text-xs rounded-lg' style='box-shadow: 0 2px 0 #46A302;'>18</span>") | replace("(19)_____", "<span class='inline-block bg-[#58CC02] text-white px-3 py-0.5 font-black text-xs rounded-lg' style='box-shadow: 0 2px 0 #46A302;'>19</span>") | replace("(20)_____", "<span class='inline-block bg-[#58CC02] text-white px-3 py-0.5 font-black text-xs rounded-lg' style='box-shadow: 0 2px 0 #46A302;'>20</span>") | replace("(21)_____", "<span class='inline-block bg-[#58CC02] text-white px-3 py-0.5 font-black text-xs rounded-lg' style='box-shadow: 0 2px 0 #46A302;'>21</span>") | replace("(22)_____", "<span class='inline-block bg-[#58CC02] text-white px-3 py-0.5 font-black text-xs rounded-lg' style='box-shadow: 0 2px 0 #46A302;'>22</span>") | safe }}
-                                    </div>
+                                    <h4 class="text-[#58CC02] font-black text-xs uppercase tracking-wider mb-2">Passage</h4>
+                                    <div class="passage-text" data-part="{{ part.part_number }}" data-highlight-key="reading-gapped-{{ part.part_number }}">{{ part.text | safe }}</div>
                                 </div>
-                                <div class="space-y-3 overflow-y-auto min-h-0 pr-1">
-                                    <div>
-                                        <h4 class="text-[#FFC800] font-black text-xs uppercase tracking-wider mb-2">Removed Sentences</h4>
-                                        <div class="space-y-2">
-                                            {% for letter, sentence in part.removed_sentences.items() %}
-                                            <div class="passage-card p-2 md:p-3 text-xs md:text-sm text-[#AFAFAF] font-medium">
-                                                <span class="font-black text-[#FFC800]">{{ letter }}.</span> {{ sentence }}
-                                            </div>
+                                <div class="space-y-2 md:space-y-3 overflow-y-auto min-h-0 pr-1">
+                                    <h4 class="text-[#FFC800] font-black text-xs uppercase tracking-wider mb-2">Questions</h4>
+                                    {% for q in part.questions %}
+                                    <div class="question-card p-2 md:p-3 focusable-question" data-question="{{ q.number }}" id="q-{{ q.number }}" tabindex="0">
+                                        <div class="font-bold text-white mb-2 text-xs md:text-sm flex items-start gap-2">
+                                            <span class="w-6 h-6 bg-[#58CC02] rounded-lg flex items-center justify-center text-white text-xs font-black flex-shrink-0">{{ q.number }}</span>
+                                            <span>{{ q.question }}</span>
+                                        </div>
+                                        <div class="space-y-1.5 md:space-y-2">
+                                            {% for letter, option in q.options.items() %}
+                                            <button type="button"
+                                                    class="option-btn w-full p-2 md:p-3 text-left text-xs md:text-sm text-[#AFAFAF] flex items-start gap-2 font-medium"
+                                                    data-question="{{ q.number }}"
+                                                    data-value="{{ letter }}">
+                                                <span class="font-black text-[#58CC02]">{{ letter }}.</span>
+                                                <span>{{ option }}</span>
+                                            </button>
                                             {% endfor %}
                                         </div>
+                                        <input type="hidden" name="{{ q.number }}" value="">
                                     </div>
-                                    <div>
-                                        <h4 class="text-[#58CC02] font-black text-xs uppercase tracking-wider mb-2">Your Answers</h4>
-                                        <div class="space-y-2">
-                                            {% for q in part.questions %}
-                                            <div class="flex items-center gap-2" id="q-{{ q.number }}">
-                                                <span class="font-bold text-[#AFAFAF] text-xs w-16">Gap {{ q.number }}:</span>
-                                                <select name="{{ q.number }}" data-question="{{ q.number }}" class="flex-1 bg-[#131F24] border-2 border-[#2B4148] text-white px-2 py-2 rounded-lg focus:border-[#58CC02] outline-none font-bold text-xs">
-                                                    <option value="">...</option>
-                                                    <option value="A">A</option>
-                                                    <option value="B">B</option>
-                                                    <option value="C">C</option>
-                                                    <option value="D">D</option>
-                                                    <option value="E">E</option>
-                                                    <option value="F">F</option>
-                                                    <option value="G">G</option>
-                                                    <option value="H">H</option>
-                                                </select>
-                                            </div>
-                                            {% endfor %}
-                                        </div>
-                                    </div>
+                                    {% endfor %}
                                 </div>
                             </div>
 

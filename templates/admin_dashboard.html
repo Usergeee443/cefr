@@ -287,35 +287,35 @@
         <!-- Reading Tab -->
         <div id="reading-tab" class="tab-content active">
             <div class="admin-card p-6">
-                <h2 class="text-xl font-black text-white flex items-center gap-3 mb-6">
+                <h2 class="text-xl font-black text-white flex items-center gap-3 mb-4">
                     <div class="w-10 h-10 bg-[#A78BFA]/20 rounded-xl flex items-center justify-center">
                         <svg class="w-5 h-5 text-[#A78BFA]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                     </div>
                     Reading
                 </h2>
-                <div class="flex flex-wrap items-center gap-4 mb-4 p-4 bg-[#0F172A] rounded-xl border border-[#334155]">
+                <div class="flex flex-wrap items-center gap-4 mb-6 p-4 bg-[#0F172A] rounded-xl border border-[#334155]">
                     <div><label class="text-xs text-gray-500 block mb-1">Test nomi</label><input type="text" id="reading-test-title" class="form-input w-48" placeholder="Reading Test 1"></div>
                     <div><label class="text-xs text-gray-500 block mb-1">Vaqt (daqiqa)</label><input type="number" id="reading-test-time" class="form-input w-24" value="60"></div>
-                    <button type="button" onclick="saveSectionTestInfo('reading')" class="px-4 py-2 bg-[#A78BFA] hover:bg-[#9368E6] text-white font-bold rounded-xl text-sm mt-6">Testni saqlash</button>
+                    <button type="button" onclick="saveSectionTestInfo('reading')" class="px-4 py-2 bg-[#A78BFA] hover:bg-[#9368E6] text-white font-bold rounded-xl text-sm">Testni saqlash</button>
                 </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-bold text-gray-300 mb-1">Mavjud partlar</label>
-                    <div id="reading-parts-list" class="text-sm text-gray-400 min-h-[1.5rem]">—</div>
+
+                <p class="text-sm font-bold text-gray-300 mb-3">Partni tanlang (1–5):</p>
+                <div class="flex flex-wrap gap-3 mb-6">
+                    <button type="button" onclick="selectPart('reading', 0)" id="reading-part-btn-0" class="part-btn px-5 py-3 rounded-xl font-bold border-2 border-[#334155] bg-[#1E293B] text-gray-400 hover:border-[#A78BFA] hover:text-[#A78BFA] transition" data-section="reading" data-part="0">Part 1</button>
+                    <button type="button" onclick="selectPart('reading', 1)" id="reading-part-btn-1" class="part-btn px-5 py-3 rounded-xl font-bold border-2 border-[#334155] bg-[#1E293B] text-gray-400 hover:border-[#A78BFA] hover:text-[#A78BFA] transition" data-section="reading" data-part="1">Part 2</button>
+                    <button type="button" onclick="selectPart('reading', 2)" id="reading-part-btn-2" class="part-btn px-5 py-3 rounded-xl font-bold border-2 border-[#334155] bg-[#1E293B] text-gray-400 hover:border-[#A78BFA] hover:text-[#A78BFA] transition" data-section="reading" data-part="2">Part 3</button>
+                    <button type="button" onclick="selectPart('reading', 3)" id="reading-part-btn-3" class="part-btn px-5 py-3 rounded-xl font-bold border-2 border-[#334155] bg-[#1E293B] text-gray-400 hover:border-[#A78BFA] hover:text-[#A78BFA] transition" data-section="reading" data-part="3">Part 4</button>
+                    <button type="button" onclick="selectPart('reading', 4)" id="reading-part-btn-4" class="part-btn px-5 py-3 rounded-xl font-bold border-2 border-[#334155] bg-[#1E293B] text-gray-400 hover:border-[#A78BFA] hover:text-[#A78BFA] transition" data-section="reading" data-part="4">Part 5</button>
                 </div>
-                <div class="mb-6">
-                    <label class="block text-sm font-bold text-gray-300 mb-2">Partni tanlang</label>
-                    <select id="reading-part-select" class="form-input w-full max-w-md" onchange="onSectionPartSelect('reading')">
-                        <option value="">— Partni tanlang —</option>
-                        <option value="0">Part 1: Open Cloze</option>
-                        <option value="1">Part 2: Multiple Choice Cloze</option>
-                        <option value="2">Part 3: Gapped Text</option>
-                        <option value="3">Part 4: Reading Comprehension</option>
-                        <option value="4">Part 5: Mixed</option>
-                    </select>
-                </div>
-                <div id="reading-part-form-container" class="hidden"></div>
-                <div id="reading-part-save-wrap" class="hidden mt-4">
-                    <button type="button" onclick="saveSectionPart('reading')" class="btn-primary">Partni saqlash</button>
+
+                <div id="reading-part-panel" class="hidden border-t-2 border-[#334155] pt-6">
+                    <h3 class="text-lg font-bold text-white mb-3">Mavjud partlar</h3>
+                    <div id="reading-mavjud-parts" class="space-y-3 mb-4"></div>
+                    <button type="button" onclick="showNewPartForm('reading')" class="px-4 py-2 bg-[#58CC02] hover:bg-[#46A302] text-white font-bold rounded-xl text-sm mb-6">+ Yangi qo'shish</button>
+                    <div id="reading-part-form-container" class="hidden"></div>
+                    <div id="reading-part-save-wrap" class="hidden mt-4">
+                        <button type="button" onclick="saveSectionPart('reading')" class="btn-primary">Partni saqlash</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -323,38 +323,38 @@
         <!-- Listening Tab -->
         <div id="listening-tab" class="tab-content">
             <div class="admin-card p-6">
-                <h2 class="text-xl font-black text-white flex items-center gap-3 mb-6">
+                <h2 class="text-xl font-black text-white flex items-center gap-3 mb-4">
                     <div class="w-10 h-10 bg-[#45B7D1]/20 rounded-xl flex items-center justify-center">
                         <svg class="w-5 h-5 text-[#45B7D1]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/></svg>
                     </div>
                     Listening
                 </h2>
-                <div class="flex flex-wrap items-center gap-4 mb-4 p-4 bg-[#0F172A] rounded-xl border border-[#334155]">
+                <div class="flex flex-wrap items-center gap-4 mb-6 p-4 bg-[#0F172A] rounded-xl border border-[#334155]">
                     <div><label class="text-xs text-gray-500 block mb-1">Test nomi</label><input type="text" id="listening-test-title" class="form-input w-48" placeholder="Listening Test 1"></div>
                     <div><label class="text-xs text-gray-500 block mb-1">Vaqt (daqiqa)</label><input type="number" id="listening-test-time" class="form-input w-24" value="40"></div>
-                    <button type="button" onclick="saveSectionTestInfo('listening')" class="px-4 py-2 bg-[#45B7D1] hover:bg-[#3AA3BB] text-white font-bold rounded-xl text-sm mt-6">Testni saqlash</button>
+                    <button type="button" onclick="saveSectionTestInfo('listening')" class="px-4 py-2 bg-[#45B7D1] hover:bg-[#3AA3BB] text-white font-bold rounded-xl text-sm">Testni saqlash</button>
                 </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-bold text-gray-300 mb-1">Mavjud partlar</label>
-                    <div id="listening-parts-list" class="text-sm text-gray-400 min-h-[1.5rem]">—</div>
+
+                <p class="text-sm font-bold text-gray-300 mb-3">Partni tanlang (1–6):</p>
+                <div class="flex flex-wrap gap-3 mb-6">
+                    <button type="button" onclick="selectPart('listening', 0)" id="listening-part-btn-0" class="part-btn px-5 py-3 rounded-xl font-bold border-2 border-[#334155] bg-[#1E293B] text-gray-400 hover:border-[#45B7D1] hover:text-[#45B7D1] transition">Part 1</button>
+                    <button type="button" onclick="selectPart('listening', 1)" id="listening-part-btn-1" class="part-btn px-5 py-3 rounded-xl font-bold border-2 border-[#334155] bg-[#1E293B] text-gray-400 hover:border-[#45B7D1] hover:text-[#45B7D1] transition">Part 2</button>
+                    <button type="button" onclick="selectPart('listening', 2)" id="listening-part-btn-2" class="part-btn px-5 py-3 rounded-xl font-bold border-2 border-[#334155] bg-[#1E293B] text-gray-400 hover:border-[#45B7D1] hover:text-[#45B7D1] transition">Part 3</button>
+                    <button type="button" onclick="selectPart('listening', 3)" id="listening-part-btn-3" class="part-btn px-5 py-3 rounded-xl font-bold border-2 border-[#334155] bg-[#1E293B] text-gray-400 hover:border-[#45B7D1] hover:text-[#45B7D1] transition">Part 4</button>
+                    <button type="button" onclick="selectPart('listening', 4)" id="listening-part-btn-4" class="part-btn px-5 py-3 rounded-xl font-bold border-2 border-[#334155] bg-[#1E293B] text-gray-400 hover:border-[#45B7D1] hover:text-[#45B7D1] transition">Part 5</button>
+                    <button type="button" onclick="selectPart('listening', 5)" id="listening-part-btn-5" class="part-btn px-5 py-3 rounded-xl font-bold border-2 border-[#334155] bg-[#1E293B] text-gray-400 hover:border-[#45B7D1] hover:text-[#45B7D1] transition">Part 6</button>
                 </div>
-                <div class="mb-6">
-                    <label class="block text-sm font-bold text-gray-300 mb-2">Partni tanlang</label>
-                    <select id="listening-part-select" class="form-input w-full max-w-md" onchange="onSectionPartSelect('listening')">
-                        <option value="">— Partni tanlang —</option>
-                        <option value="0">Part 1: Short Conversations</option>
-                        <option value="1">Part 2: Sentence Completion</option>
-                        <option value="2">Part 3: Speaker Matching</option>
-                        <option value="3">Part 4: Map Labeling</option>
-                        <option value="4">Part 5: Interview</option>
-                        <option value="5">Part 6: Note Completion</option>
-                    </select>
+
+                <div id="listening-part-panel" class="hidden border-t-2 border-[#334155] pt-6">
+                    <h3 class="text-lg font-bold text-white mb-3">Mavjud partlar</h3>
+                    <div id="listening-mavjud-parts" class="space-y-3 mb-4"></div>
+                    <button type="button" onclick="showNewPartForm('listening')" class="px-4 py-2 bg-[#58CC02] hover:bg-[#46A302] text-white font-bold rounded-xl text-sm mb-6">+ Yangi qo'shish</button>
+                    <div id="listening-part-form-container" class="hidden"></div>
+                    <div id="listening-part-save-wrap" class="hidden mt-4">
+                        <button type="button" onclick="saveSectionPart('listening')" class="btn-primary">Partni saqlash</button>
+                    </div>
                 </div>
-                <div id="listening-part-form-container" class="hidden"></div>
-                <div id="listening-part-save-wrap" class="hidden mt-4">
-                    <button type="button" onclick="saveSectionPart('listening')" class="btn-primary">Partni saqlash</button>
-                </div>
-                <div class="mt-8 pt-6 border-t-2 border-[#334155]">
+                <div class="mt-6 pt-6 border-t-2 border-[#334155]">
                     <h3 class="text-lg font-bold text-white mb-2">Part 4: Xarita rasm yuklash</h3>
                     <div class="flex flex-wrap items-center gap-3">
                         <input type="file" id="listening-map-file" accept=".png,.jpg,.jpeg,.gif,.webp" class="text-sm text-gray-400 file:mr-3 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#45B7D1]/20 file:text-[#45B7D1] file:font-bold">
@@ -368,32 +368,32 @@
         <!-- Writing Tab -->
         <div id="writing-tab" class="tab-content">
             <div class="admin-card p-6">
-                <h2 class="text-xl font-black text-white flex items-center gap-3 mb-6">
+                <h2 class="text-xl font-black text-white flex items-center gap-3 mb-4">
                     <div class="w-10 h-10 bg-[#FF9F43]/20 rounded-xl flex items-center justify-center">
                         <svg class="w-5 h-5 text-[#FF9F43]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                     </div>
                     Writing
                 </h2>
-                <div class="flex flex-wrap items-center gap-4 mb-4 p-4 bg-[#0F172A] rounded-xl border border-[#334155]">
+                <div class="flex flex-wrap items-center gap-4 mb-6 p-4 bg-[#0F172A] rounded-xl border border-[#334155]">
                     <div><label class="text-xs text-gray-500 block mb-1">Test nomi</label><input type="text" id="writing-test-title" class="form-input w-48" placeholder="Writing Test 1"></div>
                     <div><label class="text-xs text-gray-500 block mb-1">Vaqt (daqiqa)</label><input type="number" id="writing-test-time" class="form-input w-24" value="80"></div>
-                    <button type="button" onclick="saveSectionTestInfo('writing')" class="px-4 py-2 bg-[#FF9F43] hover:bg-[#E68A33] text-white font-bold rounded-xl text-sm mt-6">Testni saqlash</button>
+                    <button type="button" onclick="saveSectionTestInfo('writing')" class="px-4 py-2 bg-[#FF9F43] hover:bg-[#E68A33] text-white font-bold rounded-xl text-sm">Testni saqlash</button>
                 </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-bold text-gray-300 mb-1">Mavjud partlar</label>
-                    <div id="writing-parts-list" class="text-sm text-gray-400 min-h-[1.5rem]">—</div>
+
+                <p class="text-sm font-bold text-gray-300 mb-3">Partni tanlang (1–2):</p>
+                <div class="flex flex-wrap gap-3 mb-6">
+                    <button type="button" onclick="selectPart('writing', 0)" id="writing-part-btn-0" class="part-btn px-5 py-3 rounded-xl font-bold border-2 border-[#334155] bg-[#1E293B] text-gray-400 hover:border-[#FF9F43] hover:text-[#FF9F43] transition">Part 1</button>
+                    <button type="button" onclick="selectPart('writing', 1)" id="writing-part-btn-1" class="part-btn px-5 py-3 rounded-xl font-bold border-2 border-[#334155] bg-[#1E293B] text-gray-400 hover:border-[#FF9F43] hover:text-[#FF9F43] transition">Part 2</button>
                 </div>
-                <div class="mb-6">
-                    <label class="block text-sm font-bold text-gray-300 mb-2">Partni tanlang</label>
-                    <select id="writing-part-select" class="form-input w-full max-w-md" onchange="onSectionPartSelect('writing')">
-                        <option value="">— Partni tanlang —</option>
-                        <option value="0">Part 1: Tasks (Email, Review)</option>
-                        <option value="1">Part 2: Essay</option>
-                    </select>
-                </div>
-                <div id="writing-part-form-container" class="hidden"></div>
-                <div id="writing-part-save-wrap" class="hidden mt-4">
-                    <button type="button" onclick="saveSectionPart('writing')" class="btn-primary">Partni saqlash</button>
+
+                <div id="writing-part-panel" class="hidden border-t-2 border-[#334155] pt-6">
+                    <h3 class="text-lg font-bold text-white mb-3">Mavjud partlar</h3>
+                    <div id="writing-mavjud-parts" class="space-y-3 mb-4"></div>
+                    <button type="button" onclick="showNewPartForm('writing')" class="px-4 py-2 bg-[#58CC02] hover:bg-[#46A302] text-white font-bold rounded-xl text-sm mb-6">+ Yangi qo'shish</button>
+                    <div id="writing-part-form-container" class="hidden"></div>
+                    <div id="writing-part-save-wrap" class="hidden mt-4">
+                        <button type="button" onclick="saveSectionPart('writing')" class="btn-primary">Partni saqlash</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -641,12 +641,21 @@
                 this.classList.add('active');
                 const tab = this.dataset.tab;
                 document.getElementById(tab + '-tab').classList.add('active');
-                if (['reading','listening','writing'].includes(tab)) loadSectionData(tab);
+                if (['reading','listening','writing'].includes(tab)) {
+                    loadSectionData(tab);
+                    document.getElementById(tab + '-part-panel').classList.add('hidden');
+                    document.querySelectorAll('.part-btn').forEach(b => {
+                        b.classList.remove('border-[#A78BFA]', 'border-[#45B7D1]', 'border-[#FF9F43]', 'text-[#A78BFA]', 'text-[#45B7D1]', 'text-[#FF9F43]', 'bg-[#A78BFA]/20', 'bg-[#45B7D1]/20', 'bg-[#FF9F43]/20');
+                        b.classList.add('border-[#334155]', 'text-gray-400');
+                    });
+                    selectedPartTypeIndex = null;
+                }
             });
         });
         loadSectionData('reading');
 
         let editingPartIndex = -1;
+        let selectedPartTypeIndex = null;
 
         async function loadSectionData(section) {
             const tests = await loadTests(section);
@@ -655,22 +664,101 @@
             const timeEl = document.getElementById(section + '-test-time');
             if (titleEl) titleEl.value = test ? test.title : '';
             if (timeEl) timeEl.value = test ? (test.time_limit != null ? test.time_limit : (section === 'reading' ? 60 : section === 'listening' ? 40 : 80)) : (section === 'reading' ? 60 : section === 'listening' ? 40 : 80);
-            const partsListEl = document.getElementById(section + '-parts-list');
-            if (partsListEl) {
-                if (!test || !test.parts || test.parts.length === 0) partsListEl.textContent = 'Hozircha part yo\'q. Partni tanlang, formani to\'ldiring va «Partni saqlash» bosing.';
-                else partsListEl.innerHTML = test.parts.map(function(p, i) { return '<span class="inline-block bg-[#334155] text-gray-300 px-2 py-0.5 rounded mr-1 mb-1">' + (p.title || 'Part ' + (i+1)) + '</span>'; }).join('');
+        }
+
+        function selectPart(section, typeIndex) {
+            currentSection = section;
+            currentPartTypeIndex = typeIndex;
+            selectedPartTypeIndex = typeIndex;
+            document.querySelectorAll('.part-btn').forEach(b => b.classList.remove('border-[#A78BFA]', 'border-[#45B7D1]', 'border-[#FF9F43]', 'text-[#A78BFA]', 'text-[#45B7D1]', 'text-[#FF9F43]', 'bg-[#A78BFA]/20', 'bg-[#45B7D1]/20', 'bg-[#FF9F43]/20'));
+            const btn = document.getElementById(section + '-part-btn-' + typeIndex);
+            if (btn) {
+                btn.classList.remove('border-[#334155]', 'text-gray-400');
+                if (section === 'reading') { btn.classList.add('border-[#A78BFA]', 'text-[#A78BFA]', 'bg-[#A78BFA]/20'); }
+                else if (section === 'listening') { btn.classList.add('border-[#45B7D1]', 'text-[#45B7D1]', 'bg-[#45B7D1]/20'); }
+                else { btn.classList.add('border-[#FF9F43]', 'text-[#FF9F43]', 'bg-[#FF9F43]/20'); }
             }
+            const panel = document.getElementById(section + '-part-panel');
+            panel.classList.remove('hidden');
+            document.getElementById(section + '-part-form-container').classList.add('hidden');
+            document.getElementById(section + '-part-form-container').innerHTML = '';
+            document.getElementById(section + '-part-save-wrap').classList.add('hidden');
+            refreshMavjudParts(section, typeIndex);
+        }
+
+        async function refreshMavjudParts(section, typeIndex) {
+            const tests = await loadTests(section);
+            const test = tests[0];
+            const parts = test && test.parts ? test.parts : [];
+            const pType = PART_TEMPLATES[section][typeIndex].type;
+            const container = document.getElementById(section + '-mavjud-parts');
+            const matching = parts.filter((p, i) => p.type === pType || (p.part_number === typeIndex + 1 && !p.type));
+            if (matching.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-sm">Hozircha bu part yo\'q. «Yangi qo\'shish» bosing.</p>';
+                return;
+            }
+            let html = '';
+            matching.forEach((p, idx) => {
+                const globalIndex = parts.indexOf(p);
+                html += '<div class="p-4 bg-[#0F172A] rounded-xl border-2 border-[#334155] flex items-center justify-between gap-4">';
+                html += '<div><span class="font-bold text-white">' + (p.title || 'Part ' + (typeIndex + 1)) + '</span></div>';
+                html += '<div class="flex gap-2">';
+                html += '<button type="button" onclick="editExistingPart(\'' + section + '\', ' + globalIndex + ')" class="px-4 py-2 bg-[#1CB0F6] hover:bg-[#1899D6] text-white font-bold rounded-lg text-sm">Tahrirlash</button>';
+                html += '<button type="button" onclick="deleteExistingPart(\'' + section + '\', ' + globalIndex + ')" class="px-4 py-2 bg-[#FF4B4B] hover:bg-[#EA2B2B] text-white font-bold rounded-lg text-sm">O\'chirish</button>';
+                html += '</div></div>';
+            });
+            container.innerHTML = html;
+        }
+
+        async function editExistingPart(section, partIndex) {
+            const tests = await loadTests(section);
+            const test = tests[0];
+            if (!test || !test.parts || !test.parts[partIndex]) return;
+            const partData = test.parts[partIndex];
+            editingPartIndex = partIndex;
+            currentSection = section;
+            currentPartTypeIndex = selectedPartTypeIndex;
+            const typeIndex = PART_TEMPLATES[section].findIndex(p => p.type === partData.type);
+            if (typeIndex < 0) return;
+            currentPartTypeIndex = typeIndex;
+            const formContainer = document.getElementById(section + '-part-form-container');
+            formContainer.innerHTML = renderPartForm(section, typeIndex, partData);
+            formContainer.classList.remove('hidden');
+            document.getElementById(section + '-part-save-wrap').classList.remove('hidden');
+            setFormDataFromPart(section, typeIndex, partData);
+            formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function showNewPartForm(section) {
+            const typeIndex = selectedPartTypeIndex != null ? selectedPartTypeIndex : 0;
+            currentSection = section;
+            currentPartTypeIndex = typeIndex;
+            editingPartIndex = -1;
+            const formContainer = document.getElementById(section + '-part-form-container');
+            formContainer.innerHTML = renderPartForm(section, typeIndex, null);
+            formContainer.classList.remove('hidden');
+            document.getElementById(section + '-part-save-wrap').classList.remove('hidden');
+            formContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        async function deleteExistingPart(section, partIndex) {
+            if (!confirm('Bu partni o\'chirishni xohlaysizmi?')) return;
+            const tests = await loadTests(section);
+            const test = tests[0];
+            if (!test || !test.parts) return;
+            test.parts.splice(partIndex, 1);
+            const res = await fetch('/admin/data/' + section, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tests }) });
+            if (res.ok) {
+                alert('Part o\'chirildi');
+                refreshMavjudParts(section, selectedPartTypeIndex);
+                document.getElementById(section + '-part-form-container').classList.add('hidden');
+                document.getElementById(section + '-part-save-wrap').classList.add('hidden');
+            } else alert('Xatolik');
         }
 
         async function onSectionPartSelect(section) {
-            const sel = document.getElementById(section + '-part-select');
-            const typeIndex = sel ? parseInt(sel.value, 10) : -1;
-            if (typeIndex < 0 || !PART_TEMPLATES[section] || !PART_TEMPLATES[section][typeIndex]) {
-                document.getElementById(section + '-part-form-container').classList.add('hidden');
-                document.getElementById(section + '-part-form-container').innerHTML = '';
-                document.getElementById(section + '-part-save-wrap').classList.add('hidden');
-                return;
-            }
+            const typeIndex = selectedPartTypeIndex != null ? selectedPartTypeIndex : 0;
+            if (!PART_TEMPLATES[section] || !PART_TEMPLATES[section][typeIndex]) return;
             currentSection = section;
             currentPartTypeIndex = typeIndex;
             const tests = await loadTests(section);
@@ -687,7 +775,7 @@
                 }
             }
             const container = document.getElementById(section + '-part-form-container');
-            container.innerHTML = renderPartForm(section, typeIndex);
+            container.innerHTML = renderPartForm(section, typeIndex, partData);
             container.classList.remove('hidden');
             document.getElementById(section + '-part-save-wrap').classList.remove('hidden');
             if (partData) setFormDataFromPart(section, typeIndex, partData);
@@ -706,6 +794,12 @@
                     if (q.options) Object.keys(q.options).forEach(l => set('pf_q' + q.number + '_' + l, q.options[l]));
                     set('pf_q' + q.number + '_correct', q.correct);
                 });
+                if (type === 'matching_headings') {
+                    set('pf_main_title', p.main_title);
+                    if (p.headings) Object.keys(p.headings).forEach(l => set('pf_heading_' + l, p.headings[l]));
+                    if (p.paragraphs) p.paragraphs.forEach(para => set('pf_para_' + para.number, para.text));
+                    if (p.questions) p.questions.forEach(q => set('pf_match_' + q.number, q.correct));
+                }
                 if (type === 'gapped_text') {
                     if (p.removed_sentences) Object.keys(p.removed_sentences).forEach(l => set('pf_sent_' + l, p.removed_sentences[l]));
                     if (p.questions) p.questions.forEach(q => set('pf_gap_' + q.number, q.correct));
@@ -802,11 +896,19 @@
                 tests.unshift(test);
             }
             if (!test.parts) test.parts = [];
-            part.part_number = editingPartIndex >= 0 ? test.parts[editingPartIndex].part_number : test.parts.length + 1;
+            if (section === 'writing') {
+                part.part_number = currentPartTypeIndex === 0 ? 1 : 2;
+            } else {
+                part.part_number = editingPartIndex >= 0 ? test.parts[editingPartIndex].part_number : test.parts.length + 1;
+            }
             if (editingPartIndex >= 0) test.parts[editingPartIndex] = part;
             else test.parts.push(part);
             const res = await fetch('/admin/data/' + section, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tests }) });
-            if (res.ok) { alert('Part saqlandi'); loadSectionData(section); } else { alert('Xatolik: ' + (await res.text())); }
+            if (res.ok) {
+                alert('Part saqlandi');
+                loadSectionData(section);
+                if (typeof refreshMavjudParts === 'function' && selectedPartTypeIndex != null) refreshMavjudParts(section, selectedPartTypeIndex);
+            } else { alert('Xatolik: ' + (await res.text())); }
         }
 
         function buildPartFromForm(section, typeIndex) {
@@ -818,7 +920,7 @@
                     part.type = 'open_cloze';
                     part.text = getVal('pf_text');
                     part.questions = [];
-                    for (let i = 1; i <= 8; i++) part.questions.push({ number: i, correct: getVal('pf_correct_' + i) });
+                    for (let i = 1; i <= 6; i++) part.questions.push({ number: i, correct: getVal('pf_correct_' + i) });
                 } else if (type === 'multiple_choice_cloze') {
                     part.type = 'multiple_choice_cloze';
                     part.text = getVal('pf_text');
@@ -829,6 +931,22 @@
                         ['A','B','C','D','E','F','G','H','I','J'].forEach(l => { options[l] = getVal('pf_q' + n + '_' + l); });
                         part.questions.push({ number: n, question: getVal('pf_q' + n + '_question'), options, correct: getVal('pf_q' + n + '_correct') });
                     }
+                } else if (type === 'matching_headings') {
+                    part.type = 'matching_headings';
+                    part.main_title = getVal('pf_main_title');
+                    part.headings = {};
+                    ['A','B','C','D','E','F','G','H'].forEach(l => { part.headings[l] = getVal('pf_heading_' + l); });
+                    part.paragraphs = [];
+                    ['I','II','III','IV','V','VI'].forEach(pnum => {
+                        part.paragraphs.push({ number: pnum, text: getVal('pf_para_' + pnum) });
+                    });
+                    part.questions = [];
+                    const paraNums = ['I','II','III','IV','V','VI'];
+                    const qNums = [15,16,17,18,19,20];
+                    paraNums.forEach((pnum, idx) => {
+                        const qnum = qNums[idx];
+                        part.questions.push({ number: qnum, paragraph: pnum, correct: getVal('pf_match_' + qnum) });
+                    });
                 } else if (type === 'gapped_text') {
                     part.type = 'gapped_text';
                     part.text = getVal('pf_text');
@@ -894,8 +1012,8 @@
                     part.audio_description = getVal('pf_audio_desc');
                     part.transcript = getVal('pf_transcript');
                     part.places = [];
-                    for (let i = 0; i < 6; i++) part.places.push({ number: 19 + i, name: getVal('pf_place_name_' + (19 + i)), correct: getVal('pf_place_correct_' + (19 + i)) });
                     part.map_labels = ['A','B','C','D','E','F','G','H'];
+                    for (let i = 0; i < 5; i++) part.places.push({ number: 19 + i, name: getVal('pf_place_name_' + (19 + i)), correct: getVal('pf_place_correct_' + (19 + i)) });
                 } else if (type === 'interview') {
                     part.type = 'interview';
                     part.audio_description = getVal('pf_audio_desc');
@@ -919,11 +1037,12 @@
             if (currentSection === 'writing') {
                 if (type === 'tasks') {
                     part.type = 'tasks';
+                    part.instruction = getVal('pf_instruction');
                     part.tasks = [];
                     for (let t = 1; t <= 2; t++) part.tasks.push({
                         task_number: t,
                         title: getVal('pf_task' + t + '_title'),
-                        type: getVal('pf_task' + t + '_type') || (t === 1 ? 'email' : 'review'),
+                        type: getVal('pf_task' + t + '_type') || ('task' + t),
                         instruction: getVal('pf_task' + t + '_instruction'),
                         situation: getVal('pf_task' + t + '_situation'),
                         min_words: parseInt(getVal('pf_task' + t + '_min') || 50, 10),
@@ -953,9 +1072,9 @@
         // Part templates for Reading, Listening, Writing
         const PART_TEMPLATES = {
             reading: [
-                { label: 'Part 1: Open Cloze', type: 'open_cloze', template: { part_number: 1, title: 'Part 1: Open Cloze', instruction: 'For questions 1-8, read the text and write ONE word in each gap.', type: 'open_cloze', text: 'Matnni shu yerda yozing. Bo\'sh joylar: (1)_____, (2)_____, ...', questions: [ { number: 1, correct: '' }, { number: 2, correct: '' } ] }},
+                { label: 'Part 1: Open Cloze', type: 'open_cloze', template: { part_number: 1, title: 'Part 1: Open Cloze', instruction: 'For questions 1-6, read the text and write ONE word in each gap.', type: 'open_cloze', text: 'Matnni shu yerda yozing. Bo\'sh joylar: (1)_____, (2)_____, ...', questions: [ { number: 1, correct: '' }, { number: 2, correct: '' }, { number: 3, correct: '' }, { number: 4, correct: '' }, { number: 5, correct: '' }, { number: 6, correct: '' } ] }},
                 { label: 'Part 2: Multiple Choice Cloze (10 variant)', type: 'multiple_choice_cloze', template: { part_number: 1, title: 'Part 2: Multiple Choice Cloze', instruction: 'For questions 9-16, choose A–J for each gap.', type: 'multiple_choice_cloze', text: 'Matn (9)_____ ... (16)_____', questions: [ { number: 9, question: '', options: { A: '', B: '', C: '', D: '', E: '', F: '', G: '', H: '', I: '', J: '' }, correct: '' } ] }},
-                { label: 'Part 3: Gapped Text (6 bo\'sh joy, A–H)', type: 'gapped_text', template: { part_number: 1, title: 'Part 3: Gapped Text', instruction: 'Choose A–H for each gap (17–22).', type: 'gapped_text', text: 'Matn (17)_____ ... (22)_____', removed_sentences: { A: '', B: '', C: '', D: '', E: '', F: '', G: '', H: '' }, questions: [ { number: 17, correct: '' }, { number: 18, correct: '' }, { number: 19, correct: '' }, { number: 20, correct: '' }, { number: 21, correct: '' }, { number: 22, correct: '' } ] }},
+                { label: 'Part 3: Matching Headings to Paragraphs', type: 'matching_headings', template: { part_number: 3, title: 'Part 3: Matching Headings to Paragraphs', instruction: 'Read the text and choose the correct heading for each paragraph from the list of headings below. There are more headings than paragraphs, so you will not use all of them. You cannot use any heading more than once.', type: 'matching_headings', main_title: '', headings: { A: '', B: '', C: '', D: '', E: '', F: '', G: '', H: '' }, paragraphs: [ { number: 'I', text: '' }, { number: 'II', text: '' }, { number: 'III', text: '' }, { number: 'IV', text: '' }, { number: 'V', text: '' }, { number: 'VI', text: '' } ], questions: [ { number: 15, paragraph: 'I', correct: '' }, { number: 16, paragraph: 'II', correct: '' }, { number: 17, paragraph: 'III', correct: '' }, { number: 18, paragraph: 'IV', correct: '' }, { number: 19, paragraph: 'V', correct: '' }, { number: 20, paragraph: 'VI', correct: '' } ] }},
                 { label: 'Part 4: Reading Comprehension (MC + True/False)', type: 'multiple_choice_comprehension', template: { part_number: 1, title: 'Part 4: Reading Comprehension', instruction: 'Choose A–D for questions 23–26; True/False/No information for 27–31.', type: 'multiple_choice_comprehension', text: 'Maqola matni...', questions: [ { number: 23, question: '', options: { A: '', B: '', C: '', D: '' }, correct: '' } ] }},
                 { label: 'Part 5: Mixed (4 bo\'sh joy + 2 savol)', type: 'part5_mixed', template: { part_number: 1, title: 'Part 5: Mixed', instruction: 'Complete gaps 32–35 with ONE word; answer 36–37 (A–D).', type: 'part5_mixed', text: 'Uzun matn...', gap_fill: { text: '(32)_____ (33)_____ (34)_____ (35)_____', questions: [ { number: 32, correct: '' }, { number: 33, correct: '' }, { number: 34, correct: '' }, { number: 35, correct: '' } ] }, questions: [ { number: 36, question: '', options: { A: '', B: '', C: '', D: '' }, correct: '' }, { number: 37, question: '', options: { A: '', B: '', C: '', D: '' }, correct: '' } ] }}
             ],
@@ -963,12 +1082,12 @@
                 { label: 'Part 1: Short Conversations (8 savol)', type: 'short_conversations', template: { part_number: 1, title: 'Part 1: Short Conversations', instruction: 'For questions 1-8, choose A, B or C.', type: 'short_conversations', questions: [ { number: 1, audio_description: '', transcript: '', options: { A: '', B: '', C: '' }, correct: '' } ] }},
                 { label: 'Part 2: Sentence Completion (gap fill)', type: 'sentence_completion', template: { part_number: 1, title: 'Part 2: Sentence Completion', instruction: 'Complete sentences with ONE word.', type: 'sentence_completion', audio_description: '', transcript: '', questions: [ { number: 9, question: '_____', correct: '' } ] }},
                 { label: 'Part 3: Speaker / Multiple Matching', type: 'speaker_matching', template: { part_number: 1, title: 'Part 3: Speaker Matching', instruction: 'Match each speaker with A–F.', type: 'speaker_matching', audio_description: '', speakers: [ { number: 15, name: 'Speaker 1', transcript: '' } ], options: { A: '', B: '', C: '', D: '', E: '', F: '' }, answers: [ { number: 15, correct: '' } ] }},
-                { label: 'Part 4: Map Labeling', type: 'map_labeling', template: { part_number: 1, title: 'Part 4: Map Labeling', instruction: 'Match places with letters on the map.', type: 'map_labeling', map_image_url: '', audio_description: '', transcript: '', places: [ { number: 19, name: '', correct: '' } ], map_labels: ['A','B','C','D','E','F','G','H'] }},
+                { label: 'Part 4: Map Labeling', type: 'map_labeling', template: { part_number: 4, title: 'Part 4: Map Labeling', instruction: 'You will hear someone giving a talk. Label the places (19-23) on the map (A-H). There are THREE extra options which you do not need to use. Mark your answers on the answer sheet.', type: 'map_labeling', map_image_url: '', audio_description: '', transcript: '', places: [ { number: 19, name: '', correct: '' }, { number: 20, name: '', correct: '' }, { number: 21, name: '', correct: '' }, { number: 22, name: '', correct: '' }, { number: 23, name: '', correct: '' } ], map_labels: ['A','B','C','D','E','F','G','H'] }},
                 { label: 'Part 5: Interview (Multiple Choice)', type: 'interview', template: { part_number: 1, title: 'Part 5: Interview', instruction: 'For questions 25-30, choose A, B or C.', type: 'interview', audio_description: '', transcript: '', questions: [ { number: 25, question: '', options: { A: '', B: '', C: '' }, correct: '' } ] }},
                 { label: 'Part 6: Note Completion (bitta matn)', type: 'note_completion', template: { part_number: 1, title: 'Part 6: Note Completion', instruction: 'Complete notes with ONE word (31–36).', type: 'note_completion', audio_description: '', transcript: '', text: 'Matn (31)_____ (32)_____ ... (36)_____', questions: [ { number: 31, correct: '' }, { number: 32, correct: '' } ] }}
             ],
             writing: [
-                { label: 'Part 1: Tasks (Email, Review va b.)', type: 'tasks', template: { part_number: 1, title: 'Part 1', instruction: 'Complete BOTH tasks.', tasks: [ { task_number: 1, title: 'Task 1', type: 'email', instruction: '', situation: '', min_words: 50, max_words: 500 }, { task_number: 2, title: 'Task 2', type: 'review', instruction: '', situation: '', min_words: 120, max_words: 150 } ] }},
+                { label: 'Part 1: Tasks (Task 1 va Task 2)', type: 'tasks', template: { part_number: 1, title: 'Part 1', instruction: 'Read the instructions for each task carefully. Complete Task 1 and Task 2.', tasks: [ { task_number: 1, title: 'Task 1', type: 'task1', instruction: '', situation: '', min_words: 50, max_words: 500 }, { task_number: 2, title: 'Task 2', type: 'task2', instruction: '', situation: '', min_words: 120, max_words: 150 } ] }},
                 { label: 'Part 2: Essay', type: 'essay', template: { part_number: 1, title: 'Part 2: Essay', instruction: 'Write an essay.', type: 'essay', prompt: '', min_words: 180, max_words: 200 }}
             ]
         };
@@ -1038,19 +1157,24 @@
             currentPartTypeIndex = null;
         }
 
-        function renderPartForm(section, typeIndex) {
+        function renderPartForm(section, typeIndex, partData) {
             const item = PART_TEMPLATES[section][typeIndex];
             const type = item.type;
             const nextPartNum = (() => { try { const el = document.getElementById('test-parts-json'); const raw = el ? (el.value || '').trim() : ''; const p = raw ? JSON.parse(raw) : []; return (Array.isArray(p) && p.length) ? p.length + 1 : 1; } catch(e) { return 1; } })();
+            const hasPart = partData && partData.questions && partData.questions.length > 0;
 
             if (section === 'reading') {
                 if (type === 'open_cloze') {
                     let html = '<div class="space-y-4"><div><label class="block text-sm font-bold text-gray-300 mb-1">Part sarlavha</label><input type="text" id="pf_title" class="form-input" value="Part ' + nextPartNum + ': Open Cloze" placeholder="Part 1: Open Cloze"></div>';
-                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Ko\'rsatma</label><textarea id="pf_instruction" class="form-input h-16" placeholder="For questions 1-8...">For questions 1-8, read the text and write ONE word in each gap.</textarea></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Ko\'rsatma</label><textarea id="pf_instruction" class="form-input h-16" placeholder="For questions 1-6...">For questions 1-6, read the text and write ONE word in each gap.</textarea></div>';
                     html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Matn (bo\'sh joylar: (1)_____, (2)_____ ...)</label><textarea id="pf_text" class="form-input h-40 font-mono text-sm" placeholder="Climate change is (1)_____ most pressing..."></textarea></div>';
-                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-2">To\'g\'ri javoblar (1–8)</label><div class="grid grid-cols-4 gap-2">';
-                    for (let i = 1; i <= 8; i++) html += '<div><label class="text-xs text-gray-500">' + i + '</label><input type="text" id="pf_correct_' + i + '" class="form-input py-1" placeholder="so\'z"></div>';
-                    html += '</div></div></div>';
+                    html += '<div class="border-t-2 border-[#334155] pt-4"><h3 class="text-lg font-bold text-white mb-3">Savollar (bo\'sh joylar uchun to\'g\'ri javoblar)</h3>';
+                    html += '<div id="questions-list-open-cloze" class="space-y-2 mb-3"></div>';
+                    html += '<div class="grid grid-cols-3 gap-2 mb-3">';
+                    for (let i = 1; i <= 6; i++) html += '<div><label class="text-xs text-gray-500">' + i + '</label><input type="text" id="pf_correct_' + i + '" class="form-input py-1" placeholder="so\'z"></div>';
+                    html += '</div>';
+                    html += '<button type="button" onclick="addQuestionOpenCloze()" class="px-4 py-2 bg-[#58CC02] hover:bg-[#46A302] text-white font-bold rounded-lg text-sm">+ Savol qo\'shish</button>';
+                    html += '</div></div>';
                     return html;
                 }
                 if (type === 'multiple_choice_cloze') {
@@ -1058,15 +1182,49 @@
                     let html = '<div class="space-y-4"><div><label class="block text-sm font-bold text-gray-300 mb-1">Part sarlavha</label><input type="text" id="pf_title" class="form-input" value="Part ' + nextPartNum + ': Multiple Choice Cloze"></div>';
                     html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Ko\'rsatma</label><textarea id="pf_instruction" class="form-input h-14">For questions ' + startNum + '-' + (startNum+7) + ', choose A–J for each gap.</textarea></div>';
                     html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Matn (bo\'sh joylar: (' + startNum + ')_____ ...)</label><textarea id="pf_text" class="form-input h-32 font-mono text-sm"></textarea></div>';
+                    html += '<div class="border-t-2 border-[#334155] pt-4"><h3 class="text-lg font-bold text-white mb-3">Savollar</h3>';
+                    html += '<div id="questions-list-multiple-choice-cloze" class="space-y-2 mb-3"></div>';
                     for (let q = 0; q < 8; q++) {
                         const n = startNum + q;
-                        html += '<div class="p-4 bg-[#0F172A] rounded-xl border border-[#334155]"><h4 class="font-bold text-[#4ECDC4] mb-2 text-sm">Savol ' + n + '</h4>';
+                        html += '<div class="p-4 bg-[#0F172A] rounded-xl border border-[#334155] mb-2"><h4 class="font-bold text-[#4ECDC4] mb-2 text-sm">Savol ' + n + '</h4>';
                         html += '<input type="text" id="pf_q' + n + '_question" class="form-input mb-2 w-full" placeholder="Savol matni (jumla)">';
                         html += '<div class="grid grid-cols-5 gap-1 mb-2">';
                         ['A','B','C','D','E','F','G','H','I','J'].forEach((l, i) => { html += '<input type="text" id="pf_q' + n + '_' + l + '" class="form-input py-1 text-xs" placeholder="' + l + '">'; });
                         html += '</div><select id="pf_q' + n + '_correct" class="form-input py-1 w-20"><option value="">?</option>' + ['A','B','C','D','E','F','G','H','I','J'].map(l => '<option value="' + l + '">' + l + '</option>').join('') + '</select></div>';
                     }
-                    return html + '</div>';
+                    html += '</div></div>';
+                    return html;
+                }
+                if (type === 'matching_headings') {
+                    let html = '<div class="space-y-4"><div><label class="block text-sm font-bold text-gray-300 mb-1">Part sarlavha</label><input type="text" id="pf_title" class="form-input" value="Part ' + nextPartNum + ': Matching Headings to Paragraphs"></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Ko\'rsatma</label><textarea id="pf_instruction" class="form-input h-20">Read the text and choose the correct heading for each paragraph from the list of headings below. There are more headings than paragraphs, so you will not use all of them. You cannot use any heading more than once.</textarea></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Asosiy sarlavha (matn tepasida)</label><input type="text" id="pf_main_title" class="form-input" placeholder="HOW DOES THE BIOLOGICAL CLOCK TICK?"></div>';
+                    html += '<div class="border-t-2 border-[#334155] pt-4"><h3 class="text-lg font-bold text-white mb-3">Headings (A–H) — 8 ta</h3>';
+                    ['A','B','C','D','E','F','G','H'].forEach(l => {
+                        html += '<div class="mb-2"><span class="text-[#FF9600] font-bold mr-2 w-6 inline-block">' + l + ')</span><input type="text" id="pf_heading_' + l + '" class="form-input flex-1 inline-block w-full md:w-auto" placeholder="Heading ' + l + '"></div>';
+                    });
+                    html += '</div>';
+                    html += '<div class="border-t-2 border-[#334155] pt-4"><h3 class="text-lg font-bold text-white mb-3">Paragraflar (I–VI) — 6 ta</h3>';
+                    ['I','II','III','IV','V','VI'].forEach((pnum, idx) => {
+                        html += '<div class="mb-4 p-3 bg-[#0F172A] rounded-lg border border-[#334155]">';
+                        html += '<label class="text-sm font-bold text-[#FF9600] mb-2 block">Paragraph ' + pnum + '</label>';
+                        html += '<textarea id="pf_para_' + pnum + '" class="form-input h-32 font-mono text-sm" placeholder="Paragraph ' + pnum + ' matni..."></textarea>';
+                        html += '</div>';
+                    });
+                    html += '</div>';
+                    html += '<div class="border-t-2 border-[#334155] pt-4"><h3 class="text-lg font-bold text-white mb-3">To\'g\'ri javoblar (15–20)</h3>';
+                    const paraNums = ['I','II','III','IV','V','VI'];
+                    const qNums = [15,16,17,18,19,20];
+                    paraNums.forEach((pnum, idx) => {
+                        const qnum = qNums[idx];
+                        html += '<div class="mb-2 flex items-center gap-3"><span class="text-sm text-gray-300 w-24">Question ' + qnum + ' (Para ' + pnum + '):</span>';
+                        html += '<select id="pf_match_' + qnum + '" class="form-input py-1 w-32">';
+                        html += '<option value="">— Tanlang —</option>';
+                        ['A','B','C','D','E','F','G','H'].forEach(l => { html += '<option value="' + l + '">' + l + '</option>'; });
+                        html += '</select></div>';
+                    });
+                    html += '</div></div>';
+                    return html;
                 }
                 if (type === 'gapped_text') {
                     const startNum = 17;
@@ -1158,12 +1316,12 @@
                 if (type === 'map_labeling') {
                     const startNum = 19;
                     let html = '<div class="space-y-4"><div><label class="block text-sm font-bold text-gray-300 mb-1">Part sarlavha</label><input type="text" id="pf_title" class="form-input" value="Part ' + nextPartNum + ': Map Labeling"></div>';
-                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Ko\'rsatma</label><textarea id="pf_instruction" class="form-input h-14">Match places with letters (A–H) on the map.</textarea></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Ko\'rsatma</label><textarea id="pf_instruction" class="form-input h-20">You will hear someone giving a talk. Label the places (19-23) on the map (A-H). There are THREE extra options which you do not need to use. Mark your answers on the answer sheet.</textarea></div>';
                     html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Xarita rasm URL</label><input type="text" id="pf_map_url" class="form-input" placeholder="/static/uploads/listening_maps/..."></div>';
                     html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Audio tavsifi</label><input type="text" id="pf_audio_desc" class="form-input"></div>';
                     html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Transcript</label><textarea id="pf_transcript" class="form-input h-24"></textarea></div>';
-                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-2">Joylar (6 ta: nom + harf A–H)</label>';
-                    for (let i = 0; i < 6; i++) { const n = startNum + i; html += '<div class="flex gap-2 mb-2"><span class="text-gray-500 w-8">' + n + '</span><input type="text" id="pf_place_name_' + n + '" class="form-input flex-1" placeholder="Joy nomi"><select id="pf_place_correct_' + n + '" class="form-input py-1 w-20">' + ['A','B','C','D','E','F','G','H'].map(l => '<option value="' + l + '">' + l + '</option>').join('') + '</select></div>'; }
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-2">Joylar (5 ta: 19-23, nom + harf A–H)</label>';
+                    for (let i = 0; i < 5; i++) { const n = startNum + i; html += '<div class="flex gap-2 mb-2"><span class="text-gray-500 w-8">' + n + '</span><input type="text" id="pf_place_name_' + n + '" class="form-input flex-1" placeholder="Joy nomi"><select id="pf_place_correct_' + n + '" class="form-input py-1 w-20">' + ['A','B','C','D','E','F','G','H'].map(l => '<option value="' + l + '">' + l + '</option>').join('') + '</select></div>'; }
                     return html + '</div></div>';
                 }
                 if (type === 'interview') {
@@ -1197,11 +1355,11 @@
             if (section === 'writing') {
                 if (type === 'tasks') {
                     let html = '<div class="space-y-4"><div><label class="block text-sm font-bold text-gray-300 mb-1">Part sarlavha</label><input type="text" id="pf_title" class="form-input" value="Part 1"></div>';
-                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Ko\'rsatma</label><textarea id="pf_instruction" class="form-input h-14">Complete BOTH tasks.</textarea></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Umumiy ko\'rsatma (Part 1 savoli)</label><textarea id="pf_instruction" class="form-input h-20">Read the instructions for each task carefully. Complete Task 1 and Task 2.</textarea></div>';
                     for (let t = 1; t <= 2; t++) {
                         html += '<div class="p-4 bg-[#0F172A] rounded-xl border border-[#334155]"><h4 class="font-bold text-[#4ECDC4] mb-2">Task ' + t + '</h4>';
-                        html += '<input type="text" id="pf_task' + t + '_title" class="form-input mb-2" placeholder="Task sarlavha (masalan: Email)">';
-                        html += '<input type="text" id="pf_task' + t + '_type" class="form-input mb-2" placeholder="type: email / review">';
+html += '<input type="text" id="pf_task' + t + '_title" class="form-input mb-2" placeholder="Task sarlavha">';
+                    html += '<input type="text" id="pf_task' + t + '_type" class="form-input mb-2" placeholder="Tur (ixtiyoriy)">';
                         html += '<textarea id="pf_task' + t + '_instruction" class="form-input h-16 mb-2" placeholder="Ko\'rsatma"></textarea>';
                         html += '<textarea id="pf_task' + t + '_situation" class="form-input h-24 mb-2" placeholder="Situation matni"></textarea>';
                         html += '<div class="flex gap-2"><input type="number" id="pf_task' + t + '_min" class="form-input w-24" placeholder="min so\'z" value="' + (t===1?50:120) + '"><input type="number" id="pf_task' + t + '_max" class="form-input w-24" placeholder="max" value="' + (t===1?500:150) + '"></div></div>';
@@ -1218,6 +1376,135 @@
             }
 
             return '<p class="text-gray-500">Ushbu part turi uchun forma hozircha mavjud emas. Bo\'sh shablon tugmasidan foydalaning.</p>';
+        }
+
+        function renderQuestionsList(section, typeIndex, partData) {
+            const type = PART_TEMPLATES[section][typeIndex].type;
+            const containerId = 'questions-list-' + type.replace(/_/g, '-');
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            if (!partData || !partData.questions || partData.questions.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-sm py-2">Hozircha savollar yo\'q. Formani to\'ldiring va «Partni saqlash» bosing.</p>';
+                return;
+            }
+            
+            let html = '';
+            partData.questions.forEach((q, idx) => {
+                html += '<div class="p-3 bg-[#0F172A] rounded-lg border border-[#334155] mb-2" data-question-index="' + idx + '" data-question-number="' + (q.number || (idx + 1)) + '">';
+                html += '<div class="flex items-start justify-between gap-3">';
+                html += '<div class="flex-1">';
+                html += '<div class="flex items-center gap-2 mb-1">';
+                html += '<span class="w-6 h-6 bg-[#1CB0F6] rounded flex items-center justify-center text-white text-xs font-black">' + (q.number || (idx + 1)) + '</span>';
+                
+                if (type === 'open_cloze') {
+                    html += '<span class="text-sm text-gray-300">To\'g\'ri javob: <strong class="text-[#58CC02]">' + (q.correct || '—') + '</strong></span>';
+                } else if (type === 'multiple_choice_cloze') {
+                    html += '<div class="flex-1"><span class="text-sm text-gray-300">' + (q.question || '—') + '</span>';
+                    if (q.options) html += '<span class="text-xs text-gray-500 ml-2">(' + Object.keys(q.options).length + ' variant: ' + Object.keys(q.options).join(', ') + ')</span>';
+                    html += '<span class="text-xs text-[#58CC02] font-bold ml-2">To\'g\'ri: ' + (q.correct || '?') + '</span></div>';
+                } else if (type === 'multiple_choice_comprehension' || type === 'part5_mixed') {
+                    html += '<div class="flex-1"><span class="text-sm text-gray-300">' + (q.question || '—') + '</span>';
+                    if (q.options) {
+                        const optKeys = Object.keys(q.options);
+                        html += '<span class="text-xs text-gray-500 ml-2">(' + optKeys.length + ' variant';
+                        if (q.options.A === 'True') html += ': True/False/No information';
+                        else html += ': ' + optKeys.join(', ');
+                        html += ')</span>';
+                    }
+                    html += '<span class="text-xs text-[#58CC02] font-bold ml-2">To\'g\'ri: ' + (q.correct || '?') + '</span></div>';
+                } else if (type === 'gapped_text') {
+                    html += '<span class="text-sm text-gray-300">Gap ' + (q.number || (idx + 1)) + ': <strong class="text-[#58CC02]">' + (q.correct || '—') + '</strong></span>';
+                }
+                
+                html += '</div></div>';
+                html += '</div>';
+                html += '<div class="flex gap-2 flex-shrink-0">';
+                html += '<button type="button" onclick="editQuestion(\'' + section + '\', ' + typeIndex + ', ' + idx + ')" class="px-3 py-1 bg-[#1CB0F6] hover:bg-[#1899D6] text-white text-xs font-bold rounded">Tahrirlash</button>';
+                html += '<button type="button" onclick="deleteQuestion(\'' + section + '\', ' + typeIndex + ', ' + idx + ')" class="px-3 py-1 bg-[#FF4B4B] hover:bg-[#EA2B2B] text-white text-xs font-bold rounded">O\'chirish</button>';
+                html += '</div></div></div>';
+            });
+            container.innerHTML = html;
+        }
+
+        async function editQuestion(section, typeIndex, questionIndex) {
+            const tests = await loadTests(section);
+            const test = tests[0];
+            if (!test || !test.parts) return;
+            const pType = PART_TEMPLATES[section][typeIndex].type;
+            const part = test.parts.find(p => p.type === pType || (p.part_number === typeIndex + 1 && !p.type));
+            if (!part || !part.questions || !part.questions[questionIndex]) return;
+            
+            const q = part.questions[questionIndex];
+            const type = PART_TEMPLATES[section][typeIndex].type;
+            
+            // Formani to'ldirish
+            if (type === 'open_cloze') {
+                const inputId = 'pf_correct_' + (q.number || (questionIndex + 1));
+                const input = document.getElementById(inputId);
+                if (input) input.value = q.correct || '';
+            } else if (type === 'multiple_choice_cloze') {
+                const num = q.number || (questionIndex + 9);
+                const qInput = document.getElementById('pf_q' + num + '_question');
+                const correctSelect = document.getElementById('pf_q' + num + '_correct');
+                if (qInput) qInput.value = q.question || '';
+                if (correctSelect) correctSelect.value = q.correct || '';
+                if (q.options) {
+                    Object.keys(q.options).forEach(l => {
+                        const optInput = document.getElementById('pf_q' + num + '_' + l);
+                        if (optInput) optInput.value = q.options[l] || '';
+                    });
+                }
+            } else if (type === 'multiple_choice_comprehension') {
+                const num = q.number || (questionIndex + 23);
+                const qInput = document.getElementById('pf_cq' + num + '_q');
+                const correctSelect = document.getElementById('pf_cq' + num + '_correct');
+                if (qInput) qInput.value = q.question || '';
+                if (correctSelect) correctSelect.value = q.correct || '';
+                if (q.options && q.options.A !== 'True') {
+                    Object.keys(q.options).forEach(l => {
+                        const optInput = document.getElementById('pf_cq' + num + '_' + l);
+                        if (optInput) optInput.value = q.options[l] || '';
+                    });
+                }
+            }
+            
+            // Scroll to form
+            const container = document.getElementById(section + '-part-form-container');
+            if (container) container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        async function deleteQuestion(section, typeIndex, questionIndex) {
+            if (!confirm('Bu savolni o\'chirishni xohlaysizmi?')) return;
+            
+            const tests = await loadTests(section);
+            const test = tests[0];
+            if (!test || !test.parts) return;
+            const pType = PART_TEMPLATES[section][typeIndex].type;
+            const partIndex = test.parts.findIndex(p => p.type === pType || (p.part_number === typeIndex + 1 && !p.type));
+            if (partIndex < 0) return;
+            
+            const part = test.parts[partIndex];
+            if (!part.questions || !part.questions[questionIndex]) return;
+            
+            part.questions.splice(questionIndex, 1);
+            // Renumber questions
+            part.questions.forEach((q, i) => {
+                if (!q.number) q.number = (typeIndex === 0 ? i + 1 : (typeIndex === 1 ? i + 9 : (typeIndex === 2 ? i + 17 : (typeIndex === 3 ? i + 23 : i + 32))));
+            });
+            
+            const res = await fetch('/admin/data/' + section, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tests }) });
+            if (res.ok) {
+                alert('Savol o\'chirildi');
+                onSectionPartSelect(section);
+            } else {
+                alert('Xatolik');
+            }
+        }
+
+        function addQuestionOpenCloze() {
+            // Open cloze uchun yangi savol qo'shish - bu oddiy, faqat to'g'ri javob kiritiladi
+            alert('Yangi savol qo\'shish uchun formani to\'ldiring va «Partni saqlash» bosing.');
         }
 
         function getVal(id) { const el = document.getElementById(id); return el ? (el.value || '').trim() : ''; }
@@ -1238,7 +1525,7 @@
                     part.type = 'open_cloze';
                     part.text = getVal('pf_text');
                     part.questions = [];
-                    for (let i = 1; i <= 8; i++) part.questions.push({ number: i, correct: getVal('pf_correct_' + i) });
+                    for (let i = 1; i <= 6; i++) part.questions.push({ number: i, correct: getVal('pf_correct_' + i) });
                 } else if (type === 'multiple_choice_cloze') {
                     part.type = 'multiple_choice_cloze';
                     part.text = getVal('pf_text');
@@ -1250,6 +1537,22 @@
                         ['A','B','C','D','E','F','G','H','I','J'].forEach(l => { options[l] = getVal('pf_q' + n + '_' + l); });
                         part.questions.push({ number: n, question: getVal('pf_q' + n + '_question'), options, correct: getVal('pf_q' + n + '_correct') });
                     }
+                } else if (type === 'matching_headings') {
+                    part.type = 'matching_headings';
+                    part.main_title = getVal('pf_main_title');
+                    part.headings = {};
+                    ['A','B','C','D','E','F','G','H'].forEach(l => { part.headings[l] = getVal('pf_heading_' + l); });
+                    part.paragraphs = [];
+                    ['I','II','III','IV','V','VI'].forEach(pnum => {
+                        part.paragraphs.push({ number: pnum, text: getVal('pf_para_' + pnum) });
+                    });
+                    part.questions = [];
+                    const paraNums = ['I','II','III','IV','V','VI'];
+                    const qNums = [15,16,17,18,19,20];
+                    paraNums.forEach((pnum, idx) => {
+                        const qnum = qNums[idx];
+                        part.questions.push({ number: qnum, paragraph: pnum, correct: getVal('pf_match_' + qnum) });
+                    });
                 } else if (type === 'gapped_text') {
                     part.type = 'gapped_text';
                     part.text = getVal('pf_text');
@@ -1319,8 +1622,8 @@
                     part.audio_description = getVal('pf_audio_desc');
                     part.transcript = getVal('pf_transcript');
                     part.places = [];
-                    for (let i = 0; i < 6; i++) part.places.push({ number: 19 + i, name: getVal('pf_place_name_' + (19 + i)), correct: getVal('pf_place_correct_' + (19 + i)) });
                     part.map_labels = ['A','B','C','D','E','F','G','H'];
+                    for (let i = 0; i < 5; i++) part.places.push({ number: 19 + i, name: getVal('pf_place_name_' + (19 + i)), correct: getVal('pf_place_correct_' + (19 + i)) });
                 } else if (type === 'interview') {
                     part.type = 'interview';
                     part.audio_description = getVal('pf_audio_desc');
@@ -1348,7 +1651,7 @@
                     for (let t = 1; t <= 2; t++) part.tasks.push({
                         task_number: t,
                         title: getVal('pf_task' + t + '_title'),
-                        type: getVal('pf_task' + t + '_type') || (t === 1 ? 'email' : 'review'),
+                        type: getVal('pf_task' + t + '_type') || ('task' + t),
                         instruction: getVal('pf_task' + t + '_instruction'),
                         situation: getVal('pf_task' + t + '_situation'),
                         min_words: parseInt(getVal('pf_task' + t + '_min') || 50, 10),

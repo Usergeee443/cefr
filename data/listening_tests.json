@@ -148,18 +148,17 @@
         {
           "part_number": 4,
           "title": "Part 4: Map Labeling",
-          "instruction": "You will hear a guide describing a university campus. For questions 19-24, match each place with the correct letter (A-H) on the map.",
+          "instruction": "You will hear someone giving a talk. Label the places (19-23) on the map (A-H). There are THREE extra options which you do not need to use. Mark your answers on the answer sheet.",
           "type": "map_labeling",
           "map_image_url": "",
-          "audio_description": "A guide describing a university campus tour.",
-          "transcript": "Welcome to our university campus tour. Let me show you around. If you look straight ahead, you'll see the Main Library - that's the large building right in the center. To the left of the library is the Science Building, and right behind it is the Sports Center. If you turn right from the entrance, the first building you see is the Student Union. The Cafeteria is just next to the Student Union. And finally, the Art Gallery is the small building at the far end of the campus, near the lake.",
+          "audio_description": "Someone giving a talk about places on a map.",
+          "transcript": "Welcome to our town center. Let me point out some important locations. As you enter from London Road, you'll see the town hall directly ahead - that's the large building in the center. To your left, on High Street, there's a supermarket. If you continue down High Street and turn right onto Sheep Street, you'll find the post office. Further along Sheep Street, near the park, is the primary school. And finally, if you walk down Church Lane from the town hall, you'll come to Wok'n'Roll restaurant.",
           "places": [
-            {"number": 19, "name": "Main Library", "correct": "D"},
-            {"number": 20, "name": "Science Building", "correct": "C"},
-            {"number": 21, "name": "Sports Center", "correct": "F"},
-            {"number": 22, "name": "Student Union", "correct": "B"},
-            {"number": 23, "name": "Cafeteria", "correct": "A"},
-            {"number": 24, "name": "Art Gallery", "correct": "H"}
+            {"number": 19, "name": "town hall", "correct": "D"},
+            {"number": 20, "name": "supermarket", "correct": "A"},
+            {"number": 21, "name": "post office", "correct": "B"},
+            {"number": 22, "name": "primary school", "correct": "E"},
+            {"number": 23, "name": "Wok'n'Roll", "correct": "G"}
           ],
           "map_labels": ["A", "B", "C", "D", "E", "F", "G", "H"]
         },
