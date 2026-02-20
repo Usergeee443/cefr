@@ -513,6 +513,63 @@
                                 </div>
                             </div>
 
+                            {% elif part.type == "matching_statements" %}
+                            <!-- Part 2: xuddi rasmdagidek – PART 2 sarlavha, ko'rsatmalar, 7-14 chapda, List of announcements A-J o'ngda -->
+                            <div class="flex flex-col flex-1 min-h-0">
+                                <h2 class="text-lg md:text-xl font-black text-white uppercase mb-3 flex-shrink-0">PART 2</h2>
+                                <!-- Ko'rsatmalar (admin paneldan yoki default) -->
+                                <div class="mb-4 flex-shrink-0 space-y-1 text-sm text-[#AFAFAF]">
+                                    {% for line in (part.instruction or '').split('\n') %}
+                                    {% if line.strip() %}<p>{{ line.strip() }}</p>{% endif %}
+                                    {% endfor %}
+                                    {% if not (part.instruction or '').strip() %}
+                                    <p>Read the texts 7-14 and the statements A-J. Decide which text matches with the situation described in the statements.</p>
+                                    <p>Each statement can be used <strong class="text-white">ONCE only</strong>. There are <strong class="text-white">TWO extra statements</strong> which you do not need to use.</p>
+                                    <p>Mark your answers on the answer sheet.</p>
+                                    {% endif %}
+                                </div>
+                                <div class="grid lg:grid-cols-2 gap-4 md:gap-6 flex-1 min-h-0">
+                                    <!-- Chap: raqamli matnlar 7-14 -->
+                                    <div class="passage-card p-4 md:p-5 overflow-y-auto min-h-0 flex flex-col">
+                                        <div class="space-y-4">
+                                            {% for desc in part.descriptions %}
+                                            <div class="focusable-question" data-question="{{ desc.number }}" id="q-{{ desc.number }}" tabindex="0">
+                                                <p class="text-[#AFAFAF] text-sm leading-relaxed mb-2">
+                                                    <span class="font-black text-white">{{ desc.number }}.</span> {{ desc.text }}
+                                                </p>
+                                                <div class="flex items-center gap-2">
+                                                    <span class="text-xs font-bold text-[#777]">{{ desc.number }} =</span>
+                                                    <input type="text"
+                                                           name="{{ desc.number }}"
+                                                           value=""
+                                                           maxlength="1"
+                                                           class="w-11 h-9 text-center text-sm font-black text-white bg-[#1E293B] border-2 border-[#334155] rounded focus:border-[#1CB0F6] focus:outline-none uppercase"
+                                                           placeholder="?"
+                                                           pattern="[A-J]"
+                                                           title="A–J">
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <!-- O'ng: List of announcements A–J -->
+                                    <div class="overflow-y-auto min-h-0 pr-1 flex flex-col">
+                                        <div class="passage-card p-4 md:p-5">
+                                            <h4 class="text-[#1CB0F6] font-black text-sm uppercase tracking-wider mb-4">List of announcements</h4>
+                                            <div class="space-y-4">
+                                                {% for letter, statement in part.statements.items() %}
+                                                <div>
+                                                    <p class="text-sm text-[#AFAFAF] leading-relaxed">
+                                                        <span class="font-black text-[#1CB0F6]">{{ letter }}.</span> {{ statement }}
+                                                    </p>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             {% elif part.type == "multiple_choice_cloze" %}
                             <!-- Part 2: Chapda savollar tartib bilan (har biri 1 qator), o'ngda passage + variantlar -->
                             <div class="grid lg:grid-cols-2 gap-3 md:gap-4 flex-1 min-h-0">
@@ -964,6 +1021,44 @@
             });
         });
         
+        // Matching statements input handling (A-J only, for questions 7-14)
+        document.querySelectorAll('input[type="text"][maxlength="1"]').forEach(input => {
+            if (input.name && /^[7-9]|1[0-4]$/.test(input.name)) {
+                input.addEventListener('input', function() {
+                    // Convert to uppercase and filter to A-J only
+                    let val = this.value.toUpperCase().replace(/[^A-J]/g, '');
+                    if (val.length > 1) val = val.slice(0, 1);
+                    this.value = val;
+                    
+                    updateProgress();
+                    updateQuestionNavHighlight();
+                    
+                    if (this.value.trim()) {
+                        this.classList.add('filled');
+                        const card = this.closest('.question-card');
+                        if (card) card.classList.add('answered');
+                    } else {
+                        this.classList.remove('filled');
+                        const card = this.closest('.question-card');
+                        if (card) card.classList.remove('answered');
+                    }
+                });
+                
+                input.addEventListener('keypress', function(e) {
+                    const key = e.key.toUpperCase();
+                    if (!/[A-J]/.test(key) && key !== 'Backspace' && key !== 'Delete' && key !== 'Enter') {
+                        e.preventDefault();
+                    }
+                });
+                
+                input.addEventListener('blur', function() {
+                    if (this.value.trim()) {
+                        showToast('Javob saqlandi!');
+                    }
+                });
+            }
+        });
+        
         document.querySelectorAll('select').forEach(select => {
             select.addEventListener('change', function() {
                 updateProgress();
@@ -977,6 +1072,7 @@
             let answered = 0;
             document.querySelectorAll('input[type="hidden"]').forEach(input => { if (input.value) answered++; });
             document.querySelectorAll('.gap-input').forEach(input => { if (input.value.trim()) answered++; });
+            document.querySelectorAll('input[type="text"][maxlength="1"]').forEach(input => { if (input.value.trim()) answered++; });
             document.querySelectorAll('select').forEach(select => { if (select.value) answered++; });
             const pct = Math.round((answered / totalQuestions) * 100);
             document.getElementById('progress').textContent = pct;

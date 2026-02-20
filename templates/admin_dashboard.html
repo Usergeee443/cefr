@@ -794,6 +794,11 @@
                     if (q.options) Object.keys(q.options).forEach(l => set('pf_q' + q.number + '_' + l, q.options[l]));
                     set('pf_q' + q.number + '_correct', q.correct);
                 });
+                if (type === 'matching_statements') {
+                    if (p.descriptions) p.descriptions.forEach(desc => set('pf_desc_' + desc.number, desc.text));
+                    if (p.statements) Object.keys(p.statements).forEach(l => set('pf_stmt_' + l, p.statements[l]));
+                    if (p.questions) p.questions.forEach(q => set('pf_match_' + q.number, q.correct));
+                }
                 if (type === 'matching_headings') {
                     set('pf_main_title', p.main_title);
                     if (p.headings) Object.keys(p.headings).forEach(l => set('pf_heading_' + l, p.headings[l]));
@@ -921,6 +926,18 @@
                     part.text = getVal('pf_text');
                     part.questions = [];
                     for (let i = 1; i <= 6; i++) part.questions.push({ number: i, correct: getVal('pf_correct_' + i) });
+                } else if (type === 'matching_statements') {
+                    part.type = 'matching_statements';
+                    part.descriptions = [];
+                    for (let i = 7; i <= 14; i++) {
+                        part.descriptions.push({ number: i, text: getVal('pf_desc_' + i) });
+                    }
+                    part.statements = {};
+                    ['A','B','C','D','E','F','G','H','I','J'].forEach(l => { part.statements[l] = getVal('pf_stmt_' + l); });
+                    part.questions = [];
+                    for (let i = 7; i <= 14; i++) {
+                        part.questions.push({ number: i, correct: getVal('pf_match_' + i) });
+                    }
                 } else if (type === 'multiple_choice_cloze') {
                     part.type = 'multiple_choice_cloze';
                     part.text = getVal('pf_text');
@@ -1073,7 +1090,7 @@
         const PART_TEMPLATES = {
             reading: [
                 { label: 'Part 1: Open Cloze', type: 'open_cloze', template: { part_number: 1, title: 'Part 1: Open Cloze', instruction: 'For questions 1-6, read the text and write ONE word in each gap.', type: 'open_cloze', text: 'Matnni shu yerda yozing. Bo\'sh joylar: (1)_____, (2)_____, ...', questions: [ { number: 1, correct: '' }, { number: 2, correct: '' }, { number: 3, correct: '' }, { number: 4, correct: '' }, { number: 5, correct: '' }, { number: 6, correct: '' } ] }},
-                { label: 'Part 2: Multiple Choice Cloze (10 variant)', type: 'multiple_choice_cloze', template: { part_number: 1, title: 'Part 2: Multiple Choice Cloze', instruction: 'For questions 9-16, choose A–J for each gap.', type: 'multiple_choice_cloze', text: 'Matn (9)_____ ... (16)_____', questions: [ { number: 9, question: '', options: { A: '', B: '', C: '', D: '', E: '', F: '', G: '', H: '', I: '', J: '' }, correct: '' } ] }},
+                { label: 'Part 2: Matching Statements', type: 'matching_statements', template: { part_number: 2, title: 'Part 2: Matching Statements', instruction: 'Read the texts 7-14 and the statements A-J. Decide which text matches with the situation described in the statements. Each statement can be used ONCE only. There are TWO extra statements which you do not need to use. Mark your answers on the answer sheet.', type: 'matching_statements', descriptions: [ { number: 7, text: '' }, { number: 8, text: '' }, { number: 9, text: '' }, { number: 10, text: '' }, { number: 11, text: '' }, { number: 12, text: '' }, { number: 13, text: '' }, { number: 14, text: '' } ], statements: { A: '', B: '', C: '', D: '', E: '', F: '', G: '', H: '', I: '', J: '' }, questions: [ { number: 7, correct: '' }, { number: 8, correct: '' }, { number: 9, correct: '' }, { number: 10, correct: '' }, { number: 11, correct: '' }, { number: 12, correct: '' }, { number: 13, correct: '' }, { number: 14, correct: '' } ] }},
                 { label: 'Part 3: Matching Headings to Paragraphs', type: 'matching_headings', template: { part_number: 3, title: 'Part 3: Matching Headings to Paragraphs', instruction: 'Read the text and choose the correct heading for each paragraph from the list of headings below. There are more headings than paragraphs, so you will not use all of them. You cannot use any heading more than once.', type: 'matching_headings', main_title: '', headings: { A: '', B: '', C: '', D: '', E: '', F: '', G: '', H: '' }, paragraphs: [ { number: 'I', text: '' }, { number: 'II', text: '' }, { number: 'III', text: '' }, { number: 'IV', text: '' }, { number: 'V', text: '' }, { number: 'VI', text: '' } ], questions: [ { number: 15, paragraph: 'I', correct: '' }, { number: 16, paragraph: 'II', correct: '' }, { number: 17, paragraph: 'III', correct: '' }, { number: 18, paragraph: 'IV', correct: '' }, { number: 19, paragraph: 'V', correct: '' }, { number: 20, paragraph: 'VI', correct: '' } ] }},
                 { label: 'Part 4: Reading Comprehension (MC + True/False)', type: 'multiple_choice_comprehension', template: { part_number: 1, title: 'Part 4: Reading Comprehension', instruction: 'Choose A–D for questions 23–26; True/False/No information for 27–31.', type: 'multiple_choice_comprehension', text: 'Maqola matni...', questions: [ { number: 23, question: '', options: { A: '', B: '', C: '', D: '' }, correct: '' } ] }},
                 { label: 'Part 5: Mixed (4 bo\'sh joy + 2 savol)', type: 'part5_mixed', template: { part_number: 1, title: 'Part 5: Mixed', instruction: 'Complete gaps 32–35 with ONE word; answer 36–37 (A–D).', type: 'part5_mixed', text: 'Uzun matn...', gap_fill: { text: '(32)_____ (33)_____ (34)_____ (35)_____', questions: [ { number: 32, correct: '' }, { number: 33, correct: '' }, { number: 34, correct: '' }, { number: 35, correct: '' } ] }, questions: [ { number: 36, question: '', options: { A: '', B: '', C: '', D: '' }, correct: '' }, { number: 37, question: '', options: { A: '', B: '', C: '', D: '' }, correct: '' } ] }}
@@ -1191,6 +1208,35 @@
                         html += '<div class="grid grid-cols-5 gap-1 mb-2">';
                         ['A','B','C','D','E','F','G','H','I','J'].forEach((l, i) => { html += '<input type="text" id="pf_q' + n + '_' + l + '" class="form-input py-1 text-xs" placeholder="' + l + '">'; });
                         html += '</div><select id="pf_q' + n + '_correct" class="form-input py-1 w-20"><option value="">?</option>' + ['A','B','C','D','E','F','G','H','I','J'].map(l => '<option value="' + l + '">' + l + '</option>').join('') + '</select></div>';
+                    }
+                    html += '</div></div>';
+                    return html;
+                }
+                if (type === 'matching_statements') {
+                    let html = '<div class="space-y-4"><div><label class="block text-sm font-bold text-gray-300 mb-1">Part sarlavha</label><input type="text" id="pf_title" class="form-input" value="Part ' + nextPartNum + ': Matching Statements"></div>';
+                    html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Ko\'rsatma</label><textarea id="pf_instruction" class="form-input h-20">Read the texts 7-14 and the statements A-J. Decide which text matches with the situation described in the statements. Each statement can be used ONCE only. There are TWO extra statements which you do not need to use. Mark your answers on the answer sheet.</textarea></div>';
+                    html += '<div class="border-t-2 border-[#334155] pt-4"><h3 class="text-lg font-bold text-white mb-3">Raqamli tavsiflar (7-14) — 8 ta</h3>';
+                    for (let i = 7; i <= 14; i++) {
+                        html += '<div class="mb-3 p-3 bg-[#0F172A] rounded-lg border border-[#334155]">';
+                        html += '<label class="text-sm font-bold text-[#CE82FF] mb-2 block">' + i + '.</label>';
+                        html += '<textarea id="pf_desc_' + i + '" class="form-input h-16" placeholder="Tavsif matni..."></textarea>';
+                        html += '</div>';
+                    }
+                    html += '</div>';
+                    html += '<div class="border-t-2 border-[#334155] pt-4"><h3 class="text-lg font-bold text-white mb-3">Harfli bayonotlar (A-J) — 10 ta</h3>';
+                    ['A','B','C','D','E','F','G','H','I','J'].forEach(l => {
+                        html += '<div class="mb-3 p-3 bg-[#0F172A] rounded-lg border border-[#334155]">';
+                        html += '<label class="text-sm font-bold text-[#1CB0F6] mb-2 block">' + l + '.</label>';
+                        html += '<textarea id="pf_stmt_' + l + '" class="form-input h-20" placeholder="Bayonot matni..."></textarea>';
+                        html += '</div>';
+                    });
+                    html += '</div>';
+                    html += '<div class="border-t-2 border-[#334155] pt-4"><h3 class="text-lg font-bold text-white mb-3">To\'g\'ri javoblar</h3>';
+                    for (let i = 7; i <= 14; i++) {
+                        html += '<div class="mb-2 flex items-center gap-3">';
+                        html += '<span class="text-sm font-bold text-white w-8">' + i + ' =</span>';
+                        html += '<select id="pf_match_' + i + '" class="form-input py-1 w-20"><option value="">?</option>' + ['A','B','C','D','E','F','G','H','I','J'].map(l => '<option value="' + l + '">' + l + '</option>').join('') + '</select>';
+                        html += '</div>';
                     }
                     html += '</div></div>';
                     return html;
@@ -1526,6 +1572,18 @@ html += '<input type="text" id="pf_task' + t + '_title" class="form-input mb-2" 
                     part.text = getVal('pf_text');
                     part.questions = [];
                     for (let i = 1; i <= 6; i++) part.questions.push({ number: i, correct: getVal('pf_correct_' + i) });
+                } else if (type === 'matching_statements') {
+                    part.type = 'matching_statements';
+                    part.descriptions = [];
+                    for (let i = 7; i <= 14; i++) {
+                        part.descriptions.push({ number: i, text: getVal('pf_desc_' + i) });
+                    }
+                    part.statements = {};
+                    ['A','B','C','D','E','F','G','H','I','J'].forEach(l => { part.statements[l] = getVal('pf_stmt_' + l); });
+                    part.questions = [];
+                    for (let i = 7; i <= 14; i++) {
+                        part.questions.push({ number: i, correct: getVal('pf_match_' + i) });
+                    }
                 } else if (type === 'multiple_choice_cloze') {
                     part.type = 'multiple_choice_cloze';
                     part.text = getVal('pf_text');

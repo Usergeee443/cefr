@@ -282,23 +282,13 @@ def _build_test_from_all_tests(section: str, user: dict) -> dict:
         if pnum in parts_by_number and parts_by_number[pnum]:
             candidates = parts_by_number[pnum]  # [(part_dict, test_id), ...]
             
-            # Reading uchun Part 1 har doim open_cloze bo'lishi kerak
+            # Reading: faqat admin paneldan – part turi bo'yicha filtrlash
             if section == "reading" and pnum == 1:
                 candidates = [(p, tid) for p, tid in candidates if p.get("type") == "open_cloze"]
-                if not candidates:
-                    # Agar open_cloze topilmasa, default dan foydalanish
-                    default_test = DEFAULT_READING
-            # Reading uchun Part 3 har doim matching_headings bo'lishi kerak
+            if section == "reading" and pnum == 2:
+                candidates = [(p, tid) for p, tid in candidates if p.get("type") == "matching_statements"]
             if section == "reading" and pnum == 3:
                 candidates = [(p, tid) for p, tid in candidates if p.get("type") == "matching_headings"]
-                if not candidates:
-                    # Agar matching_headings topilmasa, default dan foydalanish
-                    default_test = DEFAULT_READING
-                    if default_test.get("parts"):
-                        for dp in default_test["parts"]:
-                            if dp.get("part_number") == 1 and dp.get("type") == "open_cloze":
-                                candidates = [(dict(dp), default_test.get("id", "reading_default"))]
-                                break
             
             if not candidates:
                 continue
@@ -326,30 +316,28 @@ def _build_test_from_all_tests(section: str, user: dict) -> dict:
             part_copy["_source_test_id"] = test_id  # Original test ID ni saqlash
             selected_parts.append(part_copy)
     
-    # Agar hech qanday part topilmasa yoki kam partlar bo'lsa, default testdan to'ldirish
-    default_test = DEFAULT_READING if section == "reading" else (DEFAULT_LISTENING if section == "listening" else DEFAULT_WRITING)
-    default_parts = default_test.get("parts", [])
-    
-    # Har bir part_number uchun agar part topilmasa, default dan olish
-    for pnum in range(1, max_parts + 1):
-        # Agar bu part_number uchun part topilgan bo'lsa, o'tkazib yuborish
-        if any(p.get("part_number") == pnum for p in selected_parts):
-            continue
-        
-        # Default testdan shu part_number ga ega bo'lgan partni topish
-        for dp in default_parts:
-            if dp.get("part_number") == pnum:
-                part_copy = dict(dp)
-                part_copy["_source_test_id"] = default_test.get("id", section + "_default")
-                selected_parts.append(part_copy)
-                break
-    
-    # Agar hali ham hech qanday part bo'lmasa, default testning barcha partlarini olish
-    if not selected_parts:
-        selected_parts = [dict(p) for p in default_parts]
-        for p in selected_parts:
-            if "_source_test_id" not in p:
-                p["_source_test_id"] = default_test.get("id", section + "_default")
+    # Reading va Listening: faqat admin paneldan – default bilan to'ldirmaymiz.
+    # Writing: agar partlar bo'lmasa default ishlatiladi.
+    if section in ("reading", "listening"):
+        # Hech qanday default part qo'shilmaydi – faqat JSON dagi partlar.
+        pass
+    else:
+        default_test = DEFAULT_WRITING
+        default_parts = default_test.get("parts", [])
+        for pnum in range(1, max_parts + 1):
+            if any(p.get("part_number") == pnum for p in selected_parts):
+                continue
+            for dp in default_parts:
+                if dp.get("part_number") == pnum:
+                    part_copy = dict(dp)
+                    part_copy["_source_test_id"] = default_test.get("id", section + "_default")
+                    selected_parts.append(part_copy)
+                    break
+        if not selected_parts:
+            selected_parts = [dict(p) for p in default_parts]
+            for p in selected_parts:
+                if "_source_test_id" not in p:
+                    p["_source_test_id"] = default_test.get("id", section + "_default")
     
     # Partlarni part_number bo'yicha tartiblash
     selected_parts.sort(key=lambda p: p.get("part_number", 0))
@@ -565,19 +553,40 @@ DEFAULT_READING = {
         },
         {
             "part_number": 2,
-            "title": "Part 2: Multiple Choice Cloze",
-            "instruction": "For questions 9-16, read the text and choose which answer (A–J) best fits each gap. Questions are listed in order on the left; choose one of the 10 variants for each.",
-            "type": "multiple_choice_cloze",
-            "text": "The Rise of Remote Work\n\nThe COVID-19 pandemic has (9)_____ transformed the way we work. Before 2020, working from home was (10)_____ a privilege enjoyed by a small percentage of the workforce. However, the global health crisis (11)_____ companies worldwide to rapidly adopt remote work policies.\n\nThis shift has had both positive and negative (12)_____. On the one hand, employees have gained more flexibility and eliminated lengthy commutes. Many workers report feeling more (13)_____ and having a better work-life balance. On the other hand, some people struggle with isolation and find it difficult to (14)_____ work from their personal life.\n\nCompanies are now (15)_____ hybrid models that combine remote and office work. This approach aims to offer the best of both worlds, allowing employees to enjoy flexibility while still maintaining face-to-face (16)_____ with colleagues.",
+            "title": "Part 2: Matching Statements",
+            "instruction": "Read the texts 7-14 and the statements A-J. Decide which text matches with the situation described in the statements. Each statement can be used ONCE only. There are TWO extra statements which you do not need to use. Mark your answers on the answer sheet.",
+            "type": "matching_statements",
+            "descriptions": [
+                {"number": 7, "text": "Richard is an introvert. He is looking for meaningful connections without the stress of large crowds."},
+                {"number": 8, "text": "Mark is currently unemployed. He is seeking practical strategies for market success in the digital era."},
+                {"number": 9, "text": "Fred doesn't know what talent he has. He is tired of the daily grind and he is seeking to craft something unique."},
+                {"number": 10, "text": "Sarah can't keep up with the new technologies and wants to learn basic functions of modern apps and media."},
+                {"number": 11, "text": "George is a cook. He wants to expand his business to the East and the West. He needs to know local favorites of his customers."},
+                {"number": 12, "text": "Tony is looking forward to know about the Balkans, its customs, food and modern day looks. He has saved 1000$ for travels as of now."},
+                {"number": 13, "text": "Nolan is looking for a fun and effective workout that pushes his limits."},
+                {"number": 14, "text": "Oprah wants to exercise but she doesn't want to push herself and wants a nice atmosphere."}
+            ],
+            "statements": {
+                "A": "Forest Bathing Immersion: Focuses on nature, meditation, mindful walks, finding peace, and recharging. Scheduled for Sundays, 9am-12pm, $40 per session.",
+                "B": "Senior Tech Savvy Club: Aims to teach basic apps, online security, and social media in a friendly environment. Scheduled for Tuesdays, 10am-12pm, Free.",
+                "C": "Masterclass: From Idea to Market: A workshop for entrepreneurs on launching and growing a business, including networking. Scheduled for February 15th-17th, 9am-5pm, $299.",
+                "D": "HIIT Bootcamp: Ignite Your Fitness: A high-intensity interval training program focused on getting 'shredded' and achieving maximum results. Scheduled for Monday & Wednesday, 5:30am-6:30am, $25 per session.",
+                "E": "Unleash Your Inner Artist: Workshops for painting, pottery, or singing in a fun, open-mic setting. Scheduled for Wednesdays, 6pm-8pm, $30 per session, with all materials provided.",
+                "F": "Writers' Circle: A supportive community for budding writers to develop their craft, share work, and receive feedback. Scheduled for Thursdays, 7pm-9pm, Free.",
+                "G": "Global Flavors Cooking Class: Learn authentic recipes from diverse cultures led by experienced chefs, for a fun, social experience. Scheduled for Every other Friday, 7pm-9pm, $50 per session.",
+                "H": "Intentional Conversations Club: Ditch the small talk and dive deep! Explore meaningful topics in small, supportive groups. Discover new perspectives and forge genuine connections. Every Thursday, 7pm-9pm. Coffee and snacks provided. Free!",
+                "I": "Backpacker's Dream: Discover Eastern Europe. Embark on a budget-friendly adventure through hidden gems of Eastern Europe. Hike stunning landscapes, explore charming villages, and soak in local cultures. All levels welcome! May 1st-15th. Prices from $699.",
+                "J": "Rescue Dog Walking Club: Make a difference! Walk shelter dogs in need of exercise and love. Enjoy the outdoors, make canine friends, and contribute to a worthy cause. Saturdays, 10am-12pm. Free!"
+            },
             "questions": [
-                {"number": 9, "question": "The COVID-19 pandemic has _____ transformed the way we work.", "options": {"A": "deeply", "B": "hardly", "C": "rarely", "D": "slightly", "E": "fully", "F": "barely", "G": "fairly", "H": "widely", "I": "nearly", "J": "truly"}, "correct": "A"},
-                {"number": 10, "question": "Before 2020, working from home was _____ a privilege enjoyed by a small percentage of the workforce.", "options": {"A": "often", "B": "commonly", "C": "mainly", "D": "usually", "E": "mostly", "F": "typically", "G": "largely", "H": "always", "I": "sometimes", "J": "rarely"}, "correct": "C"},
-                {"number": 11, "question": "The global health crisis _____ companies worldwide to rapidly adopt remote work policies.", "options": {"A": "made", "B": "forced", "C": "let", "D": "allowed", "E": "led", "F": "enabled", "G": "required", "H": "caused", "I": "persuaded", "J": "encouraged"}, "correct": "B"},
-                {"number": 12, "question": "This shift has had both positive and negative _____.", "options": {"A": "consequences", "B": "results", "C": "outcomes", "D": "effects", "E": "impacts", "F": "reactions", "G": "responses", "H": "changes", "I": "developments", "J": "trends"}, "correct": "A"},
-                {"number": 13, "question": "Many workers report feeling more _____ and having a better work-life balance.", "options": {"A": "effective", "B": "productive", "C": "efficient", "D": "successful", "E": "focused", "F": "motivated", "G": "satisfied", "H": "relaxed", "I": "creative", "J": "confident"}, "correct": "B"},
-                {"number": 14, "question": "Some people find it difficult to _____ work from their personal life.", "options": {"A": "divide", "B": "split", "C": "separate", "D": "part", "E": "distinguish", "F": "remove", "G": "keep", "H": "balance", "I": "manage", "J": "organize"}, "correct": "C"},
-                {"number": 15, "question": "Companies are now _____ hybrid models that combine remote and office work.", "options": {"A": "accepting", "B": "receiving", "C": "embracing", "D": "welcoming", "E": "adopting", "F": "introducing", "G": "testing", "H": "exploring", "I": "considering", "J": "supporting"}, "correct": "C"},
-                {"number": 16, "question": "Employees enjoy flexibility while still maintaining face-to-face _____ with colleagues.", "options": {"A": "interaction", "B": "communication", "C": "connection", "D": "contact", "E": "collaboration", "F": "cooperation", "G": "discussion", "H": "relationship", "I": "network", "J": "exchange"}, "correct": "A"}
+                {"number": 7, "correct": "H"},
+                {"number": 8, "correct": "C"},
+                {"number": 9, "correct": "E"},
+                {"number": 10, "correct": "B"},
+                {"number": 11, "correct": "G"},
+                {"number": 12, "correct": "I"},
+                {"number": 13, "correct": "D"},
+                {"number": 14, "correct": "A"}
             ]
         },
         {
@@ -856,7 +865,16 @@ def calculate_reading_score(answers: Dict[str, str], test_data: dict) -> Dict:
     details = []
     for part in test_data["parts"]:
         ptype = part["type"]
-        if ptype in ["multiple_choice_cloze", "multiple_choice_comprehension"]:
+        if ptype == "matching_statements":
+            for q in part["questions"]:
+                total += 1
+                qn = str(q["number"])
+                ua = answers.get(qn, "").strip().upper()
+                ca = q["correct"].upper()
+                ic = ua == ca
+                if ic: correct += 1
+                details.append({"q": qn, "ua": ua, "ca": ca, "ok": ic, "part": part["part_number"]})
+        elif ptype in ["multiple_choice_cloze", "multiple_choice_comprehension"]:
             for q in part["questions"]:
                 total += 1
                 qn = str(q["number"])
