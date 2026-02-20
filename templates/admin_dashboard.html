@@ -830,6 +830,9 @@
                 set('pf_title', p.title);
                 set('pf_instruction', p.instruction);
                 set('pf_audio_desc', p.audio_description);
+                set('pf_audio_url', p.audio_url || '');
+                const audioUrlEl = document.getElementById('listening-audio-url');
+                if (audioUrlEl) audioUrlEl.textContent = p.audio_url || '';
                 set('pf_transcript', p.transcript);
                 set('pf_map_url', p.map_image_url);
                 set('pf_text', p.text);
@@ -1002,6 +1005,7 @@
             if (currentSection === 'listening') {
                 if (type === 'short_conversations') {
                     part.type = 'short_conversations';
+                    part.audio_url = getVal('pf_audio_url');
                     part.questions = [];
                     for (let i = 1; i <= 8; i++) {
                         const options = {};
@@ -1011,12 +1015,14 @@
                 } else if (type === 'sentence_completion') {
                     part.type = 'sentence_completion';
                     part.audio_description = getVal('pf_audio_desc');
+                    part.audio_url = getVal('pf_audio_url');
                     part.transcript = getVal('pf_transcript');
                     part.questions = [];
                     for (let i = 0; i < 6; i++) part.questions.push({ number: 9 + i, question: getVal('pf_sent_q' + (9 + i)), correct: getVal('pf_sent_correct_' + (9 + i)) });
                 } else if (type === 'speaker_matching') {
                     part.type = 'speaker_matching';
                     part.audio_description = getVal('pf_audio_desc');
+                    part.audio_url = getVal('pf_audio_url');
                     part.speakers = [];
                     for (let i = 0; i < 4; i++) part.speakers.push({ number: 15 + i, name: getVal('pf_spk_name_' + (15 + i)), transcript: getVal('pf_spk_trans_' + (15 + i)) });
                     part.options = {};
@@ -1027,6 +1033,7 @@
                     part.type = 'map_labeling';
                     part.map_image_url = getVal('pf_map_url');
                     part.audio_description = getVal('pf_audio_desc');
+                    part.audio_url = getVal('pf_audio_url');
                     part.transcript = getVal('pf_transcript');
                     part.places = [];
                     part.map_labels = ['A','B','C','D','E','F','G','H'];
@@ -1034,6 +1041,7 @@
                 } else if (type === 'interview') {
                     part.type = 'interview';
                     part.audio_description = getVal('pf_audio_desc');
+                    part.audio_url = getVal('pf_audio_url');
                     part.transcript = getVal('pf_transcript');
                     part.questions = [];
                     for (let i = 0; i < 6; i++) {
@@ -1045,6 +1053,7 @@
                 } else if (type === 'note_completion') {
                     part.type = 'note_completion';
                     part.audio_description = getVal('pf_audio_desc');
+                    part.audio_url = getVal('pf_audio_url');
                     part.transcript = getVal('pf_transcript');
                     part.text = getVal('pf_text');
                     part.questions = [];
@@ -1327,6 +1336,7 @@
                 if (type === 'short_conversations') {
                     let html = '<div class="space-y-4"><div><label class="block text-sm font-bold text-gray-300 mb-1">Part sarlavha</label><input type="text" id="pf_title" class="form-input" value="Part ' + nextPartNum + ': Short Conversations"></div>';
                     html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Ko\'rsatma</label><textarea id="pf_instruction" class="form-input h-14">For questions 1-8, choose A, B or C.</textarea></div>';
+                    html += '<div class="border-t-2 border-[#334155] pt-4 pb-4"><h3 class="text-sm font-bold text-white mb-2">Audio yuklash (ixtiyoriy)</h3><p class="text-xs text-gray-400 mb-2">Yuklangan bo\'lsa, testda TTS o\'rniga shu audio ijro etiladi.</p><div class="flex flex-wrap items-center gap-3 mb-2"><input type="file" id="listening-audio-file" accept=".mp3,.wav,.m4a,.ogg,.webm" class="text-sm text-gray-400 file:mr-3 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#45B7D1]/20 file:text-[#45B7D1] file:font-bold"><button type="button" onclick="uploadListeningAudio()" class="px-4 py-2 bg-[#45B7D1] hover:bg-[#3AA3BB] text-white font-bold rounded-lg text-sm">Yuklash</button></div><input type="hidden" id="pf_audio_url"><span id="listening-audio-url" class="text-sm text-[#58CC02] break-all block mt-1"></span></div>';
                     for (let i = 1; i <= 8; i++) {
                         html += '<div class="p-4 bg-[#0F172A] rounded-xl border border-[#334155] mb-3"><h4 class="font-bold text-[#4ECDC4] mb-2 text-sm">Savol ' + i + '</h4>';
                         html += '<input type="text" id="pf_sc' + i + '_desc" class="form-input mb-2" placeholder="Audio tavsifi">';
@@ -1341,6 +1351,7 @@
                     const startNum = 9;
                     let html = '<div class="space-y-4"><div><label class="block text-sm font-bold text-gray-300 mb-1">Part sarlavha</label><input type="text" id="pf_title" class="form-input" value="Part ' + nextPartNum + ': Sentence Completion"></div>';
                     html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Ko\'rsatma</label><textarea id="pf_instruction" class="form-input h-14">Complete sentences with ONE word (' + startNum + '–' + (startNum+5) + ').</textarea></div>';
+                    html += '<div class="border-t-2 border-[#334155] pt-4 pb-4"><h3 class="text-sm font-bold text-white mb-2">Audio yuklash (ixtiyoriy)</h3><p class="text-xs text-gray-400 mb-2">Yuklangan bo\'lsa, testda TTS o\'rniga shu audio ijro etiladi.</p><div class="flex flex-wrap items-center gap-3 mb-2"><input type="file" id="listening-audio-file" accept=".mp3,.wav,.m4a,.ogg,.webm" class="text-sm text-gray-400 file:mr-3 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#45B7D1]/20 file:text-[#45B7D1] file:font-bold"><button type="button" onclick="uploadListeningAudio()" class="px-4 py-2 bg-[#45B7D1] hover:bg-[#3AA3BB] text-white font-bold rounded-lg text-sm">Yuklash</button></div><input type="hidden" id="pf_audio_url"><span id="listening-audio-url" class="text-sm text-[#58CC02] break-all block mt-1"></span></div>';
                     html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Audio tavsifi</label><input type="text" id="pf_audio_desc" class="form-input"></div>';
                     html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Transcript</label><textarea id="pf_transcript" class="form-input h-24"></textarea></div>';
                     html += '<div><label class="block text-sm font-bold text-gray-300 mb-2">Savollar (jumla _____ bilan)</label>';
@@ -1351,6 +1362,7 @@
                     const startNum = 15;
                     let html = '<div class="space-y-4"><div><label class="block text-sm font-bold text-gray-300 mb-1">Part sarlavha</label><input type="text" id="pf_title" class="form-input" value="Part ' + nextPartNum + ': Speaker Matching"></div>';
                     html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Ko\'rsatma</label><textarea id="pf_instruction" class="form-input h-14">Match each speaker with A–F.</textarea></div>';
+                    html += '<div class="border-t-2 border-[#334155] pt-4 pb-4"><h3 class="text-sm font-bold text-white mb-2">Audio yuklash (ixtiyoriy)</h3><p class="text-xs text-gray-400 mb-2">Yuklangan bo\'lsa, testda TTS o\'rniga shu audio ijro etiladi.</p><div class="flex flex-wrap items-center gap-3 mb-2"><input type="file" id="listening-audio-file" accept=".mp3,.wav,.m4a,.ogg,.webm" class="text-sm text-gray-400 file:mr-3 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#45B7D1]/20 file:text-[#45B7D1] file:font-bold"><button type="button" onclick="uploadListeningAudio()" class="px-4 py-2 bg-[#45B7D1] hover:bg-[#3AA3BB] text-white font-bold rounded-lg text-sm">Yuklash</button></div><input type="hidden" id="pf_audio_url"><span id="listening-audio-url" class="text-sm text-[#58CC02] break-all block mt-1"></span></div>';
                     html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Audio tavsifi</label><input type="text" id="pf_audio_desc" class="form-input"></div>';
                     for (let i = 0; i < 4; i++) { const n = startNum + i; html += '<div class="mb-3"><label class="text-xs text-gray-500">Spiker ' + n + '</label><input type="text" id="pf_spk_name_' + n + '" class="form-input mb-1" placeholder="Ism"><textarea id="pf_spk_trans_' + n + '" class="form-input h-16" placeholder="Transcript"></textarea></div>'; }
                     html += '<div><label class="block text-sm font-bold text-gray-300 mb-2">Variantlar A–F</label><div class="grid grid-cols-2 gap-2 mb-2">';
@@ -1363,6 +1375,7 @@
                     const startNum = 19;
                     let html = '<div class="space-y-4"><div><label class="block text-sm font-bold text-gray-300 mb-1">Part sarlavha</label><input type="text" id="pf_title" class="form-input" value="Part ' + nextPartNum + ': Map Labeling"></div>';
                     html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Ko\'rsatma</label><textarea id="pf_instruction" class="form-input h-20">You will hear someone giving a talk. Label the places (19-23) on the map (A-H). There are THREE extra options which you do not need to use. Mark your answers on the answer sheet.</textarea></div>';
+                    html += '<div class="border-t-2 border-[#334155] pt-4 pb-4"><h3 class="text-sm font-bold text-white mb-2">Audio yuklash (ixtiyoriy)</h3><p class="text-xs text-gray-400 mb-2">Yuklangan bo\'lsa, testda TTS o\'rniga shu audio ijro etiladi.</p><div class="flex flex-wrap items-center gap-3 mb-2"><input type="file" id="listening-audio-file" accept=".mp3,.wav,.m4a,.ogg,.webm" class="text-sm text-gray-400 file:mr-3 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#45B7D1]/20 file:text-[#45B7D1] file:font-bold"><button type="button" onclick="uploadListeningAudio()" class="px-4 py-2 bg-[#45B7D1] hover:bg-[#3AA3BB] text-white font-bold rounded-lg text-sm">Yuklash</button></div><input type="hidden" id="pf_audio_url"><span id="listening-audio-url" class="text-sm text-[#58CC02] break-all block mt-1"></span></div>';
                     html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Xarita rasm URL</label><input type="text" id="pf_map_url" class="form-input" placeholder="/static/uploads/listening_maps/..."></div>';
                     html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Audio tavsifi</label><input type="text" id="pf_audio_desc" class="form-input"></div>';
                     html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Transcript</label><textarea id="pf_transcript" class="form-input h-24"></textarea></div>';
@@ -1374,6 +1387,7 @@
                     const startNum = 25;
                     let html = '<div class="space-y-4"><div><label class="block text-sm font-bold text-gray-300 mb-1">Part sarlavha</label><input type="text" id="pf_title" class="form-input" value="Part ' + nextPartNum + ': Interview"></div>';
                     html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Ko\'rsatma</label><textarea id="pf_instruction" class="form-input h-14">For questions ' + startNum + '-' + (startNum+5) + ', choose A, B or C.</textarea></div>';
+                    html += '<div class="border-t-2 border-[#334155] pt-4 pb-4"><h3 class="text-sm font-bold text-white mb-2">Audio yuklash (ixtiyoriy)</h3><p class="text-xs text-gray-400 mb-2">Yuklangan bo\'lsa, testda TTS o\'rniga shu audio ijro etiladi.</p><div class="flex flex-wrap items-center gap-3 mb-2"><input type="file" id="listening-audio-file" accept=".mp3,.wav,.m4a,.ogg,.webm" class="text-sm text-gray-400 file:mr-3 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#45B7D1]/20 file:text-[#45B7D1] file:font-bold"><button type="button" onclick="uploadListeningAudio()" class="px-4 py-2 bg-[#45B7D1] hover:bg-[#3AA3BB] text-white font-bold rounded-lg text-sm">Yuklash</button></div><input type="hidden" id="pf_audio_url"><span id="listening-audio-url" class="text-sm text-[#58CC02] break-all block mt-1"></span></div>';
                     html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Audio tavsifi</label><input type="text" id="pf_audio_desc" class="form-input"></div>';
                     html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Transcript</label><textarea id="pf_transcript" class="form-input h-32"></textarea></div>';
                     html += '<div><label class="block text-sm font-bold text-gray-300 mb-2">Savollar (6 ta, A–B–C)</label>';
@@ -1389,6 +1403,7 @@
                     const startNum = 31;
                     let html = '<div class="space-y-4"><div><label class="block text-sm font-bold text-gray-300 mb-1">Part sarlavha</label><input type="text" id="pf_title" class="form-input" value="Part ' + nextPartNum + ': Note Completion"></div>';
                     html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Ko\'rsatma</label><textarea id="pf_instruction" class="form-input h-14">Complete notes with ONE word (' + startNum + '–' + (startNum+5) + ').</textarea></div>';
+                    html += '<div class="border-t-2 border-[#334155] pt-4 pb-4"><h3 class="text-sm font-bold text-white mb-2">Audio yuklash (ixtiyoriy)</h3><p class="text-xs text-gray-400 mb-2">Yuklangan bo\'lsa, testda TTS o\'rniga shu audio ijro etiladi.</p><div class="flex flex-wrap items-center gap-3 mb-2"><input type="file" id="listening-audio-file" accept=".mp3,.wav,.m4a,.ogg,.webm" class="text-sm text-gray-400 file:mr-3 file:py-2 file:px-4 file:rounded file:border-0 file:bg-[#45B7D1]/20 file:text-[#45B7D1] file:font-bold"><button type="button" onclick="uploadListeningAudio()" class="px-4 py-2 bg-[#45B7D1] hover:bg-[#3AA3BB] text-white font-bold rounded-lg text-sm">Yuklash</button></div><input type="hidden" id="pf_audio_url"><span id="listening-audio-url" class="text-sm text-[#58CC02] break-all block mt-1"></span></div>';
                     html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Audio tavsifi</label><input type="text" id="pf_audio_desc" class="form-input"></div>';
                     html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Transcript (to\'liq)</label><textarea id="pf_transcript" class="form-input h-24"></textarea></div>';
                     html += '<div><label class="block text-sm font-bold text-gray-300 mb-1">Matn bo\'sh joylar bilan ((' + startNum + ')_____ ...)</label><textarea id="pf_text" class="form-input h-32 font-mono text-sm"></textarea></div>';
@@ -1653,6 +1668,7 @@ html += '<input type="text" id="pf_task' + t + '_title" class="form-input mb-2" 
             if (currentSection === 'listening') {
                 if (type === 'short_conversations') {
                     part.type = 'short_conversations';
+                    part.audio_url = getVal('pf_audio_url');
                     part.questions = [];
                     for (let i = 1; i <= 8; i++) {
                         const options = {};
@@ -1662,12 +1678,14 @@ html += '<input type="text" id="pf_task' + t + '_title" class="form-input mb-2" 
                 } else if (type === 'sentence_completion') {
                     part.type = 'sentence_completion';
                     part.audio_description = getVal('pf_audio_desc');
+                    part.audio_url = getVal('pf_audio_url');
                     part.transcript = getVal('pf_transcript');
                     part.questions = [];
                     for (let i = 0; i < 6; i++) part.questions.push({ number: 9 + i, question: getVal('pf_sent_q' + (9 + i)), correct: getVal('pf_sent_correct_' + (9 + i)) });
                 } else if (type === 'speaker_matching') {
                     part.type = 'speaker_matching';
                     part.audio_description = getVal('pf_audio_desc');
+                    part.audio_url = getVal('pf_audio_url');
                     part.speakers = [];
                     for (let i = 0; i < 4; i++) part.speakers.push({ number: 15 + i, name: getVal('pf_spk_name_' + (15 + i)), transcript: getVal('pf_spk_trans_' + (15 + i)) });
                     part.options = {};
@@ -1678,6 +1696,7 @@ html += '<input type="text" id="pf_task' + t + '_title" class="form-input mb-2" 
                     part.type = 'map_labeling';
                     part.map_image_url = getVal('pf_map_url');
                     part.audio_description = getVal('pf_audio_desc');
+                    part.audio_url = getVal('pf_audio_url');
                     part.transcript = getVal('pf_transcript');
                     part.places = [];
                     part.map_labels = ['A','B','C','D','E','F','G','H'];
@@ -1685,6 +1704,7 @@ html += '<input type="text" id="pf_task' + t + '_title" class="form-input mb-2" 
                 } else if (type === 'interview') {
                     part.type = 'interview';
                     part.audio_description = getVal('pf_audio_desc');
+                    part.audio_url = getVal('pf_audio_url');
                     part.transcript = getVal('pf_transcript');
                     part.questions = [];
                     for (let i = 0; i < 6; i++) {
@@ -1696,6 +1716,7 @@ html += '<input type="text" id="pf_task' + t + '_title" class="form-input mb-2" 
                 } else if (type === 'note_completion') {
                     part.type = 'note_completion';
                     part.audio_description = getVal('pf_audio_desc');
+                    part.audio_url = getVal('pf_audio_url');
                     part.transcript = getVal('pf_transcript');
                     part.text = getVal('pf_text');
                     part.questions = [];
@@ -1867,6 +1888,32 @@ html += '<input type="text" id="pf_task' + t + '_title" class="form-input mb-2" 
             } else {
                 urlEl.textContent = 'Xatolik: ' + (data.error || res.statusText);
                 urlEl.classList.remove('hidden');
+            }
+        }
+
+        async function uploadListeningAudio() {
+            const input = document.getElementById('listening-audio-file');
+            if (!input || !input.files || !input.files[0]) {
+                alert('Avval audio faylini tanlang (mp3, wav, m4a, ogg, webm)');
+                return;
+            }
+            const form = new FormData();
+            form.append('file', input.files[0]);
+            try {
+                const res = await fetch('/admin/upload-listening-audio', { method: 'POST', body: form });
+                const data = await res.json().catch(() => ({}));
+                const urlEl = document.getElementById('listening-audio-url');
+                const hiddenEl = document.getElementById('pf_audio_url');
+                if (res.ok && data.url) {
+                    if (hiddenEl) hiddenEl.value = data.url;
+                    if (urlEl) { urlEl.textContent = data.url; urlEl.classList.remove('hidden'); }
+                    input.value = '';
+                } else {
+                    if (urlEl) urlEl.textContent = 'Xatolik: ' + (data.error || res.statusText);
+                }
+            } catch (e) {
+                const urlEl = document.getElementById('listening-audio-url');
+                if (urlEl) urlEl.textContent = 'Xatolik: ' + e.message;
             }
         }
 

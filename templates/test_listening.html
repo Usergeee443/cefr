@@ -456,7 +456,7 @@
                             <div class="mb-6 md:mb-8">
                                 <div class="flex flex-wrap items-center gap-3 md:gap-4 mb-4">
                                     <button type="button" class="audio-play-btn px-5 md:px-6 py-3 md:py-4 text-sm md:text-base flex items-center gap-2 md:gap-3"
-                                            data-transcript="{{ part.questions | map(attribute='transcript') | join('\n\n') }}" data-part="{{ part.part_number }}">
+                                            data-transcript="{{ part.questions | map(attribute='transcript') | join('\n\n') }}" data-part="{{ part.part_number }}" data-audio-url="{{ part.audio_url or '' }}">
                                         <svg class="w-5 h-5 md:w-6 md:h-6 play-icon" fill="currentColor" viewBox="0 0 24 24">
                                             <path d="M8 5v14l11-7z"/>
                                         </svg>
@@ -498,7 +498,7 @@
                             <div class="mb-6 md:mb-8">
                                 <div class="flex flex-wrap items-center gap-3 md:gap-4 mb-4">
                                     <button type="button" class="audio-play-btn px-5 md:px-6 py-3 md:py-4 text-sm md:text-base flex items-center gap-2 md:gap-3 bg-[#CE82FF]" style="box-shadow: 0 4px 0 #A560E8;"
-                                            data-transcript="{{ part.transcript }}" data-part="{{ part.part_number }}">
+                                            data-transcript="{{ part.transcript }}" data-part="{{ part.part_number }}" data-audio-url="{{ part.audio_url or '' }}">
                                         <svg class="w-5 h-5 md:w-6 md:h-6 play-icon" fill="currentColor" viewBox="0 0 24 24">
                                             <path d="M8 5v14l11-7z"/>
                                         </svg>
@@ -532,7 +532,7 @@
                             <div class="mb-6 md:mb-8">
                                 <div class="flex flex-wrap items-center gap-3 md:gap-4 mb-4">
                                     <button type="button" class="audio-play-btn px-5 md:px-6 py-3 md:py-4 text-sm md:text-base flex items-center gap-2 md:gap-3 bg-[#FFC800] text-[#1A2C32]" style="box-shadow: 0 4px 0 #E6B400;"
-                                            data-transcript="{{ part.speakers | map(attribute='transcript') | join('\n\n') }}" data-part="{{ part.part_number }}">
+                                            data-transcript="{{ part.speakers | map(attribute='transcript') | join('\n\n') }}" data-part="{{ part.part_number }}" data-audio-url="{{ part.audio_url or '' }}">
                                         <svg class="w-5 h-5 md:w-6 md:h-6 play-icon" fill="currentColor" viewBox="0 0 24 24">
                                             <path d="M8 5v14l11-7z"/>
                                         </svg>
@@ -584,7 +584,7 @@
                             <div class="mb-6 md:mb-8">
                                 <div class="flex flex-wrap items-center gap-3 md:gap-4 mb-4">
                                     <button type="button" class="audio-play-btn px-5 md:px-6 py-3 md:py-4 text-sm md:text-base flex items-center gap-2 md:gap-3 bg-[#FF9600]" style="box-shadow: 0 4px 0 #E68600;"
-                                            data-transcript="{{ part.transcript }}" data-part="{{ part.part_number }}">
+                                            data-transcript="{{ part.transcript }}" data-part="{{ part.part_number }}" data-audio-url="{{ part.audio_url or '' }}">
                                         <svg class="w-5 h-5 md:w-6 md:h-6 play-icon" fill="currentColor" viewBox="0 0 24 24">
                                             <path d="M8 5v14l11-7z"/>
                                         </svg>
@@ -646,7 +646,7 @@
                             <div class="mb-6 md:mb-8">
                                 <div class="flex flex-wrap items-center gap-3 md:gap-4 mb-4">
                                     <button type="button" class="audio-play-btn px-5 md:px-6 py-3 md:py-4 text-sm md:text-base flex items-center gap-2 md:gap-3 bg-[#FF4B4B]" style="box-shadow: 0 4px 0 #EA2B2B;"
-                                            data-transcript="{{ part.transcript }}" data-part="{{ part.part_number }}">
+                                            data-transcript="{{ part.transcript }}" data-part="{{ part.part_number }}" data-audio-url="{{ part.audio_url or '' }}">
                                         <svg class="w-5 h-5 md:w-6 md:h-6 play-icon" fill="currentColor" viewBox="0 0 24 24">
                                             <path d="M8 5v14l11-7z"/>
                                         </svg>
@@ -690,7 +690,7 @@
                             <div class="mb-6 md:mb-8">
                                 <div class="flex flex-wrap items-center gap-3 md:gap-4 mb-4">
                                     <button type="button" class="audio-play-btn px-5 md:px-6 py-3 md:py-4 text-sm md:text-base flex items-center gap-2 md:gap-3 bg-[#58CC02]" style="box-shadow: 0 4px 0 #46A302;"
-                                            data-transcript="{{ part.transcript }}" data-part="{{ part.part_number }}">
+                                            data-transcript="{{ part.transcript }}" data-part="{{ part.part_number }}" data-audio-url="{{ part.audio_url or '' }}">
                                         <svg class="w-5 h-5 md:w-6 md:h-6 play-icon" fill="currentColor" viewBox="0 0 24 24">
                                             <path d="M8 5v14l11-7z"/>
                                         </svg>
@@ -905,6 +905,7 @@
         document.querySelectorAll('.audio-play-btn').forEach(btn => {
             btn.addEventListener('click', async function() {
                 const transcript = this.dataset.transcript;
+                const audioUrl = (this.dataset.audioUrl || '').trim();
                 const questionNum = this.dataset.question || this.dataset.part;
                 const container = this.closest('.question-card') || this.closest('.mb-8') || this.closest('.mb-6');
                 const audioPlayer = container.querySelector('.audio-player');
@@ -931,8 +932,24 @@
                     return;
                 }
                 
+                // Yuklangan audio URL bo'lsa, to'g'ridan-to'g'ri ijro etish
+                if (audioUrl) {
+                    audioPlayer.src = audioUrl;
+                    audioPlayer.classList.remove('hidden');
+                    audioPlayer.play();
+                    btnText.textContent = 'Pause';
+                    playIcon.innerHTML = '<path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>';
+                    this.classList.add('playing');
+                    return;
+                }
+                
+                // Transcript bo'lmasa TTS ishlamaydi
+                if (!transcript || !transcript.trim()) {
+                    btnText.textContent = 'Audio yo\'q';
+                    return;
+                }
                 // Check cache
-                const cacheKey = transcript.substring(0, 100);
+                const cacheKey = (transcript || '').substring(0, 100);
                 if (audioCache[cacheKey]) {
                     audioPlayer.src = audioCache[cacheKey];
                     audioPlayer.classList.remove('hidden');

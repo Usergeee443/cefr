@@ -2517,6 +2517,33 @@ async def admin_upload_listening_map(request: Request, file: UploadFile = File(.
     url = f"/static/uploads/listening_maps/{name}"
     return JSONResponse({"url": url})
 
+
+# Admin: Listening audio yuklash (har qanday part uchun)
+UPLOAD_AUDIO_DIR = Path(__file__).resolve().parent / "static" / "uploads" / "listening_audio"
+ALLOWED_AUDIO_EXTENSIONS = {".mp3", ".wav", ".m4a", ".ogg", ".webm"}
+
+
+@app.post("/admin/upload-listening-audio", response_class=JSONResponse)
+async def admin_upload_listening_audio(request: Request, file: UploadFile = File(...)):
+    if not check_admin(request):
+        return JSONResponse({"error": "Unauthorized"}, status_code=401)
+    if not file.filename:
+        return JSONResponse({"error": "Fayl tanlanmagan"}, status_code=400)
+    ext = Path(file.filename).suffix.lower()
+    if ext not in ALLOWED_AUDIO_EXTENSIONS:
+        return JSONResponse({"error": "Faqat audio fayllari (mp3, wav, m4a, ogg, webm)"}, status_code=400)
+    UPLOAD_AUDIO_DIR.mkdir(parents=True, exist_ok=True)
+    name = f"{uuid.uuid4().hex}{ext}"
+    path = UPLOAD_AUDIO_DIR / name
+    try:
+        content = await file.read()
+        path.write_bytes(content)
+    except Exception as e:
+        return JSONResponse({"error": str(e)}, status_code=500)
+    url = f"/static/uploads/listening_audio/{name}"
+    return JSONResponse({"url": url})
+
+
 @app.post("/admin/user/{user_id}")
 async def admin_update_user(request: Request, user_id: str):
     if not check_admin(request): return JSONResponse({"error": "Unauthorized"}, status_code=401)
