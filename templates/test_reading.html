@@ -508,7 +508,7 @@
                                 <div class="passage-card p-4 md:p-5 overflow-y-auto min-h-0 flex-1 passage-highlight-container">
                                     <h4 class="text-[#CE82FF] font-black text-xs uppercase tracking-wider mb-2">Passage</h4>
                                     <div class="passage-text" data-part="{{ part.part_number }}" data-highlight-key="reading-open-{{ part.part_number }}">
-                                        {{ part.text | replace("(1)_____", "<input type='text' name='1' id='q-1' class='gap-input' placeholder='1' data-question='1'>") | replace("(2)_____", "<input type='text' name='2' id='q-2' class='gap-input' placeholder='2' data-question='2'>") | replace("(3)_____", "<input type='text' name='3' id='q-3' class='gap-input' placeholder='3' data-question='3'>") | replace("(4)_____", "<input type='text' name='4' id='q-4' class='gap-input' placeholder='4' data-question='4'>") | replace("(5)_____", "<input type='text' name='5' id='q-5' class='gap-input' placeholder='5' data-question='5'>") | replace("(6)_____", "<input type='text' name='6' id='q-6' class='gap-input' placeholder='6' data-question='6'>") | safe }}
+                                        {{ (part.text or '') | open_cloze_gaps | safe }}
                                     </div>
                                 </div>
                             </div>

@@ -81,6 +81,24 @@ if Path(__file__).resolve().parent.joinpath("static").exists():
     app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
+
+def _open_cloze_gaps_filter(text: str) -> str:
+    """Part 1 matnidagi (1)_____, (1) _____ yoki (1) ___ kabi barcha formatlarni input maydoniga aylantiradi."""
+    if not text:
+        return ""
+    for n in range(1, 7):
+        # (n) dan keyin ixtiyoriy bo'shliq va bir yoki bir nechta pastki chiziq
+        pattern = r"\(\s*" + str(n) + r"\s*\)\s*_+"
+        replacement = (
+            '<input type="text" name="%d" id="q-%d" class="gap-input" placeholder="%d" data-question="%d">'
+            % (n, n, n, n)
+        )
+        text = re.sub(pattern, replacement, text, flags=re.IGNORECASE)
+    return text
+
+
+templates.env.filters["open_cloze_gaps"] = _open_cloze_gaps_filter
+
 # In-memory stores
 sessions: Dict[str, Dict] = {}
 feedbacks: List[Dict] = []
