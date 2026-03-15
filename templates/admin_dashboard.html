@@ -889,7 +889,21 @@
                 test.time_limit = time;
             }
             const res = await fetch('/admin/data/' + section, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tests }) });
-            if (res.ok) { alert('Test saqlandi'); loadSectionData(section); } else { alert('Xatolik'); }
+            let msg = 'Test saqlandi';
+            try {
+                const data = await res.json();
+                if (!res.ok) {
+                    alert('Xatolik: ' + (data.error || res.statusText));
+                    return;
+                }
+                if (data.errors && data.errors.length) {
+                    msg += '\\n\\nOgohlantirishlar (ba\'zi partlar saqlanmadi):\\n- ' + data.errors.join('\\n- ');
+                }
+            } catch (e) {
+                if (!res.ok) { alert('Xatolik: ' + res.statusText); return; }
+            }
+            alert(msg);
+            loadSectionData(section);
         }
 
         async function saveSectionPart(section) {
@@ -912,11 +926,22 @@
             if (editingPartIndex >= 0) test.parts[editingPartIndex] = part;
             else test.parts.push(part);
             const res = await fetch('/admin/data/' + section, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tests }) });
-            if (res.ok) {
-                alert('Part saqlandi');
-                loadSectionData(section);
-                if (typeof refreshMavjudParts === 'function' && selectedPartTypeIndex != null) refreshMavjudParts(section, selectedPartTypeIndex);
-            } else { alert('Xatolik: ' + (await res.text())); }
+            let msg = 'Part saqlandi';
+            try {
+                const data = await res.json();
+                if (!res.ok) {
+                    alert('Xatolik: ' + (data.error || res.statusText));
+                    return;
+                }
+                if (data.errors && data.errors.length) {
+                    msg += '\\n\\nOgohlantirishlar (ba\'zi partlar saqlanmadi):\\n- ' + data.errors.join('\\n- ');
+                }
+            } catch (e) {
+                if (!res.ok) { alert('Xatolik: ' + res.statusText); return; }
+            }
+            alert(msg);
+            loadSectionData(section);
+            if (typeof refreshMavjudParts === 'function' && selectedPartTypeIndex != null) refreshMavjudParts(section, selectedPartTypeIndex);
         }
 
         function buildPartFromForm(section, typeIndex) {

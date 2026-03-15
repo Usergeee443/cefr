@@ -258,17 +258,159 @@ GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "957401626494-fap468c0rveevdd6r
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET", "")
 GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI", "http://localhost:8000/auth/google/callback")
 
+def _validate_reading_tests(tests: list) -> tuple[list, list]:
+    """Reading testlari uchun eng zarur tekshiruvlar.
+
+    Maqsad: noto'g'ri strukturadagi partlar tufayli frontend/backend yiqilmasin.
+    Xato bo'lsa, o'sha part/skan testdan chiqarib tashlanadi, lekin qolganlari ishlashda davom etadi.
+    """
+    cleaned: list = []
+    errors: list = []
+    allowed_types = {
+        "open_cloze",
+        "matching_statements",
+        "matching_headings",
+        "gapped_text",
+        "multiple_choice_comprehension",
+        "part5_mixed",
+    }
+
+    for ti, test in enumerate(tests or []):
+        parts = test.get("parts") or []
+        clean_parts = []
+        for pi, part in enumerate(parts):
+            pnum = part.get("part_number")
+            ptype = part.get("type")
+            if not pnum or not isinstance(pnum, int):
+                errors.append(f"reading test[{ti}] part[{pi}] part_number yo'q yoki noto'g'ri")
+                continue
+            if ptype not in allowed_types:
+                errors.append(f"reading test[{ti}] part[{pi}] noma'lum type: {ptype}")
+                continue
+
+            # type bo'yicha minimal majburiy maydonlar
+            if ptype in {"open_cloze", "matching_statements", "gapped_text",
+                         "multiple_choice_comprehension", "part5_mixed"}:
+                if not isinstance(part.get("questions"), list) or not part["questions"]:
+                    errors.append(f"reading test[{ti}] part[{pi}] questions bo'sh yoki noto'g'ri")
+                    continue
+            if ptype == "matching_headings":
+                if not isinstance(part.get("paragraphs"), list) or not part["paragraphs"]:
+                    errors.append(f"reading test[{ti}] part[{pi}] paragraphs yo'q")
+                    continue
+
+            clean_parts.append(part)
+
+        if clean_parts:
+            test_copy = dict(test)
+            test_copy["parts"] = clean_parts
+            cleaned.append(test_copy)
+
+    return cleaned, errors
+
+
+def _validate_listening_tests(tests: list) -> tuple[list, list]:
+    cleaned: list = []
+    errors: list = []
+    allowed_types = {
+        "short_conversations",
+        "sentence_completion",
+        "speaker_matching",
+        "map_labeling",
+        "interview",
+        "note_completion",
+    }
+    for ti, test in enumerate(tests or []):
+        parts = test.get("parts") or []
+        clean_parts = []
+        for pi, part in enumerate(parts):
+            pnum = part.get("part_number")
+            ptype = part.get("type")
+            if not pnum or not isinstance(pnum, int):
+                errors.append(f"listening test[{ti}] part[{pi}] part_number yo'q yoki noto'g'ri")
+                continue
+            if ptype not in allowed_types:
+                errors.append(f"listening test[{ti}] part[{pi}] noma'lum type: {ptype}")
+                continue
+            if ptype in {"short_conversations", "sentence_completion",
+                         "interview"}:
+                if not isinstance(part.get("questions"), list) or not part["questions"]:
+                    errors.append(f"listening test[{ti}] part[{pi}] questions bo'sh yoki noto'g'ri")
+                    continue
+            if ptype in {"speaker_matching"}:
+                if not isinstance(part.get("speakers"), list) or not part["speakers"]:
+                    errors.append(f"listening test[{ti}] part[{pi}] speakers yo'q")
+                    continue
+            if ptype == "map_labeling":
+                if not isinstance(part.get("places"), list) or not part["places"]:
+                    errors.append(f"listening test[{ti}] part[{pi}] places yo'q")
+                    continue
+            if ptype == "note_completion":
+                if not part.get("text"):
+                    errors.append(f"listening test[{ti}] part[{pi}] text yo'q")
+                    continue
+
+            clean_parts.append(part)
+
+        if clean_parts:
+            test_copy = dict(test)
+            test_copy["parts"] = clean_parts
+            cleaned.append(test_copy)
+
+    return cleaned, errors
+
+
+def _validate_writing_tests(tests: list) -> tuple[list, list]:
+    cleaned: list = []
+    errors: list = []
+    allowed_types = {"tasks", "essay"}
+    for ti, test in enumerate(tests or []):
+        parts = test.get("parts") or []
+        clean_parts = []
+        for pi, part in enumerate(parts):
+            pnum = part.get("part_number")
+            ptype = part.get("type")
+            if not pnum or not isinstance(pnum, int):
+                errors.append(f"writing test[{ti}] part[{pi}] part_number yo'q yoki noto'g'ri")
+                continue
+            if ptype not in allowed_types:
+                errors.append(f"writing test[{ti}] part[{pi}] noma'lum type: {ptype}")
+                continue
+            if ptype == "tasks":
+                if not isinstance(part.get("tasks"), list) or not part["tasks"]:
+                    errors.append(f"writing test[{ti}] part[{pi}] tasks bo'sh")
+                    continue
+            if ptype == "essay":
+                if not part.get("prompt"):
+                    errors.append(f"writing test[{ti}] part[{pi}] prompt yo'q")
+                    continue
+            clean_parts.append(part)
+        if clean_parts:
+            test_copy = dict(test)
+            test_copy["parts"] = clean_parts
+            cleaned.append(test_copy)
+    return cleaned, errors
+
+
 def get_reading_tests() -> list:
     data = load_json("reading_tests.json")
-    return data.get("tests", [])
+    tests = data.get("tests", [])
+    cleaned, _ = _validate_reading_tests(tests)
+    return cleaned
+
 
 def get_listening_tests() -> list:
     data = load_json("listening_tests.json")
-    return data.get("tests", [])
+    tests = data.get("tests", [])
+    cleaned, _ = _validate_listening_tests(tests)
+    return cleaned
+
 
 def get_writing_tests() -> list:
     data = load_json("writing_tests.json")
-    return data.get("tests", [])
+    tests = data.get("tests", [])
+    cleaned, _ = _validate_writing_tests(tests)
+    return cleaned
 
 def _build_test_from_all_tests(section: str, user: dict) -> dict:
     """Barcha testlardan har bir part turi uchun bitta part tanlab, yangi test yaratadi."""
@@ -2499,15 +2641,20 @@ async def admin_get_data(request: Request, section: str):
 async def admin_save_data(request: Request, section: str):
     if not check_admin(request): return JSONResponse({"error": "Unauthorized"}, status_code=401)
     body = await request.json()
+    tests = body.get("tests", []) or []
+    errors: list[str] = []
     if section == "reading":
-        save_json("reading_tests.json", {"tests": body.get("tests", [])})
+        cleaned, errors = _validate_reading_tests(tests)
+        save_json("reading_tests.json", {"tests": cleaned})
     elif section == "listening":
-        save_json("listening_tests.json", {"tests": body.get("tests", [])})
+        cleaned, errors = _validate_listening_tests(tests)
+        save_json("listening_tests.json", {"tests": cleaned})
     elif section == "writing":
-        save_json("writing_tests.json", {"tests": body.get("tests", [])})
+        cleaned, errors = _validate_writing_tests(tests)
+        save_json("writing_tests.json", {"tests": cleaned})
     else:
         return JSONResponse({"error": "Unknown section"}, status_code=400)
-    return JSONResponse({"success": True})
+    return JSONResponse({"success": True, "errors": errors})
 
 
 # Admin: Listening Part 4 xarita rasm yuklash
